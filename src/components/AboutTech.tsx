@@ -17,7 +17,7 @@ export const About = () => {
           
           <div className="space-y-6 text-lg text-secondary-text leading-relaxed">
             <p>
-              I am a <span className="text-white font-medium">Experienced Full-Stack Developer</span> building scalable systems and AI-powered solutions. My approach combines deep technical expertise with a product-focused mindset.
+              I am a <span className="text-white font-medium">Full-Stack Developer</span> with over 4 years of experience building scalable systems and AI-powered solutions. My approach combines deep technical expertise with a product-focused mindset.
             </p>
             <p>
               I specialize in the <span className="text-white font-medium">MEAN Stack</span>, architecting distributed systems that handle complex data workflows. From optimizing PDF processing for healthcare to building enterprise-grade HRMS systems, I thrive on solving high-stakes engineering challenges.

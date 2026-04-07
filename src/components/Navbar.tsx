@@ -23,7 +23,7 @@ export const Navbar = () => {
           className="text-2xl font-bold tracking-tighter flex items-center gap-2"
         >
           <div className="w-8 h-8 bg-accent-blue rounded-lg glow-blue flex items-center justify-center text-bg-pure text-sm">AD</div>
-          <span>ARPIT<span className="text-accent-blue">.</span></span>
+          <span>ARPIT<span className="text-accent-blue"> DWIVEDI</span></span>
         </motion.a>
 
         {/* Desktop Links */}
