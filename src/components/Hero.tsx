@@ -1,10 +1,61 @@
-import { motion } from 'motion/react';
-import { ArrowRight, Terminal } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { ArrowRight, Terminal as TerminalIcon, Send } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useState, useRef, useEffect, FormEvent } from 'react';
 import metadata from '../../metadata.json';
+
+const COMMANDS = {
+  about: "I am a Full-Stack Developer building scalable systems and AI-powered solutions. Architecting future-proof applications is my mission.",
+  skills: "Stack: Angular, React, Node.js, Express, MongoDB, TypeScript, AI/LLMs, Docker, AWS.",
+  projects: "Featured: Flagship OCR Engine. Other: QME Panel, HRMS System, NGO Platform.",
+  contact: "Email: arp.d@pm.me | GitHub: @marpit697 | LinkedIn: Arpit Dwivedi",
+  whoami: "Role: Senior Full-Stack Specialist / AI Integrator.",
+  location: "Current Basis: India (Remote Global Availability).",
+  help: "Available commands: [about, skills, projects, contact, whoami, location, clear, exit]",
+  exit: "Safe mode engaged. To restart, refresh your terminal session.",
+};
 
 export const Hero = () => {
   const { hero } = metadata.content;
+  const [input, setInput] = useState('');
+  const [history, setHistory] = useState<{ type: 'command' | 'response', text: string }[]>([
+    { type: 'response', text: 'Welcome to Arpit Terminal v2.0.0' },
+    { type: 'response', text: 'Type "help" to see available commands.' }
+  ]);
+  const terminalEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const scrollToBottom = () => {
+    terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [history]);
+
+  const handleCommand = (e: FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+
+    const cmd = input.trim().toLowerCase();
+    const newHistory = [...history, { type: 'command' as const, text: input }];
+
+    if (cmd === 'clear') {
+      setHistory([{ type: 'response', text: 'Terminal cleared.' }]);
+    } else if (COMMANDS[cmd as keyof typeof COMMANDS]) {
+      newHistory.push({ type: 'response', text: COMMANDS[cmd as keyof typeof COMMANDS] });
+      setHistory(newHistory);
+    } else {
+      newHistory.push({ type: 'response', text: `Command not found: ${cmd}. Type "help" for a list of commands.` });
+      setHistory(newHistory);
+    }
+
+    setInput('');
+  };
+
+  const focusInput = () => {
+    inputRef.current?.focus();
+  };
 
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center pt-24 overflow-hidden">
@@ -65,46 +116,58 @@ export const Hero = () => {
           className="relative hidden lg:block"
         >
           {/* Futuristic Terminal/Dashboard Mockup */}
-          <div className="w-full aspect-video rounded-2xl glass p-1 glow-blue relative overflow-hidden group">
-            <div className="absolute top-0 left-0 w-full h-8 bg-white/5 border-b border-white/10 flex items-center px-4 gap-2">
+          <div 
+            onClick={focusInput}
+            className="w-full h-[400px] rounded-2xl glass p-1 glow-blue relative overflow-hidden group border border-white/10 cursor-text"
+          >
+            <div className="absolute top-0 left-0 w-full h-8 bg-white/5 border-b border-white/10 flex items-center px-4 gap-2 z-20">
               <div className="w-2.5 h-2.5 rounded-full bg-red-500/50" />
               <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50" />
               <div className="w-2.5 h-2.5 rounded-full bg-green-500/50" />
               <div className="ml-4 text-[10px] font-mono text-secondary-text">{hero.terminal.filename}</div>
             </div>
-            <div className="mt-8 p-6 font-mono text-sm space-y-2">
-              <div className="flex gap-2">
-                <span className="text-accent-purple">const</span>
-                <span className="text-accent-blue">developer</span>
-                <span className="text-white">=</span>
-                <span className="text-white">{"{"}</span>
-              </div>
-              <div className="pl-4 flex gap-2">
-                <span className="text-secondary-text">name:</span>
-                <span className="text-yellow-400">'{hero.terminal.code.name}'</span>,
-              </div>
-              <div className="pl-4 flex gap-2">
-                <span className="text-secondary-text">role:</span>
-                <span className="text-yellow-400">'{hero.terminal.code.role}'</span>,
-              </div>
-              <div className="pl-4 flex gap-2">
-                <span className="text-secondary-text">stack:</span>
-                <span className="text-white">[{hero.terminal.code.stack.map(s => `'${s}'`).join(', ')}]</span>,
-              </div>
-              <div className="pl-4 flex gap-2">
-                <span className="text-secondary-text">mission:</span>
-                <span className="text-yellow-400">'{hero.terminal.code.mission}'</span>
-              </div>
-              <div className="flex gap-2">
-                <span className="text-white">{"}"}</span>;
-              </div>
-              <div className="mt-6 flex gap-2 animate-pulse">
-                <span className="text-accent-blue font-bold tracking-widest">_</span>
+            
+            <div className="h-full pt-10 pb-4 px-6 font-mono text-sm overflow-y-auto scrollbar-hide">
+              <div className="space-y-2">
+                <AnimatePresence mode="popLayout">
+                  {history.map((item, idx) => (
+                    <motion.div 
+                      key={idx}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="flex gap-2"
+                    >
+                      <span className={item.type === 'command' ? 'text-accent-blue' : 'text-secondary-text'}>
+                        {item.type === 'command' ? '$' : '>'}
+                      </span>
+                      <span className={item.type === 'command' ? 'text-white' : 'text-yellow-400/90'}>
+                        {item.text}
+                      </span>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+                
+                <form onSubmit={handleCommand} className="flex gap-2 items-center">
+                  <span className="text-accent-blue font-bold">$</span>
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    className="bg-transparent border-none outline-none text-white flex-grow font-mono focus:ring-0 p-0"
+                    placeholder="Type command..."
+                    autoFocus
+                  />
+                  <button type="submit" className="text-accent-blue opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Send size={14} />
+                  </button>
+                </form>
+                <div ref={terminalEndRef} />
               </div>
             </div>
             
             {/* Overlay Dashboard Elements */}
-            <div className="absolute bottom-4 right-4 w-32 h-20 glass rounded-lg p-2 flex flex-col justify-between border-accent-blue/30">
+            <div className="absolute bottom-4 right-4 w-32 h-20 glass rounded-lg p-2 flex flex-col justify-between border-accent-blue/30 pointer-events-none opacity-50">
               <div className="text-[8px] font-mono text-accent-blue uppercase tracking-tighter">{hero.terminal.systemLoad}</div>
               <div className="flex items-end gap-1 h-8">
                 {[40, 70, 45, 90, 65, 80, 50].map((h, i) => (
@@ -120,7 +183,7 @@ export const Hero = () => {
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             className="absolute -top-10 -right-10 w-24 h-24 glass rounded-2xl flex items-center justify-center glow-purple border-accent-purple/30"
           >
-            <Terminal className="text-accent-purple" size={32} />
+            <TerminalIcon className="text-accent-purple" size={32} />
           </motion.div>
         </motion.div>
       </div>
