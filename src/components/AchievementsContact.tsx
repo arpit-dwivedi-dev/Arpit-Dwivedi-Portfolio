@@ -220,7 +220,7 @@ export const Footer = () => {
     <footer className="py-12 border-t border-white/5 bg-bg-pure">
       <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
         <div className="text-xl font-bold tracking-tighter">
-          {metadata.name.split(' ')[0]}<span className="text-accent-blue">.</span>
+          {metadata.name}<span className="text-accent-blue">.</span>
         </div>
         <div className="text-secondary-text text-sm font-mono">
           © {new Date().getFullYear()} {metadata.name}. {footer.rights}
