@@ -21,7 +21,6 @@
       ]
     },
     "allowImportingTsExtensions": true,
-    "noEmit": true,
-    "types": ["jest", "puppeteer"]
+    "noEmit": true
   }
 }

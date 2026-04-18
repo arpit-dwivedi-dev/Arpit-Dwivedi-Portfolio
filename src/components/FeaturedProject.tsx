@@ -1,10 +1,17 @@
 import { motion } from 'motion/react';
-import { PROJECTS } from '../constants';
-import { ExternalLink, CheckCircle2, Zap, Shield, FileText } from 'lucide-react';
+import { ExternalLink, Zap, Shield, FileText } from 'lucide-react';
+import metadata from '../../metadata.json';
 
 export const FeaturedProject = () => {
-  const featured = PROJECTS.find(p => p.featured);
+  const { projects, featuredProject } = metadata.content;
+  const featured = projects.find(p => p.featured);
   if (!featured) return null;
+
+  const handleClick = () => {
+    if (featured.link) {
+      window.open(featured.link, '_blank');
+    }
+  };
 
   return (
     <section className="py-24 relative overflow-hidden">
@@ -13,14 +20,14 @@ export const FeaturedProject = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6"
+          className="flex flex-col md:flex-row justify-between items-center md:items-end mb-12 gap-6 text-center md:text-left"
         >
           <div>
-            <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-2 block">Flagship System</span>
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Featured <span className="text-gradient">Project</span></h2>
+            <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-2 block">{featuredProject.label}</span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">{featuredProject.title} <span className="text-gradient">{featuredProject.titleAccent}</span></h2>
           </div>
-          <p className="text-secondary-text max-w-md text-right hidden md:block">
-            Showcasing high-impact engineering solutions that solve real-world complex problems.
+          <p className="text-secondary-text max-w-md text-right hidden md:block text-sm md:text-base leading-relaxed font-medium">
+            {featuredProject.description}
           </p>
         </motion.div>
 
@@ -29,29 +36,30 @@ export const FeaturedProject = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="group relative rounded-3xl overflow-hidden bg-bg-secondary border border-white/10 glow-blue/10"
+          onClick={handleClick}
+          className="group relative rounded-3xl overflow-hidden bg-bg-secondary border border-white/10 glow-blue/10 cursor-pointer transition-all"
         >
           <div className="grid grid-cols-1 lg:grid-cols-2">
             {/* Project Info */}
             <div className="p-8 md:p-12 flex flex-col justify-center">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-accent-blue/10 flex items-center justify-center text-accent-blue">
+                <div className="w-12 h-12 rounded-xl bg-accent-blue/10 flex items-center justify-center text-accent-blue group-hover:bg-accent-blue group-hover:text-bg-pure transition-colors">
                   <Shield size={24} />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-white">{featured.title}</h3>
+                  <h3 className="text-2xl font-bold text-white group-hover:text-accent-blue transition-colors">{featured.title}</h3>
                   <p className="text-accent-blue font-mono text-xs uppercase tracking-widest">{featured.subtitle}</p>
                 </div>
               </div>
 
-              <p className="text-secondary-text text-lg mb-8 leading-relaxed">
+              <p className="text-secondary-text text-base md:text-lg mb-8 leading-relaxed">
                 {featured.description}
               </p>
 
-              <div className="grid grid-cols-3 gap-4 mb-10">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-10">
                 {featured.metrics?.map((metric) => (
                   <div key={metric.label} className="p-4 rounded-2xl glass border-white/5 group-hover:border-accent-blue/20 transition-colors">
-                    <div className="text-2xl font-bold text-white mb-1">{metric.value}</div>
+                    <div className="text-xl sm:text-2xl font-bold text-white mb-1">{metric.value}</div>
                     <div className="text-[10px] uppercase tracking-widest text-secondary-text font-mono">{metric.label}</div>
                   </div>
                 ))}
@@ -66,8 +74,11 @@ export const FeaturedProject = () => {
               </div>
 
               <div className="flex gap-4">
-                <button className="px-6 py-3 bg-accent-blue text-bg-pure font-bold rounded-xl flex items-center gap-2 hover:glow-blue transition-all">
-                  Case Study <ExternalLink size={16} />
+                <button 
+                  onClick={(e) => { e.stopPropagation(); handleClick(); }}
+                  className="px-6 py-3 bg-accent-blue text-bg-pure font-bold rounded-xl flex items-center gap-2 hover:glow-blue transition-all"
+                >
+                  {featuredProject.button} <ExternalLink size={16} />
                 </button>
               </div>
             </div>
@@ -98,18 +109,18 @@ export const FeaturedProject = () => {
                   <div className="grid grid-cols-2 gap-4 mt-8">
                     <div className="h-24 rounded-xl bg-accent-blue/5 border border-accent-blue/20 flex flex-col items-center justify-center gap-2">
                       <FileText className="text-accent-blue" size={24} />
-                      <span className="text-[10px] font-mono text-accent-blue">OCR ENGINE</span>
+                      <span className="text-[10px] font-mono text-accent-blue">{featuredProject.visual.ocr}</span>
                     </div>
                     <div className="h-24 rounded-xl bg-accent-purple/5 border border-accent-purple/20 flex flex-col items-center justify-center gap-2">
                       <Zap className="text-accent-purple" size={24} />
-                      <span className="text-[10px] font-mono text-accent-purple">AI PARSER</span>
+                      <span className="text-[10px] font-mono text-accent-purple">{featuredProject.visual.ai}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Floating Badge */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-2 glass rounded-full border-accent-blue text-accent-blue font-bold text-sm glow-blue">
-                  99.9% OPTIMIZED
+                  {featuredProject.visual.badge}
                 </div>
               </motion.div>
               

@@ -1,8 +1,12 @@
 import { motion } from 'motion/react';
-import { EXPERIENCE, PROJECTS } from '../constants';
-import { Briefcase, Calendar, CheckCircle2, ExternalLink, Github, ArrowUpRight } from 'lucide-react';
+import { Briefcase, Calendar, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import metadata from '../../metadata.json';
+import { ProjectCard } from './ProjectCard';
 
 export const Experience = () => {
+  const { experience, experienceSection } = metadata.content;
+
   return (
     <section id="experience" className="py-24 relative overflow-hidden bg-bg-secondary">
       <div className="max-w-7xl mx-auto px-6">
@@ -12,16 +16,16 @@ export const Experience = () => {
           viewport={{ once: true }}
           className="text-center mb-20"
         >
-          <span className="text-accent-purple font-mono text-sm tracking-widest uppercase mb-2 block">Career Journey</span>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Experience <span className="text-gradient">Timeline</span></h2>
+          <span className="text-accent-purple font-mono text-sm tracking-widest uppercase mb-2 block">{experienceSection.label}</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">{experienceSection.title} <span className="text-gradient">{experienceSection.titleAccent}</span></h2>
         </motion.div>
 
         <div className="relative max-w-4xl mx-auto">
           {/* Vertical Line */}
-          <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-accent-blue via-accent-purple to-transparent opacity-20" />
+          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-accent-blue via-accent-purple to-transparent opacity-20" />
 
           <div className="space-y-12">
-            {EXPERIENCE.map((exp, idx) => (
+            {experience.map((exp, idx) => (
               <motion.div
                 key={exp.company}
                 initial={{ opacity: 0, x: idx % 2 === 0 ? -50 : 50 }}
@@ -31,9 +35,9 @@ export const Experience = () => {
                 className={`relative flex flex-col md:flex-row gap-8 items-center ${idx % 2 === 0 ? 'md:flex-row-reverse' : ''}`}
               >
                 {/* Timeline Dot */}
-                <div className="absolute left-0 md:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-bg-pure border-2 border-accent-blue glow-blue z-10" />
+                <div className="absolute left-4 md:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-bg-pure border-2 border-accent-blue glow-blue z-10" />
 
-                <div className="w-full md:w-1/2 p-8 rounded-3xl glass border-white/5 hover:border-accent-blue/20 transition-all group">
+                <div className="w-full md:w-1/2 pl-12 md:p-8 rounded-3xl glass border-white/5 hover:border-accent-blue/20 transition-all group">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-xl bg-accent-blue/10 flex items-center justify-center text-accent-blue">
@@ -74,7 +78,8 @@ export const Experience = () => {
 };
 
 export const Projects = () => {
-  const otherProjects = PROJECTS.filter(p => !p.featured);
+  const { projects, projectsSection } = metadata.content;
+  const otherProjects = projects.filter(p => !p.featured).slice(0, 3);
 
   return (
     <section id="projects" className="py-24 relative overflow-hidden">
@@ -83,67 +88,35 @@ export const Projects = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6"
+          className="flex flex-col md:flex-row justify-between items-center md:items-end mb-16 gap-6 text-center md:text-left"
         >
           <div>
-            <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-2 block">Portfolio</span>
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Key <span className="text-gradient">Projects</span></h2>
+            <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-2 block">{projectsSection.label}</span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">{projectsSection.title} <span className="text-gradient">{projectsSection.titleAccent}</span></h2>
           </div>
-          <p className="text-secondary-text max-w-md text-right hidden md:block">
-            A selection of professional and personal projects demonstrating full-stack expertise.
-          </p>
+          <div className="hidden md:flex flex-col items-end">
+            <p className="text-secondary-text max-w-sm text-right mb-4">
+              {projectsSection.description}
+            </p>
+            <Link to="/projects" className="text-accent-blue hover:text-white transition-colors flex items-center gap-2 font-mono text-sm group">
+              View All Projects <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {otherProjects.map((project, idx) => (
-            <motion.div
-              key={project.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
-              className="group p-8 rounded-3xl bg-bg-secondary border border-white/5 hover:border-accent-blue/30 transition-all flex flex-col h-full relative overflow-hidden"
-            >
-              {/* Background Glow */}
-              <div className="absolute -top-24 -right-24 w-48 h-48 bg-accent-blue/5 rounded-full blur-3xl group-hover:bg-accent-blue/10 transition-colors" />
-
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex gap-2">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white group-hover:text-accent-blue transition-colors">
-                    <Github size={20} />
-                  </div>
-                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white group-hover:text-accent-blue transition-colors">
-                    <ExternalLink size={20} />
-                  </div>
-                </div>
-                <ArrowUpRight size={24} className="text-secondary-text group-hover:text-accent-blue transition-colors" />
-              </div>
-
-              <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-accent-blue transition-colors">{project.title}</h3>
-              <p className="text-secondary-text text-sm mb-8 leading-relaxed flex-grow">
-                {project.description}
-              </p>
-
-              <div className="flex flex-wrap gap-2 mb-8">
-                {project.tags.map(tag => (
-                  <span key={tag} className="px-3 py-1 rounded-lg bg-white/5 text-[10px] font-mono text-secondary-text group-hover:text-white transition-colors">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-              {project.metrics && (
-                <div className="pt-6 border-t border-white/5 flex gap-6">
-                  {project.metrics.map(m => (
-                    <div key={m.label}>
-                      <div className="text-lg font-bold text-white">{m.value}</div>
-                      <div className="text-[10px] uppercase tracking-widest text-secondary-text font-mono">{m.label}</div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </motion.div>
+            <ProjectCard key={project.title} project={project} index={idx} />
           ))}
+        </div>
+
+        <div className="mt-12 text-center md:hidden">
+          <Link 
+            to="/projects" 
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl glass text-accent-blue font-bold hover:bg-white/5 transition-all"
+          >
+            View All Projects <ArrowRight size={18} />
+          </Link>
         </div>
       </div>
     </section>

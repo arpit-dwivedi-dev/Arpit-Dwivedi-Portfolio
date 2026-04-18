@@ -1,5 +1,210 @@
 {
-  "name": "Arpit Dwivedi | Full-Stack Developer Portfolio",
+  "name": "Arpit Dwivedi",
   "description": "Premium futuristic portfolio of Arpit Dwivedi, a senior Full-Stack Developer specializing in MEAN stack, AI integration, and scalable system architecture.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [],
+  "content": {
+    "navLinks": [
+      { "name": "Home", "href": "#home" },
+      { "name": "About", "href": "#about" },
+      { "name": "Experience", "href": "#experience" },
+      { "name": "Projects", "href": "#projects" },
+      { "name": "Contact", "href": "#contact" }
+    ],
+    "techStack": {
+      "frontend": ["Angular", "RxJS", "NgRx", "Angular Material", "TypeScript", "React", "Tailwind CSS"],
+      "backend": ["Node.js", "Express.js", "REST APIs", "Microservices", "Socket.io"],
+      "database": ["MongoDB", "MySQL", "Redis", "PostgreSQL"],
+      "devops": ["Docker", "CI/CD", "GitHub Actions", "VPS", "Nginx", "AWS"],
+      "testing": ["Jest", "Puppeteer", "Lighthouse", "TDD"]
+    },
+    "experience": [
+      {
+        "company": "Altos Global Services",
+        "role": "Full-stack Developer",
+        "period": "2023 – Present",
+        "description": "Leading full-stack development and AI integration. Architecting scalable API solutions and managing a team of developers.",
+        "highlights": ["AI integration (OpenAI, LLaMA Parse)", "Team leadership", "API architecture"]
+      },
+      {
+        "company": "Appinventiv",
+        "role": "Angular Specialist",
+        "period": "2022 – 2023",
+        "description": "Focused on Angular specialization, UI/UX improvements, and robust testing using Jest and TDD principles.",
+        "highlights": ["Angular performance tuning", "UI/UX optimization", "Unit testing (Jest)"]
+      },
+      {
+        "company": "Freelancer",
+        "role": "Web Developer",
+        "period": "2021",
+        "description": "Delivered high-quality client projects, focusing on static websites and responsive design.",
+        "highlights": ["Client-based delivery", "Responsive design", "SEO optimization"]
+      }
+    ],
+    "projects": [
+      {
+        "title": "ROR Document System",
+        "subtitle": "Healthcare AI Platform",
+        "description": "A flagship AI-powered document management system for healthcare, handling massive PDF datasets with extreme efficiency.",
+        "metrics": [
+          { "label": "PDF Pages", "value": "20,000+" },
+          { "label": "Performance", "value": "99.9% ↑" },
+          { "label": "Automation", "value": "95%" }
+        ],
+        "tags": ["Angular", "Node.js", "OCR", "AI", "Performance"],
+        "featured": true,
+        "link": "https://example.com/medical-flagship"
+      },
+      {
+        "title": "QME Panel",
+        "description": "Healthcare analytics dashboard providing deep insights into medical evaluations and panel management.",
+        "tags": ["Angular", "Node.js", "D3.js", "MongoDB"],
+        "metrics": [{ "label": "Modules", "value": "10+" }],
+        "link": "https://example.com/qme-panel"
+      },
+      {
+        "title": "HRMS System",
+        "description": "Comprehensive Human Resource Management System with over 25 integrated modules for enterprise use.",
+        "tags": ["MEAN Stack", "Microservices", "Redis"],
+        "metrics": [{ "label": "Modules", "value": "25+" }],
+        "link": "https://example.com/hrms"
+      },
+      {
+        "title": "NGO Website",
+        "description": "Highly responsive and SEO-friendly platform for a non-profit organization to boost their digital presence.",
+        "tags": ["React", "Tailwind", "SEO"],
+        "metrics": [{ "label": "SEO Score", "value": "100" }],
+        "link": "https://example.com/ngo"
+      }
+    ],
+    "impactMetrics": [
+      { "label": "PDF Load Optimization", "value": "99.9%" },
+      { "label": "AI Automation", "value": "95%" },
+      { "label": "Modules Delivered", "value": "15+" },
+      { "label": "Team Leadership", "value": "3 Members" },
+      { "label": "Cost Savings", "value": "₹10–15L" }
+    ],
+    "hero": {
+      "badge": "AVAILABLE FOR NEW OPPORTUNITIES",
+      "title": "Full-Stack",
+      "titleAccent": "Developer",
+      "subtitle": "Building scalable systems, AI-powered solutions, and high-performance applications. Specializing in the MEAN Stack and distributed architectures.",
+      "buttons": {
+        "projects": "View Projects",
+        "contact": "Contact Me"
+      },
+      "stats": [
+        { "value": "4+", "label": "Years Exp" },
+        { "value": "15+", "label": "Projects" },
+        { "value": "AI", "label": "Specialist" }
+      ],
+      "terminal": {
+        "filename": "arpit_dwivedi -- portfolio_v2.ts",
+        "code": {
+          "name": "Arpit Dwivedi",
+          "role": "Full-Stack Specialist",
+          "stack": ["MEAN", "AI", "DevOps"],
+          "mission": "Building Scalable Future"
+        },
+        "systemLoad": "System Load"
+      }
+    },
+    "about": {
+      "label": "Engineering Mindset",
+      "title": "About",
+      "titleAccent": "Me",
+      "paragraphs": [
+        "I am a Experience Full-Stack Developer building scalable systems and AI-powered solutions. My approach combines deep technical expertise with a product-focused mindset.",
+        "I specialize in the MEAN Stack, architecting distributed systems that handle complex data workflows. From optimizing PDF processing for healthcare to building enterprise-grade HRMS systems, I thrive on solving high-stakes engineering challenges.",
+        "My leadership experience in Agile teams allows me to bridge the gap between technical architecture and business impact, ensuring every line of code delivers real value."
+      ],
+      "features": [
+        "Performance Tuning",
+        "System Security",
+        "Microservices",
+        "UI/UX Excellence"
+      ],
+      "card": {
+        "est": "EST. 2021",
+        "location": "India (Remote/Onsite)",
+        "locationLabel": "Location",
+        "expertise": [
+          { "title": "Full-Stack Architecture", "subtitle": "Scalable & Maintainable" },
+          { "title": "AI Integration", "subtitle": "OpenAI & LLM Workflows" }
+        ]
+      }
+    },
+    "techStackSection": {
+      "label": "Technical Arsenal",
+      "title": "Tech",
+      "titleAccent": "Stack",
+      "categories": {
+        "frontend": "Frontend",
+        "backend": "Backend",
+        "database": "Database",
+        "devops": "DevOps"
+      }
+    },
+    "devops": {
+      "label": "Infrastructure",
+      "title": "DevOps &",
+      "titleAccent": "Architecture",
+      "description": "I design and implement robust CI/CD pipelines and containerized environments to ensure seamless deployment and high availability.",
+      "list": [
+        "Docker Containerization",
+        "GitHub Actions CI/CD",
+        "VPS Hosting & Nginx Configuration"
+      ]
+    },
+    "contact": {
+      "label": "Get in Touch",
+      "title": "Let's build something",
+      "titleAccent": "impactful",
+      "description": "I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.",
+      "email": "arp.d@pm.me",
+      "linkedin": "Arpit Dwivedi",
+      "github": "arpit-dwivedi",
+      "form": {
+        "name": "Name",
+        "email": "Email",
+        "message": "Message",
+        "button": "Send Message"
+      }
+    },
+    "featuredProject": {
+      "label": "Flagship System",
+      "title": "Featured",
+      "titleAccent": "Project",
+      "description": "Showcasing high-impact engineering solutions that solve real-world complex problems.",
+      "button": "Case Study",
+      "visual": {
+        "ocr": "OCR ENGINE",
+        "ai": "AI PARSER",
+        "badge": "99.9% OPTIMIZED"
+      }
+    },
+    "experienceSection": {
+      "label": "Career Journey",
+      "title": "Experience",
+      "titleAccent": "Timeline"
+    },
+    "projectsSection": {
+      "label": "Portfolio",
+      "title": "Key",
+      "titleAccent": "Projects",
+      "description": "A selection of professional and personal projects demonstrating full-stack expertise."
+    },
+    "achievementsSection": {
+      "label": "Impact Metrics",
+      "title": "Real-World",
+      "titleAccent": "Impact"
+    },
+    "architecture": {
+      "loadBalancer": "LOAD BALANCER (NGINX)",
+      "nodeApp": "NODE APP",
+      "database": "MONGODB CLUSTER"
+    },
+    "footer": {
+      "rights": "All rights reserved."
+    }
+  }
 }

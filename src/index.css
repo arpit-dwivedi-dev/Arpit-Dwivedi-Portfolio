@@ -10,6 +10,7 @@
   --color-bg-pure: #000000;
   --color-bg-secondary: #0F0F0F;
   --color-bg-tertiary: #1A1A1A;
+  --color-secondary-text: #A1A1AA;
 }
 
 @layer base {
