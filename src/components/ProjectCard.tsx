@@ -1,8 +1,9 @@
 import { motion } from 'motion/react';
-import { Github, ExternalLink, ArrowUpRight } from 'lucide-react';
+import { Github as GitHub, ExternalLink, ArrowUpRight } from 'lucide-react';
+import { KeyboardEvent } from 'react';
 
 interface ProjectCardProps {
-  key?: any;
+  key?: string | number;
   project: {
     title: string;
     description: string;
@@ -26,6 +27,13 @@ export const ProjectCard = ({ project, index }: ProjectCardProps) => {
     }
   };
 
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleClick();
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -33,6 +41,9 @@ export const ProjectCard = ({ project, index }: ProjectCardProps) => {
       viewport={{ once: true }}
       transition={{ delay: index * 0.1 }}
       onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
       className="group p-8 rounded-3xl bg-bg-secondary border border-white/5 hover:border-accent-blue/30 transition-all flex flex-col h-full relative overflow-hidden cursor-pointer"
     >
       {/* Background Glow */}
@@ -43,14 +54,30 @@ export const ProjectCard = ({ project, index }: ProjectCardProps) => {
           {project.github && (
             <div 
               onClick={(e) => { e.stopPropagation(); window.open(`https://github.com/${project.github}`, '_blank'); }}
+              onKeyDown={(e) => { 
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.stopPropagation(); 
+                  window.open(`https://github.com/${project.github}`, '_blank'); 
+                }
+              }}
+              role="button"
+              tabIndex={0}
               className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white hover:text-accent-blue transition-colors relative z-10"
             >
-              <Github size={20} />
+              <GitHub size={20} />
             </div>
           )}
           {project.link && (
             <div 
               onClick={(e) => { e.stopPropagation(); window.open(project.link, '_blank'); }}
+              onKeyDown={(e) => { 
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.stopPropagation(); 
+                  window.open(project.link, '_blank'); 
+                }
+              }}
+              role="button"
+              tabIndex={0}
               className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white hover:text-accent-blue transition-colors relative z-10"
             >
               <ExternalLink size={20} />

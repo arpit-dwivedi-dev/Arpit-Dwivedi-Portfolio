@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowRight, Terminal as TerminalIcon, Send } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useState, useRef, useEffect, FormEvent } from 'react';
+import { useState, useRef, useEffect, FormEvent, KeyboardEvent } from 'react';
 import metadata from '../../metadata.json';
 
 const COMMANDS = {
@@ -18,9 +18,9 @@ const COMMANDS = {
 export const Hero = () => {
   const { hero } = metadata.content;
   const [input, setInput] = useState('');
-  const [history, setHistory] = useState<{ type: 'command' | 'response', text: string }[]>([
-    { type: 'response', text: 'Welcome to Arpit Terminal v2.0.0' },
-    { type: 'response', text: 'Type "help" to see available commands.' }
+  const [history, setHistory] = useState<{ id: string, type: 'command' | 'response', text: string }[]>([
+    { id: 'initial-1', type: 'response', text: 'Welcome to Arpit Terminal v2.0.0' },
+    { id: 'initial-2', type: 'response', text: 'Type "help" to see available commands.' }
   ]);
   const terminalEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -38,15 +38,16 @@ export const Hero = () => {
     if (!input.trim()) return;
 
     const cmd = input.trim().toLowerCase();
-    const newHistory = [...history, { type: 'command' as const, text: input }];
+    const commandId = Date.now().toString();
+    const newHistory = [...history, { id: commandId, type: 'command' as const, text: input }];
 
     if (cmd === 'clear') {
-      setHistory([{ type: 'response', text: 'Terminal cleared.' }]);
+      setHistory([{ id: Date.now().toString(), type: 'response', text: 'Terminal cleared.' }]);
     } else if (COMMANDS[cmd as keyof typeof COMMANDS]) {
-      newHistory.push({ type: 'response', text: COMMANDS[cmd as keyof typeof COMMANDS] });
+      newHistory.push({ id: Date.now().toString() + '-resp', type: 'response', text: COMMANDS[cmd as keyof typeof COMMANDS] });
       setHistory(newHistory);
     } else {
-      newHistory.push({ type: 'response', text: `Command not found: ${cmd}. Type "help" for a list of commands.` });
+      newHistory.push({ id: Date.now().toString() + '-err', type: 'response', text: `Command not found: ${cmd}. Type "help" for a list of commands.` });
       setHistory(newHistory);
     }
 
@@ -55,6 +56,12 @@ export const Hero = () => {
 
   const focusInput = () => {
     inputRef.current?.focus();
+  };
+
+  const handleTerminalKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      focusInput();
+    }
   };
 
   return (
@@ -84,8 +91,8 @@ export const Hero = () => {
           </p>
 
           <div className="flex flex-wrap gap-4 mb-12">
-            {hero.stats.map((stat, idx) => (
-              <div key={idx} className="flex flex-col gap-1 px-4 py-2 rounded-xl glass">
+            {hero.stats.map((stat) => (
+              <div key={stat.label} className="flex flex-col gap-1 px-4 py-2 rounded-xl glass">
                 <span className="text-2xl font-bold text-white">{stat.value}</span>
                 <span className="text-[10px] uppercase tracking-widest text-secondary-text font-mono">{stat.label}</span>
               </div>
@@ -118,7 +125,11 @@ export const Hero = () => {
           {/* Futuristic Terminal/Dashboard Mockup */}
           <div 
             onClick={focusInput}
-            className="w-full h-[400px] rounded-2xl glass p-1 glow-blue relative overflow-hidden group border border-white/10 cursor-text"
+            onKeyDown={handleTerminalKeyDown}
+            role="button"
+            tabIndex={0}
+            aria-label="Interactive terminal"
+            className="w-full h-[400px] rounded-2xl glass p-1 glow-blue relative overflow-hidden group border border-white/10 cursor-text focus:outline-none focus:border-accent-blue/50"
           >
             <div className="absolute top-0 left-0 w-full h-8 bg-white/5 border-b border-white/10 flex items-center px-4 gap-2 z-20">
               <div className="w-2.5 h-2.5 rounded-full bg-red-500/50" />
@@ -130,9 +141,9 @@ export const Hero = () => {
             <div className="h-full pt-10 pb-4 px-6 font-mono text-sm overflow-y-auto scrollbar-hide">
               <div className="space-y-2">
                 <AnimatePresence mode="popLayout">
-                  {history.map((item, idx) => (
+                  {history.map((item) => (
                     <motion.div 
-                      key={idx}
+                      key={item.id}
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       className="flex gap-2"
@@ -171,7 +182,7 @@ export const Hero = () => {
               <div className="text-[8px] font-mono text-accent-blue uppercase tracking-tighter">{hero.terminal.systemLoad}</div>
               <div className="flex items-end gap-1 h-8">
                 {[40, 70, 45, 90, 65, 80, 50].map((h, i) => (
-                  <div key={i} className="flex-1 bg-accent-blue/50 rounded-t-sm" style={{ height: `${h}%` }} />
+                  <div key={`load-bar-${h}-${i}`} className="flex-1 bg-accent-blue/50 rounded-t-sm" style={{ height: `${h}%` }} />
                 ))}
               </div>
             </div>

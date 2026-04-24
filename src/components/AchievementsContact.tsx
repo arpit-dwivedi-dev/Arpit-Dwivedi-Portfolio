@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Shield, Zap, Server, Database, Globe, Mail, Linkedin, Github, Send, ArrowRight } from 'lucide-react';
+import { Zap, Server, Mail, Linkedin as LinkedIn, Github as GitHub, Send } from 'lucide-react';
 import metadata from '../../metadata.json';
 
 export const Achievements = () => {
@@ -65,7 +65,7 @@ export const DevOpsArchitecture = () => {
               </p>
               <ul className="space-y-4">
                 {devops.list.map((item, idx) => (
-                  <li key={idx} className="flex items-center gap-3">
+                  <li key={item} className="flex items-center gap-3">
                     <div className={`w-6 h-6 rounded-full bg-accent-${idx % 2 === 0 ? 'blue' : 'purple'}/10 flex items-center justify-center text-accent-${idx % 2 === 0 ? 'blue' : 'purple'}`}>
                       <Zap size={14} />
                     </div>
@@ -158,9 +158,9 @@ export const Contact = () => {
                   <div className="text-lg font-bold text-white group-hover:text-accent-blue transition-colors">{contact.email}</div>
                 </div>
               </a>
-              <a href={`https://linkedin.com/in/${contact.linkedin.replace(/\s+/g, '-').toLowerCase()}`} target="_blank" rel="noreferrer" className="flex items-center gap-4 group">
+              <a href={`https://linkedin.com/in/${contact.linkedin.replaceAll(/\s+/g, '-').toLowerCase()}`} target="_blank" rel="noreferrer" className="flex items-center gap-4 group">
                 <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white group-hover:bg-accent-blue group-hover:text-bg-pure transition-all">
-                  <Linkedin size={20} />
+                  <LinkedIn size={20} />
                 </div>
                 <div>
                   <div className="text-xs font-mono text-secondary-text uppercase tracking-widest">LinkedIn</div>
@@ -169,7 +169,7 @@ export const Contact = () => {
               </a>
               <a href={`https://github.com/${contact.github}`} target="_blank" rel="noreferrer" className="flex items-center gap-4 group">
                 <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white group-hover:bg-accent-blue group-hover:text-bg-pure transition-all">
-                  <Github size={20} />
+                  <GitHub size={20} />
                 </div>
                 <div>
                   <div className="text-xs font-mono text-secondary-text uppercase tracking-widest">GitHub</div>

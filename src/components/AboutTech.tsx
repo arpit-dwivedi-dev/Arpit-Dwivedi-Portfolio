@@ -21,8 +21,8 @@ export const About = () => {
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-8">{about.title} <span className="text-gradient">{about.titleAccent}</span></h2>
           
           <div className="space-y-6 text-base md:text-lg text-secondary-text leading-relaxed">
-            {about.paragraphs.map((p, i) => (
-              <p key={i} dangerouslySetInnerHTML={{ __html: p.replace(/MEAN Stack|Experience Full-Stack Developer/g, match => `<span class="text-white font-medium">${match}</span>`) }} />
+            {about.paragraphs.map((p) => (
+              <p key={p} dangerouslySetInnerHTML={{ __html: p.replaceAll(/MEAN Stack|Experience Full-Stack Developer/g, match => `<span class="text-white font-medium">${match}</span>`) }} />
             ))}
           </div>
 

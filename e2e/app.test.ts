@@ -61,7 +61,7 @@ describe('Portfolio App Tests', () => {
     if (aboutDot) {
       await aboutDot.click();
       // Wait for URL to update instead of waiting for navigation
-      await page.waitForFunction(() => window.location.hash.includes('about'));
+      await page.waitForFunction(() => globalThis.location.hash.includes('about'));
       const url = page.url();
       expect(url).toContain('#about');
     }
@@ -72,36 +72,28 @@ describe('Portfolio App Tests', () => {
     await page.waitForSelector('#contact');
     const contactSection = await page.$('#contact');
     expect(contactSection).not.toBeNull();
-    if (contactSection) {
-      // Check for form elements if they exist
-      const form = await contactSection.$('form');
-      if (form) {
-        // Use more flexible selectors based on placeholders and button text
-        const nameInput = await form.$('input[placeholder="Your Name"]');
-        const emailInput = await form.$('input[placeholder="your@email.com"]');
-        const messageInput = await form.$('textarea[placeholder="Tell me about your project..."]');
-        // Find the submit button by type and then check its text content
-        const submitButton = await form.$('button[type="submit"]');
-        if (submitButton) {
-          const buttonText = await page.evaluate(el => el.textContent, submitButton);
-          expect(buttonText).toContain('Send Message');
-        } else {
-          // If we can't find by type, try to find any button and check its text
-          const buttons = await form.$$('button');
-          let found = false;
-          for (const button of buttons) {
-            const text = await page.evaluate(el => el.textContent, button);
-            if (text && text.includes('Send Message')) {
-              found = true;
-              break;
-            }
-          }
-          expect(found).toBe(true);
-        }
-        expect(nameInput).not.toBeNull();
-        expect(emailInput).not.toBeNull();
-        expect(messageInput).not.toBeNull();
-      }
+    if (!contactSection) return;
+
+    const form = await contactSection.$('form');
+    if (!form) return;
+
+    const nameInput = await form.$('input[placeholder="Your Name"]');
+    const emailInput = await form.$('input[placeholder="your@email.com"]');
+    const messageInput = await form.$('textarea[placeholder="Tell me about your project..."]');
+    expect(nameInput).not.toBeNull();
+    expect(emailInput).not.toBeNull();
+    expect(messageInput).not.toBeNull();
+
+    const submitButton = await form.$('button[type="submit"]');
+    if (submitButton) {
+      const buttonText = await page.evaluate(el => el.textContent, submitButton);
+      expect(buttonText).toContain('Send Message');
+      return;
     }
+
+    const buttons = await form.$$('button');
+    const buttonTexts = await Promise.all(buttons.map(button => page.evaluate(el => el.textContent, button)));
+    const found = buttonTexts.some(text => text?.includes('Send Message'));
+    expect(found).toBe(true);
   });
 });
