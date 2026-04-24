@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { GithubIcon as GitHub, ExternalLink, ArrowUpRight } from 'lucide-react';
+import { Github, ExternalLink, ArrowUpRight } from 'lucide-react';
 import React, { KeyboardEvent } from 'react';
 
 interface ProjectCardProps {
@@ -63,7 +63,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
               className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white hover:text-accent-blue transition-colors relative z-10"
               aria-label="View Github Repository"
             >
-              <GitHub size={20} />
+              <Github size={20} />
             </button>
           )}
           {project.link && (

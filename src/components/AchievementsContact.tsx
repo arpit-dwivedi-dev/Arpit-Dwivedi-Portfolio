@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Zap, Server, Mail, LinkedinIcon as LinkedIn, GithubIcon as GitHub, Send } from 'lucide-react';
+import { Zap, Server, Mail, Linkedin, Github, Send } from 'lucide-react';
 import metadata from '../../metadata.json';
 
 export const Achievements = () => {
@@ -160,7 +160,7 @@ export const Contact = () => {
               </a>
               <a href={`https://linkedin.com/in/${contact.linkedin.replaceAll(/\s+/g, '-').toLowerCase()}`} target="_blank" rel="noreferrer" className="flex items-center gap-4 group">
                 <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white group-hover:bg-accent-blue group-hover:text-bg-pure transition-all">
-                  <LinkedIn size={20} />
+                  <Linkedin size={20} />
                 </div>
                 <div>
                   <div className="text-xs font-mono text-secondary-text uppercase tracking-widest">LinkedIn</div>
@@ -169,7 +169,7 @@ export const Contact = () => {
               </a>
               <a href={`https://github.com/${contact.github}`} target="_blank" rel="noreferrer" className="flex items-center gap-4 group">
                 <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white group-hover:bg-accent-blue group-hover:text-bg-pure transition-all">
-                  <GitHub size={20} />
+                  <Github size={20} />
                 </div>
                 <div>
                   <div className="text-xs font-mono text-secondary-text uppercase tracking-widest">GitHub</div>

@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Menu, X, GithubIcon as GitHub, LinkedinIcon as LinkedIn } from 'lucide-react';
+import { Menu, X, Github, Linkedin } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import metadata from '../../metadata.json';
@@ -55,8 +55,8 @@ export const Navbar = () => {
             animate={{ opacity: 1, scale: 1 }}
             className="flex items-center gap-4 ml-4"
           >
-            <a href={`https://github.com/${contact.github}`} target="_blank" rel="noreferrer" className="text-secondary-text hover:text-accent-blue transition-colors"><GitHub size={18} /></a>
-            <a href="https://www.linkedin.com/in/marpit697-ad/" target="_blank" rel="noreferrer" className="text-secondary-text hover:text-accent-blue transition-colors"><LinkedIn size={18} /></a>
+            <a href={`https://github.com/${contact.github}`} target="_blank" rel="noreferrer" className="text-secondary-text hover:text-accent-blue transition-colors"><Github size={18} /></a>
+            <a href="https://www.linkedin.com/in/marpit697-ad/" target="_blank" rel="noreferrer" className="text-secondary-text hover:text-accent-blue transition-colors"><Linkedin size={18} /></a>
           </motion.div>
         </div>
 
@@ -94,8 +94,8 @@ export const Navbar = () => {
           transition={{ delay: 0.4 }}
           className="flex items-center gap-8 mt-8"
         >
-          <a href={`https://github.com/${contact.github}`} target="_blank" rel="noreferrer" className="text-secondary-text hover:text-accent-blue transition-colors"><GitHub size={24} /></a>
-          <a href="https://www.linkedin.com/in/marpit697-ad/" target="_blank" rel="noreferrer" className="text-secondary-text hover:text-accent-blue transition-colors"><LinkedIn size={24} /></a>
+          <a href={`https://github.com/${contact.github}`} target="_blank" rel="noreferrer" className="text-secondary-text hover:text-accent-blue transition-colors"><Github size={24} /></a>
+          <a href="https://www.linkedin.com/in/marpit697-ad/" target="_blank" rel="noreferrer" className="text-secondary-text hover:text-accent-blue transition-colors"><Linkedin size={24} /></a>
         </motion.div>
       </motion.div>
     </nav>
