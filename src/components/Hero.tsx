@@ -123,13 +123,12 @@ export const Hero = () => {
           className="relative hidden lg:block"
         >
           {/* Futuristic Terminal/Dashboard Mockup */}
-          <div 
+          <button 
+            type="button"
             onClick={focusInput}
             onKeyDown={handleTerminalKeyDown}
-            role="button"
-            tabIndex={0}
             aria-label="Interactive terminal"
-            className="w-full h-[400px] rounded-2xl glass p-1 glow-blue relative overflow-hidden group border border-white/10 cursor-text focus:outline-none focus:border-accent-blue/50"
+            className="w-full h-[400px] rounded-2xl glass p-1 glow-blue relative overflow-hidden group border border-white/10 cursor-text focus:outline-none focus:border-accent-blue/50 text-left block"
           >
             <div className="absolute top-0 left-0 w-full h-8 bg-white/5 border-b border-white/10 flex items-center px-4 gap-2 z-20">
               <div className="w-2.5 h-2.5 rounded-full bg-red-500/50" />
@@ -186,7 +185,7 @@ export const Hero = () => {
                 ))}
               </div>
             </div>
-          </div>
+          </button>
           
           {/* Floating Elements */}
           <motion.div 

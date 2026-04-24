@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Zap, Server, Mail, Linkedin as LinkedIn, Github as GitHub, Send } from 'lucide-react';
+import { Zap, Server, Mail, LinkedinIcon as LinkedIn, GithubIcon as GitHub, Send } from 'lucide-react';
 import metadata from '../../metadata.json';
 
 export const Achievements = () => {

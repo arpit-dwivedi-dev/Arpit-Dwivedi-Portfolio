@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Menu, X, Github as GitHub, Linkedin as LinkedIn } from 'lucide-react';
+import { Menu, X, GithubIcon as GitHub, LinkedinIcon as LinkedIn } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import metadata from '../../metadata.json';

@@ -1,9 +1,8 @@
 import { motion } from 'motion/react';
-import { Github as GitHub, ExternalLink, ArrowUpRight } from 'lucide-react';
-import { KeyboardEvent } from 'react';
+import { GithubIcon as GitHub, ExternalLink, ArrowUpRight } from 'lucide-react';
+import React, { KeyboardEvent } from 'react';
 
 interface ProjectCardProps {
-  key?: string | number;
   project: {
     title: string;
     description: string;
@@ -18,7 +17,7 @@ interface ProjectCardProps {
   index: number;
 }
 
-export const ProjectCard = ({ project, index }: ProjectCardProps) => {
+export const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
   const handleClick = () => {
     if (project.link) {
       window.open(project.link, '_blank');
@@ -52,7 +51,8 @@ export const ProjectCard = ({ project, index }: ProjectCardProps) => {
       <div className="flex items-center justify-between mb-6">
         <div className="flex gap-2">
           {project.github && (
-            <div 
+            <button 
+              type="button"
               onClick={(e) => { e.stopPropagation(); window.open(`https://github.com/${project.github}`, '_blank'); }}
               onKeyDown={(e) => { 
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -60,15 +60,15 @@ export const ProjectCard = ({ project, index }: ProjectCardProps) => {
                   window.open(`https://github.com/${project.github}`, '_blank'); 
                 }
               }}
-              role="button"
-              tabIndex={0}
               className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white hover:text-accent-blue transition-colors relative z-10"
+              aria-label="View Github Repository"
             >
               <GitHub size={20} />
-            </div>
+            </button>
           )}
           {project.link && (
-            <div 
+            <button 
+              type="button"
               onClick={(e) => { e.stopPropagation(); window.open(project.link, '_blank'); }}
               onKeyDown={(e) => { 
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -76,12 +76,11 @@ export const ProjectCard = ({ project, index }: ProjectCardProps) => {
                   window.open(project.link, '_blank'); 
                 }
               }}
-              role="button"
-              tabIndex={0}
               className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white hover:text-accent-blue transition-colors relative z-10"
+              aria-label="View Live Project"
             >
               <ExternalLink size={20} />
-            </div>
+            </button>
           )}
         </div>
         <ArrowUpRight size={24} className="text-secondary-text group-hover:text-accent-blue transition-colors" />
