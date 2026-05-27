@@ -2,14 +2,13 @@ import { motion } from 'motion/react';
 import { Menu, X } from 'lucide-react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import metadata from '../../metadata.json';
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { navLinks, contact } = metadata.content;
-  useLocation();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -43,7 +42,7 @@ export const Navbar = () => {
               transition={{ delay: idx * 0.1 }}
             >
               <Link
-                to={link.href.startsWith('#') ? `/${link.href}` : link.href}
+                 to={link.href.startsWith('#') ? link.href : link.href}
                 className="text-sm font-medium text-secondary-text hover:text-white transition-colors relative group"
               >
                 {link.name}
@@ -81,7 +80,7 @@ export const Navbar = () => {
             transition={{ delay: idx * 0.1 }}
           >
             <Link 
-              to={link.href.startsWith('#') ? `/${link.href}` : link.href}
+               to={link.href.startsWith('#') ? link.href : link.href}
               onClick={() => setIsOpen(false)}
               className="text-3xl font-bold text-white hover:text-accent-blue transition-colors"
             >

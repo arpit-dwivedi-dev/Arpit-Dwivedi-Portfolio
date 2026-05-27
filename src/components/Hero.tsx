@@ -18,19 +18,33 @@ const COMMANDS = {
 export const Hero = () => {
   const { hero } = metadata.content;
   const [input, setInput] = useState('');
-  const [history, setHistory] = useState<{ id: string, type: 'command' | 'response', text: string }[]>([
+  const [history, setHistory] = useState<Array<{ id: string, type: 'command' | 'response', text: string }>>([
     { id: 'initial-1', type: 'response', text: 'Welcome to Arpit Terminal v2.0.0' },
     { id: 'initial-2', type: 'response', text: 'Type "help" to see available commands.' }
   ]);
   const terminalEndRef = useRef<HTMLDivElement>(null);
+  const isFirstRender = useRef(true);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
-    terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // Scroll the terminal container directly, not the page.
+    // scrollIntoView on the ref element bubbles up to the page
+    // when the overflow-y-auto container has no overflow,
+    // causing unwanted page scroll that hides hero content behind the navbar.
+    const terminalContainer = terminalEndRef.current?.closest('.overflow-y-auto') as HTMLElement | null;
+    if (terminalContainer) {
+      terminalContainer.scrollTop = terminalContainer.scrollHeight;
+    }
   };
 
   useEffect(() => {
-    scrollToBottom();
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (document.documentElement.scrollTop === 0) {
+      scrollToBottom();
+    }
   }, [history]);
 
   const handleCommand = (e: FormEvent) => {
@@ -39,17 +53,14 @@ export const Hero = () => {
 
     const cmd = input.trim().toLowerCase();
     const commandId = Date.now().toString();
-    const newHistory = [...history, { id: commandId, type: 'command' as const, text: input }];
-
-    if (cmd === 'clear') {
-      setHistory([{ id: Date.now().toString(), type: 'response', text: 'Terminal cleared.' }]);
-    } else if (COMMANDS[cmd as keyof typeof COMMANDS]) {
-      newHistory.push({ id: Date.now().toString() + '-resp', type: 'response', text: COMMANDS[cmd as keyof typeof COMMANDS] });
-      setHistory(newHistory);
-    } else {
-      newHistory.push({ id: Date.now().toString() + '-err', type: 'response', text: `Command not found: ${cmd}. Type "help" for a list of commands.` });
-      setHistory(newHistory);
-    }
+  if (cmd === 'clear') {
+    // clear command resets history to a single response entry
+    setHistory([{ id: Date.now().toString(), type: 'response', text: 'Terminal cleared.' }]);
+  } else if (COMMANDS[cmd as keyof typeof COMMANDS]) {
+    setHistory(prev => [...prev, { id: Date.now().toString() + '-resp', type: 'response', text: COMMANDS[cmd as keyof typeof COMMANDS] }]);
+  } else {
+    setHistory(prev => [...prev, { id: Date.now().toString() + '-err', type: 'response', text: `Command not found: ${cmd}. Type "help" for a list of commands.` }]);
+  }
 
     setInput('');
   };

@@ -1,6 +1,18 @@
+import React from 'react';
 import { motion } from 'motion/react';
 import { Code2, Database, Layout, Server, ShieldCheck, Zap } from 'lucide-react';
 import metadata from '../../metadata.json';
+
+// static Tailwind class maps to avoid JIT stripping
+const techClassMap: Record<string, string> = {
+  'accent-blue': 'bg-accent-blue/10 text-accent-blue',
+  'accent-purple': 'bg-accent-purple/10 text-accent-purple',
+};
+
+const catClassMap: Record<string, string> = {
+  'accent-blue': 'bg-accent-blue/10 text-accent-blue',
+  'accent-purple': 'bg-accent-purple/10 text-accent-purple',
+};
 
 export const About = () => {
   const { about } = metadata.content;
@@ -32,7 +44,7 @@ export const About = () => {
               const color = i % 2 === 0 ? 'accent-blue' : 'accent-purple';
               return (
                 <div key={feature} className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-lg bg-${color}/10 flex items-center justify-center text-${color}`}>
+               <div className={`${techClassMap[color] ?? 'bg-gray-500/10 text-gray-500'} w-10 h-10 rounded-lg flex items-center justify-center` }>
                     <Icon size={20} />
                   </div>
                   <span className="text-sm font-medium text-white">{feature}</span>
@@ -62,7 +74,7 @@ export const About = () => {
                   const color = i === 0 ? 'accent-blue' : 'accent-purple';
                   return (
                     <div key={item.title} className="flex items-center gap-4">
-                      <div className={`w-12 h-12 rounded-xl bg-${color}/10 flex items-center justify-center text-${color}`}>
+               <div className={`${techClassMap[color] ?? 'bg-gray-500/10 text-gray-500'} w-12 h-12 rounded-xl flex items-center justify-center` }>
                         <Icon size={24} />
                       </div>
                       <div>
@@ -123,7 +135,7 @@ export const TechStack = () => {
               transition={{ delay: idx * 0.1 }}
               className="p-6 rounded-3xl glass border-white/5 hover:border-white/20 transition-all group"
             >
-              <div className={`w-12 h-12 rounded-2xl bg-${cat.color}/10 flex items-center justify-center text-${cat.color} mb-6 group-hover:scale-110 transition-transform`}>
+               <div className={`${catClassMap[cat.color] ?? 'bg-gray-500/10 text-gray-500'} w-12 h-12 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform` }>
                 <cat.icon size={24} />
               </div>
               <h3 className="text-xl font-bold text-white mb-6">{cat.name}</h3>

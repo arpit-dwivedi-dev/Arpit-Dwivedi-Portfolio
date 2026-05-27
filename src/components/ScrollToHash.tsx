@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
 export const ScrollToHash = () => {
   const { pathname, hash } = useLocation();
+  const prevPathname = useRef(pathname);
 
   useEffect(() => {
     if (hash) {
@@ -13,9 +14,13 @@ export const ScrollToHash = () => {
           element.scrollIntoView({ behavior: 'smooth' });
         }, 100);
       }
-    } else {
+    } else if (prevPathname.current !== pathname) {
+      // Only scroll to top on actual route navigation, not initial load.
+      // This avoids competing with history.scrollRestoration = 'manual'
+      // before the page layout has settled.
       window.scrollTo(0, 0);
     }
+    prevPathname.current = pathname;
   }, [pathname, hash]);
 
   return null;

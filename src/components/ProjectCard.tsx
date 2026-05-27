@@ -1,9 +1,10 @@
 import { motion } from 'motion/react';
 import { ExternalLink, ArrowUpRight } from 'lucide-react';
 import { FaGithub } from 'react-icons/fa';
-import React, { KeyboardEvent } from 'react';
+import React from 'react';
 
 interface ProjectCardProps {
+  key?: string;
   project: {
     title: string;
     description: string;
@@ -18,12 +19,12 @@ interface ProjectCardProps {
   index: number;
 }
 
-export const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
+export const ProjectCard = ({ project, index }: ProjectCardProps) => {
   const handleClick = () => {
     if (project.link) {
-      window.open(project.link, '_blank');
+      window.open(project.link, '_blank', 'noopener,noreferrer');
     } else if (project.github) {
-      window.open(`https://github.com/${project.github}`, '_blank');
+      window.open(`https://github.com/${project.github}`, '_blank', 'noopener,noreferrer');
     }
   };
 
@@ -54,7 +55,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
           {project.github && (
             <button 
               type="button"
-              onClick={(e) => { e.stopPropagation(); window.open(`https://github.com/${project.github}`, '_blank'); }}
+               onClick={(e) => { e.stopPropagation(); window.open(`https://github.com/${project.github}`, '_blank', 'noopener,noreferrer'); }}
               onKeyDown={(e) => { 
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.stopPropagation(); 
@@ -70,7 +71,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
           {project.link && (
             <button 
               type="button"
-              onClick={(e) => { e.stopPropagation(); window.open(project.link, '_blank'); }}
+               onClick={(e) => { e.stopPropagation(); window.open(project.link, '_blank', 'noopener,noreferrer'); }}
               onKeyDown={(e) => { 
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.stopPropagation(); 

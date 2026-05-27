@@ -27,14 +27,14 @@ export const HomePage = () => {
 
       {/* Scroll Indicator Dots */}
       <div className="fixed right-6 top-1/2 -translate-y-1/2 z-50 hidden xl:flex flex-col gap-4">
-        {navLinks.map((link) => (
-          <a
-            key={link.href}
-            href={link.href}
-            className="w-2 h-2 rounded-full bg-white/20 hover:bg-accent-blue transition-all hover:scale-150"
-            title={link.name}
-          />
-        ))}
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="w-2 h-2 rounded-full bg-white/20 hover:bg-accent-blue transition-all hover:scale-150"
+              title={link.name}
+            />
+          ))}
       </div>
 
       <Navbar />
