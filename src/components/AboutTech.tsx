@@ -34,7 +34,7 @@ export const About = () => {
           
           <div className="space-y-6 text-base md:text-lg text-secondary-text leading-relaxed">
             {about.paragraphs.map((p) => (
-              <p key={p} dangerouslySetInnerHTML={{ __html: p.replaceAll(/MEAN Stack|Experience Full-Stack Developer/g, match => `<span class="text-white font-medium">${match}</span>`) }} />
+              <p key={p} dangerouslySetInnerHTML={{ __html: p.replaceAll(/local businesses|healthcare and enterprise clients/g, match => `<span class="text-white font-medium">${match}</span>`) }} />
             ))}
           </div>
 
@@ -64,7 +64,7 @@ export const About = () => {
           <div className="w-full aspect-square rounded-3xl overflow-hidden glass p-4 glow-purple/20">
             <div className="w-full h-full rounded-2xl bg-bg-tertiary p-8 flex flex-col justify-between">
               <div className="flex justify-between items-start">
-                <div className="text-4xl font-bold text-white tracking-tighter">ARPIT <span className="text-accent-blue">DWIVEDI</span></div>
+                <div className="text-4xl font-bold text-white tracking-tighter">101 <span className="text-accent-blue">TECH LABS</span></div>
                 <div className="px-3 py-1 rounded-full border border-white/10 text-[10px] font-mono text-secondary-text">{about.card.est}</div>
               </div>
               

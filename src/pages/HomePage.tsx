@@ -1,9 +1,9 @@
 import { Navbar } from '../components/Navbar';
 import { Hero } from '../components/Hero';
 import { FeaturedProject } from '../components/FeaturedProject';
-import { About, TechStack } from '../components/AboutTech';
-import { Experience, Projects } from '../components/ExperienceProjects';
-import { Achievements, DevOpsArchitecture, Contact, Footer } from '../components/AchievementsContact';
+import { About } from '../components/AboutTech';
+import { Services, Projects } from '../components/ExperienceProjects';
+import { DevOpsArchitecture, LocalTrust, Contact, Footer } from '../components/AchievementsContact';
 import { motion, useScroll, useSpring } from 'motion/react';
 import metadata from '../../metadata.json';
 
@@ -43,11 +43,10 @@ export const HomePage = () => {
         <Hero />
         <FeaturedProject />
         <About />
-        <TechStack />
-        <Experience />
+        <Services />
         <Projects />
-        <Achievements />
         <DevOpsArchitecture />
+        <LocalTrust />
         <Contact />
       </main>
 

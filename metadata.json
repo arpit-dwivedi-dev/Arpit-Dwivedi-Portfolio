@@ -1,12 +1,12 @@
 {
-  "name": "Arpit Dwivedi",
-  "description": "Premium futuristic portfolio of Arpit Dwivedi, a senior Full-Stack Developer specializing in MEAN stack, AI integration, and scalable system architecture.",
+  "name": "101 Tech Labs",
+  "description": "101 Tech Labs builds websites, booking systems, and automation for local businesses — plus larger platforms for healthcare and enterprise clients.",
   "requestFramePermissions": [],
   "content": {
     "navLinks": [
       { "name": "Home", "href": "#home" },
       { "name": "About", "href": "#about" },
-      { "name": "Experience", "href": "#experience" },
+      { "name": "Services", "href": "#experience" },
       { "name": "Projects", "href": "#projects" },
       { "name": "Contact", "href": "#contact" }
     ],
@@ -17,27 +17,26 @@
       "devops": ["Docker", "CI/CD", "GitHub Actions", "VPS", "Nginx", "AWS"],
       "testing": ["Jest", "Puppeteer", "Lighthouse", "TDD"]
     },
-    "experience": [
+    "services": [
       {
-        "company": "Altos Global Services",
-        "role": "Full-stack Developer",
-        "period": "2023 – Present",
-        "description": "Leading full-stack development and AI integration. Architecting scalable API solutions and managing a team of developers.",
-        "highlights": ["AI integration (OpenAI, LLaMA Parse)", "Team leadership", "API architecture"]
+        "title": "Business Websites",
+        "description": "A professional, mobile-friendly website that makes it easy for customers to find you, see what you offer, and get in touch — built the same way we build larger platforms, using React and Angular.",
+        "highlights": ["Mobile-friendly design", "Fast load times", "Easy to update"]
       },
       {
-        "company": "Appinventiv",
-        "role": "Angular Specialist",
-        "period": "2022 – 2023",
-        "description": "Focused on Angular specialization, UI/UX improvements, and robust testing using Jest and TDD principles.",
-        "highlights": ["Angular performance tuning", "UI/UX optimization", "Unit testing (Jest)"]
+        "title": "Online Booking & Ordering Systems",
+        "description": "Let customers book appointments or place orders online instead of calling during business hours, backed by a simple system you can actually manage yourself.",
+        "highlights": ["Appointment & table booking", "Online ordering", "Simple admin dashboard"]
       },
       {
-        "company": "Freelancer",
-        "role": "Web Developer",
-        "period": "2021",
-        "description": "Delivered high-quality client projects, focusing on static websites and responsive design.",
-        "highlights": ["Client-based delivery", "Responsive design", "SEO optimization"]
+        "title": "Automating Manual Work",
+        "description": "If your team is re-entering the same data, chasing paperwork, or answering the same questions every day, we can build something that does it for you — including AI, when it actually helps.",
+        "highlights": ["Document & form automation", "AI-assisted workflows", "Fewer repetitive tasks"]
+      },
+      {
+        "title": "Local SEO & Google Visibility",
+        "description": "Showing up when someone nearby searches for what you do — a proper Google Business setup, a fast-loading site, and pages built the way search engines expect.",
+        "highlights": ["Google Business setup", "Local search visibility", "Site speed & structure"]
       }
     ],
     "projects": [
@@ -80,56 +79,55 @@
       { "label": "PDF Load Optimization", "value": "99.9%" },
       { "label": "AI Automation", "value": "95%" },
       { "label": "Modules Delivered", "value": "15+" },
-      { "label": "Team Leadership", "value": "3 Members" },
+      { "label": "Team Size", "value": "3 Members" },
       { "label": "Cost Savings", "value": "₹10–15L" }
     ],
     "hero": {
-      "badge": "AVAILABLE FOR NEW OPPORTUNITIES",
-      "title": "Full-Stack",
-      "titleAccent": "Developer",
-      "subtitle": "Building scalable systems, AI-powered solutions, and high-performance applications. Specializing in the MEAN Stack and distributed architectures.",
+      "badge": "HELPING LOCAL BUSINESSES SINCE 2021",
+      "title": "Get More Customers.\nGet More Bookings.",
+      "titleAccent": "Less Busywork.",
+      "subtitle": "Professional websites, online booking, ordering systems, and automation for local businesses.",
       "buttons": {
         "projects": "View Projects",
-        "contact": "Contact Me"
+        "contact": "Get a Quote"
       },
       "stats": [
         { "value": "4+", "label": "Years Exp" },
-        { "value": "15+", "label": "Projects" },
-        { "value": "AI", "label": "Specialist" }
+        { "value": "15+", "label": "Projects Delivered" }
       ],
       "terminal": {
-        "filename": "arpit_dwivedi -- portfolio_v2.ts",
+        "filename": "101_tech_labs -- portfolio_v2.ts",
         "code": {
-          "name": "Arpit Dwivedi",
-          "role": "Full-Stack Specialist",
+          "name": "101 Tech Labs",
+          "role": "Full-Stack & AI Engineering",
           "stack": ["MEAN", "AI", "DevOps"],
-          "mission": "Building Scalable Future"
+          "mission": "Building Scalable Systems"
         },
         "systemLoad": "System Load"
       }
     },
     "about": {
-      "label": "Engineering Mindset",
+      "label": "Who We Are",
       "title": "About",
-      "titleAccent": "Me",
+      "titleAccent": "Us",
       "paragraphs": [
-        "I am a Experience Full-Stack Developer building scalable systems and AI-powered solutions. My approach combines deep technical expertise with a product-focused mindset.",
-        "I specialize in the MEAN Stack, architecting distributed systems that handle complex data workflows. From optimizing PDF processing for healthcare to building enterprise-grade HRMS systems, I thrive on solving high-stakes engineering challenges.",
-        "My leadership experience in Agile teams allows me to bridge the gap between technical architecture and business impact, ensuring every line of code delivers real value."
+        "We build websites, booking systems, and everyday automation for local businesses — shops, restaurants, clinics, and service providers who need a professional online presence without hiring a full IT department.",
+        "We also build larger systems for healthcare and enterprise clients — document processing platforms, HR systems, scheduling software. That range means whatever your business needs, from a five-page website to a custom booking system, we've already solved harder problems.",
+        "We keep things simple: clear answers, fair pricing, and a website or system that actually gets used — not a technical showcase nobody asked for."
       ],
       "features": [
-        "Performance Tuning",
-        "System Security",
-        "Microservices",
-        "UI/UX Excellence"
+        "Fast Page Speed",
+        "Secure & Reliable",
+        "Always-On Hosting",
+        "Easy to Manage"
       ],
       "card": {
         "est": "EST. 2021",
-        "location": "India (Remote/Onsite)",
-        "locationLabel": "Location",
+        "location": "Serving businesses across [CITY/REGION]",
+        "locationLabel": "Service Area",
         "expertise": [
-          { "title": "Full-Stack Architecture", "subtitle": "Scalable & Maintainable" },
-          { "title": "AI Integration", "subtitle": "OpenAI & LLM Workflows" }
+          { "title": "Websites & Systems", "subtitle": "Built to Last" },
+          { "title": "AI & Automation", "subtitle": "Where It Actually Helps" }
         ]
       }
     },
@@ -148,21 +146,37 @@
       "label": "Infrastructure",
       "title": "DevOps &",
       "titleAccent": "Architecture",
-      "description": "I design and implement robust CI/CD pipelines and containerized environments to ensure seamless deployment and high availability.",
+      "description": "We build CI/CD pipelines and containerized environments so deployments are boring — no surprises, no manual steps, no downtime nobody planned for.",
       "list": [
         "Docker Containerization",
         "GitHub Actions CI/CD",
         "VPS Hosting & Nginx Configuration"
       ]
     },
+    "localTrust": {
+      "label": "Serving Local Businesses",
+      "title": "Built For",
+      "titleAccent": "Your Neighborhood",
+      "description": "We work with businesses close to home, not just enterprise clients across the country.",
+      "phone": "+91 70715 20965",
+      "serviceArea": "Serving businesses across [CITY/REGION]",
+      "testimonials": [
+        { "quote": "[Placeholder — real client testimonial pending]", "name": "[Client Name]", "business": "[Business Name]" },
+        { "quote": "[Placeholder — real client testimonial pending]", "name": "[Client Name]", "business": "[Business Name]" }
+      ]
+    },
     "contact": {
       "label": "Get in Touch",
       "title": "Let's build something",
       "titleAccent": "impactful",
-      "description": "I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.",
-      "email": "arp.d@pm.me",
-      "linkedin": "Arpit Dwivedi",
-      "github": "arpit-dwivedi-dev",
+      "description": "We're open to discussing new projects, technical challenges, or work that needs a full-stack team rather than one person doing everything.",
+      "email": "contact@101techlabs.com",
+      "linkedin": "101 Tech Labs",
+      "github": "101techlabs",
+      "whatsapp": {
+        "number": "917071520965",
+        "message": "hey 101 Tech Labs"
+      },
       "form": {
         "name": "Name",
         "email": "Email",
@@ -171,27 +185,27 @@
       }
     },
     "featuredProject": {
-      "label": "Flagship System",
-      "title": "Featured",
-      "titleAccent": "Project",
-      "description": "Showcasing high-impact engineering solutions that solve real-world complex problems.",
-      "button": "Case Study",
+      "label": "What We Can Handle",
+      "title": "Built For",
+      "titleAccent": "Serious Complexity",
+      "description": "This is the kind of technical complexity we handle for enterprise clients — which is exactly why your business website or booking system is well within reach.",
+      "button": "View Case Study",
       "visual": {
         "ocr": "OCR ENGINE",
         "ai": "AI PARSER",
         "badge": "99.9% OPTIMIZED"
       }
     },
-    "experienceSection": {
-      "label": "Career Journey",
-      "title": "Experience",
-      "titleAccent": "Timeline"
+    "servicesSection": {
+      "label": "How We Help",
+      "title": "What We",
+      "titleAccent": "Do"
     },
     "projectsSection": {
       "label": "Portfolio",
       "title": "Key",
       "titleAccent": "Projects",
-      "description": "A selection of professional and personal projects demonstrating full-stack expertise."
+      "description": "Enterprise-scale systems we've delivered — proof that whatever complexity your project needs, we've already handled harder."
     },
     "achievementsSection": {
       "label": "Impact Metrics",
@@ -204,7 +218,8 @@
       "database": "MONGODB CLUSTER"
     },
     "footer": {
-      "rights": "All rights reserved."
+      "rights": "All rights reserved.",
+      "techNote": "Built on modern, reliable technology."
     }
   }
 }

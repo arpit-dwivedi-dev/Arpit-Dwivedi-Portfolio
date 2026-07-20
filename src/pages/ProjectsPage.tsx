@@ -39,7 +39,7 @@ export const ProjectsPage = () => {
                 <h2 className="text-4xl md:text-6xl font-bold tracking-tight">All <span className="text-gradient">Projects</span></h2>
               </div>
               <p className="text-secondary-text max-w-md text-right hidden md:block text-lg">
-                Explore my full collection of engineering solutions and technical explorations.
+                Explore our full collection of engineering work — production systems, platforms, and technical experiments.
               </p>
             </div>
           </motion.div>

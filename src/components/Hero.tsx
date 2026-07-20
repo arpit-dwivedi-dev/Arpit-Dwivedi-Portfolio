@@ -4,13 +4,15 @@ import { Link } from 'react-router-dom';
 import { useState, useRef, useEffect, FormEvent, KeyboardEvent } from 'react';
 import metadata from '../../metadata.json';
 
+// NOTE: contact.github/linkedin below resolve to placeholder company URLs (101techlabs) —
+// confirm real profiles exist before launch, do not assume they're live.
 const COMMANDS = {
-  about: "I am a Full-Stack Developer building scalable systems and AI-powered solutions. Architecting future-proof applications is my mission.",
+  about: "101 Tech Labs builds websites, booking systems, and automation for local businesses — plus larger platforms for healthcare and enterprise clients when the job calls for it.",
   skills: "Stack: Angular, React, Node.js, Express, MongoDB, TypeScript, AI/LLMs, Docker, AWS.",
-  projects: "Featured: Flagship OCR Engine. Other: QME Panel, HRMS System, NGO Platform.",
-  contact: "Email: arp.d@pm.me | GitHub: @marpit697 | LinkedIn: Arpit Dwivedi",
-  whoami: "Role: Senior Full-Stack Specialist / AI Integrator.",
-  location: "Current Basis: India (Remote Global Availability).",
+  projects: "Featured: Flagship OCR Engine (ROR Document System). Also: QME Panel, HRMS System, NGO Platform.",
+  contact: "Email: contact@101techlabs.com | GitHub: @101techlabs | Web: 101techlabs.com",
+  whoami: "101 Tech Labs — full-stack & AI engineering team helping local businesses get online, building since 2021.",
+  location: "Serving [CITY/REGION] and remote clients nationwide.",
   help: "Available commands: [about, skills, projects, contact, whoami, location, clear, exit]",
   exit: "Safe mode engaged. To restart, refresh your terminal session.",
 };
@@ -19,7 +21,7 @@ export const Hero = () => {
   const { hero } = metadata.content;
   const [input, setInput] = useState('');
   const [history, setHistory] = useState<Array<{ id: string, type: 'command' | 'response', text: string }>>([
-    { id: 'initial-1', type: 'response', text: 'Welcome to Arpit Terminal v2.0.0' },
+    { id: 'initial-1', type: 'response', text: 'Welcome to 101 Tech Labs Terminal v2.0.0' },
     { id: 'initial-2', type: 'response', text: 'Type "help" to see available commands.' }
   ]);
   const terminalEndRef = useRef<HTMLDivElement>(null);
@@ -93,7 +95,7 @@ export const Hero = () => {
             {hero.badge}
           </div>
           
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.1] mb-6">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.1] mb-6 whitespace-pre-line">
             {hero.title} <span className="text-gradient">{hero.titleAccent}</span>
           </h1>
           

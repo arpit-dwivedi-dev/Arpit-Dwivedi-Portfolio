@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Zap, Server, Mail, Send } from 'lucide-react';
+import { Zap, Server, Mail, Send, Phone, MapPin } from 'lucide-react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import metadata from '../../metadata.json';
 
@@ -129,6 +129,59 @@ export const DevOpsArchitecture = () => {
   );
 };
 
+export const LocalTrust = () => {
+  const { localTrust } = metadata.content;
+
+  return (
+    <section className="py-24 relative overflow-hidden bg-bg-secondary">
+      <div className="max-w-7xl mx-auto px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-2 block">{localTrust.label}</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">{localTrust.title} <span className="text-gradient">{localTrust.titleAccent}</span></h2>
+          <p className="text-secondary-text max-w-xl mx-auto">{localTrust.description}</p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+          <a href={`tel:+${localTrust.phone.replace(/\D/g, '')}`} className="p-6 rounded-2xl glass border-white/5 flex items-center gap-4 group hover:border-accent-blue/20 transition-all">
+            <div className="w-12 h-12 rounded-xl bg-accent-blue/10 flex items-center justify-center text-accent-blue">
+              <Phone size={20} />
+            </div>
+            <div>
+              <div className="text-xs font-mono text-secondary-text uppercase tracking-widest">Call Us</div>
+              <div className="text-lg font-bold text-white group-hover:text-accent-blue transition-colors">{localTrust.phone}</div>
+            </div>
+          </a>
+          <div className="p-6 rounded-2xl glass border-white/5 flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-accent-purple/10 flex items-center justify-center text-accent-purple">
+              <MapPin size={20} />
+            </div>
+            <div>
+              <div className="text-xs font-mono text-secondary-text uppercase tracking-widest">Service Area</div>
+              <div className="text-lg font-bold text-white">{localTrust.serviceArea}</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {localTrust.testimonials.map((testimonial, idx) => (
+            <div key={idx} className="p-6 rounded-2xl glass border border-dashed border-white/20 relative">
+              <span className="absolute top-4 right-4 text-[9px] font-mono uppercase tracking-widest text-accent-purple/80">Placeholder</span>
+              <p className="text-secondary-text text-sm italic mb-4">&ldquo;{testimonial.quote}&rdquo;</p>
+              <div className="text-sm font-bold text-white">{testimonial.name}</div>
+              <div className="text-xs text-secondary-text">{testimonial.business}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 export const Contact = () => {
   const { contact } = metadata.content;
 
@@ -149,6 +202,7 @@ export const Contact = () => {
               {contact.description}
             </p>
 
+            {/* PLACEHOLDER: contact.linkedin/github below resolve to placeholder URLs (101techlabs) — confirm real profiles exist before launch */}
             <div className="space-y-6 flex flex-col items-center lg:items-start">
               <a href={`mailto:${contact.email}`} className="flex items-center gap-4 group w-full max-w-sm lg:max-w-none">
                 <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white group-hover:bg-accent-blue group-hover:text-bg-pure transition-all">
@@ -159,7 +213,7 @@ export const Contact = () => {
                   <div className="text-lg font-bold text-white group-hover:text-accent-blue transition-colors">{contact.email}</div>
                 </div>
               </a>
-              <a href={`https://linkedin.com/in/${contact.linkedin.replaceAll(/\s+/g, '-').toLowerCase()}`} target="_blank" rel="noreferrer" className="flex items-center gap-4 group">
+              <a href={`https://linkedin.com/company/${contact.linkedin.replaceAll(/\s+/g, '-').toLowerCase()}`} target="_blank" rel="noreferrer" className="flex items-center gap-4 group">
                 <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white group-hover:bg-accent-blue group-hover:text-bg-pure transition-all">
                   <FaLinkedin size={20} />
                 </div>
@@ -200,7 +254,7 @@ export const Contact = () => {
               </div>
               <div className="space-y-2">
                 <label className="text-xs font-mono text-secondary-text uppercase tracking-widest">{contact.form.message}</label>
-                <textarea rows={4} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-accent-blue focus:outline-none transition-colors" placeholder="Tell me about your project..." />
+                <textarea rows={4} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-accent-blue focus:outline-none transition-colors" placeholder="Tell us about your project..." />
               </div>
               <button className="w-full py-4 bg-accent-blue text-bg-pure font-bold rounded-xl flex items-center justify-center gap-2 hover:glow-blue transition-all group">
                 {contact.form.button}
@@ -220,8 +274,11 @@ export const Footer = () => {
   return (
     <footer className="py-12 border-t border-white/5 bg-bg-pure">
       <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-        <div className="text-xl font-bold tracking-tighter">
-          {metadata.name}<span className="text-accent-blue">.</span>
+        <div>
+          <div className="text-xl font-bold tracking-tighter">
+            {metadata.name}<span className="text-accent-blue">.</span>
+          </div>
+          <div className="text-[10px] font-mono text-secondary-text mt-1">{footer.techNote}</div>
         </div>
         <div className="text-secondary-text text-sm font-mono">
           © {new Date().getFullYear()} {metadata.name}. {footer.rights}

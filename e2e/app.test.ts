@@ -19,43 +19,43 @@ describe('Portfolio App Tests', () => {
   });
 
   test('should load the app and display the navbar', async () => {
-    await page.goto('http://localhost:3000/Arpit-Dwivedi-Portfolio/');
+    await page.goto('http://localhost:3000/101TechLabs/');
     await page.waitForSelector('nav');
     const navbar = await page.$('nav');
     expect(navbar).not.toBeNull();
   });
 
   test('should display the hero section', async () => {
-    await page.goto('http://localhost:3000/Arpit-Dwivedi-Portfolio/');
+    await page.goto('http://localhost:3000/101TechLabs/');
     await page.waitForSelector('#home');
     const hero = await page.$('#home');
     expect(hero).not.toBeNull();
   });
 
   test('should display the featured project section', async () => {
-    await page.goto('http://localhost:3000/Arpit-Dwivedi-Portfolio/');
+    await page.goto('http://localhost:3000/101TechLabs/');
     await page.waitForSelector('#projects');
     const featuredProject = await page.$('#projects');
     expect(featuredProject).not.toBeNull();
   });
 
   test('should display the about section', async () => {
-    await page.goto('http://localhost:3000/Arpit-Dwivedi-Portfolio/');
+    await page.goto('http://localhost:3000/101TechLabs/');
     await page.waitForSelector('#about');
     const about = await page.$('#about');
     expect(about).not.toBeNull();
   });
 
-  test('should display the tech stack section', async () => {
-    await page.goto('http://localhost:3000/Arpit-Dwivedi-Portfolio/');
-    // Wait for the TechStack section to be visible by looking for its heading
-    await page.waitForSelector('text=Tech Stack');
-    const techStackSection = await page.$('text=Tech Stack');
-    expect(techStackSection).not.toBeNull();
+  test('should display the services section', async () => {
+    await page.goto('http://localhost:3000/101TechLabs/');
+    // Tech Stack is no longer a standalone section — check the Services ("What We Do") section instead
+    await page.waitForSelector('#experience');
+    const servicesSection = await page.$('#experience');
+    expect(servicesSection).not.toBeNull();
   });
 
   test('should navigate to the about section when clicking the about dot', async () => {
-    await page.goto('http://localhost:3000/Arpit-Dwivedi-Portfolio/');
+    await page.goto('http://localhost:3000/101TechLabs/');
     await page.waitForSelector('a[href="#about"]');
     const aboutDot = await page.$('a[href="#about"]');
     if (aboutDot) {
@@ -68,7 +68,7 @@ describe('Portfolio App Tests', () => {
   });
 
   test('should have a working contact form (if present)', async () => {
-    await page.goto('http://localhost:3000/Arpit-Dwivedi-Portfolio/');
+    await page.goto('http://localhost:3000/101TechLabs/');
     await page.waitForSelector('#contact');
     const contactSection = await page.$('#contact');
     expect(contactSection).not.toBeNull();
@@ -79,7 +79,7 @@ describe('Portfolio App Tests', () => {
 
     const nameInput = await form.$('input[placeholder="Your Name"]');
     const emailInput = await form.$('input[placeholder="your@email.com"]');
-    const messageInput = await form.$('textarea[placeholder="Tell me about your project..."]');
+    const messageInput = await form.$('textarea[placeholder="Tell us about your project..."]');
     expect(nameInput).not.toBeNull();
     expect(emailInput).not.toBeNull();
     expect(messageInput).not.toBeNull();

@@ -27,7 +27,7 @@ export const Navbar = () => {
             to="/"
             className="text-2xl font-bold tracking-tighter flex items-center gap-2"
           >
-            <div className="w-8 h-8 bg-accent-blue rounded-lg glow-blue flex items-center justify-center text-bg-pure text-sm">AD</div>
+            <div className="w-8 h-8 bg-accent-blue rounded-lg glow-blue flex items-center justify-center text-bg-pure text-sm">TL</div>
             <span>{metadata.name.split(' ')[0]}<span className="text-accent-blue"> {metadata.name.split(' ').slice(1).join(' ')}</span></span>
           </Link>
         </motion.div>
@@ -50,13 +50,14 @@ export const Navbar = () => {
               </Link>
             </motion.div>
           ))}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             className="flex items-center gap-4 ml-4"
           >
+            {/* PLACEHOLDER: contact.github/linkedin are not confirmed live company profiles — verify before launch */}
             <a href={`https://github.com/${contact.github}`} target="_blank" rel="noreferrer" className="text-secondary-text hover:text-accent-blue transition-colors"><FaGithub size={18} /></a>
-            <a href="https://www.linkedin.com/in/marpit697-ad/" target="_blank" rel="noreferrer" className="text-secondary-text hover:text-accent-blue transition-colors"><FaLinkedin size={18} /></a>
+            <a href={`https://linkedin.com/company/${contact.linkedin.replaceAll(/\s+/g, '-').toLowerCase()}`} target="_blank" rel="noreferrer" className="text-secondary-text hover:text-accent-blue transition-colors"><FaLinkedin size={18} /></a>
           </motion.div>
         </div>
 
@@ -95,7 +96,7 @@ export const Navbar = () => {
           className="flex items-center gap-8 mt-8"
         >
           <a href={`https://github.com/${contact.github}`} target="_blank" rel="noreferrer" className="text-secondary-text hover:text-accent-blue transition-colors"><FaGithub size={24} /></a>
-          <a href="https://www.linkedin.com/in/marpit697-ad/" target="_blank" rel="noreferrer" className="text-secondary-text hover:text-accent-blue transition-colors"><FaLinkedin size={24} /></a>
+          <a href={`https://linkedin.com/company/${contact.linkedin.replaceAll(/\s+/g, '-').toLowerCase()}`} target="_blank" rel="noreferrer" className="text-secondary-text hover:text-accent-blue transition-colors"><FaLinkedin size={24} /></a>
         </motion.div>
       </motion.div>
     </nav>
