@@ -269,7 +269,11 @@ export const Contact = () => {
             </p>
 
             {/* PLACEHOLDER: contact.linkedin/github below resolve to placeholder URLs (101techlabs) — confirm real profiles exist before launch */}
-            <div className="space-y-6 flex flex-col items-center lg:items-start">
+            {/* items-start (not center): each link's width is just its own icon+text
+                content, which varies (email address vs. "101 Tech Labs" vs.
+                "101techlabs") — centering them independently put every row's icon at
+                a different x-position instead of a straight left-aligned column. */}
+            <div className="space-y-6 flex flex-col items-start">
               <a href={`mailto:${contact.email}`} className="flex items-center gap-4 group w-full max-w-sm lg:max-w-none">
                 <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white group-hover:bg-accent-blue group-hover:text-bg-pure transition-all">
                   <Mail size={20} aria-hidden="true" />

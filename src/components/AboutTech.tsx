@@ -62,20 +62,25 @@ export const About = () => {
           transition={{ duration: 0.8 }}
           className="relative"
         >
-          <div className="w-full aspect-square rounded-3xl overflow-hidden glass p-4 glow-purple/20">
-            <div className="w-full h-full rounded-2xl bg-bg-tertiary p-8 flex flex-col justify-between">
-              <div className="flex justify-between items-start">
-                <div className="text-4xl font-bold text-white tracking-tighter">101 <span className="text-accent-blue">TECH LABS</span></div>
-                <div className="px-3 py-1 rounded-full border border-white/10 text-[10px] font-mono text-secondary-text">{about.card.est}</div>
+          {/* The grid above is single-column below lg, so this card runs full-width
+              and stacked there — a fixed aspect-square makes the box shorter than its
+              content (2-line heading + badge + 2 expertise rows + service-area box) at
+              those widths, and overflow-hidden was clipping the bottom as a result.
+              Let height follow content below lg; lg+ restores the fixed-ratio look. */}
+          <div className="w-full aspect-auto lg:aspect-square rounded-3xl overflow-hidden glass p-4 glow-purple/20">
+            <div className="w-full h-full rounded-2xl bg-bg-tertiary p-8 flex flex-col gap-8 justify-between">
+              <div className="flex justify-between items-start gap-3">
+                <div className="text-3xl sm:text-4xl font-bold text-white tracking-tighter">101 <span className="text-accent-blue">TECH LABS</span></div>
+                <div className="shrink-0 px-3 py-1 rounded-full border border-white/10 text-[10px] font-mono text-secondary-text">{about.card.est}</div>
               </div>
-              
+
               <div className="space-y-4">
                 {about.card.expertise.map((item, i) => {
                   const Icon = i === 0 ? Code2 : Zap;
                   const color = i === 0 ? 'accent-blue' : 'accent-purple';
                   return (
                     <div key={item.title} className="flex items-center gap-4">
-               <div className={`${techClassMap[color] ?? 'bg-gray-500/10 text-gray-500'} w-12 h-12 rounded-xl flex items-center justify-center` }>
+               <div className={`${techClassMap[color] ?? 'bg-gray-500/10 text-gray-500'} w-12 h-12 rounded-xl flex items-center justify-center shrink-0` }>
                         <Icon size={24} />
                       </div>
                       <div>

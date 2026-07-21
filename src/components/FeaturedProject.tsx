@@ -85,14 +85,18 @@ export const FeaturedProject = () => {
             </div>
 
             {/* Project Visual Mockup */}
-            {/* Extra right padding on mobile only: the fixed WhatsApp button (right-6,
-                56px wide) occupies a 24-80px inset column from the screen edge. Without
-                this, the card's right edge (24px page gutter + 32px panel padding = 56px
-                inset) sits inside that column, so it collides with the button at whatever
-                scroll position the card's bottom happens to land on. Pushing the inset
-                past 80px removes the shared column entirely — no scroll position can
-                overlap them. sm+ reverts to the original padding (untouched there). */}
-            <div className="relative bg-bg-tertiary p-8 pr-20 sm:pr-8 flex items-center justify-center overflow-hidden">
+            {/* Extra horizontal padding on mobile only: the fixed WhatsApp button
+                (right-6, 56px wide) occupies a 24-80px inset column from the screen
+                edge, plus its own shadow/glow beyond that box. Below sm the card
+                isn't capped by max-w-md (the panel is narrower than 448px), so it
+                fills the full padded width right up to that column — a right-only
+                pr-20 used to clear it but pushed the whole card left, making it look
+                off-center. Widening px symmetrically to 16 (64px, an 8px safety
+                margin past the button's 56px-from-edge clearance) clears the same
+                column on the right while keeping the card centered. sm+ reverts to
+                the original padding: max-w-md caps the card well clear of the
+                button there regardless of padding. */}
+            <div className="relative bg-bg-tertiary p-8 px-16 sm:px-8 flex items-center justify-center overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-accent-blue/10 to-transparent opacity-50" />
               
               {/* Abstract UI Elements */}
@@ -129,10 +133,21 @@ export const FeaturedProject = () => {
                       <span className="text-[10px] font-mono text-accent-purple">{featuredProject.visual.ai}</span>
                     </div>
                   </div>
+
+                  {/* Below sm, the card's height follows its content (see aspect-auto
+                      note above), so an absolutely-centered badge would land on top of
+                      the OCR/AI cards instead of empty space. Render it in normal flow
+                      here instead; the floating overlay version below takes over at sm+
+                      where the fixed aspect ratio keeps the center point empty. */}
+                  <div className="flex justify-center pt-2 sm:hidden">
+                    <div className="px-4 py-2 glass rounded-full border-accent-blue text-accent-blue font-bold text-sm glow-blue">
+                      {featuredProject.visual.badge}
+                    </div>
+                  </div>
                 </div>
 
-                {/* Floating Badge */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-2 glass rounded-full border-accent-blue text-accent-blue font-bold text-sm glow-blue">
+                {/* Floating Badge (sm+ only, see note above) */}
+                <div className="hidden sm:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-2 glass rounded-full border-accent-blue text-accent-blue font-bold text-sm glow-blue">
                   {featuredProject.visual.badge}
                 </div>
               </motion.div>
