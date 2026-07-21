@@ -1,8 +1,7 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
 import metadata from '../../metadata.json';
 import { hiContent } from '../content/hi';
-import { fetchSiteContent, LocalizedSiteContent } from '../sanity/fetchSiteContent';
 import type { SiteContent, Lang } from './types';
 
 export type { SiteContent, Lang };
@@ -47,18 +46,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const isHindi = location.pathname === '/hi' || location.pathname.startsWith('/hi/');
   const lang: Lang = isHindi ? 'hi' : 'en';
 
-  // Bundled metadata.json/hi.ts render immediately on first paint; once the
-  // Sanity fetch resolves, live CMS content takes over — if it fails (offline,
-  // dataset misconfigured, etc.) liveContent just stays null and the bundled
-  // copy keeps serving indefinitely, so a CMS outage can't take the site down.
-  const [liveContent, setLiveContent] = useState<LocalizedSiteContent | null>(null);
-  useEffect(() => {
-    fetchSiteContent().then((result) => {
-      if (result) setLiveContent(result);
-    });
-  }, []);
-
-  const content = liveContent ? liveContent[lang] : (isHindi ? hiContent : metadata.content);
+  const content = isHindi ? hiContent : metadata.content;
 
   useEffect(() => {
     document.documentElement.lang = lang;

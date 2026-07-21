@@ -26,7 +26,6 @@ export default defineConfig(({mode}) => {
         output: {
           manualChunks: {
             sentry: ['@sentry/react'],
-            sanity: ['@sanity/client'],
           },
         },
       },
