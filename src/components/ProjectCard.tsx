@@ -2,6 +2,7 @@ import { motion } from 'motion/react';
 import { ExternalLink, ArrowUpRight } from 'lucide-react';
 import { FaGithub } from 'react-icons/fa';
 import React from 'react';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface ProjectCardProps {
   key?: string;
@@ -20,74 +21,12 @@ interface ProjectCardProps {
 }
 
 export const ProjectCard = ({ project, index }: ProjectCardProps) => {
-  const handleClick = () => {
-    if (project.link) {
-      window.open(project.link, '_blank', 'noopener,noreferrer');
-    } else if (project.github) {
-      window.open(`https://github.com/${project.github}`, '_blank', 'noopener,noreferrer');
-    }
-  };
+  const { content } = useLanguage();
+  const { projectCard } = content;
+  const primaryHref = project.link || (project.github ? `https://github.com/${project.github}` : undefined);
 
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      handleClick();
-    }
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1 }}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      role="button"
-      tabIndex={0}
-      className="group p-8 rounded-3xl bg-bg-secondary border border-white/5 hover:border-accent-blue/30 transition-all flex flex-col h-full relative overflow-hidden cursor-pointer"
-    >
-      {/* Background Glow */}
-      <div className="absolute -top-24 -right-24 w-48 h-48 bg-accent-blue/5 rounded-full blur-3xl group-hover:bg-accent-blue/10 transition-colors" />
-
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex gap-2">
-          {project.github && (
-            <button 
-              type="button"
-               onClick={(e) => { e.stopPropagation(); window.open(`https://github.com/${project.github}`, '_blank', 'noopener,noreferrer'); }}
-              onKeyDown={(e) => { 
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.stopPropagation(); 
-                  window.open(`https://github.com/${project.github}`, '_blank'); 
-                }
-              }}
-              className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white hover:text-accent-blue transition-colors relative z-10"
-              aria-label="View Github Repository"
-            >
-              <FaGithub size={20} />
-            </button>
-          )}
-          {project.link && (
-            <button 
-              type="button"
-               onClick={(e) => { e.stopPropagation(); window.open(project.link, '_blank', 'noopener,noreferrer'); }}
-              onKeyDown={(e) => { 
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.stopPropagation(); 
-                  window.open(project.link, '_blank'); 
-                }
-              }}
-              className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white hover:text-accent-blue transition-colors relative z-10"
-              aria-label="View Live Project"
-            >
-              <ExternalLink size={20} />
-            </button>
-          )}
-        </div>
-        <ArrowUpRight size={24} className="text-secondary-text group-hover:text-accent-blue transition-colors" />
-      </div>
-
+  const details = (
+    <>
       <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-accent-blue transition-colors">{project.title}</h3>
       <p className="text-secondary-text text-sm mb-8 leading-relaxed flex-grow">
         {project.description}
@@ -111,6 +50,59 @@ export const ProjectCard = ({ project, index }: ProjectCardProps) => {
           ))}
         </div>
       )}
+    </>
+  );
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1 }}
+      className="group p-8 rounded-3xl bg-bg-secondary border border-white/5 hover:border-accent-blue/30 transition-all flex flex-col h-full relative overflow-hidden"
+    >
+      {/* Background Glow */}
+      <div className="absolute -top-24 -right-24 w-48 h-48 bg-accent-blue/5 rounded-full blur-3xl group-hover:bg-accent-blue/10 transition-colors" />
+
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex gap-2">
+          {project.github && (
+            <a
+              href={`https://github.com/${project.github}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white hover:text-accent-blue transition-colors relative z-10"
+              aria-label={projectCard.viewGithub}
+            >
+              <FaGithub size={20} />
+            </a>
+          )}
+          {project.link && (
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white hover:text-accent-blue transition-colors relative z-10"
+              aria-label={projectCard.viewLive}
+            >
+              <ExternalLink size={20} />
+            </a>
+          )}
+        </div>
+        <ArrowUpRight size={24} className="text-secondary-text group-hover:text-accent-blue transition-colors" aria-hidden="true" />
+      </div>
+
+      {primaryHref ? (
+        <a
+          href={primaryHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={projectCard.viewDetails.replace('{title}', project.title)}
+          className="contents"
+        >
+          {details}
+        </a>
+      ) : details}
     </motion.div>
   );
 };

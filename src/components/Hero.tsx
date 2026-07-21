@@ -1,28 +1,21 @@
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { ArrowRight, Terminal as TerminalIcon, Send } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useState, useRef, useEffect, FormEvent, KeyboardEvent } from 'react';
-import metadata from '../../metadata.json';
+import { useState, useRef, useEffect, FormEvent } from 'react';
+import { useLanguage } from '../i18n/LanguageContext';
 
-// NOTE: contact.github/linkedin below resolve to placeholder company URLs (101techlabs) —
-// confirm real profiles exist before launch, do not assume they're live.
-const COMMANDS = {
-  about: "101 Tech Labs builds websites, booking systems, and automation for local businesses — plus larger platforms for healthcare and enterprise clients when the job calls for it.",
-  skills: "Stack: Angular, React, Node.js, Express, MongoDB, TypeScript, AI/LLMs, Docker, AWS.",
-  projects: "Featured: Flagship OCR Engine (ROR Document System). Also: QME Panel, HRMS System, NGO Platform.",
-  contact: "Email: contact@101techlabs.com | GitHub: @101techlabs | Web: 101techlabs.com",
-  whoami: "101 Tech Labs — full-stack & AI engineering team helping local businesses get online, building since 2021.",
-  location: "Serving [CITY/REGION] and remote clients nationwide.",
-  help: "Available commands: [about, skills, projects, contact, whoami, location, clear, exit]",
-  exit: "Safe mode engaged. To restart, refresh your terminal session.",
-};
+// NOTE: contact.github/linkedin (referenced via terminalCommands.contact) resolve to
+// placeholder company URLs (101techlabs) — confirm real profiles exist before launch.
 
 export const Hero = () => {
-  const { hero } = metadata.content;
+  const { content } = useLanguage();
+  const { hero } = content;
+  const COMMANDS = hero.terminalCommands;
+  const shouldReduceMotion = useReducedMotion();
   const [input, setInput] = useState('');
   const [history, setHistory] = useState<Array<{ id: string, type: 'command' | 'response', text: string }>>([
-    { id: 'initial-1', type: 'response', text: 'Welcome to 101 Tech Labs Terminal v2.0.0' },
-    { id: 'initial-2', type: 'response', text: 'Type "help" to see available commands.' }
+    { id: 'initial-1', type: 'response', text: hero.terminal.welcomeLine1 },
+    { id: 'initial-2', type: 'response', text: hero.terminal.welcomeLine2 }
   ]);
   const terminalEndRef = useRef<HTMLDivElement>(null);
   const isFirstRender = useRef(true);
@@ -57,11 +50,11 @@ export const Hero = () => {
     const commandId = Date.now().toString();
   if (cmd === 'clear') {
     // clear command resets history to a single response entry
-    setHistory([{ id: Date.now().toString(), type: 'response', text: 'Terminal cleared.' }]);
+    setHistory([{ id: Date.now().toString(), type: 'response', text: hero.terminal.cleared }]);
   } else if (COMMANDS[cmd as keyof typeof COMMANDS]) {
     setHistory(prev => [...prev, { id: Date.now().toString() + '-resp', type: 'response', text: COMMANDS[cmd as keyof typeof COMMANDS] }]);
   } else {
-    setHistory(prev => [...prev, { id: Date.now().toString() + '-err', type: 'response', text: `Command not found: ${cmd}. Type "help" for a list of commands.` }]);
+    setHistory(prev => [...prev, { id: Date.now().toString() + '-err', type: 'response', text: hero.terminal.notFound.replace('{cmd}', cmd) }]);
   }
 
     setInput('');
@@ -69,12 +62,6 @@ export const Hero = () => {
 
   const focusInput = () => {
     inputRef.current?.focus();
-  };
-
-  const handleTerminalKeyDown = (e: KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      focusInput();
-    }
   };
 
   return (
@@ -136,11 +123,15 @@ export const Hero = () => {
           className="relative hidden lg:block"
         >
           {/* Futuristic Terminal/Dashboard Mockup */}
-          <button 
-            type="button"
+          {/* No interactive role/aria-label here on purpose: this div contains real
+              focusable children (the input, the submit button) plus a lot of unrelated
+              visible terminal-output text. Giving the wrapper role="button" + an
+              aria-label made assistive tech announce "Interactive terminal" as its name
+              while ignoring all that inner text (an accessible-name/visible-text mismatch,
+              flagged by axe's label-content-name-mismatch rule). onClick here is a mouse-only
+              convenience — keyboard/AT users tab directly to the real input below. */}
+          <div
             onClick={focusInput}
-            onKeyDown={handleTerminalKeyDown}
-            aria-label="Interactive terminal"
             className="w-full h-[400px] rounded-2xl glass p-1 glow-blue relative overflow-hidden group border border-white/10 cursor-text focus:outline-none focus:border-accent-blue/50 text-left block"
           >
             <div className="absolute top-0 left-0 w-full h-8 bg-white/5 border-b border-white/10 flex items-center px-4 gap-2 z-20">
@@ -177,18 +168,18 @@ export const Hero = () => {
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    className="bg-transparent border-none outline-none text-white flex-grow font-mono focus:ring-0 p-0"
-                    placeholder="Type command..."
+                    className="bg-transparent border-none outline-none text-white flex-grow font-mono focus:ring-0 p-0 py-1 min-h-6"
+                    placeholder={hero.terminal.inputPlaceholder}
                     autoFocus
                   />
-                  <button type="submit" className="text-accent-blue opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button type="submit" aria-label={hero.terminal.ariaSendCommand} className="text-accent-blue opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity">
                     <Send size={14} />
                   </button>
                 </form>
                 <div ref={terminalEndRef} />
               </div>
             </div>
-            
+
             {/* Overlay Dashboard Elements */}
             <div className="absolute bottom-4 right-4 w-32 h-20 glass rounded-lg p-2 flex flex-col justify-between border-accent-blue/30 pointer-events-none opacity-50">
               <div className="text-[8px] font-mono text-accent-blue uppercase tracking-tighter">{hero.terminal.systemLoad}</div>
@@ -198,15 +189,15 @@ export const Hero = () => {
                 ))}
               </div>
             </div>
-          </button>
+          </div>
           
           {/* Floating Elements */}
-          <motion.div 
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          <motion.div
+            animate={shouldReduceMotion ? {} : { y: [0, -10, 0] }}
+            transition={{ duration: 4, repeat: shouldReduceMotion ? 0 : Infinity, ease: "easeInOut" }}
             className="absolute -top-10 -right-10 w-24 h-24 glass rounded-2xl flex items-center justify-center glow-purple border-accent-purple/30"
           >
-            <TerminalIcon className="text-accent-purple" size={32} />
+            <TerminalIcon className="text-accent-purple" size={32} aria-hidden="true" />
           </motion.div>
         </motion.div>
       </div>

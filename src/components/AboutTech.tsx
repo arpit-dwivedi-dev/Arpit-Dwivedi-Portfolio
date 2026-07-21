@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Code2, Database, Layout, Server, ShieldCheck, Zap } from 'lucide-react';
-import metadata from '../../metadata.json';
+import { useLanguage } from '../i18n/LanguageContext';
 
 // static Tailwind class maps to avoid JIT stripping
 const techClassMap: Record<string, string> = {
@@ -15,7 +15,8 @@ const catClassMap: Record<string, string> = {
 };
 
 export const About = () => {
-  const { about } = metadata.content;
+  const { content } = useLanguage();
+  const { about } = content;
 
   const icons = [Zap, ShieldCheck, Server, Layout];
 
@@ -34,7 +35,7 @@ export const About = () => {
           
           <div className="space-y-6 text-base md:text-lg text-secondary-text leading-relaxed">
             {about.paragraphs.map((p) => (
-              <p key={p} dangerouslySetInnerHTML={{ __html: p.replaceAll(/local businesses|healthcare and enterprise clients/g, match => `<span class="text-white font-medium">${match}</span>`) }} />
+              <p key={p} dangerouslySetInnerHTML={{ __html: p.replaceAll(/\*\*(.+?)\*\*/g, (_match, phrase) => `<span class="text-white font-medium">${phrase}</span>`) }} />
             ))}
           </div>
 
@@ -103,7 +104,8 @@ export const About = () => {
 };
 
 export const TechStack = () => {
-  const { techStack, techStackSection } = metadata.content;
+  const { content } = useLanguage();
+  const { techStack, techStackSection } = content;
   
   const categories = [
     { name: techStackSection.categories.frontend, icon: Layout, skills: techStack.frontend, color: 'accent-blue' },

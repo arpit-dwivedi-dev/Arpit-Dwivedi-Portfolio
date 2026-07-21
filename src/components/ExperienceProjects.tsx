@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { Layout, Calendar, Zap, Search, CheckCircle2, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import metadata from '../../metadata.json';
+import { useLanguage } from '../i18n/LanguageContext';
 import { ProjectCard } from './ProjectCard';
 
 const serviceIcons = [Layout, Calendar, Zap, Search];
@@ -12,7 +12,8 @@ const serviceClassMap: Record<string, string> = {
 };
 
 export const Services = () => {
-  const { services, servicesSection } = metadata.content;
+  const { content } = useLanguage();
+  const { services, servicesSection } = content;
 
   return (
     <section id="experience" className="py-24 relative overflow-hidden bg-bg-secondary">
@@ -41,18 +42,18 @@ export const Services = () => {
                 className="p-6 rounded-3xl glass border-white/5 hover:border-accent-blue/20 transition-all group"
               >
                 <div className={`${serviceClassMap[color]} w-12 h-12 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
-                  <Icon size={24} />
+                  <Icon size={24} aria-hidden="true" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-3 group-hover:text-accent-blue transition-colors">{service.title}</h3>
                 <p className="text-secondary-text text-sm mb-6 leading-relaxed">{service.description}</p>
-                <div className="flex flex-wrap gap-2">
+                <ul className="flex flex-wrap gap-2 list-none">
                   {service.highlights.map(h => (
-                    <div key={h} className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/5 text-[10px] font-mono text-white">
-                      <CheckCircle2 size={10} className="text-accent-blue" />
+                    <li key={h} className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/5 text-[10px] font-mono text-white">
+                      <CheckCircle2 size={10} className="text-accent-blue" aria-hidden="true" />
                       {h}
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </motion.div>
             );
           })}
@@ -63,8 +64,10 @@ export const Services = () => {
 };
 
 export const Projects = () => {
-  const { projects, projectsSection } = metadata.content;
+  const { lang, content } = useLanguage();
+  const { projects, projectsSection } = content;
   const otherProjects = projects.filter(p => !p.featured).slice(0, 3);
+  const projectsHref = lang === 'hi' ? '/hi/projects' : '/projects';
 
   return (
     <section id="projects" className="py-24 relative overflow-hidden">
@@ -83,8 +86,8 @@ export const Projects = () => {
             <p className="text-secondary-text max-w-sm text-right mb-4">
               {projectsSection.description}
             </p>
-            <Link to="/projects" className="text-accent-blue hover:text-white transition-colors flex items-center gap-2 font-mono text-sm group">
-              View All Projects <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            <Link to={projectsHref} className="text-accent-blue hover:text-white transition-colors flex items-center gap-2 font-mono text-sm group">
+              {projectsSection.viewAll} <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
         </motion.div>
@@ -96,11 +99,11 @@ export const Projects = () => {
         </div>
 
         <div className="mt-12 text-center md:hidden">
-          <Link 
-            to="/projects" 
+          <Link
+            to={projectsHref}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl glass text-accent-blue font-bold hover:bg-white/5 transition-all"
           >
-            View All Projects <ArrowRight size={18} />
+            {projectsSection.viewAll} <ArrowRight size={18} />
           </Link>
         </div>
       </div>

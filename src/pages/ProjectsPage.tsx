@@ -2,13 +2,15 @@ import { useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import metadata from '../../metadata.json';
 import { ProjectCard } from '../components/ProjectCard';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/AchievementsContact';
+import { useLanguage } from '../i18n/LanguageContext';
 
 export const ProjectsPage = () => {
-  const { projects, projectsSection } = metadata.content;
+  const { lang, content } = useLanguage();
+  const { projects, projectsSection } = content;
+  const homeHref = lang === 'hi' ? '/hi' : '/';
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -18,28 +20,28 @@ export const ProjectsPage = () => {
     <div className="relative bg-bg-pure selection:bg-accent-blue/30 selection:text-accent-blue overflow-x-hidden min-h-screen">
       <Navbar />
       
-      <main className="pt-32 pb-24">
+      <main id="main-content" className="pt-32 pb-24">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="mb-12"
           >
-            <Link 
-              to="/" 
+            <Link
+              to={homeHref}
               className="inline-flex items-center gap-2 text-secondary-text hover:text-white transition-colors group mb-8"
             >
               <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-              Back to Home
+              {projectsSection.backToHome}
             </Link>
-            
+
             <div className="flex flex-col md:flex-row justify-between items-center md:items-end gap-6 text-center md:text-left">
               <div>
                 <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-2 block">{projectsSection.label}</span>
-                <h2 className="text-4xl md:text-6xl font-bold tracking-tight">All <span className="text-gradient">Projects</span></h2>
+                <h2 className="text-4xl md:text-6xl font-bold tracking-tight">{projectsSection.pageTitle} <span className="text-gradient">{projectsSection.pageTitleAccent}</span></h2>
               </div>
               <p className="text-secondary-text max-w-md text-right hidden md:block text-lg">
-                Explore our full collection of engineering work — production systems, platforms, and technical experiments.
+                {projectsSection.pageDescription}
               </p>
             </div>
           </motion.div>
@@ -57,7 +59,6 @@ export const ProjectsPage = () => {
       {/* Global Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(0,209,255,0.03),transparent_70%)]" />
-        <div className="absolute top-0 left-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
       </div>
     </div>
   );

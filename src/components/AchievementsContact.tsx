@@ -1,10 +1,13 @@
 import { motion } from 'motion/react';
 import { Zap, Server, Mail, Send, Phone, MapPin } from 'lucide-react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
+import { useState, FormEvent } from 'react';
 import metadata from '../../metadata.json';
+import { useLanguage } from '../i18n/LanguageContext';
 
 export const Achievements = () => {
-  const { impactMetrics, achievementsSection } = metadata.content;
+  const { content } = useLanguage();
+  const { impactMetrics, achievementsSection } = content;
 
   return (
     <section className="py-24 relative overflow-hidden bg-bg-secondary">
@@ -44,7 +47,8 @@ export const Achievements = () => {
 };
 
 export const DevOpsArchitecture = () => {
-  const { devops } = metadata.content;
+  const { content } = useLanguage();
+  const { devops, architecture } = content;
 
   return (
     <section className="py-24 relative overflow-hidden">
@@ -57,7 +61,7 @@ export const DevOpsArchitecture = () => {
             transition={{ duration: 0.8 }}
             className="text-center lg:text-left"
           >
-            <span className="text-accent-purple font-mono text-sm tracking-widest uppercase mb-2 block">{devops.label}</span>
+            <span className="text-accent-purple-text font-mono text-sm tracking-widest uppercase mb-2 block">{devops.label}</span>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-8">{devops.title} <span className="text-gradient">{devops.titleAccent}</span></h2>
             
             <div className="space-y-6 text-base md:text-lg text-secondary-text leading-relaxed">
@@ -68,7 +72,7 @@ export const DevOpsArchitecture = () => {
                 {devops.list.map((item, idx) => (
                   <li key={item} className="flex items-center gap-3">
                     <div className={`w-6 h-6 rounded-full bg-accent-${idx % 2 === 0 ? 'blue' : 'purple'}/10 flex items-center justify-center text-accent-${idx % 2 === 0 ? 'blue' : 'purple'}`}>
-                      <Zap size={14} />
+                      <Zap size={14} aria-hidden="true" />
                     </div>
                     <span className="text-sm font-medium text-white">{item}</span>
                   </li>
@@ -88,32 +92,32 @@ export const DevOpsArchitecture = () => {
             <div className="relative z-10 grid grid-cols-3 gap-4">
               <div className="col-span-3 flex justify-center mb-8">
                 <div className="px-6 py-3 rounded-xl glass border-accent-blue text-accent-blue font-bold text-sm glow-blue">
-                  {metadata.content.architecture.loadBalancer}
+                  {architecture.loadBalancer}
                 </div>
               </div>
               
               <div className="flex flex-col items-center gap-4">
                 <div className="w-full p-4 rounded-xl glass border-white/10 flex flex-col items-center gap-2">
-                  <Server size={24} className="text-white" />
-                  <span className="text-[10px] font-mono text-secondary-text">{metadata.content.architecture.nodeApp} 1</span>
+                  <Server size={24} className="text-white" aria-hidden="true" />
+                  <span className="text-[10px] font-mono text-secondary-text">{architecture.nodeApp} 1</span>
                 </div>
               </div>
               <div className="flex flex-col items-center gap-4">
                 <div className="w-full p-4 rounded-xl glass border-white/10 flex flex-col items-center gap-2">
-                  <Server size={24} className="text-white" />
-                  <span className="text-[10px] font-mono text-secondary-text">{metadata.content.architecture.nodeApp} 2</span>
+                  <Server size={24} className="text-white" aria-hidden="true" />
+                  <span className="text-[10px] font-mono text-secondary-text">{architecture.nodeApp} 2</span>
                 </div>
               </div>
               <div className="flex flex-col items-center gap-4">
                 <div className="w-full p-4 rounded-xl glass border-white/10 flex flex-col items-center gap-2">
-                  <Server size={24} className="text-white" />
-                  <span className="text-[10px] font-mono text-secondary-text">{metadata.content.architecture.nodeApp} 3</span>
+                  <Server size={24} className="text-white" aria-hidden="true" />
+                  <span className="text-[10px] font-mono text-secondary-text">{architecture.nodeApp} 3</span>
                 </div>
               </div>
 
               <div className="col-span-3 flex justify-center mt-8">
                 <div className="px-6 py-3 rounded-xl glass border-accent-purple text-accent-purple font-bold text-sm glow-purple">
-                  {metadata.content.architecture.database}
+                  {architecture.database}
                 </div>
               </div>
             </div>
@@ -130,7 +134,8 @@ export const DevOpsArchitecture = () => {
 };
 
 export const LocalTrust = () => {
-  const { localTrust } = metadata.content;
+  const { content } = useLanguage();
+  const { localTrust } = content;
 
   return (
     <section className="py-24 relative overflow-hidden bg-bg-secondary">
@@ -149,19 +154,19 @@ export const LocalTrust = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
           <a href={`tel:+${localTrust.phone.replace(/\D/g, '')}`} className="p-6 rounded-2xl glass border-white/5 flex items-center gap-4 group hover:border-accent-blue/20 transition-all">
             <div className="w-12 h-12 rounded-xl bg-accent-blue/10 flex items-center justify-center text-accent-blue">
-              <Phone size={20} />
+              <Phone size={20} aria-hidden="true" />
             </div>
             <div>
-              <div className="text-xs font-mono text-secondary-text uppercase tracking-widest">Call Us</div>
+              <div className="text-xs font-mono text-secondary-text uppercase tracking-widest">{localTrust.callLabel}</div>
               <div className="text-lg font-bold text-white group-hover:text-accent-blue transition-colors">{localTrust.phone}</div>
             </div>
           </a>
           <div className="p-6 rounded-2xl glass border-white/5 flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-accent-purple/10 flex items-center justify-center text-accent-purple">
-              <MapPin size={20} />
+              <MapPin size={20} aria-hidden="true" />
             </div>
             <div>
-              <div className="text-xs font-mono text-secondary-text uppercase tracking-widest">Service Area</div>
+              <div className="text-xs font-mono text-secondary-text uppercase tracking-widest">{localTrust.serviceAreaLabel}</div>
               <div className="text-lg font-bold text-white">{localTrust.serviceArea}</div>
             </div>
           </div>
@@ -170,7 +175,6 @@ export const LocalTrust = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {localTrust.testimonials.map((testimonial, idx) => (
             <div key={idx} className="p-6 rounded-2xl glass border border-dashed border-white/20 relative">
-              <span className="absolute top-4 right-4 text-[9px] font-mono uppercase tracking-widest text-accent-purple/80">Placeholder</span>
               <p className="text-secondary-text text-sm italic mb-4">&ldquo;{testimonial.quote}&rdquo;</p>
               <div className="text-sm font-bold text-white">{testimonial.name}</div>
               <div className="text-xs text-secondary-text">{testimonial.business}</div>
@@ -182,8 +186,70 @@ export const LocalTrust = () => {
   );
 };
 
+// Web3Forms access key — safe to expose client-side, it only lets people submit
+// mail to the inbox that generated it. Get one free at https://web3forms.com/.
+const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY as string | undefined;
+
 export const Contact = () => {
-  const { contact } = metadata.content;
+  const { content } = useLanguage();
+  const { contact } = content;
+  const [values, setValues] = useState({ name: '', email: '', message: '' });
+  const [errors, setErrors] = useState<{ name?: string; email?: string; message?: string }>({});
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    const nextErrors: typeof errors = {};
+    if (!values.name.trim()) nextErrors.name = contact.form.errors.nameRequired;
+    if (!values.email.trim()) {
+      nextErrors.email = contact.form.errors.emailRequired;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
+      nextErrors.email = contact.form.errors.emailInvalid;
+    }
+    if (!values.message.trim()) nextErrors.message = contact.form.errors.messageRequired;
+
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) {
+      setStatus('idle');
+      return;
+    }
+
+    const subject = contact.mailSubjectTemplate.replace('{name}', values.name);
+
+    if (!WEB3FORMS_KEY) {
+      // No access key configured (e.g. local dev without .env) — fall back to
+      // opening the visitor's own mail client rather than silently failing.
+      const mailtoSubject = encodeURIComponent(subject);
+      const body = encodeURIComponent(`${values.message}\n\nFrom: ${values.name} (${values.email})`);
+      window.location.href = `mailto:${contact.email}?subject=${mailtoSubject}&body=${body}`;
+      setStatus('sent');
+      return;
+    }
+
+    setStatus('sending');
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          subject,
+          name: values.name,
+          email: values.email,
+          message: values.message,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setStatus('sent');
+        setValues({ name: '', email: '', message: '' });
+      } else {
+        setStatus('error');
+      }
+    } catch {
+      setStatus('error');
+    }
+  };
 
   return (
     <section id="contact" className="py-24 relative overflow-hidden">
@@ -206,7 +272,7 @@ export const Contact = () => {
             <div className="space-y-6 flex flex-col items-center lg:items-start">
               <a href={`mailto:${contact.email}`} className="flex items-center gap-4 group w-full max-w-sm lg:max-w-none">
                 <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white group-hover:bg-accent-blue group-hover:text-bg-pure transition-all">
-                  <Mail size={20} />
+                  <Mail size={20} aria-hidden="true" />
                 </div>
                 <div>
                   <div className="text-xs font-mono text-secondary-text uppercase tracking-widest">{contact.form.email}</div>
@@ -241,25 +307,71 @@ export const Contact = () => {
             transition={{ delay: 0.2 }}
             className="p-8 rounded-3xl glass border-white/10 glow-blue/5"
           >
-            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-6" onSubmit={handleSubmit} noValidate>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-xs font-mono text-secondary-text uppercase tracking-widest">{contact.form.name}</label>
-                  <input type="text" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-accent-blue focus:outline-none transition-colors" placeholder={`Your ${contact.form.name}`} />
+                  <label htmlFor="contact-name" className="text-xs font-mono text-secondary-text uppercase tracking-widest">{contact.form.name}</label>
+                  <input
+                    id="contact-name"
+                    type="text"
+                    required
+                    aria-required="true"
+                    aria-invalid={errors.name ? true : undefined}
+                    aria-describedby={errors.name ? 'contact-name-error' : undefined}
+                    value={values.name}
+                    onChange={(e) => setValues(v => ({ ...v, name: e.target.value }))}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-accent-blue focus:outline-none transition-colors"
+                    placeholder={contact.form.namePlaceholder}
+                  />
+                  {errors.name && <p id="contact-name-error" role="alert" className="text-red-400 text-xs">{errors.name}</p>}
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-mono text-secondary-text uppercase tracking-widest">{contact.form.email}</label>
-                  <input type="email" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-accent-blue focus:outline-none transition-colors" placeholder="your@email.com" />
+                  <label htmlFor="contact-email" className="text-xs font-mono text-secondary-text uppercase tracking-widest">{contact.form.email}</label>
+                  <input
+                    id="contact-email"
+                    type="email"
+                    required
+                    aria-required="true"
+                    aria-invalid={errors.email ? true : undefined}
+                    aria-describedby={errors.email ? 'contact-email-error' : undefined}
+                    value={values.email}
+                    onChange={(e) => setValues(v => ({ ...v, email: e.target.value }))}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-accent-blue focus:outline-none transition-colors"
+                    placeholder={contact.form.emailPlaceholder}
+                  />
+                  {errors.email && <p id="contact-email-error" role="alert" className="text-red-400 text-xs">{errors.email}</p>}
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-xs font-mono text-secondary-text uppercase tracking-widest">{contact.form.message}</label>
-                <textarea rows={4} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-accent-blue focus:outline-none transition-colors" placeholder="Tell us about your project..." />
+                <label htmlFor="contact-message" className="text-xs font-mono text-secondary-text uppercase tracking-widest">{contact.form.message}</label>
+                <textarea
+                  id="contact-message"
+                  rows={4}
+                  required
+                  aria-required="true"
+                  aria-invalid={errors.message ? true : undefined}
+                  aria-describedby={errors.message ? 'contact-message-error' : undefined}
+                  value={values.message}
+                  onChange={(e) => setValues(v => ({ ...v, message: e.target.value }))}
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-accent-blue focus:outline-none transition-colors"
+                  placeholder={contact.form.messagePlaceholder}
+                />
+                {errors.message && <p id="contact-message-error" role="alert" className="text-red-400 text-xs">{errors.message}</p>}
               </div>
-              <button className="w-full py-4 bg-accent-blue text-bg-pure font-bold rounded-xl flex items-center justify-center gap-2 hover:glow-blue transition-all group">
-                {contact.form.button}
-                <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+              <button
+                type="submit"
+                disabled={status === 'sending'}
+                className="w-full py-4 bg-accent-blue text-bg-pure font-bold rounded-xl flex items-center justify-center gap-2 hover:glow-blue transition-all group disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {status === 'sending' ? contact.form.sending : contact.form.button}
+                <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" aria-hidden="true" />
               </button>
+              {status === 'sent' && (
+                <p role="status" className="text-accent-blue text-sm text-center">{contact.statusSent}</p>
+              )}
+              {status === 'error' && (
+                <p role="alert" className="text-red-400 text-sm text-center">{contact.statusError.replace('{email}', contact.email)}</p>
+              )}
             </form>
           </motion.div>
         </div>
@@ -269,7 +381,8 @@ export const Contact = () => {
 };
 
 export const Footer = () => {
-  const { navLinks, footer } = metadata.content;
+  const { content } = useLanguage();
+  const { navLinks, footer } = content;
 
   return (
     <footer className="py-12 border-t border-white/5 bg-bg-pure">
@@ -283,11 +396,11 @@ export const Footer = () => {
         <div className="text-secondary-text text-sm font-mono">
           © {new Date().getFullYear()} {metadata.name}. {footer.rights}
         </div>
-        <div className="flex items-center gap-6">
+        <nav aria-label="Footer" className="flex items-center gap-6">
           {navLinks.slice(0, 3).map(link => (
             <a key={link.name} href={link.href} className="text-secondary-text hover:text-white transition-colors text-sm">{link.name}</a>
           ))}
-        </div>
+        </nav>
       </div>
     </footer>
   );

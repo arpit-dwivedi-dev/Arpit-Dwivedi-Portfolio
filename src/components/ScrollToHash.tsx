@@ -12,6 +12,10 @@ export const ScrollToHash = () => {
       if (element) {
         setTimeout(() => {
           element.scrollIntoView({ behavior: 'smooth' });
+          if (!element.hasAttribute('tabindex')) {
+            element.setAttribute('tabindex', '-1');
+          }
+          element.focus({ preventScroll: true });
         }, 100);
       }
     } else if (prevPathname.current !== pathname) {

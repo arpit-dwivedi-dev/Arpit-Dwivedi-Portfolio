@@ -5,7 +5,7 @@ import { About } from '../components/AboutTech';
 import { Services, Projects } from '../components/ExperienceProjects';
 import { DevOpsArchitecture, LocalTrust, Contact, Footer } from '../components/AchievementsContact';
 import { motion, useScroll, useSpring } from 'motion/react';
-import metadata from '../../metadata.json';
+import { useLanguage } from '../i18n/LanguageContext';
 
 export const HomePage = () => {
   const { scrollYProgress } = useScroll();
@@ -15,7 +15,8 @@ export const HomePage = () => {
     restDelta: 0.001
   });
 
-  const { navLinks } = metadata.content;
+  const { content } = useLanguage();
+  const { navLinks } = content;
 
   return (
     <div className="relative bg-bg-pure selection:bg-accent-blue/30 selection:text-accent-blue overflow-x-hidden">
@@ -31,15 +32,18 @@ export const HomePage = () => {
             <a
               key={link.href}
               href={link.href}
-              className="w-2 h-2 rounded-full bg-white/20 hover:bg-accent-blue transition-all hover:scale-150"
+              aria-label={`Go to ${link.name}`}
               title={link.name}
-            />
+              className="group p-2 -m-2 flex items-center justify-center"
+            >
+              <span className="w-2 h-2 rounded-full bg-white/20 group-hover:bg-accent-blue transition-all group-hover:scale-150" aria-hidden="true" />
+            </a>
           ))}
       </div>
 
       <Navbar />
-      
-      <main>
+
+      <main id="main-content">
         <Hero />
         <FeaturedProject />
         <About />
@@ -55,7 +59,6 @@ export const HomePage = () => {
       {/* Global Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(0,209,255,0.03),transparent_70%)]" />
-        <div className="absolute top-0 left-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
       </div>
     </div>
   );

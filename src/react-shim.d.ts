@@ -11,6 +11,7 @@ declare module 'react' {
   export type KeyboardEvent = any;
   export type Dispatch<A> = (value: A) => void;
   export type SetStateAction<S> = S | ((prevState: S) => S);
+  export type ReactNode = any;
   // Provide a minimal React namespace for JSX and FC usage
   export interface FunctionComponent<P = {}> {
     (props: P & { children?: any }): any;
@@ -19,6 +20,13 @@ declare module 'react' {
   }
   export const FC: FunctionComponent;
   export const StrictMode: any;
+  export interface Context<T> {
+    Provider: FunctionComponent<{ value: T; children?: any }>;
+    Consumer: FunctionComponent<{ children: (value: T) => any }>;
+    displayName?: string;
+  }
+  export function createContext<T>(defaultValue: T): Context<T>;
+  export function useContext<T>(context: Context<T>): T;
   const React: any;
   export default React;
 }

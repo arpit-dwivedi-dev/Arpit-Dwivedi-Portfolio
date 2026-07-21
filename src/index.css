@@ -7,6 +7,11 @@
 
   --color-accent-blue: #00D1FF;
   --color-accent-purple: #7C3AED;
+  /* Same hue as accent-purple, brightened for text use: #7C3AED on #000 measures
+     3.69:1 (fails WCAG 1.4.3's 4.5:1 minimum for normal-size text). This token
+     measures 7.72:1 on black. Use for TEXT; keep accent-purple for icon/bg fills,
+     where the 3:1 non-text-contrast minimum already passes. */
+  --color-accent-purple-text: #A78BFA;
   --color-bg-pure: #000000;
   --color-bg-secondary: #0F0F0F;
   --color-bg-tertiary: #1A1A1A;
@@ -16,6 +21,13 @@
 @layer base {
   body {
     @apply bg-bg-pure text-white font-sans antialiased selection:bg-accent-blue/30 selection:text-accent-blue;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-pulse,
+    .animate-ping {
+      animation: none;
+    }
   }
 }
 

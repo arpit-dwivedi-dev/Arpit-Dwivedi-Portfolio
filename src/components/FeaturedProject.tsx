@@ -1,10 +1,12 @@
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import { ExternalLink, Zap, Shield, FileText } from 'lucide-react';
-import metadata from '../../metadata.json';
+import { useLanguage } from '../i18n/LanguageContext';
 
 export const FeaturedProject = () => {
-  const { projects, featuredProject } = metadata.content;
+  const { content } = useLanguage();
+  const { projects, featuredProject } = content;
   const featured = projects.find(p => p.featured);
+  const shouldReduceMotion = useReducedMotion();
   if (!featured) return null;
 
   const handleClick = () => {
@@ -36,8 +38,7 @@ export const FeaturedProject = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          onClick={handleClick}
-          className="group relative rounded-3xl overflow-hidden bg-bg-secondary border border-white/10 glow-blue/10 cursor-pointer transition-all"
+          className="group relative rounded-3xl overflow-hidden bg-bg-secondary border border-white/10 glow-blue/10 transition-all"
         >
           <div className="grid grid-cols-1 lg:grid-cols-2">
             {/* Project Info */}
@@ -88,9 +89,9 @@ export const FeaturedProject = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-accent-blue/10 to-transparent opacity-50" />
               
               {/* Abstract UI Elements */}
-              <motion.div 
-                animate={{ y: [0, -20, 0] }}
-                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              <motion.div
+                animate={shouldReduceMotion ? {} : { y: [0, -20, 0] }}
+                transition={{ duration: 6, repeat: shouldReduceMotion ? 0 : Infinity, ease: "easeInOut" }}
                 className="w-full max-w-md aspect-[4/3] rounded-2xl glass border-white/10 shadow-2xl relative z-10 p-6 overflow-hidden"
               >
                 <div className="flex items-center justify-between mb-6">
