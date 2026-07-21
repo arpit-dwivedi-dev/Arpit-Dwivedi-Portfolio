@@ -82,7 +82,7 @@ export const Navbar = () => {
           aria-label={isOpen ? nav.ariaCloseMenu : nav.ariaOpenMenu}
           aria-expanded={isOpen}
           aria-controls="mobile-menu"
-          className="md:hidden text-white relative z-50"
+          className="md:hidden text-white relative z-50 p-2.5 -m-2.5"
           onClick={() => setIsOpen(!isOpen)}
         >
           {isOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
@@ -94,7 +94,7 @@ export const Navbar = () => {
         id="mobile-menu"
         initial={false}
         animate={isOpen ? { opacity: 1, x: 0 } : { opacity: 0, x: '100%' }}
-        className="md:hidden fixed inset-0 z-40 bg-bg-pure/95 backdrop-blur-xl flex flex-col justify-center items-center gap-8 p-6"
+        className="md:hidden fixed inset-0 z-40 bg-bg-pure/95 backdrop-blur-xl flex flex-col justify-center items-center gap-8 p-6 overflow-y-auto"
       >
         {navLinks.map((link, idx) => (
           <motion.div
@@ -121,10 +121,10 @@ export const Navbar = () => {
           className="flex flex-col items-center gap-8 mt-8"
         >
           <div className="flex items-center gap-8">
-            <a href={`https://github.com/${contact.github}`} target="_blank" rel="noreferrer" aria-label={nav.ariaGithub} tabIndex={isOpen ? undefined : -1} className="p-2 -m-2 text-secondary-text hover:text-accent-blue transition-colors"><FaGithub size={24} /></a>
-            <a href={`https://linkedin.com/company/${contact.linkedin.replaceAll(/\s+/g, '-').toLowerCase()}`} target="_blank" rel="noreferrer" aria-label={nav.ariaLinkedin} tabIndex={isOpen ? undefined : -1} className="p-2 -m-2 text-secondary-text hover:text-accent-blue transition-colors"><FaLinkedin size={24} /></a>
+            <a href={`https://github.com/${contact.github}`} target="_blank" rel="noreferrer" aria-label={nav.ariaGithub} tabIndex={isOpen ? undefined : -1} className="p-3 -m-3 text-secondary-text hover:text-accent-blue transition-colors"><FaGithub size={24} /></a>
+            <a href={`https://linkedin.com/company/${contact.linkedin.replaceAll(/\s+/g, '-').toLowerCase()}`} target="_blank" rel="noreferrer" aria-label={nav.ariaLinkedin} tabIndex={isOpen ? undefined : -1} className="p-3 -m-3 text-secondary-text hover:text-accent-blue transition-colors"><FaLinkedin size={24} /></a>
           </div>
-          <LanguageSwitcher tabIndex={isOpen ? undefined : -1} onNavigate={() => setIsOpen(false)} />
+          <LanguageSwitcher size="lg" tabIndex={isOpen ? undefined : -1} onNavigate={() => setIsOpen(false)} />
         </motion.div>
       </motion.div>
     </nav>

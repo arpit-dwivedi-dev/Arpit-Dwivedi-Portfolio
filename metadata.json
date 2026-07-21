@@ -62,21 +62,21 @@
         ],
         "tags": ["Angular", "Node.js", "OCR", "AI", "Performance"],
         "featured": true,
-        "link": "https://example.com/medical-flagship"
+        "link": "https://uat-altos-ui.azurewebsites.net/"
       },
       {
         "title": "QME Panel",
         "description": "Healthcare analytics dashboard providing deep insights into medical evaluations and panel management.",
         "tags": ["Angular", "Node.js", "D3.js", "MongoDB"],
         "metrics": [{ "label": "Modules", "value": "10+" }],
-        "link": "https://example.com/qme-panel"
+        "link": "https://uat-qmepanel-ui.azurewebsites.net/"
       },
       {
         "title": "HRMS System",
         "description": "Comprehensive Human Resource Management System with over 25 integrated modules for enterprise use.",
         "tags": ["MEAN Stack", "Microservices", "Redis"],
         "metrics": [{ "label": "Modules", "value": "25+" }],
-        "link": "https://example.com/hrms"
+        "link": "https://arpit-dwivedi-dev.github.io/HRMS/"
       },
       {
         "title": "NGO Website",

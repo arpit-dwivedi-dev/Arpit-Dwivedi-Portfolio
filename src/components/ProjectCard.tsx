@@ -71,7 +71,7 @@ export const ProjectCard = ({ project, index }: ProjectCardProps) => {
               href={`https://github.com/${project.github}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white hover:text-accent-blue transition-colors relative z-10"
+              className="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center text-white hover:text-accent-blue transition-colors relative z-10"
               aria-label={projectCard.viewGithub}
             >
               <FaGithub size={20} />
@@ -82,7 +82,7 @@ export const ProjectCard = ({ project, index }: ProjectCardProps) => {
               href={project.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white hover:text-accent-blue transition-colors relative z-10"
+              className="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center text-white hover:text-accent-blue transition-colors relative z-10"
               aria-label={projectCard.viewLive}
             >
               <ExternalLink size={20} />

@@ -57,7 +57,7 @@ export const FeaturedProject = () => {
                 {featured.description}
               </p>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-10">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-10 [&>*:nth-last-child(1):nth-child(odd)]:col-span-2 sm:[&>*:nth-last-child(1):nth-child(odd)]:col-span-1">
                 {featured.metrics?.map((metric) => (
                   <div key={metric.label} className="p-4 rounded-2xl glass border-white/5 group-hover:border-accent-blue/20 transition-colors">
                     <div className="text-xl sm:text-2xl font-bold text-white mb-1">{metric.value}</div>
@@ -85,14 +85,26 @@ export const FeaturedProject = () => {
             </div>
 
             {/* Project Visual Mockup */}
-            <div className="relative bg-bg-tertiary p-8 flex items-center justify-center overflow-hidden">
+            {/* Extra right padding on mobile only: the fixed WhatsApp button (right-6,
+                56px wide) occupies a 24-80px inset column from the screen edge. Without
+                this, the card's right edge (24px page gutter + 32px panel padding = 56px
+                inset) sits inside that column, so it collides with the button at whatever
+                scroll position the card's bottom happens to land on. Pushing the inset
+                past 80px removes the shared column entirely — no scroll position can
+                overlap them. sm+ reverts to the original padding (untouched there). */}
+            <div className="relative bg-bg-tertiary p-8 pr-20 sm:pr-8 flex items-center justify-center overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-accent-blue/10 to-transparent opacity-50" />
               
               {/* Abstract UI Elements */}
               <motion.div
                 animate={shouldReduceMotion ? {} : { y: [0, -20, 0] }}
                 transition={{ duration: 6, repeat: shouldReduceMotion ? 0 : Infinity, ease: "easeInOut" }}
-                className="w-full max-w-md aspect-[4/3] rounded-2xl glass border-white/10 shadow-2xl relative z-10 p-6 overflow-hidden"
+                // No fixed aspect ratio below sm: at narrow widths the card shrinks
+                // enough that aspect-[4/3] forces a height shorter than its content
+                // (header + text lines + the OCR/AI boxes), so overflow-hidden was
+                // clipping the bottom of the card. Letting height follow content on
+                // mobile fixes that; sm+ restores the original fixed-ratio look.
+                className="w-full max-w-md aspect-auto sm:aspect-[4/3] rounded-2xl glass border-white/10 shadow-2xl relative z-10 p-6 overflow-hidden"
               >
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex gap-2">

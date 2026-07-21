@@ -398,7 +398,7 @@ export const Footer = () => {
         </div>
         <nav aria-label="Footer" className="flex items-center gap-6">
           {navLinks.slice(0, 3).map(link => (
-            <a key={link.name} href={link.href} className="text-secondary-text hover:text-white transition-colors text-sm">{link.name}</a>
+            <a key={link.name} href={link.href} className="py-3 -my-3 text-secondary-text hover:text-white transition-colors text-sm">{link.name}</a>
           ))}
         </nav>
       </div>
