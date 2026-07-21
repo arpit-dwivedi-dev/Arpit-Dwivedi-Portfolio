@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://arpit-dwivedi-dev.github.io/101TechLabs/",
+  "homepage": "https://arpit-dwivedi-dev.github.io/Arpit-Dwivedi-Portfolio/",
   "scripts": {
     "dev": "vite --port=4321 --host=0.0.0.0",
     "predeploy": "npm run build",
