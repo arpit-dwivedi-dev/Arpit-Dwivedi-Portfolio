@@ -3,10 +3,9 @@ import {createRoot} from 'react-dom/client';
 import * as Sentry from '@sentry/react';
 import App from './App.tsx';
 import './index.css';
-import { initErrorAndPerformanceMonitoring, initVisitorAnalytics } from './monitoring';
+import { initErrorAndPerformanceMonitoring } from './monitoring';
 
 initErrorAndPerformanceMonitoring();
-initVisitorAnalytics();
 
 history.scrollRestoration = 'manual';
 
