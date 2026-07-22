@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://101techlabs.com/sitemap.xml
