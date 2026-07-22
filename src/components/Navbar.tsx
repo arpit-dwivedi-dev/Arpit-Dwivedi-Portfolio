@@ -32,61 +32,63 @@ export const Navbar = () => {
   }, [isOpen]);
 
   return (
-    <nav aria-label="Primary" className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-bg-pure/80 backdrop-blur-md border-b border-white/10 py-4' : 'bg-transparent py-6'}`}>
-      <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-        >
-          <Link
-            to={homeHref}
-            className="text-2xl font-bold tracking-tighter flex items-center gap-2"
-          >
-            <img src="/logo.png" alt="" className="w-8 h-8 rounded-lg glow-blue" />
-            <span>{metadata.name.split(' ')[0]}<span className="text-accent-blue"> {metadata.name.split(' ').slice(1).join(' ')}</span></span>
-          </Link>
-        </motion.div>
-
-        {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link, idx) => (
-            <motion.div
-              key={link.name}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.1 }}
-            >
-              <Link
-                 to={link.href.startsWith('#') ? link.href : link.href}
-                className="text-sm font-medium text-secondary-text hover:text-white transition-colors relative group"
-              >
-                {link.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent-blue transition-all group-hover:w-full" />
-              </Link>
-            </motion.div>
-          ))}
+    <nav aria-label="Primary" className="fixed top-0 left-0 w-full z-50">
+      <div className={`transition-all duration-300 ${scrolled ? 'bg-bg-pure/80 backdrop-blur-md border-b border-white/10 py-4' : 'bg-transparent py-6'}`}>
+        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="flex items-center gap-4 ml-4"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
           >
-            {/* PLACEHOLDER: contact.github/linkedin are not confirmed live company profiles — verify before launch */}
-            <a href={`https://github.com/${contact.github}`} target="_blank" rel="noreferrer" aria-label={nav.ariaGithub} className="p-2 -m-2 text-secondary-text hover:text-accent-blue transition-colors"><FaGithub size={18} /></a>
-            <a href={`https://linkedin.com/company/${contact.linkedin.replaceAll(/\s+/g, '-').toLowerCase()}`} target="_blank" rel="noreferrer" aria-label={nav.ariaLinkedin} className="p-2 -m-2 text-secondary-text hover:text-accent-blue transition-colors"><FaLinkedin size={18} /></a>
-            <LanguageSwitcher />
+            <Link
+              to={homeHref}
+              className="text-2xl font-bold tracking-tighter flex items-center gap-2"
+            >
+              <img src="/logo.png" alt="" className="w-8 h-8 rounded-lg glow-blue" />
+              <span>{metadata.name.split(' ')[0]}<span className="text-accent-blue"> {metadata.name.split(' ').slice(1).join(' ')}</span></span>
+            </Link>
           </motion.div>
-        </div>
 
-        {/* Mobile Menu Toggle */}
-        <button
-          aria-label={isOpen ? nav.ariaCloseMenu : nav.ariaOpenMenu}
-          aria-expanded={isOpen}
-          aria-controls="mobile-menu"
-          className="md:hidden text-white relative z-50 p-2.5 -m-2.5"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
-        </button>
+          {/* Desktop Links */}
+          <div className="hidden md:flex items-center gap-8">
+            {navLinks.map((link, idx) => (
+              <motion.div
+                key={link.name}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.1 }}
+              >
+                <Link
+                   to={link.href.startsWith('#') ? link.href : link.href}
+                  className="text-sm font-medium text-secondary-text hover:text-white transition-colors relative group"
+                >
+                  {link.name}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent-blue transition-all group-hover:w-full" />
+                </Link>
+              </motion.div>
+            ))}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex items-center gap-4 ml-4"
+            >
+              {/* PLACEHOLDER: contact.github/linkedin are not confirmed live company profiles — verify before launch */}
+              <a href={`https://github.com/${contact.github}`} target="_blank" rel="noreferrer" aria-label={nav.ariaGithub} className="p-2 -m-2 text-secondary-text hover:text-accent-blue transition-colors"><FaGithub size={18} /></a>
+              <a href={`https://linkedin.com/company/${contact.linkedin.replaceAll(/\s+/g, '-').toLowerCase()}`} target="_blank" rel="noreferrer" aria-label={nav.ariaLinkedin} className="p-2 -m-2 text-secondary-text hover:text-accent-blue transition-colors"><FaLinkedin size={18} /></a>
+              <LanguageSwitcher />
+            </motion.div>
+          </div>
+
+          {/* Mobile Menu Toggle */}
+          <button
+            aria-label={nav.ariaOpenMenu}
+            aria-expanded={isOpen}
+            aria-controls="mobile-menu"
+            className={`md:hidden text-white relative z-50 p-2.5 -m-2.5 transition-opacity ${isOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+            onClick={() => setIsOpen(true)}
+          >
+            <Menu aria-hidden="true" />
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -96,6 +98,15 @@ export const Navbar = () => {
         animate={isOpen ? { opacity: 1, x: 0 } : { opacity: 0, x: '100%' }}
         className="md:hidden fixed inset-0 z-40 bg-bg-pure/95 backdrop-blur-xl flex flex-col justify-center items-center gap-8 p-6 overflow-y-auto"
       >
+        <button
+          aria-label={nav.ariaCloseMenu}
+          onClick={() => setIsOpen(false)}
+          tabIndex={isOpen ? undefined : -1}
+          className="absolute top-6 right-6 text-white p-2.5 -m-2.5"
+        >
+          <X aria-hidden="true" />
+        </button>
+
         {navLinks.map((link, idx) => (
           <motion.div
             key={link.name}
