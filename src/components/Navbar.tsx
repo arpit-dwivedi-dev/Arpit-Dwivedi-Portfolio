@@ -43,7 +43,10 @@ export const Navbar = () => {
               to={homeHref}
               className="text-2xl font-bold tracking-tighter flex items-center gap-2"
             >
-              <img src="/logo-64.png" width={32} height={32} alt="" className="w-8 h-8 rounded-lg glow-blue" />
+              <picture>
+                <source srcSet="/logo-64.webp" type="image/webp" />
+                <img src="/logo-64.png" width={32} height={32} alt="" className="w-8 h-8 rounded-lg glow-blue" />
+              </picture>
               <span>{metadata.name.split(' ')[0]}<span className="text-accent-blue"> {metadata.name.split(' ').slice(1).join(' ')}</span></span>
             </Link>
           </motion.div>

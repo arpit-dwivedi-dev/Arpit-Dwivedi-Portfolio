@@ -72,8 +72,13 @@ export const Hero = () => {
 
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
         <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
+          // No opacity in the initial/animate keyframes here on purpose: this block
+          // contains the LCP element (the h1). Animating opacity 0 -> 1 keeps it
+          // unpainted until framer-motion's JS hydrates and runs, which was showing
+          // up as a multi-second "element render delay" in Lighthouse/CrUX. The
+          // slide-in (x) is kept since a transform doesn't hide the element from LCP.
+          initial={{ x: -50 }}
+          animate={{ x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="text-center lg:text-left flex flex-col items-center lg:items-start"
         >
