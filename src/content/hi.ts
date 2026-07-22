@@ -47,6 +47,20 @@ export const hiContent: typeof metadata.content = {
   ],
   projects: [
     {
+      title: 'NGO Website',
+      description: 'एक नॉन-प्रॉफिट संस्था की डिजिटल उपस्थिति बढ़ाने के लिए हाई-रेस्पॉन्सिव और SEO-फ्रेंडली प्लेटफ़ॉर्म।',
+      tags: ['React', 'Tailwind', 'SEO'],
+      metrics: [{ label: 'SEO स्कोर', value: '100' }],
+      link: 'https://www.rashtriyaswasthyasangathan.org/',
+    },
+    {
+      title: 'HRMS System',
+      description: 'एंटरप्राइज़ उपयोग के लिए 25 से अधिक इंटीग्रेटेड मॉड्यूल्स वाला व्यापक ह्यूमन रिसोर्स मैनेजमेंट सिस्टम।',
+      tags: ['MEAN Stack', 'Microservices', 'Redis'],
+      metrics: [{ label: 'मॉड्यूल्स', value: '25+' }],
+      link: 'https://arpit-dwivedi-dev.github.io/HRMS/',
+    },
+    {
       title: 'ROR Document System',
       subtitle: 'हेल्थकेयर AI प्लेटफ़ॉर्म',
       description: 'हेल्थकेयर सेक्टर के लिए एक प्रमुख AI-संचालित डॉक्यूमेंट मैनेजमेंट सिस्टम, जो बड़े PDF डेटासेट को बेहद कुशलता से संभालता है।',
@@ -57,28 +71,12 @@ export const hiContent: typeof metadata.content = {
       ],
       tags: ['Angular', 'Node.js', 'OCR', 'AI', 'Performance'],
       featured: true,
-      link: 'https://uat-altos-ui.azurewebsites.net/',
     },
     {
       title: 'QME Panel',
       description: 'हेल्थकेयर एनालिटिक्स डैशबोर्ड जो मेडिकल इवैल्यूएशन और पैनल मैनेजमेंट की गहरी जानकारी देता है।',
       tags: ['Angular', 'Node.js', 'D3.js', 'MongoDB'],
       metrics: [{ label: 'मॉड्यूल्स', value: '10+' }],
-      link: 'https://uat-qmepanel-ui.azurewebsites.net/',
-    },
-    {
-      title: 'HRMS System',
-      description: 'एंटरप्राइज़ उपयोग के लिए 25 से अधिक इंटीग्रेटेड मॉड्यूल्स वाला व्यापक ह्यूमन रिसोर्स मैनेजमेंट सिस्टम।',
-      tags: ['MEAN Stack', 'Microservices', 'Redis'],
-      metrics: [{ label: 'मॉड्यूल्स', value: '25+' }],
-      link: 'https://arpit-dwivedi-dev.github.io/HRMS/',
-    },
-    {
-      title: 'NGO Website',
-      description: 'एक नॉन-प्रॉफिट संस्था की डिजिटल उपस्थिति बढ़ाने के लिए हाई-रेस्पॉन्सिव और SEO-फ्रेंडली प्लेटफ़ॉर्म।',
-      tags: ['React', 'Tailwind', 'SEO'],
-      metrics: [{ label: 'SEO स्कोर', value: '100' }],
-      link: 'https://www.rashtriyaswasthyasangathan.org/',
     },
   ],
   impactMetrics: [

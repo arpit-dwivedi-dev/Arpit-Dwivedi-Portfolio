@@ -123,14 +123,14 @@ export const FeaturedProject = () => {
                 <div className="space-y-4">
                   <div className="h-4 w-3/4 bg-white/5 rounded-full" />
                   <div className="h-4 w-1/2 bg-white/5 rounded-full" />
-                  <div className="grid grid-cols-2 gap-4 mt-8">
-                    <div className="h-24 rounded-xl bg-accent-blue/5 border border-accent-blue/20 flex flex-col items-center justify-center gap-2">
+                  <div className="grid grid-cols-2 gap-2 min-[400px]:gap-4 mt-8">
+                    <div className="h-24 rounded-xl bg-accent-blue/5 border border-accent-blue/20 flex flex-col items-center justify-center gap-2 px-2">
                       <FileText className="text-accent-blue" size={24} />
-                      <span className="text-[10px] font-mono text-accent-blue">{featuredProject.visual.ocr}</span>
+                      <span className="text-[9px] min-[400px]:text-[10px] font-mono text-accent-blue text-center leading-tight">{featuredProject.visual.ocr}</span>
                     </div>
-                    <div className="h-24 rounded-xl bg-accent-purple/5 border border-accent-purple/20 flex flex-col items-center justify-center gap-2">
+                    <div className="h-24 rounded-xl bg-accent-purple/5 border border-accent-purple/20 flex flex-col items-center justify-center gap-2 px-2">
                       <Zap className="text-accent-purple" size={24} />
-                      <span className="text-[10px] font-mono text-accent-purple">{featuredProject.visual.ai}</span>
+                      <span className="text-[9px] min-[400px]:text-[10px] font-mono text-accent-purple text-center leading-tight">{featuredProject.visual.ai}</span>
                     </div>
                   </div>
 
@@ -140,7 +140,7 @@ export const FeaturedProject = () => {
                       here instead; the floating overlay version below takes over at sm+
                       where the fixed aspect ratio keeps the center point empty. */}
                   <div className="flex justify-center pt-2 sm:hidden">
-                    <div className="px-4 py-2 glass rounded-full border-accent-blue text-accent-blue font-bold text-sm glow-blue">
+                    <div className="px-2.5 py-1.5 min-[400px]:px-4 min-[400px]:py-2 glass rounded-full border-accent-blue text-accent-blue font-bold text-xs min-[400px]:text-sm whitespace-nowrap glow-blue">
                       {featuredProject.visual.badge}
                     </div>
                   </div>

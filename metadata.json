@@ -52,24 +52,11 @@
     ],
     "projects": [
       {
-        "title": "ROR Document System",
-        "subtitle": "Healthcare AI Platform",
-        "description": "A flagship AI-powered document management system for healthcare, handling massive PDF datasets with extreme efficiency.",
-        "metrics": [
-          { "label": "PDF Pages", "value": "20,000+" },
-          { "label": "Performance", "value": "99.9% ↑" },
-          { "label": "Automation", "value": "95%" }
-        ],
-        "tags": ["Angular", "Node.js", "OCR", "AI", "Performance"],
-        "featured": true,
-        "link": "https://uat-altos-ui.azurewebsites.net/"
-      },
-      {
-        "title": "QME Panel",
-        "description": "Healthcare analytics dashboard providing deep insights into medical evaluations and panel management.",
-        "tags": ["Angular", "Node.js", "D3.js", "MongoDB"],
-        "metrics": [{ "label": "Modules", "value": "10+" }],
-        "link": "https://uat-qmepanel-ui.azurewebsites.net/"
+        "title": "NGO Website",
+        "description": "Highly responsive and SEO-friendly platform for a non-profit organization to boost their digital presence.",
+        "tags": ["React", "Tailwind", "SEO"],
+        "metrics": [{ "label": "SEO Score", "value": "100" }],
+        "link": "https://www.rashtriyaswasthyasangathan.org/"
       },
       {
         "title": "HRMS System",
@@ -79,11 +66,22 @@
         "link": "https://arpit-dwivedi-dev.github.io/HRMS/"
       },
       {
-        "title": "NGO Website",
-        "description": "Highly responsive and SEO-friendly platform for a non-profit organization to boost their digital presence.",
-        "tags": ["React", "Tailwind", "SEO"],
-        "metrics": [{ "label": "SEO Score", "value": "100" }],
-        "link": "https://www.rashtriyaswasthyasangathan.org/"
+        "title": "ROR Document System",
+        "subtitle": "Healthcare AI Platform",
+        "description": "A flagship AI-powered document management system for healthcare, handling massive PDF datasets with extreme efficiency.",
+        "metrics": [
+          { "label": "PDF Pages", "value": "20,000+" },
+          { "label": "Performance", "value": "99.9% ↑" },
+          { "label": "Automation", "value": "95%" }
+        ],
+        "tags": ["Angular", "Node.js", "OCR", "AI", "Performance"],
+        "featured": true
+      },
+      {
+        "title": "QME Panel",
+        "description": "Healthcare analytics dashboard providing deep insights into medical evaluations and panel management.",
+        "tags": ["Angular", "Node.js", "D3.js", "MongoDB"],
+        "metrics": [{ "label": "Modules", "value": "10+" }]
       }
     ],
     "impactMetrics": [

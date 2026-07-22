@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { ExternalLink, ArrowUpRight } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import { FaGithub } from 'react-icons/fa';
 import React from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
@@ -64,7 +64,7 @@ export const ProjectCard = ({ project, index }: ProjectCardProps) => {
       {/* Background Glow */}
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-accent-blue/5 rounded-full blur-3xl group-hover:bg-accent-blue/10 transition-colors" />
 
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center mb-6">
         <div className="flex gap-2">
           {project.github && (
             <a
@@ -89,7 +89,6 @@ export const ProjectCard = ({ project, index }: ProjectCardProps) => {
             </a>
           )}
         </div>
-        <ArrowUpRight size={24} className="text-secondary-text group-hover:text-accent-blue transition-colors" aria-hidden="true" />
       </div>
 
       {primaryHref ? (

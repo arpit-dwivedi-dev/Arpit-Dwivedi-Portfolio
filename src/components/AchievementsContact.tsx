@@ -389,8 +389,8 @@ export const Footer = () => {
   const { navLinks, footer } = content;
 
   return (
-    <footer className="py-12 border-t border-white/5 bg-bg-pure">
-      <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+    <footer className="pt-12 pb-24 border-t border-white/5 bg-bg-pure">
+      <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
         <div>
           <div className="text-xl font-bold tracking-tighter">
             {metadata.name}<span className="text-accent-blue">.</span>
@@ -400,7 +400,7 @@ export const Footer = () => {
         <div className="text-secondary-text text-sm font-mono">
           © {new Date().getFullYear()} {metadata.name}. {footer.rights}
         </div>
-        <nav aria-label="Footer" className="flex items-center gap-6">
+        <nav aria-label="Footer" className="flex flex-wrap justify-center items-center gap-6">
           {navLinks.slice(0, 3).map(link => (
             <a key={link.name} href={link.href} className="py-3 -my-3 text-secondary-text hover:text-white transition-colors text-sm">{link.name}</a>
           ))}
