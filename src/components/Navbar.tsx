@@ -42,7 +42,7 @@ export const Navbar = () => {
             to={homeHref}
             className="text-2xl font-bold tracking-tighter flex items-center gap-2"
           >
-            <div className="w-8 h-8 bg-accent-blue rounded-lg glow-blue flex items-center justify-center text-bg-pure text-sm">TL</div>
+            <img src="/logo.png" alt="" className="w-8 h-8 rounded-lg glow-blue" />
             <span>{metadata.name.split(' ')[0]}<span className="text-accent-blue"> {metadata.name.split(' ').slice(1).join(' ')}</span></span>
           </Link>
         </motion.div>
