@@ -27,6 +27,18 @@ declare module 'react' {
   }
   export function createContext<T>(defaultValue: T): Context<T>;
   export function useContext<T>(context: Context<T>): T;
+  export function lazy<T extends FunctionComponent<any>>(load: () => Promise<{ default: T }>): T;
+  export const Suspense: FunctionComponent<{ fallback?: any; children?: any }>;
+  export interface ErrorInfo {
+    componentStack?: string | null;
+  }
+  export class Component<P = {}, S = {}> {
+    constructor(props: P);
+    props: Readonly<P> & { children?: any };
+    state: Readonly<S>;
+    setState(state: Partial<S> | ((prevState: Readonly<S>, props: Readonly<P>) => Partial<S>)): void;
+    render(): any;
+  }
   const React: any;
   export default React;
 }

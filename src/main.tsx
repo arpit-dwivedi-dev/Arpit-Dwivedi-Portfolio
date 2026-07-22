@@ -1,11 +1,8 @@
 import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
-import * as Sentry from '@sentry/react';
 import App from './App.tsx';
 import './index.css';
-import { initErrorAndPerformanceMonitoring } from './monitoring';
-
-initErrorAndPerformanceMonitoring();
+import { ErrorBoundary } from './ErrorBoundary';
 
 history.scrollRestoration = 'manual';
 
@@ -13,17 +10,17 @@ const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Failed to find root element');
 createRoot(rootElement).render(
   <StrictMode>
-    <Sentry.ErrorBoundary
-      fallback={
-        <div className="min-h-screen flex items-center justify-center bg-bg-pure text-white text-center px-6">
-          <div>
-            <p className="text-xl font-bold mb-2">Something went wrong.</p>
-            <p className="text-secondary-text text-sm">Please refresh the page. Our team has been notified.</p>
-          </div>
-        </div>
-      }
-    >
+    <ErrorBoundary>
       <App />
-    </Sentry.ErrorBoundary>
+    </ErrorBoundary>
   </StrictMode>,
 );
+
+// Off the critical rendering path: Sentry's chunk (tracing + session replay)
+// is only fetched/initialized once the browser is idle after first paint.
+const scheduleMonitoringInit = () => import('./monitoring').then((m) => m.initErrorAndPerformanceMonitoring());
+if ('requestIdleCallback' in window) {
+  requestIdleCallback(scheduleMonitoringInit);
+} else {
+  setTimeout(scheduleMonitoringInit, 200);
+}
