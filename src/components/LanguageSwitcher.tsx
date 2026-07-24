@@ -18,8 +18,8 @@ export const LanguageSwitcher = ({ className = '', onNavigate, tabIndex, size = 
   const { lang, content, toPath } = useLanguage();
   const { nav } = content;
 
-  const activeClass = 'bg-white/10 text-white';
-  const inactiveClass = 'text-secondary-text hover:text-white';
+  const activeClass = 'bg-ink/10 text-ink';
+  const inactiveClass = 'text-secondary-text hover:text-ink';
   const linkSizeClass = size === 'lg' ? 'px-4 py-3 text-sm' : 'px-2 py-1 text-xs';
 
   return (

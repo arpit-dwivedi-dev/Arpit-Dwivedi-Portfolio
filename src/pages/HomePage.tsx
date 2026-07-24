@@ -36,7 +36,7 @@ export const HomePage = () => {
               title={link.name}
               className="group p-2 -m-2 flex items-center justify-center"
             >
-              <span className="w-2 h-2 rounded-full bg-white/20 group-hover:bg-accent-blue transition-all group-hover:scale-150" aria-hidden="true" />
+              <span className="w-2 h-2 rounded-full bg-ink/20 group-hover:bg-accent-blue transition-all group-hover:scale-150" aria-hidden="true" />
             </a>
           ))}
       </div>

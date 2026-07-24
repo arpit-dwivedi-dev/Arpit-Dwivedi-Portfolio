@@ -98,7 +98,7 @@ export const Hero = () => {
           <div className="flex flex-wrap gap-4 mb-12">
             {hero.stats.map((stat) => (
               <div key={stat.label} className="flex flex-col gap-1 px-4 py-2 rounded-xl glass">
-                <span className="text-2xl font-bold text-white">{stat.value}</span>
+                <span className="text-2xl font-bold text-ink">{stat.value}</span>
                 <span className="text-[10px] uppercase tracking-widest text-secondary-text font-mono">{stat.label}</span>
               </div>
             ))}
@@ -107,14 +107,14 @@ export const Hero = () => {
           <div className="flex flex-col sm:flex-row gap-4">
             <Link 
               to="/projects" 
-              className="px-8 py-4 bg-white text-bg-pure font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-accent-blue hover:text-bg-pure transition-all group"
+              className="px-8 py-4 bg-ink text-bg-pure font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-accent-blue hover:text-bg-pure transition-all group"
             >
               {hero.buttons.projects}
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </Link>
             <a 
               href="#contact" 
-              className="px-8 py-4 glass text-white font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-white/10 transition-all"
+              className="px-8 py-4 glass text-ink font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-ink/10 transition-all"
             >
               {hero.buttons.contact}
             </a>
@@ -137,9 +137,9 @@ export const Hero = () => {
               convenience — keyboard/AT users tab directly to the real input below. */}
           <div
             onClick={focusInput}
-            className="w-full h-[400px] rounded-2xl glass p-1 glow-blue relative overflow-hidden group border border-white/10 cursor-text focus:outline-none focus:border-accent-blue/50 text-left block"
+            className="w-full h-[400px] rounded-2xl glass p-1 glow-blue relative overflow-hidden group border border-ink/10 cursor-text focus:outline-none focus:border-accent-blue/50 text-left block"
           >
-            <div className="absolute top-0 left-0 w-full h-8 bg-white/5 border-b border-white/10 flex items-center px-4 gap-2 z-20">
+            <div className="absolute top-0 left-0 w-full h-8 bg-ink/5 border-b border-ink/10 flex items-center px-4 gap-2 z-20">
               <div className="w-2.5 h-2.5 rounded-full bg-red-500/50" />
               <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50" />
               <div className="w-2.5 h-2.5 rounded-full bg-green-500/50" />
@@ -159,7 +159,7 @@ export const Hero = () => {
                       <span className={item.type === 'command' ? 'text-accent-blue' : 'text-secondary-text'}>
                         {item.type === 'command' ? '$' : '>'}
                       </span>
-                      <span className={item.type === 'command' ? 'text-white' : 'text-yellow-400/90'}>
+                      <span className={item.type === 'command' ? 'text-ink' : 'text-yellow-400/90 light:text-amber-700'}>
                         {item.text}
                       </span>
                     </motion.div>
@@ -173,7 +173,7 @@ export const Hero = () => {
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    className="bg-transparent border-none outline-none text-white flex-grow font-mono focus:ring-0 p-0 py-1 min-h-6"
+                    className="bg-transparent border-none outline-none text-ink flex-grow font-mono focus:ring-0 p-0 py-1 min-h-6"
                     placeholder={hero.terminal.inputPlaceholder}
                     autoFocus
                   />

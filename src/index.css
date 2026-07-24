@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/* Site defaults to the original dark design; `.light` on <html> (toggled by
+   ThemeContext, see src/theme/ThemeContext.tsx) swaps the tokens below and
+   unlocks the `light:` variant for the handful of one-off color overrides
+   that aren't driven by a token. */
+@custom-variant light (&:where(.light, .light *));
+
 /* Self-hosted (see public/fonts/): avoids the fonts.googleapis.com -> fonts.gstatic.com
    request chain, which was the longest link in the critical network path (~1.4s).
    Both files are variable fonts — one file per family covers every weight used. */
@@ -36,11 +42,31 @@
   --color-bg-secondary: #0F0F0F;
   --color-bg-tertiary: #1A1A1A;
   --color-secondary-text: #A1A1AA;
+  /* Stand-in for literal white/black: text, glass surfaces, and borders that
+     need to sit on top of bg-pure regardless of which theme is active. */
+  --color-ink: #FFFFFF;
+}
+
+:root.light {
+  /* #0077B6 measures 5.4:1 on white (vs. 1.9:1 for the dark theme's
+     #00D1FF) — kept saturated enough to still read as the brand blue. */
+  --color-accent-blue: #0077B6;
+  /* #6D28D9 measures 5.3:1 on white; accent-purple itself is unchanged
+     since it's only used as an icon/bg fill here (3:1 minimum). */
+  --color-accent-purple-text: #6D28D9;
+  --color-bg-pure: #FFFFFF;
+  --color-bg-secondary: #F4F4F5;
+  /* A bigger step than the dark theme's bg-secondary -> bg-tertiary gap
+     (#0F0F0F -> #1A1A1A) needs: light surfaces have far less lightness
+     range to work with before nested panels blend into their container. */
+  --color-bg-tertiary: #D4D4D8;
+  --color-secondary-text: #52525B;
+  --color-ink: #0A0A0A;
 }
 
 @layer base {
   body {
-    @apply bg-bg-pure text-white font-sans antialiased selection:bg-accent-blue/30 selection:text-accent-blue;
+    @apply bg-bg-pure text-ink font-sans antialiased selection:bg-accent-blue/30 selection:text-accent-blue transition-colors duration-300;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -51,9 +77,19 @@
   }
 }
 
+/* A black-tinted overlay (the dark theme's .glass recipe, inverted) reads as
+   a flat gray blob on light backgrounds — there's no lightness headroom left
+   to fake glass. Light mode instead lifts the card off the page with a
+   near-white surface plus a soft shadow. */
+:root.light .glass {
+  background-color: rgba(255, 255, 255, 0.75);
+  border-color: rgba(24, 24, 27, 0.08);
+  box-shadow: 0 12px 30px -12px rgba(24, 24, 27, 0.18), 0 2px 8px -2px rgba(24, 24, 27, 0.06);
+}
+
 @layer utilities {
   .glass {
-    @apply bg-white/5 backdrop-blur-xl border border-white/10;
+    @apply bg-ink/5 backdrop-blur-xl border border-ink/10;
   }
   .glow-blue {
     @apply shadow-[0_0_20px_rgba(0,209,255,0.3)];

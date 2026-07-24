@@ -35,7 +35,7 @@ export const About = () => {
           
           <div className="space-y-6 text-base md:text-lg text-secondary-text leading-relaxed">
             {about.paragraphs.map((p) => (
-              <p key={p} dangerouslySetInnerHTML={{ __html: p.replaceAll(/\*\*(.+?)\*\*/g, (_match, phrase) => `<span class="text-white font-medium">${phrase}</span>`) }} />
+              <p key={p} dangerouslySetInnerHTML={{ __html: p.replaceAll(/\*\*(.+?)\*\*/g, (_match, phrase) => `<span class="text-ink font-medium">${phrase}</span>`) }} />
             ))}
           </div>
 
@@ -48,7 +48,7 @@ export const About = () => {
                <div className={`${techClassMap[color] ?? 'bg-gray-500/10 text-gray-500'} w-10 h-10 rounded-lg flex items-center justify-center` }>
                     <Icon size={20} />
                   </div>
-                  <span className="text-sm font-medium text-white">{feature}</span>
+                  <span className="text-sm font-medium text-ink">{feature}</span>
                 </div>
               );
             })}
@@ -70,8 +70,8 @@ export const About = () => {
           <div className="w-full aspect-auto lg:aspect-square rounded-3xl overflow-hidden glass p-4 glow-purple/20">
             <div className="w-full h-full rounded-2xl bg-bg-tertiary p-8 flex flex-col gap-8 justify-between">
               <div className="flex justify-between items-start gap-3">
-                <div className="text-3xl sm:text-4xl font-bold text-white tracking-tighter">101 <span className="text-accent-blue">TECH LABS</span></div>
-                <div className="shrink-0 px-3 py-1 rounded-full border border-white/10 text-[10px] font-mono text-secondary-text">{about.card.est}</div>
+                <div className="text-3xl sm:text-4xl font-bold text-ink tracking-tighter">101 <span className="text-accent-blue">TECH LABS</span></div>
+                <div className="shrink-0 px-3 py-1 rounded-full border border-ink/10 text-[10px] font-mono text-secondary-text">{about.card.est}</div>
               </div>
 
               <div className="space-y-4">
@@ -84,7 +84,7 @@ export const About = () => {
                         <Icon size={24} />
                       </div>
                       <div>
-                        <div className="text-sm font-bold text-white">{item.title}</div>
+                        <div className="text-sm font-bold text-ink">{item.title}</div>
                         <div className="text-xs text-secondary-text">{item.subtitle}</div>
                       </div>
                     </div>
@@ -94,7 +94,7 @@ export const About = () => {
 
               <div className="p-4 rounded-xl glass border-accent-blue/20">
                 <div className="text-[10px] font-mono text-accent-blue uppercase tracking-widest mb-2">{about.card.locationLabel}</div>
-                <div className="text-sm font-medium text-white">{about.card.location}</div>
+                <div className="text-sm font-medium text-ink">{about.card.location}</div>
               </div>
             </div>
           </div>
@@ -140,15 +140,15 @@ export const TechStack = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
-              className="p-6 rounded-3xl glass border-white/5 hover:border-white/20 transition-all group"
+              className="p-6 rounded-3xl glass border-ink/5 hover:border-ink/20 transition-all group"
             >
                <div className={`${catClassMap[cat.color] ?? 'bg-gray-500/10 text-gray-500'} w-12 h-12 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform` }>
                 <cat.icon size={24} />
               </div>
-              <h3 className="text-xl font-bold text-white mb-6">{cat.name}</h3>
+              <h3 className="text-xl font-bold text-ink mb-6">{cat.name}</h3>
               <div className="flex flex-wrap gap-2">
                 {cat.skills.map(skill => (
-                  <span key={skill} className="px-3 py-1 rounded-lg bg-white/5 border border-white/5 text-xs font-mono text-secondary-text hover:text-white hover:bg-white/10 transition-colors">
+                  <span key={skill} className="px-3 py-1 rounded-lg bg-ink/5 border border-ink/5 text-xs font-mono text-secondary-text hover:text-ink hover:bg-ink/10 transition-colors">
                     {skill}
                   </span>
                 ))}

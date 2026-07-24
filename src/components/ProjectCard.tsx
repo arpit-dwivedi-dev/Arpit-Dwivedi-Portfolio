@@ -27,24 +27,24 @@ export const ProjectCard = ({ project, index }: ProjectCardProps) => {
 
   const details = (
     <>
-      <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-accent-blue transition-colors">{project.title}</h3>
+      <h3 className="text-2xl font-bold text-ink mb-4 group-hover:text-accent-blue transition-colors">{project.title}</h3>
       <p className="text-secondary-text text-sm mb-8 leading-relaxed flex-grow">
         {project.description}
       </p>
 
       <div className="flex flex-wrap gap-2 mb-8">
         {project.tags.map(tag => (
-          <span key={tag} className="px-3 py-1 rounded-lg bg-white/5 text-[10px] font-mono text-secondary-text group-hover:text-white transition-colors">
+          <span key={tag} className="px-3 py-1 rounded-lg bg-ink/5 text-[10px] font-mono text-secondary-text group-hover:text-ink transition-colors">
             {tag}
           </span>
         ))}
       </div>
 
       {project.metrics && (
-        <div className="pt-6 border-t border-white/5 flex gap-6">
+        <div className="pt-6 border-t border-ink/5 flex gap-6">
           {project.metrics.map(m => (
             <div key={m.label}>
-              <div className="text-lg font-bold text-white">{m.value}</div>
+              <div className="text-lg font-bold text-ink">{m.value}</div>
               <div className="text-[10px] uppercase tracking-widest text-secondary-text font-mono">{m.label}</div>
             </div>
           ))}
@@ -59,7 +59,7 @@ export const ProjectCard = ({ project, index }: ProjectCardProps) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.1 }}
-      className="group p-8 rounded-3xl bg-bg-secondary border border-white/5 hover:border-accent-blue/30 transition-all flex flex-col h-full relative overflow-hidden"
+      className="group p-8 rounded-3xl bg-bg-secondary border border-ink/5 hover:border-accent-blue/30 transition-all flex flex-col h-full relative overflow-hidden light:shadow-[0_12px_30px_-12px_rgba(24,24,27,0.18)]"
     >
       {/* Background Glow */}
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-accent-blue/5 rounded-full blur-3xl group-hover:bg-accent-blue/10 transition-colors" />
@@ -71,7 +71,7 @@ export const ProjectCard = ({ project, index }: ProjectCardProps) => {
               href={`https://github.com/${project.github}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center text-white hover:text-accent-blue transition-colors relative z-10"
+              className="w-11 h-11 rounded-xl bg-ink/5 flex items-center justify-center text-ink hover:text-accent-blue transition-colors relative z-10"
               aria-label={projectCard.viewGithub}
             >
               <FaGithub size={20} />
@@ -82,7 +82,7 @@ export const ProjectCard = ({ project, index }: ProjectCardProps) => {
               href={project.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center text-white hover:text-accent-blue transition-colors relative z-10"
+              className="w-11 h-11 rounded-xl bg-ink/5 flex items-center justify-center text-ink hover:text-accent-blue transition-colors relative z-10"
               aria-label={projectCard.viewLive}
             >
               <ExternalLink size={20} />

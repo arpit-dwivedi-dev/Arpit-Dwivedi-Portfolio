@@ -29,7 +29,7 @@ export const ProjectsPage = () => {
           >
             <Link
               to={homeHref}
-              className="inline-flex items-center gap-2 text-secondary-text hover:text-white transition-colors group mb-8"
+              className="inline-flex items-center gap-2 text-secondary-text hover:text-ink transition-colors group mb-8"
             >
               <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
               {projectsSection.backToHome}

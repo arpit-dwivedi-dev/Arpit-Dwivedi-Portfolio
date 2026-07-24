@@ -38,7 +38,7 @@ export const FeaturedProject = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="group relative rounded-3xl overflow-hidden bg-bg-secondary border border-white/10 glow-blue/10 transition-all"
+          className="group relative rounded-3xl overflow-hidden bg-bg-secondary border border-ink/10 glow-blue/10 transition-all light:shadow-[0_12px_30px_-12px_rgba(24,24,27,0.18)]"
         >
           <div className="grid grid-cols-1 lg:grid-cols-2">
             {/* Project Info */}
@@ -48,7 +48,7 @@ export const FeaturedProject = () => {
                   <Shield size={24} />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-white group-hover:text-accent-blue transition-colors">{featured.title}</h3>
+                  <h3 className="text-2xl font-bold text-ink group-hover:text-accent-blue transition-colors">{featured.title}</h3>
                   <p className="text-accent-blue font-mono text-xs uppercase tracking-widest">{featured.subtitle}</p>
                 </div>
               </div>
@@ -59,8 +59,8 @@ export const FeaturedProject = () => {
 
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-10 [&>*:nth-last-child(1):nth-child(odd)]:col-span-2 sm:[&>*:nth-last-child(1):nth-child(odd)]:col-span-1">
                 {featured.metrics?.map((metric) => (
-                  <div key={metric.label} className="p-4 rounded-2xl glass border-white/5 group-hover:border-accent-blue/20 transition-colors">
-                    <div className="text-xl sm:text-2xl font-bold text-white mb-1">{metric.value}</div>
+                  <div key={metric.label} className="p-4 rounded-2xl glass border-ink/5 group-hover:border-accent-blue/20 transition-colors">
+                    <div className="text-xl sm:text-2xl font-bold text-ink mb-1">{metric.value}</div>
                     <div className="text-[10px] uppercase tracking-widest text-secondary-text font-mono">{metric.label}</div>
                   </div>
                 ))}
@@ -68,7 +68,7 @@ export const FeaturedProject = () => {
 
               <div className="flex flex-wrap gap-2 mb-10">
                 {featured.tags.map(tag => (
-                  <span key={tag} className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-secondary-text">
+                  <span key={tag} className="px-3 py-1 rounded-full bg-ink/5 border border-ink/10 text-xs font-mono text-secondary-text">
                     {tag}
                   </span>
                 ))}
@@ -108,12 +108,12 @@ export const FeaturedProject = () => {
                 // (header + text lines + the OCR/AI boxes), so overflow-hidden was
                 // clipping the bottom of the card. Letting height follow content on
                 // mobile fixes that; sm+ restores the original fixed-ratio look.
-                className="w-full max-w-md aspect-auto sm:aspect-[4/3] rounded-2xl glass border-white/10 shadow-2xl relative z-10 p-6 overflow-hidden"
+                className="w-full max-w-md aspect-auto sm:aspect-[4/3] rounded-2xl glass border-ink/10 shadow-2xl relative z-10 p-6 overflow-hidden"
               >
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex gap-2">
-                    <div className="w-3 h-3 rounded-full bg-white/10" />
-                    <div className="w-12 h-3 rounded-full bg-white/10" />
+                    <div className="w-3 h-3 rounded-full bg-ink/10" />
+                    <div className="w-12 h-3 rounded-full bg-ink/10" />
                   </div>
                   <div className="w-8 h-8 rounded-lg bg-accent-blue/20 flex items-center justify-center text-accent-blue">
                     <Zap size={16} />
@@ -121,8 +121,8 @@ export const FeaturedProject = () => {
                 </div>
                 
                 <div className="space-y-4">
-                  <div className="h-4 w-3/4 bg-white/5 rounded-full" />
-                  <div className="h-4 w-1/2 bg-white/5 rounded-full" />
+                  <div className="h-4 w-3/4 bg-ink/5 rounded-full" />
+                  <div className="h-4 w-1/2 bg-ink/5 rounded-full" />
                   <div className="grid grid-cols-2 gap-2 min-[400px]:gap-4 mt-8">
                     <div className="h-24 rounded-xl bg-accent-blue/5 border border-accent-blue/20 flex flex-col items-center justify-center gap-2 px-2">
                       <FileText className="text-accent-blue" size={24} />
@@ -153,8 +153,8 @@ export const FeaturedProject = () => {
               </motion.div>
               
               {/* Background Circles */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] border border-white/5 rounded-full" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] border border-white/5 rounded-full" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] border border-ink/5 rounded-full" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] border border-ink/5 rounded-full" />
             </div>
           </div>
         </motion.div>

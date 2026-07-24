@@ -30,9 +30,9 @@ export const Achievements = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
-              className="p-8 rounded-3xl glass border-white/5 hover:border-accent-blue/20 transition-all text-center group"
+              className="p-8 rounded-3xl glass border-ink/5 hover:border-accent-blue/20 transition-all text-center group"
             >
-              <div className="text-4xl font-extrabold text-white mb-2 group-hover:text-accent-blue transition-colors tracking-tighter">
+              <div className="text-4xl font-extrabold text-ink mb-2 group-hover:text-accent-blue transition-colors tracking-tighter">
                 {metric.value}
               </div>
               <div className="text-[10px] uppercase tracking-widest text-secondary-text font-mono">
@@ -74,7 +74,7 @@ export const DevOpsArchitecture = () => {
                     <div className={`w-6 h-6 rounded-full bg-accent-${idx % 2 === 0 ? 'blue' : 'purple'}/10 flex items-center justify-center text-accent-${idx % 2 === 0 ? 'blue' : 'purple'}`}>
                       <Zap size={14} aria-hidden="true" />
                     </div>
-                    <span className="text-sm font-medium text-white">{item}</span>
+                    <span className="text-sm font-medium text-ink">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -86,7 +86,7 @@ export const DevOpsArchitecture = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="relative p-8 rounded-3xl glass border-white/10 glow-blue/10 overflow-hidden"
+            className="relative p-8 rounded-3xl glass border-ink/10 glow-blue/10 overflow-hidden"
           >
             {/* Architecture Diagram Mockup */}
             <div className="relative z-10 grid grid-cols-3 gap-4">
@@ -97,20 +97,20 @@ export const DevOpsArchitecture = () => {
               </div>
               
               <div className="flex flex-col items-center gap-4">
-                <div className="w-full p-4 rounded-xl glass border-white/10 flex flex-col items-center gap-2">
-                  <Server size={24} className="text-white" aria-hidden="true" />
+                <div className="w-full p-4 rounded-xl glass border-ink/10 flex flex-col items-center gap-2">
+                  <Server size={24} className="text-ink" aria-hidden="true" />
                   <span className="text-[10px] font-mono text-secondary-text">{architecture.nodeApp} 1</span>
                 </div>
               </div>
               <div className="flex flex-col items-center gap-4">
-                <div className="w-full p-4 rounded-xl glass border-white/10 flex flex-col items-center gap-2">
-                  <Server size={24} className="text-white" aria-hidden="true" />
+                <div className="w-full p-4 rounded-xl glass border-ink/10 flex flex-col items-center gap-2">
+                  <Server size={24} className="text-ink" aria-hidden="true" />
                   <span className="text-[10px] font-mono text-secondary-text">{architecture.nodeApp} 2</span>
                 </div>
               </div>
               <div className="flex flex-col items-center gap-4">
-                <div className="w-full p-4 rounded-xl glass border-white/10 flex flex-col items-center gap-2">
-                  <Server size={24} className="text-white" aria-hidden="true" />
+                <div className="w-full p-4 rounded-xl glass border-ink/10 flex flex-col items-center gap-2">
+                  <Server size={24} className="text-ink" aria-hidden="true" />
                   <span className="text-[10px] font-mono text-secondary-text">{architecture.nodeApp} 3</span>
                 </div>
               </div>
@@ -124,7 +124,7 @@ export const DevOpsArchitecture = () => {
             
             {/* Connecting Lines (Abstract) */}
             <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
-              <div className="w-full h-full border-2 border-dashed border-white/10 rounded-full animate-spin-slow" />
+              <div className="w-full h-full border-2 border-dashed border-ink/10 rounded-full animate-spin-slow" />
             </div>
           </motion.div>
         </div>
@@ -152,31 +152,31 @@ export const LocalTrust = () => {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-          <a href={`tel:+${localTrust.phone.replace(/\D/g, '')}`} className="p-6 rounded-2xl glass border-white/5 flex items-center gap-4 group hover:border-accent-blue/20 transition-all">
+          <a href={`tel:+${localTrust.phone.replace(/\D/g, '')}`} className="p-6 rounded-2xl glass border-ink/5 flex items-center gap-4 group hover:border-accent-blue/20 transition-all">
             <div className="w-12 h-12 rounded-xl bg-accent-blue/10 flex items-center justify-center text-accent-blue">
               <Phone size={20} aria-hidden="true" />
             </div>
             <div>
               <div className="text-xs font-mono text-secondary-text uppercase tracking-widest">{localTrust.callLabel}</div>
-              <div className="text-lg font-bold text-white group-hover:text-accent-blue transition-colors">{localTrust.phone}</div>
+              <div className="text-lg font-bold text-ink group-hover:text-accent-blue transition-colors">{localTrust.phone}</div>
             </div>
           </a>
-          <div className="p-6 rounded-2xl glass border-white/5 flex items-center gap-4">
+          <div className="p-6 rounded-2xl glass border-ink/5 flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-accent-purple/10 flex items-center justify-center text-accent-purple">
               <MapPin size={20} aria-hidden="true" />
             </div>
             <div>
               <div className="text-xs font-mono text-secondary-text uppercase tracking-widest">{localTrust.serviceAreaLabel}</div>
-              <div className="text-lg font-bold text-white">{localTrust.serviceArea}</div>
+              <div className="text-lg font-bold text-ink">{localTrust.serviceArea}</div>
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {localTrust.testimonials.map((testimonial, idx) => (
-            <div key={idx} className="p-6 rounded-2xl glass border border-dashed border-white/20 relative">
+            <div key={idx} className="p-6 rounded-2xl glass border border-dashed border-ink/20 relative">
               <p className="text-secondary-text text-sm italic mb-4">&ldquo;{testimonial.quote}&rdquo;</p>
-              <div className="text-sm font-bold text-white">{testimonial.name}</div>
+              <div className="text-sm font-bold text-ink">{testimonial.name}</div>
               <div className="text-xs text-secondary-text">{testimonial.business}</div>
             </div>
           ))}
@@ -275,30 +275,30 @@ export const Contact = () => {
                 a different x-position instead of a straight left-aligned column. */}
             <div className="space-y-6 flex flex-col items-start">
               <a href={`mailto:${contact.email}`} className="flex items-center gap-4 group w-full max-w-sm lg:max-w-none">
-                <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white group-hover:bg-accent-blue group-hover:text-bg-pure transition-all">
+                <div className="w-12 h-12 rounded-xl bg-ink/5 flex items-center justify-center text-ink group-hover:bg-accent-blue group-hover:text-bg-pure transition-all">
                   <Mail size={20} aria-hidden="true" />
                 </div>
                 <div>
                   <div className="text-xs font-mono text-secondary-text uppercase tracking-widest">{contact.form.email}</div>
-                  <div className="text-lg font-bold text-white group-hover:text-accent-blue transition-colors">{contact.email}</div>
+                  <div className="text-lg font-bold text-ink group-hover:text-accent-blue transition-colors">{contact.email}</div>
                 </div>
               </a>
               <a href={`https://linkedin.com/company/${contact.linkedin.replaceAll(/\s+/g, '-').toLowerCase()}`} target="_blank" rel="noreferrer" className="flex items-center gap-4 group">
-                <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white group-hover:bg-accent-blue group-hover:text-bg-pure transition-all">
+                <div className="w-12 h-12 rounded-xl bg-ink/5 flex items-center justify-center text-ink group-hover:bg-accent-blue group-hover:text-bg-pure transition-all">
                   <FaLinkedin size={20} />
                 </div>
                 <div>
                   <div className="text-xs font-mono text-secondary-text uppercase tracking-widest">LinkedIn</div>
-                  <div className="text-lg font-bold text-white group-hover:text-accent-blue transition-colors">{contact.linkedin}</div>
+                  <div className="text-lg font-bold text-ink group-hover:text-accent-blue transition-colors">{contact.linkedin}</div>
                 </div>
               </a>
               <a href={`https://github.com/${contact.github}`} target="_blank" rel="noreferrer" className="flex items-center gap-4 group">
-                <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white group-hover:bg-accent-blue group-hover:text-bg-pure transition-all">
+                <div className="w-12 h-12 rounded-xl bg-ink/5 flex items-center justify-center text-ink group-hover:bg-accent-blue group-hover:text-bg-pure transition-all">
                   <FaGithub size={20} />
                 </div>
                 <div>
                   <div className="text-xs font-mono text-secondary-text uppercase tracking-widest">GitHub</div>
-                  <div className="text-lg font-bold text-white group-hover:text-accent-blue transition-colors">{contact.github}</div>
+                  <div className="text-lg font-bold text-ink group-hover:text-accent-blue transition-colors">{contact.github}</div>
                 </div>
               </a>
             </div>
@@ -309,7 +309,7 @@ export const Contact = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="p-8 rounded-3xl glass border-white/10 glow-blue/5"
+            className="p-8 rounded-3xl glass border-ink/10 glow-blue/5"
           >
             <form className="space-y-6" onSubmit={handleSubmit} noValidate>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -324,10 +324,10 @@ export const Contact = () => {
                     aria-describedby={errors.name ? 'contact-name-error' : undefined}
                     value={values.name}
                     onChange={(e) => setValues(v => ({ ...v, name: e.target.value }))}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-accent-blue focus:outline-none transition-colors"
+                    className="w-full bg-ink/5 border border-ink/10 rounded-xl px-4 py-3 text-ink focus:border-accent-blue focus:outline-none transition-colors"
                     placeholder={contact.form.namePlaceholder}
                   />
-                  {errors.name && <p id="contact-name-error" role="alert" className="text-red-400 text-xs">{errors.name}</p>}
+                  {errors.name && <p id="contact-name-error" role="alert" className="text-red-400 light:text-red-600 text-xs">{errors.name}</p>}
                 </div>
                 <div className="space-y-2">
                   <label htmlFor="contact-email" className="text-xs font-mono text-secondary-text uppercase tracking-widest">{contact.form.email}</label>
@@ -340,10 +340,10 @@ export const Contact = () => {
                     aria-describedby={errors.email ? 'contact-email-error' : undefined}
                     value={values.email}
                     onChange={(e) => setValues(v => ({ ...v, email: e.target.value }))}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-accent-blue focus:outline-none transition-colors"
+                    className="w-full bg-ink/5 border border-ink/10 rounded-xl px-4 py-3 text-ink focus:border-accent-blue focus:outline-none transition-colors"
                     placeholder={contact.form.emailPlaceholder}
                   />
-                  {errors.email && <p id="contact-email-error" role="alert" className="text-red-400 text-xs">{errors.email}</p>}
+                  {errors.email && <p id="contact-email-error" role="alert" className="text-red-400 light:text-red-600 text-xs">{errors.email}</p>}
                 </div>
               </div>
               <div className="space-y-2">
@@ -357,10 +357,10 @@ export const Contact = () => {
                   aria-describedby={errors.message ? 'contact-message-error' : undefined}
                   value={values.message}
                   onChange={(e) => setValues(v => ({ ...v, message: e.target.value }))}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-accent-blue focus:outline-none transition-colors"
+                  className="w-full bg-ink/5 border border-ink/10 rounded-xl px-4 py-3 text-ink focus:border-accent-blue focus:outline-none transition-colors"
                   placeholder={contact.form.messagePlaceholder}
                 />
-                {errors.message && <p id="contact-message-error" role="alert" className="text-red-400 text-xs">{errors.message}</p>}
+                {errors.message && <p id="contact-message-error" role="alert" className="text-red-400 light:text-red-600 text-xs">{errors.message}</p>}
               </div>
               <button
                 type="submit"
@@ -374,7 +374,7 @@ export const Contact = () => {
                 <p role="status" className="text-accent-blue text-sm text-center">{contact.statusSent}</p>
               )}
               {status === 'error' && (
-                <p role="alert" className="text-red-400 text-sm text-center">{contact.statusError.replace('{email}', contact.email)}</p>
+                <p role="alert" className="text-red-400 light:text-red-600 text-sm text-center">{contact.statusError.replace('{email}', contact.email)}</p>
               )}
             </form>
           </motion.div>
@@ -389,7 +389,7 @@ export const Footer = () => {
   const { navLinks, footer } = content;
 
   return (
-    <footer className="pt-12 pb-24 border-t border-white/5 bg-bg-pure">
+    <footer className="pt-12 pb-24 border-t border-ink/5 bg-bg-pure">
       <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
         <div>
           <div className="text-xl font-bold tracking-tighter">
@@ -402,7 +402,7 @@ export const Footer = () => {
         </div>
         <nav aria-label="Footer" className="flex flex-wrap justify-center items-center gap-6">
           {navLinks.slice(0, 3).map(link => (
-            <a key={link.name} href={link.href} className="py-3 -my-3 text-secondary-text hover:text-white transition-colors text-sm">{link.name}</a>
+            <a key={link.name} href={link.href} className="py-3 -my-3 text-secondary-text hover:text-ink transition-colors text-sm">{link.name}</a>
           ))}
         </nav>
       </div>
