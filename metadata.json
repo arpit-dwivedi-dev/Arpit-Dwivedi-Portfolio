@@ -180,24 +180,50 @@
       ]
     },
     "localTrust": {
-      "label": "Serving Local Businesses",
-      "title": "Built For",
-      "titleAccent": "Your Neighborhood",
-      "description": "We work with businesses close to home, not just enterprise clients across the country.",
+      "label": "Who We've Worked With",
+      "title": "Real Clients,",
+      "titleAccent": "Real Work",
+      "description": "From medical device manufacturing to nonprofit healthcare — organizations we've built and shipped software for.",
       "phone": "+91 70715 20965",
       "serviceArea": "Serving businesses worldwide",
       "callLabel": "Call Us",
       "serviceAreaLabel": "Service Area",
-      "testimonials": [
-        { "quote": "They rebuilt our booking flow in a week and calls asking for table availability basically stopped overnight.", "name": "Priya Nair", "business": "Copper Kettle Café" },
-        { "quote": "We went from a Facebook page to an actual website with online appointments. Straightforward process, no jargon.", "name": "Rohan Mehta", "business": "Mehta Dental Clinic" }
+      "visitSite": "Visit Site",
+      "clients": [
+        { "name": "SA Ethics Biotech", "description": "Medical device & blood bank equipment manufacturer.", "url": "https://www.saethicsbio.com/" },
+        { "name": "Rashtriya Swasthya Sangathan", "description": "Healthcare nonprofit running blood donation camps and mobile clinics across India.", "url": "https://www.rashtriyaswasthyasangathan.org/" }
       ]
+    },
+    "team": {
+      "label": "Who's Behind This",
+      "title": "Meet the",
+      "titleAccent": "Founder",
+      "founder": {
+        "initials": "AD",
+        "name": "Arpit Dwivedi",
+        "role": "Founder & Software Engineer",
+        "bio": "101 Tech Labs is run solo by Arpit, a full-stack and AI engineer handling everything from the first call to shipped code — so nothing gets lost in handoffs between a project manager and a developer.",
+        "highlights": ["4+ Years Experience", "Full-Stack & AI Engineering", "Direct Access, No Middlemen"]
+      }
+    },
+    "process": {
+      "label": "How We Work",
+      "title": "Our",
+      "titleAccent": "Process",
+      "description": "A straightforward path from first conversation to a system you're actually using.",
+      "steps": [
+        { "title": "Discovery Call", "description": "A quick call to understand what you need, your timeline, and whether we're the right fit." },
+        { "title": "Proposal & Scope", "description": "A clear written scope and cost estimate, so there are no surprise line items later." },
+        { "title": "Build & Iterate", "description": "Regular check-ins as we build, with room to adjust as you see it take shape." },
+        { "title": "Launch & Support", "description": "We deploy, hand over what you need, and stay reachable for fixes and follow-up work." }
+      ],
+      "cta": "Start a Project"
     },
     "contact": {
       "label": "Get in Touch",
       "title": "Let's build something",
       "titleAccent": "impactful",
-      "description": "We're open to discussing new projects, technical challenges, or work that needs a full-stack team rather than one person doing everything.",
+      "description": "We're open to discussing new projects, technical challenges, or work that needs full-stack range — from a simple website to something far more complex.",
       "email": "101techlabs@gmail.com",
       "linkedin": "101 Tech Labs",
       "linkedinUrl": "https://www.linkedin.com/company/133407777/",

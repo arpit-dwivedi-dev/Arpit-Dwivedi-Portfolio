@@ -2,8 +2,9 @@ import { Navbar } from '../components/Navbar';
 import { Hero } from '../components/Hero';
 import { FeaturedProject } from '../components/FeaturedProject';
 import { About } from '../components/AboutTech';
+import { Team, Process } from '../components/TeamProcess';
 import { Services, Projects } from '../components/ExperienceProjects';
-import { DevOpsArchitecture, LocalTrust, Contact, Footer } from '../components/AchievementsContact';
+import { DevOpsArchitecture, Clients, Contact, Footer } from '../components/AchievementsContact';
 import { motion, useScroll, useSpring } from 'motion/react';
 import { useLanguage } from '../i18n/LanguageContext';
 
@@ -47,10 +48,12 @@ export const HomePage = () => {
         <Hero />
         <FeaturedProject />
         <About />
+        <Team />
         <Services />
         <Projects />
         <DevOpsArchitecture />
-        <LocalTrust />
+        <Clients />
+        <Process />
         <Contact />
       </main>
 

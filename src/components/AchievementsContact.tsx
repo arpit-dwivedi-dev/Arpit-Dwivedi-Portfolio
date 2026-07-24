@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Zap, Server, Mail, Send, Phone, MapPin } from 'lucide-react';
+import { Zap, Server, Mail, Send, Phone, MapPin, ExternalLink } from 'lucide-react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { useState, FormEvent } from 'react';
 import metadata from '../../metadata.json';
@@ -133,7 +133,7 @@ export const DevOpsArchitecture = () => {
   );
 };
 
-export const LocalTrust = () => {
+export const Clients = () => {
   const { content } = useLanguage();
   const { localTrust } = content;
 
@@ -173,12 +173,21 @@ export const LocalTrust = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {localTrust.testimonials.map((testimonial, idx) => (
-            <div key={idx} className="p-6 rounded-2xl glass border border-dashed border-ink/20 relative">
-              <p className="text-secondary-text text-sm italic mb-4">&ldquo;{testimonial.quote}&rdquo;</p>
-              <div className="text-sm font-bold text-ink">{testimonial.name}</div>
-              <div className="text-xs text-secondary-text">{testimonial.business}</div>
-            </div>
+          {localTrust.clients.map((client) => (
+            <a
+              key={client.name}
+              href={client.url}
+              target="_blank"
+              rel="noreferrer"
+              className="p-6 rounded-2xl glass border-ink/5 hover:border-accent-blue/20 transition-all group flex flex-col gap-3"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="text-sm font-bold text-ink group-hover:text-accent-blue transition-colors">{client.name}</div>
+                <ExternalLink size={16} className="text-secondary-text shrink-0 group-hover:text-accent-blue transition-colors" aria-hidden="true" />
+              </div>
+              <p className="text-secondary-text text-sm leading-relaxed">{client.description}</p>
+              <span className="text-[10px] font-mono text-accent-blue uppercase tracking-widest mt-auto">{localTrust.visitSite}</span>
+            </a>
           ))}
         </div>
       </div>
