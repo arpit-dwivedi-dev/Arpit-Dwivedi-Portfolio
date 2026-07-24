@@ -75,12 +75,23 @@ export const FeaturedProject = () => {
               </div>
 
               <div className="flex gap-4">
-                <button
-                  disabled
-                  className="px-6 py-3 bg-accent-blue/40 text-bg-pure/60 font-bold rounded-xl flex items-center gap-2 cursor-not-allowed"
-                >
-                  {featuredProject.button} <ExternalLink size={16} />
-                </button>
+                {featured.link ? (
+                  <a
+                    href={featured.link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-6 py-3 bg-accent-blue text-bg-pure font-bold rounded-xl flex items-center gap-2 hover:glow-blue transition-all"
+                  >
+                    {featuredProject.button} <ExternalLink size={16} />
+                  </a>
+                ) : (
+                  <button
+                    disabled
+                    className="px-6 py-3 bg-accent-blue/40 text-bg-pure/60 font-bold rounded-xl flex items-center gap-2 cursor-not-allowed"
+                  >
+                    {featuredProject.button} <ExternalLink size={16} />
+                  </button>
+                )}
               </div>
             </div>
 
