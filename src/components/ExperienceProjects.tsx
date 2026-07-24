@@ -1,11 +1,11 @@
 import { motion } from 'motion/react';
-import { Layout, Calendar, Zap, Search, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Layout, Calendar, Zap, Search, Brain, CheckCircle2, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import { ProjectCard } from './ProjectCard';
 
-const serviceIcons = [Layout, Calendar, Zap, Search];
-const serviceColors = ['accent-blue', 'accent-purple', 'accent-blue', 'accent-purple'];
+const serviceIcons = [Layout, Calendar, Zap, Search, Brain];
+const serviceColors = ['accent-blue', 'accent-purple', 'accent-blue', 'accent-purple', 'accent-blue'];
 const serviceClassMap: Record<string, string> = {
   'accent-blue': 'bg-accent-blue/10 text-accent-blue',
   'accent-purple': 'bg-accent-purple/10 text-accent-purple',
@@ -28,7 +28,7 @@ export const Services = () => {
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">{servicesSection.title} <span className="text-gradient">{servicesSection.titleAccent}</span></h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service, idx) => {
             const Icon = serviceIcons[idx % serviceIcons.length];
             const color = serviceColors[idx % serviceColors.length];

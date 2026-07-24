@@ -3,6 +3,7 @@ import { Hero } from '../components/Hero';
 import { FeaturedProject } from '../components/FeaturedProject';
 import { About } from '../components/AboutTech';
 import { Team, Process } from '../components/TeamProcess';
+import { WhyChooseUs, Industries, Testimonials, FAQ } from '../components/TrustSections';
 import { Services, Projects } from '../components/ExperienceProjects';
 import { DevOpsArchitecture, Clients, Contact, Footer } from '../components/AchievementsContact';
 import { motion, useScroll, useSpring } from 'motion/react';
@@ -47,13 +48,17 @@ export const HomePage = () => {
       <main id="main-content">
         <Hero />
         <FeaturedProject />
+        <Clients />
         <About />
-        <Team />
         <Services />
+        <Industries />
+        <WhyChooseUs />
+        <Team />
         <Projects />
         <DevOpsArchitecture />
-        <Clients />
         <Process />
+        <Testimonials />
+        <FAQ />
         <Contact />
       </main>
 
