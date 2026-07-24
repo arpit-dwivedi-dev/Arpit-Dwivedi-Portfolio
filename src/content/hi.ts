@@ -186,6 +186,7 @@ export const hiContent: typeof metadata.content = {
     description: 'हम नए प्रोजेक्ट्स, तकनीकी चुनौतियों, या ऐसे काम पर चर्चा के लिए तैयार हैं जिसमें एक व्यक्ति के बजाय एक पूरी फुल-स्टैक टीम की ज़रूरत हो।',
     email: '101techlabs@gmail.com',
     linkedin: '101 Tech Labs',
+    linkedinUrl: 'https://www.linkedin.com/company/133407777/',
     github: '101techlabs',
     whatsapp: {
       number: '917071520965',

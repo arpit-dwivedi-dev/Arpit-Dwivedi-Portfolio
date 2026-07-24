@@ -76,9 +76,9 @@ export const Navbar = () => {
               animate={{ opacity: 1, scale: 1 }}
               className="flex items-center gap-4 ml-4"
             >
-              {/* PLACEHOLDER: contact.github/linkedin are not confirmed live company profiles — verify before launch */}
+              {/* PLACEHOLDER: contact.github is not a confirmed live company profile — verify before launch */}
               <a href={`https://github.com/${contact.github}`} target="_blank" rel="noreferrer" aria-label={nav.ariaGithub} className="p-2 -m-2 text-secondary-text hover:text-accent-blue transition-colors"><FaGithub size={18} /></a>
-              <a href={`https://linkedin.com/company/${contact.linkedin.replaceAll(/\s+/g, '-').toLowerCase()}`} target="_blank" rel="noreferrer" aria-label={nav.ariaLinkedin} className="p-2 -m-2 text-secondary-text hover:text-accent-blue transition-colors"><FaLinkedin size={18} /></a>
+              <a href={contact.linkedinUrl} target="_blank" rel="noreferrer" aria-label={nav.ariaLinkedin} className="p-2 -m-2 text-secondary-text hover:text-accent-blue transition-colors"><FaLinkedin size={18} /></a>
               <button
                 type="button"
                 onClick={toggleTheme}
@@ -146,7 +146,7 @@ export const Navbar = () => {
         >
           <div className="flex items-center gap-8">
             <a href={`https://github.com/${contact.github}`} target="_blank" rel="noreferrer" aria-label={nav.ariaGithub} tabIndex={isOpen ? undefined : -1} className="p-3 -m-3 text-secondary-text hover:text-accent-blue transition-colors"><FaGithub size={24} /></a>
-            <a href={`https://linkedin.com/company/${contact.linkedin.replaceAll(/\s+/g, '-').toLowerCase()}`} target="_blank" rel="noreferrer" aria-label={nav.ariaLinkedin} tabIndex={isOpen ? undefined : -1} className="p-3 -m-3 text-secondary-text hover:text-accent-blue transition-colors"><FaLinkedin size={24} /></a>
+            <a href={contact.linkedinUrl} target="_blank" rel="noreferrer" aria-label={nav.ariaLinkedin} tabIndex={isOpen ? undefined : -1} className="p-3 -m-3 text-secondary-text hover:text-accent-blue transition-colors"><FaLinkedin size={24} /></a>
             <button
               type="button"
               onClick={toggleTheme}

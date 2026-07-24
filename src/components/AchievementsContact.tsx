@@ -268,7 +268,7 @@ export const Contact = () => {
               {contact.description}
             </p>
 
-            {/* PLACEHOLDER: contact.linkedin/github below resolve to placeholder URLs (101techlabs) — confirm real profiles exist before launch */}
+            {/* PLACEHOLDER: contact.github below resolves to a placeholder URL (101techlabs) — confirm real profile exists before launch */}
             {/* items-start (not center): each link's width is just its own icon+text
                 content, which varies (email address vs. "101 Tech Labs" vs.
                 "101techlabs") — centering them independently put every row's icon at
@@ -283,7 +283,7 @@ export const Contact = () => {
                   <div className="text-lg font-bold text-ink group-hover:text-accent-blue transition-colors">{contact.email}</div>
                 </div>
               </a>
-              <a href={`https://linkedin.com/company/${contact.linkedin.replaceAll(/\s+/g, '-').toLowerCase()}`} target="_blank" rel="noreferrer" className="flex items-center gap-4 group">
+              <a href={contact.linkedinUrl} target="_blank" rel="noreferrer" className="flex items-center gap-4 group">
                 <div className="w-12 h-12 rounded-xl bg-ink/5 flex items-center justify-center text-ink group-hover:bg-accent-blue group-hover:text-bg-pure transition-all">
                   <FaLinkedin size={20} />
                 </div>
