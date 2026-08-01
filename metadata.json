@@ -57,20 +57,19 @@
     ],
     "projects": [
       {
-        "title": "NGO Website",
-        "description": "Highly responsive and SEO-friendly platform for a non-profit organization to boost their digital presence.",
-        "tags": ["React", "Tailwind", "SEO"],
-        "metrics": [{ "label": "SEO Score", "value": "100" }],
+        "title": "Rashtriya Swasthya Sangathan",
+        "subtitle": "NGO Donation & Outreach Platform",
+        "featured": true,
+        "description": "This NGO runs blood donation camps, mobile health clinics, old-age home support, and medical aid for underprivileged communities across India — but had no way for donors or volunteers to find them online. We built a full donation and outreach website: volunteer and donor sign-up, a cause-based donation flow, a news and events section, a photo gallery, and their impact numbers, all in one place. People can now find the organization, understand what they do, and give — without the NGO needing a developer on staff.",
+        "tags": ["Nonprofit", "Donor Platform", "React"],
         "link": "https://www.rashtriyaswasthyasangathan.org/"
       },
       {
-        "title": "HRMS System",
-        "subtitle": "Enterprise HRMS — 25+ modules",
-        "featured": true,
-        "description": "Comprehensive Human Resource Management System with over 25 integrated modules for enterprise use.",
-        "tags": ["MEAN Stack", "Microservices", "Redis"],
-        "metrics": [{ "label": "Modules", "value": "25+" }],
-        "link": "https://arpit-dwivedi-dev.github.io/HRMS/"
+        "title": "SA Ethics Biotech",
+        "subtitle": "Certified Medical Device Manufacturer — Corporate Site",
+        "description": "SA Ethics Biotech is an ISO 9001:2015 & ISO 13485:2016 certified manufacturer and importer/exporter of medical devices and blood bank equipment, based in Delhi and Kanpur — but their website didn't reflect that level of credibility. We built a corporate site that presents their certifications, product lines, and company background the way B2B buyers and institutional clients expect from a certified manufacturer. It's now the first thing a hospital or distributor sees before doing business with them.",
+        "tags": ["Medical Devices", "B2B", "Corporate Site"],
+        "link": "https://www.saethicsbio.com/"
       }
     ],
     "impactMetrics": [
@@ -81,7 +80,7 @@
       { "label": "Cost Savings", "value": "₹10–15L" }
     ],
     "hero": {
-      "badge": "BUILDING SINCE 2021",
+      "badge": "BUILDING SINCE 2026",
       "title": "We build AI agents and custom software",
       "titleAccent": "that automate business operations.",
       "subtitle": "From AI automation to enterprise software — we build products that streamline operations, reduce repetitive work, and scale with your business.",
@@ -90,8 +89,8 @@
         "contact": "Get a Quote"
       },
       "stats": [
-        { "value": "4+", "label": "Years Exp" },
-        { "value": "15+", "label": "Projects Delivered" }
+        { "value": "2", "label": "Client Projects Delivered" },
+        { "value": "Remote-First", "label": "Serving Clients Worldwide" }
       ],
       "terminal": {
         "filename": "101_tech_labs -- portfolio_v2.ts",
@@ -113,9 +112,9 @@
       "terminalCommands": {
         "about": "101 Tech Labs builds websites, booking systems, and automation for local businesses — plus larger enterprise software platforms when the job calls for it.",
         "skills": "Stack: Angular, React, Node.js, Express, MongoDB, TypeScript, AI/LLMs, Docker, AWS.",
-        "projects": "Projects: HRMS System, NGO Platform. More case studies coming soon.",
+        "projects": "Projects: Rashtriya Swasthya Sangathan (NGO donation platform), SA Ethics Biotech (medical device manufacturer).",
         "contact": "Email: 101techlabs@gmail.com | GitHub: @101techlabs | Web: 101techlabs.com",
-        "whoami": "101 Tech Labs — a solo full-stack & AI engineering practice helping local businesses get online, building since 2021.",
+        "whoami": "101 Tech Labs — a full-stack & AI engineering practice helping local businesses get online, building since 2026.",
         "location": "Serving clients worldwide, remote-first.",
         "help": "Available commands: [about, skills, projects, contact, whoami, location, clear, exit]",
         "exit": "Safe mode engaged. To restart, refresh your terminal session."
@@ -137,7 +136,7 @@
         "Easy to Manage"
       ],
       "card": {
-        "est": "EST. 2021",
+        "est": "EST. 2026",
         "location": "Serving businesses worldwide",
         "locationLabel": "Service Area",
         "expertise": [
@@ -191,8 +190,8 @@
         "initials": "AD",
         "name": "Arpit Dwivedi",
         "role": "Founder & Software Engineer",
-        "bio": "101 Tech Labs is run solo by Arpit, a full-stack and AI engineer handling everything from the first call to shipped code — so nothing gets lost in handoffs between a project manager and a developer.",
-        "highlights": ["4+ Years Experience", "Full-Stack & AI Engineering", "Direct Access, No Middlemen"]
+        "bio": "Arpit leads 101 Tech Labs and stays hands-on with every project, from the first call to shipped code — so nothing gets lost in handoffs between a project manager and a developer.",
+        "highlights": ["Real-World Engineering Background", "Full-Stack & AI Engineering", "Direct Access, No Middlemen"]
       }
     },
     "whyChooseUs": {
@@ -203,7 +202,7 @@
         { "title": "Direct Access", "description": "You talk directly to the engineer building your software — not a sales rep or a project manager relaying messages." },
         { "title": "Reliable Engineering", "description": "Clean architecture, secure foundations, and practical automation applied to projects of any size." },
         { "title": "Full-Stack + AI, One Vendor", "description": "Frontend, backend, DevOps, and AI/automation under one roof — no juggling multiple agencies to ship one product." },
-        { "title": "Fast & Affordable", "description": "Solo-run means lower overhead, passed on to you, without cutting corners on delivery speed or quality." }
+        { "title": "Fast & Affordable", "description": "Low overhead, no bloat — the savings get passed on to you, without cutting corners on delivery speed or quality." }
       ]
     },
     "industries": {
@@ -248,8 +247,7 @@
         { "question": "How long does a typical project take?", "answer": "A business website usually ships in 1–3 weeks; larger systems like booking platforms or custom software typically take 4–12 weeks depending on scope." },
         { "question": "Do you work with businesses outside India?", "answer": "Yes — we work remotely with clients worldwide." },
         { "question": "What happens after launch?", "answer": "We stay reachable for fixes, updates, and follow-up work. This isn't a build-and-disappear engagement." },
-        { "question": "Do you build with AI and LLMs?", "answer": "Yes — from RAG pipelines and data workflows to LLM-integrated features and agentic automation, when it actually solves the problem." },
-        { "question": "Is 101 Tech Labs a team or one person?", "answer": "Right now it's built and run solo by the founder, a full-stack and AI engineer — meaning direct access to the person doing the work at every stage." }
+        { "question": "Do you build with AI and LLMs?", "answer": "Yes — from RAG pipelines and data workflows to LLM-integrated features and agentic automation, when it actually solves the problem." }
       ]
     },
     "contact": {
@@ -287,15 +285,15 @@
       }
     },
     "featuredProject": {
-      "label": "What We Can Handle",
-      "title": "Built For",
-      "titleAccent": "Serious Complexity",
-      "description": "This is the kind of technical complexity we handle for enterprise clients — which is exactly why your business website or booking system is well within reach.",
-      "button": "View Case Study",
+      "label": "Featured Work",
+      "title": "Featured",
+      "titleAccent": "Case Study",
+      "description": "A closer look at one project — the problem, what we built, and how it's used today.",
+      "button": "Visit Live Site",
       "visual": {
-        "ocr": "OCR ENGINE",
-        "ai": "AI PARSER",
-        "badge": "99.9% OPTIMIZED"
+        "ocr": "NEWS & GALLERY",
+        "ai": "DONATION FLOW",
+        "badge": "LIVE & SECURE"
       }
     },
     "servicesSection": {
@@ -307,10 +305,10 @@
       "label": "Portfolio",
       "title": "Key",
       "titleAccent": "Projects",
-      "description": "Enterprise-scale systems we've delivered — proof that whatever complexity your project needs, we've already handled harder.",
+      "description": "Real client engagements — the problems they came to us with, and what we built to solve them.",
       "pageTitle": "All",
       "pageTitleAccent": "Projects",
-      "pageDescription": "Explore our full collection of engineering work — production systems, platforms, and technical experiments.",
+      "pageDescription": "Every project we've shipped so far — real client work, not filler.",
       "backToHome": "Back to Home",
       "viewAll": "View All Projects"
     },

@@ -66,7 +66,7 @@ export const Services = () => {
 export const Projects = () => {
   const { lang, content } = useLanguage();
   const { projects, projectsSection } = content;
-  const otherProjects = projects.filter(p => !p.featured).slice(0, 3);
+  const otherProjects = projects.slice(0, 3);
   const projectsHref = lang === 'hi' ? '/hi/projects' : '/projects';
 
   return (
