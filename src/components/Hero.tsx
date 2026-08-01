@@ -95,7 +95,7 @@ export const Hero = () => {
             {hero.subtitle}
           </p>
 
-          <div className="flex flex-wrap gap-4 mb-12">
+          <div className="flex flex-wrap justify-center lg:justify-start gap-4 mb-12">
             {hero.stats.map((stat) => (
               <div key={stat.label} className="flex flex-col gap-1 px-4 py-2 rounded-xl glass">
                 <span className="text-2xl font-bold text-ink">{stat.value}</span>
