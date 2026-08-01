@@ -57,7 +57,7 @@ export const HomePage = () => {
         <Projects />
         <DevOpsArchitecture />
         <Process />
-        <Testimonials />
+        {/* <Testimonials /> */}
         <FAQ />
         <Contact />
       </main>
