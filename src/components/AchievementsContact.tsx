@@ -4,6 +4,7 @@ import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { useState, FormEvent } from 'react';
 import metadata from '../../metadata.json';
 import { useLanguage } from '../i18n/LanguageContext';
+import { AdSlot } from './ads/AdSlot';
 
 export const Achievements = () => {
   const { content } = useLanguage();
@@ -399,6 +400,9 @@ export const Footer = () => {
 
   return (
     <footer className="pt-12 pb-24 border-t border-ink/5 bg-bg-pure">
+      <div className="max-w-7xl mx-auto px-6">
+        <AdSlot slot={import.meta.env.VITE_ADSENSE_SLOT_FOOTER} className="mb-12" />
+      </div>
       <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
         <div>
           <div className="text-xl font-bold tracking-tighter">

@@ -74,7 +74,9 @@ const upsertMetaByProperty = (property: string, content: string) => {
 // Per-route, per-language <title>/description/OG overrides. index.html's static
 // tags cover the English homepage default for non-JS clients; this fills in the
 // other 3 routes (/hi, /projects, /hi/projects) once JS runs.
-const ROUTE_META: Record<Lang, Record<'home' | 'projects', { title: string; description: string }>> = {
+type RouteKey = 'home' | 'projects' | 'freeTools' | 'mapsScraper';
+
+const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; description: string }>> = {
   en: {
     home: {
       title: '101 Tech Labs — AI Automation & Custom Software Development, Noida',
@@ -85,6 +87,15 @@ const ROUTE_META: Record<Lang, Record<'home' | 'projects', { title: string; desc
       title: 'Case Studies & Client Work | 101 Tech Labs',
       description:
         'See how 101 Tech Labs built a donor and outreach platform for Rashtriya Swasthya Sangathan and a corporate site for ISO-certified manufacturer SA Ethics Biotech — real client engagements, not templates.',
+    },
+    freeTools: {
+      title: 'Free Tools | 101 Tech Labs',
+      description: 'Free browser tools from 101 Tech Labs — starting with a Google Maps listing scraper. No signup, no catch.',
+    },
+    mapsScraper: {
+      title: 'Google Maps Scraper (Free Tool) | 101 Tech Labs',
+      description:
+        'Pull business name, address, phone, website, rating, and hours from a Google Maps search into a CSV. Built for quick lookups, not bulk scraping.',
     },
   },
   hi: {
@@ -97,6 +108,15 @@ const ROUTE_META: Record<Lang, Record<'home' | 'projects', { title: string; desc
       title: 'केस स्टडीज़ और क्लाइंट वर्क | 101 Tech Labs',
       description:
         'देखें कैसे 101 Tech Labs ने राष्ट्रीय स्वास्थ्य संगठन के लिए डोनर और आउटरीच प्लेटफ़ॉर्म बनाया, और ISO-सर्टिफ़ाइड निर्माता SA Ethics Biotech के लिए कॉर्पोरेट साइट बनाई — असली क्लाइंट प्रोजेक्ट्स, टेम्पलेट नहीं।',
+    },
+    freeTools: {
+      title: 'फ्री टूल्स | 101 Tech Labs',
+      description: '101 Tech Labs के फ्री ब्राउज़र टूल्स — शुरुआत गूगल मैप्स लिस्टिंग स्क्रैपर से। कोई साइनअप नहीं, कोई शर्त नहीं।',
+    },
+    mapsScraper: {
+      title: 'गूगल मैप्स स्क्रैपर (फ्री टूल) | 101 Tech Labs',
+      description:
+        'गूगल मैप्स सर्च से बिज़नेस का नाम, पता, फ़ोन नंबर, वेबसाइट, रेटिंग और समय एक CSV में निकालें। छोटे लुकअप के लिए बना है, बल्क स्क्रैपिंग के लिए नहीं।',
     },
   },
 };
@@ -118,7 +138,14 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     upsertAlternateLink('hi', absoluteUrl('hi', basePathname));
     upsertAlternateLink('x-default', absoluteUrl('en', basePathname));
 
-    const routeKey = basePathname === '/projects' ? 'projects' : 'home';
+    const routeKey: RouteKey =
+      basePathname === '/projects'
+        ? 'projects'
+        : basePathname === '/free-tools'
+          ? 'freeTools'
+          : basePathname === '/free-tools/google-maps-scraper'
+            ? 'mapsScraper'
+            : 'home';
     const meta = ROUTE_META[lang][routeKey];
     const canonicalHref = absoluteUrl(lang, basePathname);
 

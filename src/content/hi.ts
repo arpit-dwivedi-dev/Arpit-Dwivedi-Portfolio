@@ -10,6 +10,7 @@ export const hiContent: SiteContent = {
     { name: 'हमारे बारे में', href: '#about' },
     { name: 'सेवाएं', href: '#experience' },
     { name: 'प्रोजेक्ट्स', href: '#projects' },
+    { name: 'फ्री टूल्स', href: '/hi/free-tools' },
     { name: 'संपर्क करें', href: '#contact' },
   ],
   nav: {
