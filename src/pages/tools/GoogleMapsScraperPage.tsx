@@ -1,7 +1,8 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Coffee, Download, Info, Loader2, MapPin, Star } from 'lucide-react';
+import { ArrowLeft, Check, ChevronDown, Coffee, Copy, Download, Info, Loader2, MapPin, Star, X } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import { Navbar } from '../../components/Navbar';
 import { Footer } from '../../components/AchievementsContact';
 import { AdSlot } from '../../components/ads/AdSlot';
@@ -9,7 +10,7 @@ import { Select } from '../../components/ui/Select';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { useMapsScraper, MAX_RESULTS_PER_SEARCH, MAX_SEARCHES_PER_SESSION } from '../../tools/googleMapsScraper/useMapsScraper';
 import { isLiveMode } from '../../tools/googleMapsScraper/dataSource';
-import { toCsv, downloadCsv } from '../../lib/csv';
+import { toCsv, downloadCsv, toJson, downloadJson, toExcel, downloadExcel } from '../../lib/csv';
 
 const RESULT_COUNT_OPTIONS = [5, 10, 20].map((n) => ({ value: String(n), label: `${n} results` }));
 
@@ -28,6 +29,7 @@ export const GoogleMapsScraperPage = () => {
   const {
     results,
     running,
+    stopping,
     error,
     run,
     cancel,
@@ -40,10 +42,36 @@ export const GoogleMapsScraperPage = () => {
   const [query, setQuery] = useState('');
   const [location, setLocation] = useState('');
   const [count, setCount] = useState('10');
+  const [exportMenuOpen, setExportMenuOpen] = useState(false);
+  const exportMenuRef = useRef<HTMLDivElement>(null);
+  const [upiModalOpen, setUpiModalOpen] = useState(false);
+  const [copiedField, setCopiedField] = useState<'upi' | 'number' | null>(null);
+
+  const UPI_ID = 'marpit697.ad@ybl';
+  const UPI_NUMBER = '7071520965';
+  const UPI_PAYEE_NAME = 'Arpit Dwivedi';
+  const UPI_LINK = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(UPI_PAYEE_NAME)}&cu=INR`;
+
+  const handleCopy = (field: 'upi' | 'number', value: string) => {
+    navigator.clipboard.writeText(value).catch(() => {});
+    setCopiedField(field);
+    setTimeout(() => setCopiedField((current) => (current === field ? null : current)), 1500);
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    if (!exportMenuOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (exportMenuRef.current && !exportMenuRef.current.contains(e.target as Node)) {
+        setExportMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [exportMenuOpen]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -54,9 +82,17 @@ export const GoogleMapsScraperPage = () => {
     run(combined, Number(count));
   };
 
-  const handleExport = () => {
+  const handleExport = (format: 'csv' | 'json' | 'excel') => {
     if (!results.length) return;
-    downloadCsv(`google-maps-results-${Date.now()}.csv`, toCsv(results, CSV_COLUMNS));
+    const base = `google-maps-results-${Date.now()}`;
+    if (format === 'csv') {
+      downloadCsv(`${base}.csv`, toCsv(results, CSV_COLUMNS));
+    } else if (format === 'json') {
+      downloadJson(`${base}.json`, toJson(results, CSV_COLUMNS));
+    } else {
+      downloadExcel(`${base}.xls`, toExcel(results, CSV_COLUMNS));
+    }
+    setExportMenuOpen(false);
   };
 
   // Announced to screen readers via the sr-only status region below — the
@@ -135,7 +171,7 @@ export const GoogleMapsScraperPage = () => {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="e.g. coffee shops"
-                  disabled={running || sessionLimitReached}
+                  disabled={running || stopping || sessionLimitReached}
                   aria-describedby="session-status"
                   className="w-full bg-ink/5 border border-ink/10 rounded-xl px-4 py-3 text-ink focus:border-accent-blue focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure transition-colors disabled:opacity-60"
                 />
@@ -151,7 +187,7 @@ export const GoogleMapsScraperPage = () => {
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   placeholder="e.g. Austin, TX"
-                  disabled={running || sessionLimitReached}
+                  disabled={running || stopping || sessionLimitReached}
                   aria-describedby="session-status"
                   className="w-full bg-ink/5 border border-ink/10 rounded-xl px-4 py-3 text-ink focus:border-accent-blue focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure transition-colors disabled:opacity-60"
                 />
@@ -166,7 +202,7 @@ export const GoogleMapsScraperPage = () => {
                   value={count}
                   onChange={setCount}
                   options={RESULT_COUNT_OPTIONS}
-                  disabled={running || sessionLimitReached}
+                  disabled={running || stopping || sessionLimitReached}
                   ariaDescribedBy="session-status"
                 />
               </div>
@@ -183,7 +219,7 @@ export const GoogleMapsScraperPage = () => {
               ) : (
                 <button
                   type="submit"
-                  disabled={sessionLimitReached}
+                  disabled={stopping || sessionLimitReached}
                   aria-describedby="session-status"
                   className="w-full py-3 bg-accent-blue text-bg-pure font-bold rounded-xl hover:glow-blue transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure"
                 >
@@ -211,30 +247,59 @@ export const GoogleMapsScraperPage = () => {
               aria-labelledby="maps-results-heading"
               className="rounded-3xl bg-bg-secondary border border-ink/5 flex flex-col lg:h-full lg:min-h-0"
             >
-              <div className="flex items-center justify-between gap-4 px-6 py-4 border-b border-ink/5 shrink-0">
+              <div className="flex flex-wrap items-center justify-between gap-3 px-4 sm:px-6 py-4 border-b border-ink/5 shrink-0">
                 <h3 id="maps-results-heading" className="flex items-center gap-2 text-lg font-bold text-ink">
                   Results
                   <span className="px-2 py-0.5 rounded-full bg-ink/10 text-secondary-text text-xs font-mono">{results.length}</span>
                 </h3>
-                <div className="flex items-center gap-2 shrink-0">
-                  <a
-                    href="https://www.buymeacoffee.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-[#FFDD00]/10 text-[#FFDD00] text-sm font-bold hover:bg-[#FFDD00]/20 transition-all focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure"
-                  >
-                    <Coffee size={16} aria-hidden="true" />
-                    Buy me a coffee
-                  </a>
+                <div className="flex items-center gap-2 shrink-0 flex-wrap">
                   <button
                     type="button"
-                    onClick={handleExport}
-                    disabled={!results.length}
-                    className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-ink/5 text-ink text-sm font-bold hover:bg-ink/10 transition-all disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure"
+                    onClick={() => setUpiModalOpen(true)}
+                    className="inline-flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-[#FFDD00]/10 text-[#FFDD00] text-sm font-bold hover:bg-[#FFDD00]/20 transition-all focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure"
                   >
-                    <Download size={16} aria-hidden="true" />
-                    Export CSV
+                    <Coffee size={16} aria-hidden="true" />
+                    <span className="hidden sm:inline">Buy me a coffee</span>
                   </button>
+                  <div className="relative" ref={exportMenuRef}>
+                    <button
+                      type="button"
+                      onClick={() => setExportMenuOpen((open) => !open)}
+                      disabled={!results.length}
+                      aria-haspopup="menu"
+                      aria-expanded={exportMenuOpen}
+                      className="inline-flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-ink/5 text-ink text-sm font-bold hover:bg-ink/10 transition-all disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure"
+                    >
+                      <Download size={16} aria-hidden="true" />
+                      <span className="hidden sm:inline">Export</span>
+                      <ChevronDown size={14} aria-hidden="true" className={`transition-transform ${exportMenuOpen ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    {exportMenuOpen && (
+                      <div
+                        role="menu"
+                        className="absolute right-0 top-full mt-2 w-40 rounded-xl bg-bg-secondary border border-ink/10 shadow-xl overflow-hidden z-10"
+                      >
+                        {(
+                          [
+                            { format: 'csv' as const, label: 'CSV (.csv)' },
+                            { format: 'excel' as const, label: 'Excel (.xls)' },
+                            { format: 'json' as const, label: 'JSON (.json)' },
+                          ]
+                        ).map((opt) => (
+                          <button
+                            key={opt.format}
+                            type="button"
+                            role="menuitem"
+                            onClick={() => handleExport(opt.format)}
+                            className="w-full text-left px-4 py-2.5 text-sm text-ink hover:bg-ink/10 transition-colors"
+                          >
+                            {opt.label}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -329,6 +394,86 @@ export const GoogleMapsScraperPage = () => {
       </div>
 
       <Footer />
+
+      <AnimatePresence>
+        {upiModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4"
+            onClick={() => setUpiModalOpen(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="upi-modal-heading"
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-sm rounded-3xl bg-bg-secondary border border-ink/10 p-6 shadow-2xl"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 id="upi-modal-heading" className="text-lg font-bold text-ink flex items-center gap-2">
+                  <Coffee size={18} className="text-[#FFDD00]" aria-hidden="true" />
+                  Buy me a coffee
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setUpiModalOpen(false)}
+                  aria-label="Close"
+                  className="p-1.5 rounded-lg hover:bg-ink/10 text-secondary-text transition-colors"
+                >
+                  <X size={18} aria-hidden="true" />
+                </button>
+              </div>
+
+              <p className="text-sm text-secondary-text mb-4">
+                Scan the QR or use the UPI details below. Thank you for the support!
+              </p>
+
+              <div className="flex justify-center mb-4">
+                <div className="p-3 rounded-2xl bg-white">
+                  <QRCodeSVG value={UPI_LINK} size={180} bgColor="#ffffff" fgColor="#000000" level="M" includeMargin={false} />
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-center justify-between gap-2 px-4 py-3 rounded-xl bg-ink/5">
+                  <div className="min-w-0">
+                    <p className="text-xs font-mono text-secondary-text">UPI ID</p>
+                    <p className="text-sm font-bold text-ink truncate">{UPI_ID}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleCopy('upi', UPI_ID)}
+                    className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-accent-blue/10 text-accent-blue text-xs font-bold hover:bg-accent-blue/20 transition-all"
+                  >
+                    {copiedField === 'upi' ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
+                    {copiedField === 'upi' ? 'Copied' : 'Copy'}
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-between gap-2 px-4 py-3 rounded-xl bg-ink/5">
+                  <div className="min-w-0">
+                    <p className="text-xs font-mono text-secondary-text">UPI Number</p>
+                    <p className="text-sm font-bold text-ink truncate">{UPI_NUMBER}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleCopy('number', UPI_NUMBER)}
+                    className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-accent-blue/10 text-accent-blue text-xs font-bold hover:bg-accent-blue/20 transition-all"
+                  >
+                    {copiedField === 'number' ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
+                    {copiedField === 'number' ? 'Copied' : 'Copy'}
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(0,209,255,0.03),transparent_70%)]" />
