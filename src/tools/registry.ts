@@ -13,8 +13,8 @@ export interface ToolDefinition {
 export const TOOLS: ToolDefinition[] = [
   {
     id: 'google-maps-scraper',
-    title: 'Google Maps Scraper',
-    description: 'Pull the name, address, phone, website, rating, and hours off a Google Maps search into a table you can export as CSV.',
+    title: 'Google Maps Business Finder',
+    description: 'Find businesses on Google Maps and pull their name, address, phone, website, rating, and hours into a table you can export as CSV.',
     icon: MapPin,
     path: 'google-maps-scraper',
   },

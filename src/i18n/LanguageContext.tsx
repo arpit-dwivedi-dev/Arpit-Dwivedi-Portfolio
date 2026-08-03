@@ -90,12 +90,12 @@ const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; description: st
     },
     freeTools: {
       title: 'Free Tools | 101 Tech Labs',
-      description: 'Free browser tools from 101 Tech Labs — starting with a Google Maps listing scraper. No signup, no catch.',
+      description: 'Free browser tools from 101 Tech Labs — starting with a Google Maps business finder. No signup, no catch.',
     },
     mapsScraper: {
-      title: 'Google Maps Scraper (Free Tool) | 101 Tech Labs',
+      title: 'Google Maps Business Finder (Free Tool) | 101 Tech Labs',
       description:
-        'Pull business name, address, phone, website, rating, and hours from a Google Maps search into a CSV. Built for quick lookups, not bulk scraping.',
+        'Find businesses on Google Maps and pull their name, address, phone, website, rating, and hours into a CSV. Built for quick lookups, not bulk scraping.',
     },
   },
   hi: {
@@ -111,12 +111,12 @@ const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; description: st
     },
     freeTools: {
       title: 'फ्री टूल्स | 101 Tech Labs',
-      description: '101 Tech Labs के फ्री ब्राउज़र टूल्स — शुरुआत गूगल मैप्स लिस्टिंग स्क्रैपर से। कोई साइनअप नहीं, कोई शर्त नहीं।',
+      description: '101 Tech Labs के फ्री ब्राउज़र टूल्स — शुरुआत गूगल मैप्स बिज़नेस फ़ाइंडर से। कोई साइनअप नहीं, कोई शर्त नहीं।',
     },
     mapsScraper: {
-      title: 'गूगल मैप्स स्क्रैपर (फ्री टूल) | 101 Tech Labs',
+      title: 'गूगल मैप्स बिज़नेस फ़ाइंडर (फ्री टूल) | 101 Tech Labs',
       description:
-        'गूगल मैप्स सर्च से बिज़नेस का नाम, पता, फ़ोन नंबर, वेबसाइट, रेटिंग और समय एक CSV में निकालें। छोटे लुकअप के लिए बना है, बल्क स्क्रैपिंग के लिए नहीं।',
+        'गूगल मैप्स पर बिज़नेस खोजें और उनका नाम, पता, फ़ोन नंबर, वेबसाइट, रेटिंग और समय एक CSV में निकालें। छोटे लुकअप के लिए बना है, बल्क स्क्रैपिंग के लिए नहीं।',
     },
   },
 };

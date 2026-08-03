@@ -8,6 +8,7 @@ import { AdSlot } from '../../components/ads/AdSlot';
 import { Select } from '../../components/ui/Select';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { useMapsScraper, MAX_RESULTS_PER_SEARCH, MAX_SEARCHES_PER_SESSION } from '../../tools/googleMapsScraper/useMapsScraper';
+import { isLiveMode } from '../../tools/googleMapsScraper/dataSource';
 import { toCsv, downloadCsv } from '../../lib/csv';
 
 const RESULT_COUNT_OPTIONS = [5, 10, 20].map((n) => ({ value: String(n), label: `${n} results` }));
@@ -37,6 +38,7 @@ export const GoogleMapsScraperPage = () => {
   } = useMapsScraper();
 
   const [query, setQuery] = useState('');
+  const [location, setLocation] = useState('');
   const [count, setCount] = useState('10');
 
   useEffect(() => {
@@ -45,7 +47,11 @@ export const GoogleMapsScraperPage = () => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    run(query, Number(count));
+    // Only combine when both are present — an empty "what" should still hit
+    // the hook's own "enter a search term" validation, not silently become
+    // "in Austin, TX" with no subject.
+    const combined = query.trim() && location.trim() ? `${query.trim()} in ${location.trim()}` : query.trim();
+    run(combined, Number(count));
   };
 
   const handleExport = () => {
@@ -68,39 +74,49 @@ export const GoogleMapsScraperPage = () => {
       <main id="main-content" className="pt-28 pb-16 lg:pb-6 lg:h-dvh">
         <div className="max-w-7xl mx-auto px-6 w-full lg:h-full lg:flex lg:flex-col lg:min-h-0">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="mb-6 lg:shrink-0">
-            <Link
+            {/* <Link
               to={backHref}
               className="inline-flex items-center gap-2 text-secondary-text hover:text-ink transition-colors group mb-4 text-sm"
             >
               <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
               Back to Free Tools
-            </Link>
+            </Link> */}
 
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
-                <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-1 block">Free Tool</span>
+                {/* <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-1 block">Free Tool</span> */}
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
-                  Google Maps <span className="text-gradient">Scraper</span>
+                  Google Maps <span className="text-gradient">Business Finder</span>
                 </h2>
               </div>
               <p className="text-secondary-text max-w-md text-sm">
-                Name, address, phone, website, rating, and hours off a Google Maps search — into a table you can export.
+                Find businesses on Google Maps and pull their name, address, phone, website, rating, and hours — into a table you can export.
               </p>
             </div>
           </motion.div>
 
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="flex items-center gap-3 px-4 py-3 rounded-xl bg-accent-blue/5 border border-accent-blue/20 mb-6 lg:shrink-0"
           >
             <Info size={16} className="text-accent-blue shrink-0" aria-hidden="true" />
             <p className="text-xs md:text-sm text-secondary-text leading-relaxed">
-              <strong className="text-ink">Demo mode</strong> — sample data below, not live Google Maps results. Once a backend is
-              connected, real requests stay low-volume: throttled, capped at {MAX_RESULTS_PER_SEARCH} rows/search and{' '}
-              {MAX_SEARCHES_PER_SESSION} searches/session.
+              {isLiveMode ? (
+                <>
+                  <strong className="text-ink">Heads up</strong> — this reads publicly visible Google Maps listing data at low
+                  volume: throttled, capped at {MAX_RESULTS_PER_SEARCH} rows/search and {MAX_SEARCHES_PER_SESSION} searches/session.
+                  It's built for quick lookups, not bulk extraction.
+                </>
+              ) : (
+                <>
+                  <strong className="text-ink">Demo mode</strong> — sample data below, not live Google Maps results. Once a backend
+                  is connected, real requests stay low-volume: throttled, capped at {MAX_RESULTS_PER_SEARCH} rows/search and{' '}
+                  {MAX_SEARCHES_PER_SESSION} searches/session.
+                </>
+              )}
             </p>
-          </motion.div>
+          </motion.div> */}
 
           <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-6 items-start lg:items-stretch lg:flex-1 lg:min-h-0">
             <motion.form
@@ -118,7 +134,23 @@ export const GoogleMapsScraperPage = () => {
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="e.g. coffee shops in Austin, TX"
+                  placeholder="e.g. coffee shops"
+                  disabled={running || sessionLimitReached}
+                  aria-describedby="session-status"
+                  className="w-full bg-ink/5 border border-ink/10 rounded-xl px-4 py-3 text-ink focus:border-accent-blue focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure transition-colors disabled:opacity-60"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="maps-location" className="text-xs font-mono text-secondary-text uppercase tracking-widest">
+                  Location <span className="normal-case text-secondary-text/70">(optional)</span>
+                </label>
+                <input
+                  id="maps-location"
+                  type="text"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  placeholder="e.g. Austin, TX"
                   disabled={running || sessionLimitReached}
                   aria-describedby="session-status"
                   className="w-full bg-ink/5 border border-ink/10 rounded-xl px-4 py-3 text-ink focus:border-accent-blue focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure transition-colors disabled:opacity-60"
