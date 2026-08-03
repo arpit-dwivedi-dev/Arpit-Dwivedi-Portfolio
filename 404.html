@@ -12,6 +12,9 @@
     <!-- End Google Tag Manager -->
     <link rel="preload" href="/fonts/inter-latin-variable.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/jetbrains-mono-latin-variable.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- AdSense loads on demand (see src/lib/adsense.ts) only once an AdSlot mounts; this hint lets the
+         connection warm up in parallel instead of paying a full DNS+TCP+TLS penalty at that point. -->
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -148,9 +151,9 @@
         ]
       }
     </script>
-    <script type="module" crossorigin src="/assets/index-DDIp8xLi.js"></script>
+    <script type="module" crossorigin src="/assets/index-ltPfIVyx.js"></script>
     <link rel="modulepreload" crossorigin href="/assets/sentry-C_utX6yq.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-DEs_JghL.css">
+    <link rel="stylesheet" crossorigin href="/assets/index-BLumaM6-.css">
       <script async src="https://www.googletagmanager.com/gtag/js?id=G-4D3FHRG5ST"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
