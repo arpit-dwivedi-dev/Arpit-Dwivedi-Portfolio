@@ -63,7 +63,7 @@ export const Navbar = () => {
                 transition={{ delay: idx * 0.1 }}
               >
                 <Link
-                   to={link.href.startsWith('#') ? link.href : link.href}
+                   to={link.href.startsWith('#') ? `${homeHref}${link.href}` : link.href}
                   className="text-sm font-medium text-secondary-text hover:text-ink transition-colors relative group"
                 >
                   {link.name}
@@ -129,7 +129,7 @@ export const Navbar = () => {
           >
             <Link
                ref={idx === 0 ? firstMobileLinkRef : undefined}
-               to={link.href.startsWith('#') ? link.href : link.href}
+               to={link.href.startsWith('#') ? `${homeHref}${link.href}` : link.href}
               onClick={() => setIsOpen(false)}
               tabIndex={isOpen ? undefined : -1}
               className="text-3xl font-bold text-ink hover:text-accent-blue transition-colors"
