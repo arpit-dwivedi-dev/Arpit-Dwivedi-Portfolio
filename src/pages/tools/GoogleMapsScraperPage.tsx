@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Check, ChevronDown, Coffee, Copy, Download, Info, Loader2, MapPin, Star, X } from 'lucide-react';
+import { ArrowLeft, Check, ChevronDown, Coffee, Copy, Crown, Download, Info, Loader2, Mail, MapPin, Star, X } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { Navbar } from '../../components/Navbar';
 import { Footer } from '../../components/AchievementsContact';
@@ -12,7 +12,12 @@ import { useMapsScraper, MAX_RESULTS_PER_SEARCH, MAX_SEARCHES_PER_SESSION } from
 import { isLiveMode } from '../../tools/googleMapsScraper/dataSource';
 import { toCsv, downloadCsv, toJson, downloadJson, toExcel, downloadExcel } from '../../lib/csv';
 
-const RESULT_COUNT_OPTIONS = [5, 10, 20].map((n) => ({ value: String(n), label: `${n} results` }));
+const RESULT_COUNT_OPTIONS = [
+  ...[5, 10, 15].map((n) => ({ value: String(n), label: `${n} results` })),
+  { value: 'more', label: 'More (Premium)' },
+];
+
+const CONTACT_EMAIL = '101techlabs@gmail.com';
 
 const CSV_COLUMNS = [
   { key: 'name' as const, label: 'Business' },
@@ -45,6 +50,7 @@ export const GoogleMapsScraperPage = () => {
   const [exportMenuOpen, setExportMenuOpen] = useState(false);
   const exportMenuRef = useRef<HTMLDivElement>(null);
   const [upiModalOpen, setUpiModalOpen] = useState(false);
+  const [premiumModalOpen, setPremiumModalOpen] = useState(false);
   const [copiedField, setCopiedField] = useState<'upi' | 'number' | null>(null);
 
   const UPI_ID = 'marpit697.ad@ybl';
@@ -200,7 +206,13 @@ export const GoogleMapsScraperPage = () => {
                 <Select
                   id="maps-count"
                   value={count}
-                  onChange={setCount}
+                  onChange={(value) => {
+                    if (value === 'more') {
+                      setPremiumModalOpen(true);
+                      return;
+                    }
+                    setCount(value);
+                  }}
                   options={RESULT_COUNT_OPTIONS}
                   disabled={running || stopping || sessionLimitReached}
                   ariaDescribedBy="session-status"
@@ -470,6 +482,56 @@ export const GoogleMapsScraperPage = () => {
                   </button>
                 </div>
               </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {premiumModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4"
+            onClick={() => setPremiumModalOpen(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="premium-modal-heading"
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-sm rounded-3xl bg-bg-secondary border border-ink/10 p-6 shadow-2xl"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 id="premium-modal-heading" className="text-lg font-bold text-ink flex items-center gap-2">
+                  <Crown size={18} className="text-accent-blue" aria-hidden="true" />
+                  Go Premium
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setPremiumModalOpen(false)}
+                  aria-label="Close"
+                  className="p-1.5 rounded-lg hover:bg-ink/10 text-secondary-text transition-colors"
+                >
+                  <X size={18} aria-hidden="true" />
+                </button>
+              </div>
+
+              <p className="text-sm text-secondary-text mb-4">
+                Need more than 15 results per search? That's available on our premium plan — reach out and we'll set you up.
+              </p>
+
+              <a
+                href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Google Maps Scraper — Premium access')}`}
+                className="w-full inline-flex items-center justify-center gap-2 py-3 bg-accent-blue text-bg-pure font-bold rounded-xl hover:glow-blue transition-all focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure"
+              >
+                <Mail size={16} aria-hidden="true" />
+                Contact us
+              </a>
             </motion.div>
           </motion.div>
         )}
