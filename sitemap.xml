@@ -37,4 +37,22 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://101techlabs.com/free-tools/google-maps-scraper</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/free-tools/google-maps-scraper" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/free-tools/google-maps-scraper" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/free-tools/google-maps-scraper" />
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://101techlabs.com/hi/free-tools/google-maps-scraper</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/free-tools/google-maps-scraper" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/free-tools/google-maps-scraper" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/free-tools/google-maps-scraper" />
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
