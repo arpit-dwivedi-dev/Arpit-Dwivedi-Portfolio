@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Download, Info, Loader2, MapPin, Star } from 'lucide-react';
+import { ArrowLeft, Coffee, Download, Info, Loader2, MapPin, Star } from 'lucide-react';
 import { Navbar } from '../../components/Navbar';
 import { Footer } from '../../components/AchievementsContact';
 import { AdSlot } from '../../components/ads/AdSlot';
@@ -216,15 +216,26 @@ export const GoogleMapsScraperPage = () => {
                   Results
                   <span className="px-2 py-0.5 rounded-full bg-ink/10 text-secondary-text text-xs font-mono">{results.length}</span>
                 </h3>
-                <button
-                  type="button"
-                  onClick={handleExport}
-                  disabled={!results.length}
-                  className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-ink/5 text-ink text-sm font-bold hover:bg-ink/10 transition-all disabled:opacity-40 disabled:cursor-not-allowed shrink-0 focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure"
-                >
-                  <Download size={16} aria-hidden="true" />
-                  Export CSV
-                </button>
+                <div className="flex items-center gap-2 shrink-0">
+                  <a
+                    href="https://www.buymeacoffee.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-[#FFDD00]/10 text-[#FFDD00] text-sm font-bold hover:bg-[#FFDD00]/20 transition-all focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure"
+                  >
+                    <Coffee size={16} aria-hidden="true" />
+                    Buy me a coffee
+                  </a>
+                  <button
+                    type="button"
+                    onClick={handleExport}
+                    disabled={!results.length}
+                    className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-ink/5 text-ink text-sm font-bold hover:bg-ink/10 transition-all disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure"
+                  >
+                    <Download size={16} aria-hidden="true" />
+                    Export CSV
+                  </button>
+                </div>
               </div>
 
               {/* Visually hidden — the visual progress bar + streamed rows have no other accessible equivalent. */}
