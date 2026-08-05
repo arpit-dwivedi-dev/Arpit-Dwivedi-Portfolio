@@ -2,6 +2,7 @@ import { motion } from 'motion/react';
 import { Zap, Server, Mail, Send, Phone, MapPin, ExternalLink } from 'lucide-react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { useState, FormEvent } from 'react';
+import { Link } from 'react-router-dom';
 import metadata from '../../metadata.json';
 import { useLanguage } from '../i18n/LanguageContext';
 import { AdSlot } from './ads/AdSlot';
@@ -200,7 +201,14 @@ export const Clients = () => {
 // mail to the inbox that generated it. Get one free at https://web3forms.com/.
 const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY as string | undefined;
 
-export const Contact = () => {
+interface ContactProps {
+  /** Cuts the section's own top padding — used on the standalone /contact
+   *  page, where the page wrapper already clears the fixed navbar, so the
+   *  homepage's full py-24 top padding just adds a redundant gap on top of it. */
+  compact?: boolean;
+}
+
+export const Contact = ({ compact = false }: ContactProps = {}) => {
   const { content } = useLanguage();
   const { contact } = content;
   const [values, setValues] = useState({ name: '', email: '', message: '' });
@@ -262,7 +270,7 @@ export const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-24 relative overflow-hidden">
+    <section id="contact" className={`${compact ? 'pt-4 pb-24' : 'py-24'} relative overflow-hidden`}>
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           <motion.div
@@ -395,8 +403,26 @@ export const Contact = () => {
 };
 
 export const Footer = () => {
-  const { content } = useLanguage();
+  const { lang, content } = useLanguage();
   const { navLinks, footer } = content;
+  const homeHref = lang === 'hi' ? '/hi' : '/';
+  const withLang = (path: string) => (lang === 'hi' ? `/hi${path}` : path);
+
+  // Real, individually-crawlable pages — distinct from the homepage-anchor
+  // nav above, which only makes sense on "/". Every one of these needs its
+  // own URL for Google (and AdSense review) to find independent of the
+  // one-page scroll experience.
+  const siteLinks = [
+    { name: 'Tools', href: withLang('/tools') },
+    { name: 'About', href: withLang('/about') },
+    { name: 'Services', href: withLang('/services') },
+    { name: 'Contact', href: withLang('/contact') },
+  ];
+  const legalLinks = [
+    { name: 'Privacy Policy', href: withLang('/privacy-policy') },
+    { name: 'Terms', href: withLang('/terms') },
+    { name: 'Editorial Policy', href: withLang('/editorial-policy') },
+  ];
 
   return (
     <footer className="pt-12 pb-24 border-t border-ink/5 bg-bg-pure">
@@ -415,7 +441,23 @@ export const Footer = () => {
         </div>
         <nav aria-label="Footer" className="flex flex-wrap justify-center items-center gap-6">
           {navLinks.slice(0, 3).map(link => (
-            <a key={link.name} href={link.href} className="py-3 -my-3 text-secondary-text hover:text-ink transition-colors text-sm">{link.name}</a>
+            <a key={link.name} href={link.href.startsWith('#') ? `${homeHref}${link.href}` : link.href} className="py-3 -my-3 text-secondary-text hover:text-ink transition-colors text-sm">{link.name}</a>
+          ))}
+        </nav>
+      </div>
+      <div className="max-w-7xl mx-auto px-6 mt-8 pt-8 border-t border-ink/5 flex flex-col md:flex-row justify-center items-center gap-x-8 gap-y-3">
+        <nav aria-label="Site pages" className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2">
+          {siteLinks.map((link) => (
+            <Link key={link.name} to={link.href} className="py-3 -my-3 text-secondary-text hover:text-ink transition-colors text-xs font-mono uppercase tracking-widest">
+              {link.name}
+            </Link>
+          ))}
+        </nav>
+        <nav aria-label="Legal" className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2">
+          {legalLinks.map((link) => (
+            <Link key={link.name} to={link.href} className="py-3 -my-3 text-secondary-text/70 hover:text-ink transition-colors text-xs font-mono uppercase tracking-widest">
+              {link.name}
+            </Link>
           ))}
         </nav>
       </div>

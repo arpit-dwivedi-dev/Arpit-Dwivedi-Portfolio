@@ -49,6 +49,18 @@
         "@context": "https://schema.org",
         "@graph": [
           {
+            "@type": "WebSite",
+            "@id": "https://101techlabs.com/#website",
+            "url": "https://101techlabs.com/",
+            "name": "101 Tech Labs",
+            "publisher": { "@id": "https://101techlabs.com/#organization" },
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://101techlabs.com/tools?q={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          },
+          {
             "@type": ["Organization", "LocalBusiness"],
             "@id": "https://101techlabs.com/#organization",
             "name": "101 Tech Labs",
@@ -103,20 +115,6 @@
             "description": "Production AI features that plug into your actual data and systems — not a generic chatbot bolted on top.",
             "provider": { "@id": "https://101techlabs.com/#organization" },
             "areaServed": ["India", "Remote/Worldwide"]
-          },
-          {
-            "@type": "WebApplication",
-            "name": "Google Maps Business Finder",
-            "url": "https://101techlabs.com/free-tools/google-maps-scraper",
-            "description": "Free tool to find businesses on Google Maps and export their name, address, phone, website, rating, and hours as CSV, JSON, or Excel.",
-            "applicationCategory": "BusinessApplication",
-            "operatingSystem": "Any",
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "USD"
-            },
-            "provider": { "@id": "https://101techlabs.com/#organization" }
           },
           {
             "@type": "FAQPage",

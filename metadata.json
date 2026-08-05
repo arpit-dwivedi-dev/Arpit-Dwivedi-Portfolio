@@ -98,7 +98,7 @@
         "code": {
           "name": "101 Tech Labs",
           "role": "Full-Stack & AI Engineering",
-          "stack": ["MEAN", "AI", "DevOps"],
+          "stack": ["MEAN/MERN", "AI", "DevOps"],
           "mission": "Building Scalable Systems"
         },
         "systemLoad": "System Load",

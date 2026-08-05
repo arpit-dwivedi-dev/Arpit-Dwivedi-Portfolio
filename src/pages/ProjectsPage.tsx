@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { ProjectCard } from '../components/ProjectCard';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/AchievementsContact';
+import { Breadcrumbs } from '../components/seo/Breadcrumbs';
 import { useLanguage } from '../i18n/LanguageContext';
 
 export const ProjectsPage = () => {
@@ -27,6 +28,11 @@ export const ProjectsPage = () => {
             animate={{ opacity: 1, x: 0 }}
             className="mb-12"
           >
+            <Breadcrumbs
+              className="mb-4"
+              items={[{ name: 'Home', href: homeHref }, { name: 'Projects' }]}
+            />
+
             <Link
               to={homeHref}
               className="inline-flex items-center gap-2 text-secondary-text hover:text-ink transition-colors group mb-8"
@@ -38,7 +44,7 @@ export const ProjectsPage = () => {
             <div className="flex flex-col md:flex-row justify-between items-center md:items-end gap-6 text-center md:text-left">
               <div>
                 <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-2 block">{projectsSection.label}</span>
-                <h2 className="text-4xl md:text-6xl font-bold tracking-tight">{projectsSection.pageTitle} <span className="text-gradient">{projectsSection.pageTitleAccent}</span></h2>
+                <h1 className="text-4xl md:text-6xl font-bold tracking-tight">{projectsSection.pageTitle} <span className="text-gradient">{projectsSection.pageTitleAccent}</span></h1>
               </div>
               <p className="text-secondary-text max-w-md text-right hidden md:block text-lg">
                 {projectsSection.pageDescription}

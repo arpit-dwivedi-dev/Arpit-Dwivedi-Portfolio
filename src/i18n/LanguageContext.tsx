@@ -72,9 +72,20 @@ const upsertMetaByProperty = (property: string, content: string) => {
 };
 
 // Per-route, per-language <title>/description/OG overrides. index.html's static
-// tags cover the English homepage default for non-JS clients; this fills in the
-// other 3 routes (/hi, /projects, /hi/projects) once JS runs.
-type RouteKey = 'home' | 'projects' | 'freeTools' | 'mapsScraper';
+// tags cover the English homepage default for non-JS clients; this fills in
+// every other route once JS runs.
+type RouteKey =
+  | 'home'
+  | 'projects'
+  | 'about'
+  | 'services'
+  | 'contact'
+  | 'privacyPolicy'
+  | 'terms'
+  | 'editorialPolicy'
+  | 'tools'
+  | 'toolsLeadGeneration'
+  | 'mapsScraper';
 
 const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; description: string }>> = {
   en: {
@@ -88,9 +99,37 @@ const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; description: st
       description:
         'See how 101 Tech Labs built a donor and outreach platform for Rashtriya Swasthya Sangathan and a corporate site for ISO-certified manufacturer SA Ethics Biotech — real client engagements, not templates.',
     },
-    freeTools: {
+    about: {
+      title: 'About Us | 101 Tech Labs',
+      description: 'Who builds 101 Tech Labs — a Noida-based full-stack and AI engineering practice, remote-first, working with clients worldwide.',
+    },
+    services: {
+      title: 'Services — Business Websites, Booking Systems, AI Automation | 101 Tech Labs',
+      description: 'Business websites, online booking and ordering systems, workflow automation, local SEO, and AI/LLM engineering — under one roof.',
+    },
+    contact: {
+      title: 'Contact Us | 101 Tech Labs',
+      description: 'Get a fixed-scope quote or ask a question — email, WhatsApp, or the form below.',
+    },
+    privacyPolicy: {
+      title: 'Privacy Policy | 101 Tech Labs',
+      description: 'What data 101 Tech Labs collects when you visit this site, use a free tool, or contact us, and how it is used.',
+    },
+    terms: {
+      title: 'Terms of Service | 101 Tech Labs',
+      description: 'Terms for using 101techlabs.com, including our free tools.',
+    },
+    editorialPolicy: {
+      title: 'Editorial Policy | 101 Tech Labs',
+      description: 'How we write and fact-check articles and tool documentation on 101techlabs.com.',
+    },
+    tools: {
       title: 'Free Tools | 101 Tech Labs',
       description: 'Free browser tools from 101 Tech Labs — starting with a Google Maps business finder. No signup, no catch.',
+    },
+    toolsLeadGeneration: {
+      title: 'Lead Generation Tools | 101 Tech Labs',
+      description: 'Free tools for finding and exporting business and contact data — starting with a Google Maps business finder.',
     },
     mapsScraper: {
       title: 'Google Maps Business Finder (Free Tool) | 101 Tech Labs',
@@ -109,9 +148,37 @@ const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; description: st
       description:
         'देखें कैसे 101 Tech Labs ने राष्ट्रीय स्वास्थ्य संगठन के लिए डोनर और आउटरीच प्लेटफ़ॉर्म बनाया, और ISO-सर्टिफ़ाइड निर्माता SA Ethics Biotech के लिए कॉर्पोरेट साइट बनाई — असली क्लाइंट प्रोजेक्ट्स, टेम्पलेट नहीं।',
     },
-    freeTools: {
+    about: {
+      title: 'हमारे बारे में | 101 Tech Labs',
+      description: '101 Tech Labs को कौन बनाता है — नोएडा स्थित फुल-स्टैक और AI इंजीनियरिंग प्रैक्टिस, रिमोट-फर्स्ट, दुनिया भर के क्लाइंट्स के साथ काम करती है।',
+    },
+    services: {
+      title: 'सेवाएं — बिज़नेस वेबसाइट, बुकिंग सिस्टम, AI ऑटोमेशन | 101 Tech Labs',
+      description: 'बिज़नेस वेबसाइट, ऑनलाइन बुकिंग और ऑर्डरिंग सिस्टम, वर्कफ़्लो ऑटोमेशन, लोकल SEO, और AI/LLM इंजीनियरिंग — एक ही जगह।',
+    },
+    contact: {
+      title: 'संपर्क करें | 101 Tech Labs',
+      description: 'फिक्स्ड-स्कोप कोटेशन पाएं या सवाल पूछें — ईमेल, व्हाट्सएप, या नीचे दिए गए फ़ॉर्म से।',
+    },
+    privacyPolicy: {
+      title: 'प्राइवेसी पॉलिसी | 101 Tech Labs',
+      description: 'जब आप यह साइट देखते हैं, कोई फ्री टूल इस्तेमाल करते हैं, या हमसे संपर्क करते हैं, तो 101 Tech Labs कौन सा डेटा इकट्ठा करता है और उसका उपयोग कैसे होता है।',
+    },
+    terms: {
+      title: 'सेवा की शर्तें | 101 Tech Labs',
+      description: '101techlabs.com और इसके फ्री टूल्स के इस्तेमाल की शर्तें।',
+    },
+    editorialPolicy: {
+      title: 'एडिटोरियल पॉलिसी | 101 Tech Labs',
+      description: '101techlabs.com पर लेख और टूल डॉक्यूमेंटेशन कैसे लिखे और फ़ैक्ट-चेक किए जाते हैं।',
+    },
+    tools: {
       title: 'फ्री टूल्स | 101 Tech Labs',
       description: '101 Tech Labs के फ्री ब्राउज़र टूल्स — शुरुआत गूगल मैप्स बिज़नेस फ़ाइंडर से। कोई साइनअप नहीं, कोई शर्त नहीं।',
+    },
+    toolsLeadGeneration: {
+      title: 'लीड जनरेशन टूल्स | 101 Tech Labs',
+      description: 'बिज़नेस और कॉन्टैक्ट डेटा खोजने और एक्सपोर्ट करने के फ्री टूल्स — शुरुआत गूगल मैप्स बिज़नेस फ़ाइंडर से।',
     },
     mapsScraper: {
       title: 'गूगल मैप्स बिज़नेस फ़ाइंडर (फ्री टूल) | 101 Tech Labs',
@@ -138,14 +205,19 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     upsertAlternateLink('hi', absoluteUrl('hi', basePathname));
     upsertAlternateLink('x-default', absoluteUrl('en', basePathname));
 
-    const routeKey: RouteKey =
-      basePathname === '/projects'
-        ? 'projects'
-        : basePathname === '/free-tools'
-          ? 'freeTools'
-          : basePathname === '/free-tools/google-maps-scraper'
-            ? 'mapsScraper'
-            : 'home';
+    const ROUTE_KEY_BY_PATH: Record<string, RouteKey> = {
+      '/projects': 'projects',
+      '/about': 'about',
+      '/services': 'services',
+      '/contact': 'contact',
+      '/privacy-policy': 'privacyPolicy',
+      '/terms': 'terms',
+      '/editorial-policy': 'editorialPolicy',
+      '/tools': 'tools',
+      '/tools/lead-generation': 'toolsLeadGeneration',
+      '/tools/lead-generation/google-maps-business-finder': 'mapsScraper',
+    };
+    const routeKey: RouteKey = ROUTE_KEY_BY_PATH[basePathname] ?? 'home';
     const meta = ROUTE_META[lang][routeKey];
     const canonicalHref = absoluteUrl(lang, basePathname);
 

@@ -7,10 +7,36 @@ import { Navbar } from '../../components/Navbar';
 import { Footer } from '../../components/AchievementsContact';
 import { AdSlot } from '../../components/ads/AdSlot';
 import { Select } from '../../components/ui/Select';
+import { Breadcrumbs } from '../../components/seo/Breadcrumbs';
+import { JsonLd } from '../../components/seo/JsonLd';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { useMapsScraper, MAX_RESULTS_PER_SEARCH, MAX_SEARCHES_PER_SESSION } from '../../tools/googleMapsScraper/useMapsScraper';
 import { isLiveMode } from '../../tools/googleMapsScraper/dataSource';
 import { toCsv, downloadCsv, toJson, downloadJson, toExcel, downloadExcel } from '../../lib/csv';
+import { TOOLS, getToolCategory, getRelatedTools } from '../../tools/registry';
+
+const TOOL = TOOLS.find((t) => t.id === 'google-maps-business-finder')!;
+const TOOL_CATEGORY = getToolCategory(TOOL.category)!;
+const RELATED_TOOLS = getRelatedTools(TOOL);
+
+const FAQ_ITEMS = [
+  {
+    question: 'Is the Google Maps Business Finder free to use?',
+    answer: `Yes. You get up to ${MAX_RESULTS_PER_SEARCH} results per search and ${MAX_SEARCHES_PER_SESSION} searches per browser session, with no account or signup required.`,
+  },
+  {
+    question: 'What data does it export?',
+    answer: 'Business name, address, phone number, website, rating, and hours — as a CSV, Excel (.xls), or JSON file.',
+  },
+  {
+    question: "What happens when I hit the free session limit?",
+    answer: 'Searches are capped per session to keep the free tool fast and available for everyone. Refresh the page to reset your count, or reach out for premium access with higher limits.',
+  },
+  {
+    question: 'Does this replace the official Google Places API?',
+    answer: "No. It's built for quick, low-volume manual lookups — agency prospecting, local SEO checks, one-off research — not as a production data pipeline.",
+  },
+];
 
 const RESULT_COUNT_OPTIONS = [
   ...[5, 10, 15].map((n) => ({ value: String(n), label: `${n} results` })),
@@ -30,7 +56,8 @@ const CSV_COLUMNS = [
 
 export const GoogleMapsScraperPage = () => {
   const { lang } = useLanguage();
-  const backHref = lang === 'hi' ? '/hi/free-tools' : '/free-tools';
+  const toolsBase = lang === 'hi' ? '/hi/tools' : '/tools';
+  const categoryHref = `${toolsBase}/${TOOL.category}`;
   const {
     results,
     running,
@@ -116,20 +143,30 @@ export const GoogleMapsScraperPage = () => {
       <main id="main-content" className="pt-28 pb-16 lg:pb-6 lg:h-dvh">
         <div className="max-w-7xl mx-auto px-6 w-full lg:h-full lg:flex lg:flex-col lg:min-h-0">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="mb-6 lg:shrink-0">
-            {/* <Link
-              to={backHref}
+            <Breadcrumbs
+              className="mb-3"
+              items={[
+                { name: 'Home', href: lang === 'hi' ? '/hi' : '/' },
+                { name: 'Tools', href: toolsBase },
+                { name: TOOL_CATEGORY.title, href: categoryHref },
+                { name: TOOL.title },
+              ]}
+            />
+
+            <Link
+              to={categoryHref}
               className="inline-flex items-center gap-2 text-secondary-text hover:text-ink transition-colors group mb-4 text-sm"
             >
-              <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-              Back to Free Tools
-            </Link> */}
+              <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" aria-hidden="true" />
+              Back to {TOOL_CATEGORY.title}
+            </Link>
 
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
-                {/* <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-1 block">Free Tool</span> */}
-                <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+                <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-1 block">Free Tool</span>
+                <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
                   Google Maps <span className="text-gradient">Business Finder</span>
-                </h2>
+                </h1>
               </div>
               <p className="text-secondary-text max-w-md text-sm">
                 Find businesses on Google Maps and pull their name, address, phone, website, rating, and hours — into a table you can export.
@@ -404,6 +441,126 @@ export const GoogleMapsScraperPage = () => {
       <div className="max-w-7xl mx-auto px-6">
         <AdSlot slot={import.meta.env.VITE_ADSENSE_SLOT_SCRAPER} className="my-10" />
       </div>
+
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'WebApplication',
+          name: TOOL.title,
+          url: `https://101techlabs.com${categoryHref}/${TOOL.path}`,
+          description: TOOL.description,
+          applicationCategory: 'BusinessApplication',
+          operatingSystem: 'Any',
+          offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+          provider: { '@id': 'https://101techlabs.com/#organization' },
+        }}
+      />
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: FAQ_ITEMS.map((item) => ({
+            '@type': 'Question',
+            name: item.question,
+            acceptedAnswer: { '@type': 'Answer', text: item.answer },
+          })),
+        }}
+      />
+
+      <section className="max-w-4xl mx-auto px-6 py-16 space-y-14">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight mb-4">How It Works</h2>
+          <ol className="space-y-2 text-secondary-text list-decimal list-inside">
+            <li>Enter what you're looking for — e.g. "coffee shops" — and, optionally, a location.</li>
+            <li>Choose how many results you want, up to {MAX_RESULTS_PER_SEARCH} free per search.</li>
+            <li>Export the results as CSV, Excel, or JSON with one click.</li>
+          </ol>
+        </div>
+
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight mb-4">Features</h2>
+          <ul className="grid sm:grid-cols-2 gap-3 text-secondary-text">
+            <li className="p-4 rounded-2xl bg-bg-secondary border border-ink/5">Name, address, phone, website, rating, and hours for every result</li>
+            <li className="p-4 rounded-2xl bg-bg-secondary border border-ink/5">Export to CSV, Excel (.xls), or JSON</li>
+            <li className="p-4 rounded-2xl bg-bg-secondary border border-ink/5">Live progress and screen-reader-friendly status while a search runs</li>
+            <li className="p-4 rounded-2xl bg-bg-secondary border border-ink/5">No account, install, or signup required</li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight mb-4">Use Cases</h2>
+          <ul className="space-y-2 text-secondary-text list-disc list-inside">
+            <li>Agencies building a local business prospect list</li>
+            <li>Local SEO audits — checking a client's listing against nearby competitors</li>
+            <li>Franchise or expansion research — checking business density in a target area</li>
+            <li>Compiling a public business directory for research or journalism</li>
+          </ul>
+        </div>
+
+        <div className="grid sm:grid-cols-2 gap-10">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight mb-4">Advantages</h2>
+            <ul className="space-y-2 text-secondary-text list-disc list-inside">
+              <li>Faster than scrolling and copying listings by hand</li>
+              <li>Structured, exportable output instead of screenshots</li>
+              <li>Nothing to install — runs in the browser</li>
+            </ul>
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight mb-4">Limitations</h2>
+            <ul className="space-y-2 text-secondary-text list-disc list-inside">
+              <li>Free tier caps at {MAX_RESULTS_PER_SEARCH} results per search, {MAX_SEARCHES_PER_SESSION} searches per session</li>
+              <li>Built for quick lookups, not high-volume or production data pipelines</li>
+              <li>Higher limits available on request — see "Go Premium" above</li>
+            </ul>
+          </div>
+        </div>
+
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight mb-4">FAQ</h2>
+          <div className="space-y-4">
+            {FAQ_ITEMS.map((item) => (
+              <div key={item.question} className="p-4 rounded-2xl bg-bg-secondary border border-ink/5">
+                <h3 className="font-bold text-ink mb-1">{item.question}</h3>
+                <p className="text-secondary-text text-sm">{item.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight mb-4">Related Tools</h2>
+          {RELATED_TOOLS.length > 0 ? (
+            <ul className="grid sm:grid-cols-2 gap-3">
+              {RELATED_TOOLS.map((related) => (
+                <li key={related.id}>
+                  <Link
+                    to={`${toolsBase}/${related.category}/${related.path}`}
+                    className="block p-4 rounded-2xl bg-bg-secondary border border-ink/5 hover:border-accent-blue/30 transition-colors"
+                  >
+                    <span className="font-bold text-ink">{related.title}</span>
+                    <p className="text-secondary-text text-sm mt-1">{related.description}</p>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-secondary-text text-sm">
+              More {TOOL_CATEGORY.title.toLowerCase()} are on the way. <Link to={toolsBase} className="text-accent-blue hover:underline">Browse all tools</Link>.
+            </p>
+          )}
+        </div>
+
+        <div className="p-6 rounded-3xl glass border-ink/10 flex flex-wrap items-center justify-between gap-4">
+          <p className="text-ink font-medium">Need this data flowing straight into your CRM or outreach tool automatically?</p>
+          <Link
+            to={lang === 'hi' ? '/hi/contact' : '/contact'}
+            className="shrink-0 inline-flex items-center gap-2 px-5 py-3 bg-accent-blue text-bg-pure font-bold rounded-xl hover:glow-blue transition-all"
+          >
+            Talk to us
+          </Link>
+        </div>
+      </section>
 
       <Footer />
 

@@ -7,6 +7,7 @@ declare module 'react' {
   export function useRef<T>(initialValue: T): { current: T };
   export function useRef<T>(initialValue: null): { current: T | null };
   export function useRef<T = undefined>(): { current: T | undefined };
+  export function useMemo<T>(factory: () => T, deps: readonly any[]): T;
   export type FormEvent = any;
   export type KeyboardEvent = any;
   export type Dispatch<A> = (value: A) => void;
@@ -19,6 +20,7 @@ declare module 'react' {
     defaultProps?: Partial<P>;
   }
   export const FC: FunctionComponent;
+  export type ComponentType<P = {}> = FunctionComponent<P>;
   export const StrictMode: any;
   export interface Context<T> {
     Provider: FunctionComponent<{ value: T; children?: any }>;

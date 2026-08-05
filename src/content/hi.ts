@@ -94,7 +94,7 @@ export const hiContent: SiteContent = {
       code: {
         name: '101 Tech Labs',
         role: 'फुल-स्टैक और AI इंजीनियरिंग',
-        stack: ['MEAN', 'AI', 'DevOps'],
+        stack: ['MEAN/MERN', 'AI', 'DevOps'],
         mission: 'स्केलेबल सिस्टम बनाना',
       },
       systemLoad: 'सिस्टम लोड',
