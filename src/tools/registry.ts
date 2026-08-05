@@ -1,4 +1,4 @@
-import { MapPin, type LucideIcon } from 'lucide-react';
+import { MapPin, Receipt, type LucideIcon } from 'lucide-react';
 import type { Lang } from '../i18n/types';
 
 export interface ToolCategory {
@@ -102,6 +102,17 @@ export const TOOLS: ToolDefinition[] = [
     icon: MapPin,
     category: 'lead-generation',
     path: 'google-maps-business-finder',
+    featured: true,
+  },
+  {
+    id: 'invoice-generator',
+    title: 'Invoice Generator',
+    description: 'Create a professional invoice in your browser, download it as a PDF, and save it for later — no signup, no server, your data stays on your device.',
+    titleHi: 'इनवॉइस जनरेटर',
+    descriptionHi: 'अपने ब्राउज़र में एक प्रोफेशनल इनवॉइस बनाएं, उसे PDF के रूप में डाउनलोड करें, और बाद के लिए सेव करें — कोई साइनअप नहीं, कोई सर्वर नहीं, आपका डेटा आपकी डिवाइस पर ही रहता है।',
+    icon: Receipt,
+    category: 'generators',
+    path: 'invoice-generator',
     featured: true,
   },
 ];

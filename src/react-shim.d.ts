@@ -8,8 +8,10 @@ declare module 'react' {
   export function useRef<T>(initialValue: null): { current: T | null };
   export function useRef<T = undefined>(): { current: T | undefined };
   export function useMemo<T>(factory: () => T, deps: readonly any[]): T;
+  export function useCallback<T extends (...args: any[]) => any>(callback: T, deps: readonly any[]): T;
   export type FormEvent = any;
   export type KeyboardEvent = any;
+  export type ChangeEvent<T = any> = any;
   export type Dispatch<A> = (value: A) => void;
   export type SetStateAction<S> = S | ((prevState: S) => S);
   export type ReactNode = any;

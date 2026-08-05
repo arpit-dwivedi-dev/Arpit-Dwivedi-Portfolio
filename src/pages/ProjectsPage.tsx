@@ -1,7 +1,5 @@
 import { useEffect } from 'react';
 import { motion } from 'motion/react';
-import { ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { ProjectCard } from '../components/ProjectCard';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/AchievementsContact';
@@ -29,17 +27,11 @@ export const ProjectsPage = () => {
             className="mb-12"
           >
             <Breadcrumbs
-              className="mb-4"
+              className="mb-8"
+              backHref={homeHref}
+              backLabel={projectsSection.backToHome}
               items={[{ name: content.nav.breadcrumbHome, href: homeHref }, { name: projectsSection.pageTitleAccent }]}
             />
-
-            <Link
-              to={homeHref}
-              className="inline-flex items-center gap-2 text-secondary-text hover:text-ink transition-colors group mb-8"
-            >
-              <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-              {projectsSection.backToHome}
-            </Link>
 
             <div className="flex flex-col md:flex-row justify-between items-center md:items-end gap-6 text-center md:text-left">
               <div>
