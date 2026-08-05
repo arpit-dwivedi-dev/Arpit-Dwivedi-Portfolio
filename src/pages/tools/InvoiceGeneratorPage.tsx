@@ -52,7 +52,7 @@ const fillPlaceholders = (text: string, vars: Record<string, string>) =>
   Object.entries(vars).reduce((acc, [key, value]) => acc.replaceAll(`{${key}}`, value), text);
 
 const fieldClass =
-  'w-full bg-ink/[0.03] border border-ink/10 hover:border-ink/20 focus:border-accent-blue focus:bg-ink/5 rounded-lg px-3 py-2 text-[15px] text-ink placeholder:text-secondary-text/60 focus:outline-none transition-colors';
+  'bg-ink/[0.03] border border-ink/10 hover:border-ink/20 focus:border-accent-blue focus:bg-ink/5 rounded-lg px-3 py-2 text-[15px] text-ink placeholder:text-secondary-text/60 focus:outline-none transition-colors';
 
 const labelClass = 'text-[11px] font-mono text-secondary-text uppercase tracking-widest';
 
@@ -203,7 +203,7 @@ export const InvoiceGeneratorPage = () => {
               animate={{ opacity: 1, y: 0 }}
               className="p-6 sm:p-8 rounded-3xl bg-bg-secondary border border-ink/5"
             >
-              <div className="flex flex-wrap items-start justify-between gap-6 mb-8">
+              <div className="flex flex-col items-center sm:flex-row sm:flex-wrap sm:items-start sm:justify-between gap-6 mb-8">
                 <div>
                   <input
                     ref={fileInputRef}
@@ -238,16 +238,16 @@ export const InvoiceGeneratorPage = () => {
                   {logoError && <p role="alert" className="text-red-400 light:text-red-600 text-xs mt-2 max-w-[200px]">{t.logoTooLarge}</p>}
                 </div>
 
-                <div className="w-44 ml-auto">
+                <div className="w-full max-w-[220px] sm:w-44 sm:ml-auto">
                   <label htmlFor="invoice-title" className="sr-only">{t.invoiceHeading}</label>
                   <input
                     id="invoice-title"
                     value={invoice.invoiceTitle}
                     onChange={(e) => update('invoiceTitle', e.target.value)}
                     placeholder={t.invoiceHeading}
-                    className="w-full bg-ink/[0.03] border border-ink/10 hover:border-ink/20 focus:border-accent-blue focus:bg-ink/5 rounded-lg px-3 py-1 text-right text-2xl sm:text-3xl font-bold tracking-tight text-ink placeholder:text-secondary-text/60 focus:outline-none transition-colors mb-2"
+                    className="w-full bg-ink/[0.03] border border-ink/10 hover:border-ink/20 focus:border-accent-blue focus:bg-ink/5 rounded-lg px-3 py-1 text-center sm:text-right text-2xl sm:text-3xl font-bold tracking-tight text-ink placeholder:text-secondary-text/60 focus:outline-none transition-colors mb-2"
                   />
-                  <div className="flex items-center justify-end gap-2">
+                  <div className="flex items-center justify-center sm:justify-end gap-2">
                     <label htmlFor="invoice-number" className="sr-only">{t.invoiceNumberLabel}</label>
                     <span className="text-secondary-text text-sm shrink-0">#</span>
                     <input
@@ -269,22 +269,22 @@ export const InvoiceGeneratorPage = () => {
                     onChange={(e) => update('fromAddress', e.target.value)}
                     placeholder={t.fromPlaceholder}
                     rows={3}
-                    className={`${fieldClass} resize-none`}
+                    className={`${fieldClass} w-full resize-none`}
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-3 content-start">
+                <div className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-3 content-start">
                   {[
                     { key: 'date' as const, label: t.dateLabel, type: 'date' },
                     { key: 'dueDate' as const, label: t.dueDateLabel, type: 'date' },
                   ].map((field) => (
-                    <div key={field.key} className="space-y-1">
+                    <div key={field.key} className="space-y-1 min-w-0">
                       <label htmlFor={`invoice-${field.key}`} className={labelClass}>{field.label}</label>
                       <input
                         id={`invoice-${field.key}`}
                         type={field.type}
                         value={invoice[field.key]}
                         onChange={(e) => update(field.key, e.target.value)}
-                        className={fieldClass}
+                        className={`${fieldClass} w-full min-w-0`}
                       />
                     </div>
                   ))}
@@ -295,7 +295,7 @@ export const InvoiceGeneratorPage = () => {
                       value={invoice.paymentTerms}
                       onChange={(e) => update('paymentTerms', e.target.value)}
                       placeholder={t.paymentTermsPlaceholder}
-                      className={fieldClass}
+                      className={`${fieldClass} w-full`}
                     />
                   </div>
                   <div className="space-y-1">
@@ -304,7 +304,7 @@ export const InvoiceGeneratorPage = () => {
                       id="invoice-po-number"
                       value={invoice.poNumber}
                       onChange={(e) => update('poNumber', e.target.value)}
-                      className={fieldClass}
+                      className={`${fieldClass} w-full`}
                     />
                   </div>
                 </div>
@@ -319,7 +319,7 @@ export const InvoiceGeneratorPage = () => {
                     onChange={(e) => update('billTo', e.target.value)}
                     placeholder={t.billToPlaceholder}
                     rows={3}
-                    className={`${fieldClass} resize-none`}
+                    className={`${fieldClass} w-full resize-none`}
                   />
                 </div>
                 <div className="space-y-1">
@@ -332,13 +332,73 @@ export const InvoiceGeneratorPage = () => {
                     onChange={(e) => update('shipTo', e.target.value)}
                     placeholder={t.shipToPlaceholder}
                     rows={3}
-                    className={`${fieldClass} resize-none`}
+                    className={`${fieldClass} w-full resize-none`}
                   />
                 </div>
               </div>
 
-              <div className="mb-8 overflow-x-auto">
-                <table className="w-full text-sm min-w-[480px]">
+              <div className="mb-8">
+                {/* Card layout on mobile so every field is visible without scrolling;
+                    the table layout (sm+) has room for all columns side by side. */}
+                <div className="sm:hidden space-y-3">
+                  {invoice.items.map((item, index) => (
+                    <div key={item.id} className="p-3 rounded-xl bg-ink/[0.02] border border-ink/10 space-y-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className={labelClass}>
+                          {t.itemHeader} {index + 1}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => removeItem(item.id)}
+                          disabled={invoice.items.length <= 1}
+                          aria-label={t.removeLineItemLabel}
+                          className="p-1.5 rounded-lg text-secondary-text hover:text-red-400 disabled:opacity-30 disabled:hover:text-secondary-text transition-colors"
+                        >
+                          <Trash2 size={14} aria-hidden="true" />
+                        </button>
+                      </div>
+                      <input
+                        value={item.description}
+                        onChange={(e) => updateItem(item.id, { description: e.target.value })}
+                        placeholder={t.itemPlaceholder}
+                        className={`${fieldClass} w-full`}
+                      />
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="space-y-1">
+                          <label htmlFor={`item-qty-${item.id}`} className={labelClass}>{t.quantityHeader}</label>
+                          <input
+                            id={`item-qty-${item.id}`}
+                            type="number"
+                            min={0}
+                            value={item.quantity}
+                            onChange={(e) => updateItem(item.id, { quantity: Number(e.target.value) || 0 })}
+                            className={`${fieldClass} w-full`}
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label htmlFor={`item-rate-${item.id}`} className={labelClass}>{t.rateHeader}</label>
+                          <input
+                            id={`item-rate-${item.id}`}
+                            type="number"
+                            min={0}
+                            value={item.rate}
+                            onChange={(e) => updateItem(item.id, { rate: Number(e.target.value) || 0 })}
+                            className={`${fieldClass} w-full`}
+                          />
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between pt-1 border-t border-ink/10">
+                        <span className={labelClass}>{t.amountHeader}</span>
+                        <span className="text-ink font-medium">
+                          {symbol}
+                          {(item.quantity * item.rate).toFixed(2)}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <table className="w-full text-sm hidden sm:table">
                   <thead>
                     <tr className="border-b border-ink/10 text-left">
                       <th className={`${labelClass} pb-2 font-normal`}>{t.itemHeader}</th>
@@ -356,7 +416,7 @@ export const InvoiceGeneratorPage = () => {
                             value={item.description}
                             onChange={(e) => updateItem(item.id, { description: e.target.value })}
                             placeholder={t.itemPlaceholder}
-                            className={fieldClass}
+                            className={`${fieldClass} w-full`}
                           />
                         </td>
                         <td className="py-1 px-1.5">
@@ -365,7 +425,7 @@ export const InvoiceGeneratorPage = () => {
                             min={0}
                             value={item.quantity}
                             onChange={(e) => updateItem(item.id, { quantity: Number(e.target.value) || 0 })}
-                            className={`${fieldClass} text-right`}
+                            className={`${fieldClass} w-full text-right`}
                           />
                         </td>
                         <td className="py-1 px-1.5">
@@ -374,7 +434,7 @@ export const InvoiceGeneratorPage = () => {
                             min={0}
                             value={item.rate}
                             onChange={(e) => updateItem(item.id, { rate: Number(e.target.value) || 0 })}
-                            className={`${fieldClass} text-right`}
+                            className={`${fieldClass} w-full text-right`}
                           />
                         </td>
                         <td className="py-1 text-right text-ink pl-1.5 pr-2">
@@ -416,7 +476,7 @@ export const InvoiceGeneratorPage = () => {
                       onChange={(e) => update('notes', e.target.value)}
                       placeholder={t.notesPlaceholder}
                       rows={3}
-                      className={`${fieldClass} resize-none`}
+                      className={`${fieldClass} w-full resize-none`}
                     />
                   </div>
                   <div className="space-y-1">
@@ -427,7 +487,7 @@ export const InvoiceGeneratorPage = () => {
                       onChange={(e) => update('terms', e.target.value)}
                       placeholder={t.termsPlaceholder}
                       rows={3}
-                      className={`${fieldClass} resize-none`}
+                      className={`${fieldClass} w-full resize-none`}
                     />
                   </div>
                 </div>
@@ -441,17 +501,23 @@ export const InvoiceGeneratorPage = () => {
                   {invoice.discountEnabled ? (
                     <div className="flex items-center justify-between gap-2">
                       <span className="text-secondary-text">{t.discountLabel}</span>
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex items-center gap-1">
+                        <span className="w-4 shrink-0" aria-hidden="true" />
                         <input
                           type="number"
                           min={0}
                           max={100}
                           value={invoice.discountPercent}
                           onChange={(e) => update('discountPercent', Number(e.target.value) || 0)}
-                          className={`${fieldClass} w-14 text-right`}
+                          className={`${fieldClass} w-14 text-right shrink-0`}
                         />
-                        <span className="text-secondary-text">%</span>
-                        <button type="button" onClick={() => update('discountEnabled', false)} aria-label={t.removeLabel} className="text-secondary-text hover:text-red-400">
+                        <span className="w-4 shrink-0 text-secondary-text text-center">%</span>
+                        <button
+                          type="button"
+                          onClick={() => update('discountEnabled', false)}
+                          aria-label={t.removeLabel}
+                          className="w-5 shrink-0 flex items-center justify-center text-secondary-text hover:text-red-400"
+                        >
                           <X size={12} aria-hidden="true" />
                         </button>
                       </div>
@@ -464,32 +530,40 @@ export const InvoiceGeneratorPage = () => {
 
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-secondary-text">{t.taxLabel}</span>
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-1">
+                      <span className="w-4 shrink-0" aria-hidden="true" />
                       <input
                         type="number"
                         min={0}
                         max={100}
                         value={invoice.taxPercent}
                         onChange={(e) => update('taxPercent', Number(e.target.value) || 0)}
-                        className={`${fieldClass} w-14 text-right`}
+                        className={`${fieldClass} w-14 text-right shrink-0`}
                       />
-                      <span className="text-secondary-text">%</span>
+                      <span className="w-4 shrink-0 text-secondary-text text-center">%</span>
+                      <span className="w-5 shrink-0" aria-hidden="true" />
                     </div>
                   </div>
 
                   {invoice.shippingEnabled ? (
                     <div className="flex items-center justify-between gap-2">
                       <span className="text-secondary-text">{t.shippingLabel}</span>
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-secondary-text">{symbol}</span>
+                      <div className="flex items-center gap-1">
+                        <span className="w-4 shrink-0 text-secondary-text text-center">{symbol}</span>
                         <input
                           type="number"
                           min={0}
                           value={invoice.shippingAmount}
                           onChange={(e) => update('shippingAmount', Number(e.target.value) || 0)}
-                          className={`${fieldClass} w-16 text-right`}
+                          className={`${fieldClass} w-14 text-right shrink-0`}
                         />
-                        <button type="button" onClick={() => update('shippingEnabled', false)} aria-label={t.removeLabel} className="text-secondary-text hover:text-red-400">
+                        <span className="w-4 shrink-0" aria-hidden="true" />
+                        <button
+                          type="button"
+                          onClick={() => update('shippingEnabled', false)}
+                          aria-label={t.removeLabel}
+                          className="w-5 shrink-0 flex items-center justify-center text-secondary-text hover:text-red-400"
+                        >
                           <X size={12} aria-hidden="true" />
                         </button>
                       </div>
@@ -507,15 +581,17 @@ export const InvoiceGeneratorPage = () => {
 
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-secondary-text">{t.amountPaidLabel}</span>
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-secondary-text">{symbol}</span>
+                    <div className="flex items-center gap-1">
+                      <span className="w-4 shrink-0 text-secondary-text text-center">{symbol}</span>
                       <input
                         type="number"
                         min={0}
                         value={invoice.amountPaid}
                         onChange={(e) => update('amountPaid', Number(e.target.value) || 0)}
-                        className={`${fieldClass} w-16 text-right`}
+                        className={`${fieldClass} w-14 text-right shrink-0`}
                       />
+                      <span className="w-4 shrink-0" aria-hidden="true" />
+                      <span className="w-5 shrink-0" aria-hidden="true" />
                     </div>
                   </div>
 
