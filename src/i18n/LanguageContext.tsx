@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
 import metadata from '../../metadata.json';
 import { hiContent } from '../content/hi';
+import { getGuideBySlug } from '../content/guides/data';
 import type { SiteContent, Lang } from './types';
 
 export type { SiteContent, Lang };
@@ -93,7 +94,10 @@ type RouteKey =
   | 'editorialPolicy'
   | 'tools'
   | 'toolsLeadGeneration'
-  | 'mapsScraper';
+  | 'mapsScraper'
+  | 'toolsGenerators'
+  | 'invoiceGenerator'
+  | 'guides';
 
 const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; description: string }>> = {
   en: {
@@ -144,6 +148,19 @@ const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; description: st
       description:
         'Find businesses on Google Maps and pull their name, address, phone, website, rating, and hours into a CSV. Built for quick lookups, not bulk scraping.',
     },
+    toolsGenerators: {
+      title: 'Generators | 101 Tech Labs',
+      description: 'Free generator tools from 101 Tech Labs — starting with a browser-based invoice generator. No signup, no catch.',
+    },
+    invoiceGenerator: {
+      title: 'Invoice Generator (Free Tool) | 101 Tech Labs',
+      description:
+        'Create a professional invoice in your browser and download it as a PDF. No signup, no server — your invoices are saved to your device only.',
+    },
+    guides: {
+      title: 'Invoicing Guides | 101 Tech Labs',
+      description: 'Practical guides on making invoices, setting payment terms, invoice numbering, and getting paid on time.',
+    },
   },
   hi: {
     home: {
@@ -193,6 +210,21 @@ const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; description: st
       description:
         'गूगल मैप्स पर बिज़नेस खोजें और उनका नाम, पता, फ़ोन नंबर, वेबसाइट, रेटिंग और समय एक CSV में निकालें। छोटे लुकअप के लिए बना है, बल्क स्क्रैपिंग के लिए नहीं।',
     },
+    toolsGenerators: {
+      title: 'जनरेटर्स | 101 Tech Labs',
+      description: '101 Tech Labs के फ्री जनरेटर टूल्स — शुरुआत ब्राउज़र-आधारित इनवॉइस जनरेटर से। कोई साइनअप नहीं, कोई शर्त नहीं।',
+    },
+    invoiceGenerator: {
+      title: 'इनवॉइस जनरेटर (फ्री टूल) | 101 Tech Labs',
+      description:
+        'अपने ब्राउज़र में एक प्रोफेशनल इनवॉइस बनाएं और उसे PDF के रूप में डाउनलोड करें। कोई साइनअप नहीं, कोई सर्वर नहीं — आपके इनवॉइस केवल आपकी डिवाइस पर सेव होते हैं।',
+    },
+    // No /hi/guides route exists yet (see App.tsx) — kept here only so this
+    // Record<Lang, Record<RouteKey, ...>> stays exhaustive under tsc.
+    guides: {
+      title: 'Invoicing Guides | 101 Tech Labs',
+      description: 'Practical guides on making invoices, setting payment terms, invoice numbering, and getting paid on time.',
+    },
   },
 };
 
@@ -224,9 +256,18 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
       '/tools': 'tools',
       '/tools/lead-generation': 'toolsLeadGeneration',
       '/tools/lead-generation/google-maps-business-finder': 'mapsScraper',
+      '/tools/generators': 'toolsGenerators',
+      '/tools/generators/invoice-generator': 'invoiceGenerator',
+      '/guides': 'guides',
     };
     const routeKey: RouteKey = ROUTE_KEY_BY_PATH[basePathname] ?? 'home';
-    const meta = ROUTE_META[lang][routeKey];
+    // Guide slugs are dynamic (/guides/:slug) so they can't live in the
+    // static map above — look the specific guide up and override the
+    // generic "guides" meta with its title/description when one matches.
+    const guideMatch = basePathname.startsWith('/guides/') ? getGuideBySlug(basePathname.slice('/guides/'.length)) : undefined;
+    const meta = guideMatch
+      ? { title: `${guideMatch.title} | 101 Tech Labs`, description: guideMatch.description }
+      : ROUTE_META[lang][routeKey];
     const canonicalHref = absoluteUrl(lang, basePathname);
 
     document.title = meta.title;
@@ -241,6 +282,12 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 
   const toPath: LanguageContextValue['toPath'] = (target) => {
     const basePathname = stripHiPrefix(location.pathname);
+    // Guides are English-only (see App.tsx) — no /hi/guides route exists,
+    // so switching to Hindi from one would land on a blank, unmatched URL.
+    // Send those to the Hindi home page instead of a dead link.
+    if (target === 'hi' && basePathname.startsWith('/guides')) {
+      return '/hi';
+    }
     const path = target === 'hi' ? (basePathname === '/' ? '/hi' : `/hi${basePathname}`) : basePathname;
     return `${path}${location.hash}`;
   };

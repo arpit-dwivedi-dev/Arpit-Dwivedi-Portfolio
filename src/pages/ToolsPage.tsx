@@ -45,28 +45,28 @@ export const ToolsPage = () => {
     <div className="relative bg-bg-pure selection:bg-accent-blue/30 selection:text-accent-blue overflow-x-hidden min-h-screen">
       <Navbar />
 
-      <main id="main-content" className="pt-32 pb-24">
-        <div className="max-w-7xl mx-auto px-6">
+      <main id="main-content" className="pt-20 sm:pt-28 pb-12 sm:pb-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <Breadcrumbs
-            className="mb-8"
+            className="mb-3 sm:mb-6"
             items={[{ name: content.nav.breadcrumbHome, href: lang === 'hi' ? '/hi' : '/' }, { name: t.breadcrumb }]}
           />
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
-            <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-2 block">{t.eyebrow}</span>
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-6 sm:mb-8">
+            <span className="text-accent-blue font-mono text-xs sm:text-sm tracking-widest uppercase mb-1 sm:mb-2 block">{t.eyebrow}</span>
+            <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold tracking-tight mb-2 sm:mb-3">
               {t.titleStart} <span className="text-gradient">{t.titleAccent}</span>
             </h1>
-            <p className="text-secondary-text max-w-2xl mx-auto text-lg">{t.description}</p>
+            <p className="text-secondary-text max-w-2xl mx-auto text-sm sm:text-lg">{t.description}</p>
           </motion.div>
 
           {populatedCategories.length > 1 && (
-            <nav aria-label={t.categoriesAriaLabel} className="flex flex-wrap justify-center gap-2 mb-12">
+            <nav aria-label={t.categoriesAriaLabel} className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mb-6 sm:mb-8">
               {populatedCategories.map((category) => (
                 <a
                   key={category.slug}
                   href={`${basePath}/${category.slug}`}
-                  className="px-4 py-2 rounded-full bg-bg-secondary border border-ink/5 text-sm text-secondary-text hover:text-ink hover:border-accent-blue/30 transition-colors"
+                  className="px-2.5 sm:px-4 py-1 sm:py-2 rounded-full bg-bg-secondary border border-ink/5 text-xs sm:text-sm text-secondary-text hover:text-ink hover:border-accent-blue/30 transition-colors"
                 >
                   {categoryTitle(category, lang)}
                 </a>
@@ -77,9 +77,9 @@ export const ToolsPage = () => {
           <form
             role="search"
             onSubmit={(e) => e.preventDefault()}
-            className="relative max-w-md mx-auto mb-12"
+            className="relative max-w-md mx-auto mb-8 sm:mb-10"
           >
-            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-secondary-text" aria-hidden="true" />
+            <Search size={16} className="absolute left-3.5 sm:left-4 top-1/2 -translate-y-1/2 text-secondary-text" aria-hidden="true" />
             <label htmlFor="tools-search" className="sr-only">
               {t.searchAriaLabel}
             </label>
@@ -92,7 +92,7 @@ export const ToolsPage = () => {
                 setSearchParams(value ? { q: value } : {}, { replace: true });
               }}
               placeholder={t.searchPlaceholder}
-              className="w-full bg-bg-secondary border border-ink/10 rounded-xl pl-11 pr-4 py-3 text-ink focus:border-accent-blue focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure transition-colors"
+              className="w-full bg-bg-secondary border border-ink/10 rounded-xl pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 text-sm sm:text-base text-ink focus:border-accent-blue focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure transition-colors"
             />
           </form>
 
@@ -100,7 +100,7 @@ export const ToolsPage = () => {
             <p className="text-center text-secondary-text">{t.noToolsMatch.replace('{query}', query)}</p>
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
                 {firstRow.map((tool, idx) => (
                   <ToolCard
                     key={tool.id}
@@ -113,10 +113,10 @@ export const ToolsPage = () => {
                 ))}
               </div>
 
-              <AdSlot slot={import.meta.env.VITE_ADSENSE_SLOT_TOOLS_LISTING} className="my-16" />
+              <AdSlot slot={import.meta.env.VITE_ADSENSE_SLOT_TOOLS_LISTING} className="my-10 sm:my-16" />
 
               {rest.length > 0 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
                   {rest.map((tool, idx) => (
                     <ToolCard
                       key={tool.id}

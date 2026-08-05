@@ -40,6 +40,11 @@ const ToolCategoryPage = lazy(() =>
 const GoogleMapsScraperPage = lazy(() =>
   import('./pages/tools/GoogleMapsScraperPage').then((m) => ({ default: m.GoogleMapsScraperPage })),
 );
+const InvoiceGeneratorPage = lazy(() =>
+  import('./pages/tools/InvoiceGeneratorPage').then((m) => ({ default: m.InvoiceGeneratorPage })),
+);
+const GuidesPage = lazy(() => import('./pages/GuidesPage').then((m) => ({ default: m.GuidesPage })));
+const GuidePage = lazy(() => import('./pages/GuidePage').then((m) => ({ default: m.GuidePage })));
 
 // A null Suspense fallback means a direct visit to a lazy route (shared link,
 // bookmark) paints nothing — not even the navbar — until the chunk downloads
@@ -102,6 +107,15 @@ export default function App() {
             <Route path="/hi/tools/:category" element={lazyRoute(ToolCategoryPage)} />
             <Route path="/tools/lead-generation/google-maps-business-finder" element={lazyRoute(GoogleMapsScraperPage)} />
             <Route path="/hi/tools/lead-generation/google-maps-business-finder" element={lazyRoute(GoogleMapsScraperPage)} />
+            <Route path="/tools/generators/invoice-generator" element={lazyRoute(InvoiceGeneratorPage)} />
+            <Route path="/hi/tools/generators/invoice-generator" element={lazyRoute(InvoiceGeneratorPage)} />
+
+            {/* English-only content hub — original guides written in-house
+               (not scraped from competitors) covering invoicing topics for
+               SEO/GEO. No Hindi routes yet; low priority next to the tool
+               itself, and 5 Hindi long-form articles is its own project. */}
+            <Route path="/guides" element={lazyRoute(GuidesPage)} />
+            <Route path="/guides/:slug" element={lazyRoute(GuidePage)} />
 
             {/* Legacy /free-tools URLs — redirect rather than 404 now that a
                handful of these may already be indexed or bookmarked. A true
@@ -117,6 +131,11 @@ export default function App() {
               path="/hi/free-tools/google-maps-scraper"
               element={<Navigate to="/hi/tools/lead-generation/google-maps-business-finder" replace />}
             />
+
+            {/* Safety net for any unmatched URL (dead link, typo, stale
+               bookmark) — without this, React Router renders nothing and
+               the visitor sees a blank page. */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           <WhatsAppButton />
         </LanguageProvider>

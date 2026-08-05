@@ -425,11 +425,11 @@ export const Footer = () => {
   ];
 
   return (
-    <footer className="pt-12 pb-24 border-t border-ink/5 bg-bg-pure">
+    <footer className="pt-10 pb-10 border-t border-ink/5 bg-bg-pure">
       <div className="max-w-7xl mx-auto px-6">
-        <AdSlot slot={import.meta.env.VITE_ADSENSE_SLOT_FOOTER} className="mb-12" />
+        <AdSlot slot={import.meta.env.VITE_ADSENSE_SLOT_FOOTER} className="mb-8" />
       </div>
-      <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
+      <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
         <div>
           <div className="text-xl font-bold tracking-tighter">
             {metadata.name}<span className="text-accent-blue">.</span>
@@ -445,7 +445,7 @@ export const Footer = () => {
           ))}
         </nav>
       </div>
-      <div className="max-w-7xl mx-auto px-6 mt-8 pt-8 border-t border-ink/5 flex flex-col md:flex-row justify-center items-center gap-x-8 gap-y-3">
+      <div className="max-w-7xl mx-auto px-6 mt-6 pt-6 border-t border-ink/5 flex flex-col md:flex-row justify-center items-center gap-x-8 gap-y-3">
         <nav aria-label="Site pages" className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2">
           {siteLinks.map((link) => (
             <Link key={link.name} to={link.href} className="py-3 -my-3 text-secondary-text hover:text-ink transition-colors text-xs font-mono uppercase tracking-widest">

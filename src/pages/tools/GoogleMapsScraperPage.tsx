@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Check, ChevronDown, Coffee, Copy, Crown, Download, Info, Loader2, Mail, MapPin, Star, X } from 'lucide-react';
+import { Check, ChevronDown, Coffee, Copy, Crown, Download, Info, Loader2, Mail, MapPin, Star, X } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { Navbar } from '../../components/Navbar';
 import { Footer } from '../../components/AchievementsContact';
@@ -133,7 +133,9 @@ export const GoogleMapsScraperPage = () => {
         <div className="max-w-7xl mx-auto px-6 w-full lg:h-full lg:flex lg:flex-col lg:min-h-0">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="mb-6 lg:shrink-0">
             <Breadcrumbs
-              className="mb-3"
+              className="mb-6"
+              backHref={categoryHref}
+              backLabel={fillPlaceholders(t.backTo, { category: categoryTitle(TOOL_CATEGORY, lang) })}
               items={[
                 { name: content.nav.breadcrumbHome, href: lang === 'hi' ? '/hi' : '/' },
                 { name: content.toolsPage.breadcrumb, href: toolsBase },
@@ -141,14 +143,6 @@ export const GoogleMapsScraperPage = () => {
                 { name: toolTitle(TOOL, lang) },
               ]}
             />
-
-            <Link
-              to={categoryHref}
-              className="inline-flex items-center gap-2 text-secondary-text hover:text-ink transition-colors group mb-4 text-sm"
-            >
-              <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" aria-hidden="true" />
-              {fillPlaceholders(t.backTo, { category: categoryTitle(TOOL_CATEGORY, lang) })}
-            </Link>
 
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
@@ -455,17 +449,17 @@ export const GoogleMapsScraperPage = () => {
         }}
       />
 
-      <section className="max-w-4xl mx-auto px-6 py-16 space-y-14">
+      <section className="max-w-4xl mx-auto px-6 py-10 sm:py-16 space-y-10 sm:space-y-14">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight mb-4">{t.howItWorksTitle}</h2>
-          <div className="grid sm:grid-cols-[280px_1fr] gap-6 items-start">
+          <h2 className="text-2xl font-bold tracking-tight mb-4 text-center sm:text-left">{t.howItWorksTitle}</h2>
+          <div className="grid sm:grid-cols-[280px_1fr] gap-6 sm:gap-8 items-start">
             <img
               src="/screenshots/google-maps-business-finder.png"
               alt={t.screenshotAlt}
               width={340}
               height={512}
               loading="lazy"
-              className="w-full max-w-[280px] rounded-2xl border border-ink/10"
+              className="w-full max-w-[280px] mx-auto sm:mx-0 rounded-2xl border border-ink/10"
             />
             <ol className="space-y-2 text-secondary-text list-decimal list-inside">
               {t.howItWorksSteps.map((step) => (
