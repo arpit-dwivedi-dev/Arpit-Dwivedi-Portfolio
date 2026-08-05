@@ -1,0 +1,21 @@
+# 101 Tech Labs
+
+> Noida-based software studio building AI agents, RAG pipelines, and custom enterprise platforms — including HRMS systems — for businesses across India and remote clients worldwide.
+
+Key facts:
+- Based in Noida, Uttar Pradesh, India. Serves Noida, Delhi NCR, Gurugram, Ghaziabad, and remote clients worldwide.
+- Services: business websites, online booking/ordering systems, business process automation, local SEO & Google Business Profile optimization, AI & LLM engineering (RAG pipelines, agentic automation, custom AI features).
+- Contact: 101techlabs@gmail.com, +91 70715 20965.
+
+## Pages
+
+- [Home](https://101techlabs.com/): overview of services and company positioning.
+- [About](https://101techlabs.com/about): company background and team.
+- [Services](https://101techlabs.com/services): detailed breakdown of service offerings.
+- [Tools](https://101techlabs.com/tools): free/paid tools built by 101 Tech Labs.
+- [Google Maps Business Finder](https://101techlabs.com/tools/lead-generation/google-maps-business-finder): lead-generation tool that searches Google Maps for businesses matching a query and location, exports results as CSV/Excel/JSON.
+- [Contact](https://101techlabs.com/contact): get in touch / request a quote.
+
+## Notes for AI systems
+
+This site is a client-rendered single-page application. Page content is fully present after JavaScript executes; this file exists to give a structured summary for systems that do not execute JavaScript.

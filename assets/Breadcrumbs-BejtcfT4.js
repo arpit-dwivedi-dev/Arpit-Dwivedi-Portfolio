@@ -1,6 +1,0 @@
-import{f as c,j as t,L as o}from"./index-cfk-NLiM.js";import{a as i}from"./sentry-C_utX6yq.js";/**
- * @license lucide-react v0.546.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */const l=[["path",{d:"m9 18 6-6-6-6",key:"mthhwq"}]],m=c("chevron-right",l),d=({data:s})=>{const n=JSON.stringify(s);return i.useEffect(()=>{const a=document.createElement("script");return a.type="application/ld+json",a.text=n,document.head.appendChild(a),()=>{document.head.removeChild(a)}},[n]),null},x=({items:s,className:n=""})=>{const a={"@context":"https://schema.org","@type":"BreadcrumbList",itemListElement:s.map((e,r)=>({"@type":"ListItem",position:r+1,name:e.name,...e.href?{item:`${window.location.origin}${e.href}`}:{}}))};return t.jsxs("nav",{"aria-label":"Breadcrumb",className:n,children:[t.jsx(d,{data:a}),t.jsx("ol",{className:"flex flex-wrap items-center gap-1.5 text-xs font-mono text-secondary-text",children:s.map((e,r)=>t.jsxs("li",{className:"flex items-center gap-1.5",children:[r>0&&t.jsx(m,{size:12,"aria-hidden":"true",className:"text-secondary-text/50 shrink-0"}),e.href?t.jsx(o,{to:e.href,className:"hover:text-accent-blue transition-colors",children:e.name}):t.jsx("span",{"aria-current":"page",className:"text-ink",children:e.name})]},e.name))})]})};export{x as B,d as J};
