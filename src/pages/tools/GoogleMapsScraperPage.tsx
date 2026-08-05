@@ -13,35 +13,17 @@ import { useLanguage } from '../../i18n/LanguageContext';
 import { useMapsScraper, MAX_RESULTS_PER_SEARCH, MAX_SEARCHES_PER_SESSION } from '../../tools/googleMapsScraper/useMapsScraper';
 import { isLiveMode } from '../../tools/googleMapsScraper/dataSource';
 import { toCsv, downloadCsv, toJson, downloadJson, toExcel, downloadExcel } from '../../lib/csv';
-import { TOOLS, getToolCategory, getRelatedTools } from '../../tools/registry';
+import { TOOLS, getToolCategory, getRelatedTools, categoryTitle, toolTitle, toolDescription } from '../../tools/registry';
 
 const TOOL = TOOLS.find((t) => t.id === 'google-maps-business-finder')!;
 const TOOL_CATEGORY = getToolCategory(TOOL.category)!;
 const RELATED_TOOLS = getRelatedTools(TOOL);
 
-const FAQ_ITEMS = [
-  {
-    question: 'Is the Google Maps Business Finder free to use?',
-    answer: `Yes. You get up to ${MAX_RESULTS_PER_SEARCH} results per search and ${MAX_SEARCHES_PER_SESSION} searches per browser session, with no account or signup required.`,
-  },
-  {
-    question: 'What data does it export?',
-    answer: 'Business name, address, phone number, website, rating, and hours — as a CSV, Excel (.xls), or JSON file.',
-  },
-  {
-    question: "What happens when I hit the free session limit?",
-    answer: 'Searches are capped per session to keep the free tool fast and available for everyone. Refresh the page to reset your count, or reach out for premium access with higher limits.',
-  },
-  {
-    question: 'Does this replace the official Google Places API?',
-    answer: "No. It's built for quick, low-volume manual lookups — agency prospecting, local SEO checks, one-off research — not as a production data pipeline.",
-  },
-];
-
-const RESULT_COUNT_OPTIONS = [
-  ...[5, 10, 15].map((n) => ({ value: String(n), label: `${n} results` })),
-  { value: 'more', label: 'More (Premium)' },
-];
+// Replaces the {maxResults}/{maxSearches}/{category}/{n}/{used}/{max}
+// placeholders used in metadata.json/hi.ts so translated copy can still
+// reference live, numeric values.
+const fillPlaceholders = (text: string, vars: Record<string, string>) =>
+  Object.entries(vars).reduce((acc, [key, value]) => acc.replaceAll(`{${key}}`, value), text);
 
 const CONTACT_EMAIL = '101techlabs@gmail.com';
 
@@ -55,7 +37,14 @@ const CSV_COLUMNS = [
 ];
 
 export const GoogleMapsScraperPage = () => {
-  const { lang } = useLanguage();
+  const { lang, content } = useLanguage();
+  const t = content.mapsScraperTool;
+  const placeholderVars = { maxResults: String(MAX_RESULTS_PER_SEARCH), maxSearches: String(MAX_SEARCHES_PER_SESSION) };
+  const faqItems = t.faq.map((item) => ({ question: item.question, answer: fillPlaceholders(item.answer, placeholderVars) }));
+  const resultCountOptions = [
+    ...[5, 10, 15].map((n) => ({ value: String(n), label: fillPlaceholders(t.resultsOptionLabel, { n: String(n) }) })),
+    { value: 'more', label: t.morePremiumOption },
+  ];
   const toolsBase = lang === 'hi' ? '/hi/tools' : '/tools';
   const categoryHref = `${toolsBase}/${TOOL.category}`;
   const {
@@ -131,9 +120,9 @@ export const GoogleMapsScraperPage = () => {
   // Announced to screen readers via the sr-only status region below — the
   // progress bar and streamed rows are otherwise silent to assistive tech.
   const statusText = running
-    ? `Searching — ${results.length} of ${targetCount} results loaded`
+    ? fillPlaceholders(t.statusSearching, { loaded: String(results.length), target: String(targetCount) })
     : results.length > 0
-      ? `${results.length} result${results.length === 1 ? '' : 's'} loaded`
+      ? fillPlaceholders(t.statusLoaded, { count: String(results.length) })
       : '';
 
   return (
@@ -146,10 +135,10 @@ export const GoogleMapsScraperPage = () => {
             <Breadcrumbs
               className="mb-3"
               items={[
-                { name: 'Home', href: lang === 'hi' ? '/hi' : '/' },
-                { name: 'Tools', href: toolsBase },
-                { name: TOOL_CATEGORY.title, href: categoryHref },
-                { name: TOOL.title },
+                { name: content.nav.breadcrumbHome, href: lang === 'hi' ? '/hi' : '/' },
+                { name: content.toolsPage.breadcrumb, href: toolsBase },
+                { name: categoryTitle(TOOL_CATEGORY, lang), href: categoryHref },
+                { name: toolTitle(TOOL, lang) },
               ]}
             />
 
@@ -158,19 +147,17 @@ export const GoogleMapsScraperPage = () => {
               className="inline-flex items-center gap-2 text-secondary-text hover:text-ink transition-colors group mb-4 text-sm"
             >
               <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" aria-hidden="true" />
-              Back to {TOOL_CATEGORY.title}
+              {fillPlaceholders(t.backTo, { category: categoryTitle(TOOL_CATEGORY, lang) })}
             </Link>
 
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
-                <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-1 block">Free Tool</span>
-                <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
-                  Google Maps <span className="text-gradient">Business Finder</span>
+                <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-1 block">{t.freeToolLabel}</span>
+                <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-gradient">
+                  {toolTitle(TOOL, lang)}
                 </h1>
               </div>
-              <p className="text-secondary-text max-w-md text-sm">
-                Find businesses on Google Maps and pull their name, address, phone, website, rating, and hours — into a table you can export.
-              </p>
+              <p className="text-secondary-text max-w-md text-sm">{t.heroDescription}</p>
             </div>
           </motion.div>
 
@@ -206,14 +193,14 @@ export const GoogleMapsScraperPage = () => {
             >
               <div className="space-y-2">
                 <label htmlFor="maps-query" className="text-xs font-mono text-secondary-text uppercase tracking-widest">
-                  Search
+                  {t.searchLabel}
                 </label>
                 <input
                   id="maps-query"
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="e.g. coffee shops"
+                  placeholder={t.searchPlaceholder}
                   disabled={running || stopping || sessionLimitReached}
                   aria-describedby="session-status"
                   className="w-full bg-ink/5 border border-ink/10 rounded-xl px-4 py-3 text-ink focus:border-accent-blue focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure transition-colors disabled:opacity-60"
@@ -222,14 +209,14 @@ export const GoogleMapsScraperPage = () => {
 
               <div className="space-y-2">
                 <label htmlFor="maps-location" className="text-xs font-mono text-secondary-text uppercase tracking-widest">
-                  Location <span className="normal-case text-secondary-text/70">(optional)</span>
+                  {t.locationLabel} <span className="normal-case text-secondary-text/70">{t.optionalLabel}</span>
                 </label>
                 <input
                   id="maps-location"
                   type="text"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  placeholder="e.g. Austin, TX"
+                  placeholder={t.locationPlaceholder}
                   disabled={running || stopping || sessionLimitReached}
                   aria-describedby="session-status"
                   className="w-full bg-ink/5 border border-ink/10 rounded-xl px-4 py-3 text-ink focus:border-accent-blue focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure transition-colors disabled:opacity-60"
@@ -238,7 +225,7 @@ export const GoogleMapsScraperPage = () => {
 
               <div className="space-y-2">
                 <label htmlFor="maps-count" className="text-xs font-mono text-secondary-text uppercase tracking-widest">
-                  Results
+                  {t.resultsLabel}
                 </label>
                 <Select
                   id="maps-count"
@@ -250,7 +237,7 @@ export const GoogleMapsScraperPage = () => {
                     }
                     setCount(value);
                   }}
-                  options={RESULT_COUNT_OPTIONS}
+                  options={resultCountOptions}
                   disabled={running || stopping || sessionLimitReached}
                   ariaDescribedBy="session-status"
                 />
@@ -263,7 +250,7 @@ export const GoogleMapsScraperPage = () => {
                   className="w-full py-3 bg-ink/5 text-ink font-bold rounded-xl hover:bg-ink/10 transition-all flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure"
                 >
                   <Loader2 size={18} className="animate-spin" aria-hidden="true" />
-                  Stop
+                  {t.stopButton}
                 </button>
               ) : (
                 <button
@@ -272,18 +259,18 @@ export const GoogleMapsScraperPage = () => {
                   aria-describedby="session-status"
                   className="w-full py-3 bg-accent-blue text-bg-pure font-bold rounded-xl hover:glow-blue transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure"
                 >
-                  Run search
+                  {t.runSearchButton}
                 </button>
               )}
 
               <p id="session-status" role="status" aria-live="polite" className="text-xs font-mono text-secondary-text text-center">
-                {searchesUsed}/{MAX_SEARCHES_PER_SESSION} searches used this session
-                {sessionLimitReached && ' — refresh to reset'}
+                {fillPlaceholders(t.sessionStatus, { used: String(searchesUsed), max: String(MAX_SEARCHES_PER_SESSION) })}
+                {sessionLimitReached && t.sessionLimitNote}
               </p>
 
               {error && (
                 <p role="alert" className="text-red-400 light:text-red-600 text-sm">
-                  {error}
+                  {error === 'empty-query' ? t.errorEmptyQuery : t.errorFetchFailed}
                 </p>
               )}
             </motion.form>
@@ -298,7 +285,7 @@ export const GoogleMapsScraperPage = () => {
             >
               <div className="flex flex-wrap items-center justify-between gap-3 px-4 sm:px-6 py-4 border-b border-ink/5 shrink-0">
                 <h3 id="maps-results-heading" className="flex items-center gap-2 text-lg font-bold text-ink">
-                  Results
+                  {t.resultsHeading}
                   <span className="px-2 py-0.5 rounded-full bg-ink/10 text-secondary-text text-xs font-mono">{results.length}</span>
                 </h3>
                 <div className="flex items-center gap-2 shrink-0 flex-wrap">
@@ -308,7 +295,7 @@ export const GoogleMapsScraperPage = () => {
                     className="inline-flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-[#FFDD00]/10 text-[#FFDD00] text-sm font-bold hover:bg-[#FFDD00]/20 transition-all focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure"
                   >
                     <Coffee size={16} aria-hidden="true" />
-                    <span className="hidden sm:inline">Buy me a coffee</span>
+                    <span className="hidden sm:inline">{t.buyMeCoffee}</span>
                   </button>
                   <div className="relative" ref={exportMenuRef}>
                     <button
@@ -320,7 +307,7 @@ export const GoogleMapsScraperPage = () => {
                       className="inline-flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-ink/5 text-ink text-sm font-bold hover:bg-ink/10 transition-all disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure"
                     >
                       <Download size={16} aria-hidden="true" />
-                      <span className="hidden sm:inline">Export</span>
+                      <span className="hidden sm:inline">{t.exportButton}</span>
                       <ChevronDown size={14} aria-hidden="true" className={`transition-transform ${exportMenuOpen ? 'rotate-180' : ''}`} />
                     </button>
 
@@ -331,9 +318,9 @@ export const GoogleMapsScraperPage = () => {
                       >
                         {(
                           [
-                            { format: 'csv' as const, label: 'CSV (.csv)' },
-                            { format: 'excel' as const, label: 'Excel (.xls)' },
-                            { format: 'json' as const, label: 'JSON (.json)' },
+                            { format: 'csv' as const, label: t.exportCsv },
+                            { format: 'excel' as const, label: t.exportExcel },
+                            { format: 'json' as const, label: t.exportJson },
                           ]
                         ).map((opt) => (
                           <button
@@ -363,7 +350,7 @@ export const GoogleMapsScraperPage = () => {
                   aria-valuemin={0}
                   aria-valuemax={targetCount}
                   aria-valuenow={results.length}
-                  aria-label="Search progress"
+                  aria-label={t.progressAriaLabel}
                   className="h-1 bg-ink/5 overflow-hidden shrink-0"
                 >
                   <motion.div
@@ -380,7 +367,7 @@ export const GoogleMapsScraperPage = () => {
                 {results.length === 0 && !running && (
                   <div className="h-full min-h-[300px] flex flex-col items-center justify-center text-center text-secondary-text text-sm gap-3 p-8">
                     <MapPin size={28} className="text-secondary-text/50" aria-hidden="true" />
-                    Nothing yet — run a search to see results here.
+                    {t.emptyState}
                   </div>
                 )}
 
@@ -446,9 +433,10 @@ export const GoogleMapsScraperPage = () => {
         data={{
           '@context': 'https://schema.org',
           '@type': 'WebApplication',
-          name: TOOL.title,
+          name: toolTitle(TOOL, lang),
           url: `https://101techlabs.com${categoryHref}/${TOOL.path}`,
-          description: TOOL.description,
+          description: toolDescription(TOOL, lang),
+          inLanguage: lang,
           applicationCategory: 'BusinessApplication',
           operatingSystem: 'Any',
           offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
@@ -459,7 +447,7 @@ export const GoogleMapsScraperPage = () => {
         data={{
           '@context': 'https://schema.org',
           '@type': 'FAQPage',
-          mainEntity: FAQ_ITEMS.map((item) => ({
+          mainEntity: faqItems.map((item) => ({
             '@type': 'Question',
             name: item.question,
             acceptedAnswer: { '@type': 'Answer', text: item.answer },
@@ -469,57 +457,61 @@ export const GoogleMapsScraperPage = () => {
 
       <section className="max-w-4xl mx-auto px-6 py-16 space-y-14">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight mb-4">How It Works</h2>
-          <ol className="space-y-2 text-secondary-text list-decimal list-inside">
-            <li>Enter what you're looking for — e.g. "coffee shops" — and, optionally, a location.</li>
-            <li>Choose how many results you want, up to {MAX_RESULTS_PER_SEARCH} free per search.</li>
-            <li>Export the results as CSV, Excel, or JSON with one click.</li>
-          </ol>
+          <h2 className="text-2xl font-bold tracking-tight mb-4">{t.howItWorksTitle}</h2>
+          <div className="grid sm:grid-cols-[280px_1fr] gap-6 items-start">
+            <img
+              src="/screenshots/google-maps-business-finder.png"
+              alt={t.screenshotAlt}
+              width={340}
+              height={512}
+              loading="lazy"
+              className="w-full max-w-[280px] rounded-2xl border border-ink/10"
+            />
+            <ol className="space-y-2 text-secondary-text list-decimal list-inside">
+              {t.howItWorksSteps.map((step) => (
+                <li key={step}>{fillPlaceholders(step, placeholderVars)}</li>
+              ))}
+            </ol>
+          </div>
         </div>
 
         <div>
-          <h2 className="text-2xl font-bold tracking-tight mb-4">Features</h2>
+          <h2 className="text-2xl font-bold tracking-tight mb-4">{t.featuresTitle}</h2>
           <ul className="grid sm:grid-cols-2 gap-3 text-secondary-text">
-            <li className="p-4 rounded-2xl bg-bg-secondary border border-ink/5">Name, address, phone, website, rating, and hours for every result</li>
-            <li className="p-4 rounded-2xl bg-bg-secondary border border-ink/5">Export to CSV, Excel (.xls), or JSON</li>
-            <li className="p-4 rounded-2xl bg-bg-secondary border border-ink/5">Live progress and screen-reader-friendly status while a search runs</li>
-            <li className="p-4 rounded-2xl bg-bg-secondary border border-ink/5">No account, install, or signup required</li>
+            {t.features.map((feature) => (
+              <li key={feature} className="p-4 rounded-2xl bg-bg-secondary border border-ink/5">{feature}</li>
+            ))}
           </ul>
         </div>
 
         <div>
-          <h2 className="text-2xl font-bold tracking-tight mb-4">Use Cases</h2>
+          <h2 className="text-2xl font-bold tracking-tight mb-4">{t.useCasesTitle}</h2>
           <ul className="space-y-2 text-secondary-text list-disc list-inside">
-            <li>Agencies building a local business prospect list</li>
-            <li>Local SEO audits — checking a client's listing against nearby competitors</li>
-            <li>Franchise or expansion research — checking business density in a target area</li>
-            <li>Compiling a public business directory for research or journalism</li>
+            {t.useCases.map((useCase) => <li key={useCase}>{useCase}</li>)}
           </ul>
         </div>
 
         <div className="grid sm:grid-cols-2 gap-10">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight mb-4">Advantages</h2>
+            <h2 className="text-2xl font-bold tracking-tight mb-4">{t.advantagesTitle}</h2>
             <ul className="space-y-2 text-secondary-text list-disc list-inside">
-              <li>Faster than scrolling and copying listings by hand</li>
-              <li>Structured, exportable output instead of screenshots</li>
-              <li>Nothing to install — runs in the browser</li>
+              {t.advantages.map((advantage) => <li key={advantage}>{advantage}</li>)}
             </ul>
           </div>
           <div>
-            <h2 className="text-2xl font-bold tracking-tight mb-4">Limitations</h2>
+            <h2 className="text-2xl font-bold tracking-tight mb-4">{t.limitationsTitle}</h2>
             <ul className="space-y-2 text-secondary-text list-disc list-inside">
-              <li>Free tier caps at {MAX_RESULTS_PER_SEARCH} results per search, {MAX_SEARCHES_PER_SESSION} searches per session</li>
-              <li>Built for quick lookups, not high-volume or production data pipelines</li>
-              <li>Higher limits available on request — see "Go Premium" above</li>
+              {t.limitations.map((limitation) => (
+                <li key={limitation}>{fillPlaceholders(limitation, placeholderVars)}</li>
+              ))}
             </ul>
           </div>
         </div>
 
         <div>
-          <h2 className="text-2xl font-bold tracking-tight mb-4">FAQ</h2>
+          <h2 className="text-2xl font-bold tracking-tight mb-4">{t.faqTitle}</h2>
           <div className="space-y-4">
-            {FAQ_ITEMS.map((item) => (
+            {faqItems.map((item) => (
               <div key={item.question} className="p-4 rounded-2xl bg-bg-secondary border border-ink/5">
                 <h3 className="font-bold text-ink mb-1">{item.question}</h3>
                 <p className="text-secondary-text text-sm">{item.answer}</p>
@@ -529,7 +521,7 @@ export const GoogleMapsScraperPage = () => {
         </div>
 
         <div>
-          <h2 className="text-2xl font-bold tracking-tight mb-4">Related Tools</h2>
+          <h2 className="text-2xl font-bold tracking-tight mb-4">{t.relatedToolsTitle}</h2>
           {RELATED_TOOLS.length > 0 ? (
             <ul className="grid sm:grid-cols-2 gap-3">
               {RELATED_TOOLS.map((related) => (
@@ -538,26 +530,27 @@ export const GoogleMapsScraperPage = () => {
                     to={`${toolsBase}/${related.category}/${related.path}`}
                     className="block p-4 rounded-2xl bg-bg-secondary border border-ink/5 hover:border-accent-blue/30 transition-colors"
                   >
-                    <span className="font-bold text-ink">{related.title}</span>
-                    <p className="text-secondary-text text-sm mt-1">{related.description}</p>
+                    <span className="font-bold text-ink">{toolTitle(related, lang)}</span>
+                    <p className="text-secondary-text text-sm mt-1">{toolDescription(related, lang)}</p>
                   </Link>
                 </li>
               ))}
             </ul>
           ) : (
             <p className="text-secondary-text text-sm">
-              More {TOOL_CATEGORY.title.toLowerCase()} are on the way. <Link to={toolsBase} className="text-accent-blue hover:underline">Browse all tools</Link>.
+              {fillPlaceholders(t.moreComingSoon, { category: categoryTitle(TOOL_CATEGORY, lang).toLowerCase() })}{' '}
+              <Link to={toolsBase} className="text-accent-blue hover:underline">{t.browseAllTools}</Link>.
             </p>
           )}
         </div>
 
         <div className="p-6 rounded-3xl glass border-ink/10 flex flex-wrap items-center justify-between gap-4">
-          <p className="text-ink font-medium">Need this data flowing straight into your CRM or outreach tool automatically?</p>
+          <p className="text-ink font-medium">{t.crmCta}</p>
           <Link
             to={lang === 'hi' ? '/hi/contact' : '/contact'}
             className="shrink-0 inline-flex items-center gap-2 px-5 py-3 bg-accent-blue text-bg-pure font-bold rounded-xl hover:glow-blue transition-all"
           >
-            Talk to us
+            {t.talkToUs}
           </Link>
         </div>
       </section>
@@ -586,21 +579,19 @@ export const GoogleMapsScraperPage = () => {
               <div className="flex items-center justify-between mb-4">
                 <h3 id="upi-modal-heading" className="text-lg font-bold text-ink flex items-center gap-2">
                   <Coffee size={18} className="text-[#FFDD00]" aria-hidden="true" />
-                  Buy me a coffee
+                  {t.upiModalHeading}
                 </h3>
                 <button
                   type="button"
                   onClick={() => setUpiModalOpen(false)}
-                  aria-label="Close"
+                  aria-label={t.closeAriaLabel}
                   className="p-1.5 rounded-lg hover:bg-ink/10 text-secondary-text transition-colors"
                 >
                   <X size={18} aria-hidden="true" />
                 </button>
               </div>
 
-              <p className="text-sm text-secondary-text mb-4">
-                Scan the QR or use the UPI details below. Thank you for the support!
-              </p>
+              <p className="text-sm text-secondary-text mb-4">{t.upiModalBody}</p>
 
               <div className="flex justify-center mb-4">
                 <div className="p-3 rounded-2xl bg-white">
@@ -611,7 +602,7 @@ export const GoogleMapsScraperPage = () => {
               <div className="space-y-3">
                 <div className="flex items-center justify-between gap-2 px-4 py-3 rounded-xl bg-ink/5">
                   <div className="min-w-0">
-                    <p className="text-xs font-mono text-secondary-text">UPI ID</p>
+                    <p className="text-xs font-mono text-secondary-text">{t.upiIdLabel}</p>
                     <p className="text-sm font-bold text-ink truncate">{UPI_ID}</p>
                   </div>
                   <button
@@ -620,13 +611,13 @@ export const GoogleMapsScraperPage = () => {
                     className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-accent-blue/10 text-accent-blue text-xs font-bold hover:bg-accent-blue/20 transition-all"
                   >
                     {copiedField === 'upi' ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
-                    {copiedField === 'upi' ? 'Copied' : 'Copy'}
+                    {copiedField === 'upi' ? t.copiedButton : t.copyButton}
                   </button>
                 </div>
 
                 <div className="flex items-center justify-between gap-2 px-4 py-3 rounded-xl bg-ink/5">
                   <div className="min-w-0">
-                    <p className="text-xs font-mono text-secondary-text">UPI Number</p>
+                    <p className="text-xs font-mono text-secondary-text">{t.upiNumberLabel}</p>
                     <p className="text-sm font-bold text-ink truncate">{UPI_NUMBER}</p>
                   </div>
                   <button
@@ -635,7 +626,7 @@ export const GoogleMapsScraperPage = () => {
                     className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-accent-blue/10 text-accent-blue text-xs font-bold hover:bg-accent-blue/20 transition-all"
                   >
                     {copiedField === 'number' ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
-                    {copiedField === 'number' ? 'Copied' : 'Copy'}
+                    {copiedField === 'number' ? t.copiedButton : t.copyButton}
                   </button>
                 </div>
               </div>
@@ -666,28 +657,26 @@ export const GoogleMapsScraperPage = () => {
               <div className="flex items-center justify-between mb-4">
                 <h3 id="premium-modal-heading" className="text-lg font-bold text-ink flex items-center gap-2">
                   <Crown size={18} className="text-accent-blue" aria-hidden="true" />
-                  Go Premium
+                  {t.premiumModalHeading}
                 </h3>
                 <button
                   type="button"
                   onClick={() => setPremiumModalOpen(false)}
-                  aria-label="Close"
+                  aria-label={t.closeAriaLabel}
                   className="p-1.5 rounded-lg hover:bg-ink/10 text-secondary-text transition-colors"
                 >
                   <X size={18} aria-hidden="true" />
                 </button>
               </div>
 
-              <p className="text-sm text-secondary-text mb-4">
-                Need more than 15 results per search? That's available on our premium plan — reach out and we'll set you up.
-              </p>
+              <p className="text-sm text-secondary-text mb-4">{t.premiumModalBody}</p>
 
               <a
                 href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Google Maps Scraper — Premium access')}`}
                 className="w-full inline-flex items-center justify-center gap-2 py-3 bg-accent-blue text-bg-pure font-bold rounded-xl hover:glow-blue transition-all focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure"
               >
                 <Mail size={16} aria-hidden="true" />
-                Contact us
+                {t.contactUsButton}
               </a>
             </motion.div>
           </motion.div>

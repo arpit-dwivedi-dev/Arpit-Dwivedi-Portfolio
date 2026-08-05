@@ -22,12 +22,20 @@ const stripHiPrefix = (pathname: string) => {
   return stripped === '' ? '/' : stripped;
 };
 
+// Fixed production origin rather than window.location.origin — this file
+// also runs during the build-time prerender pass (see scripts/prerender.mjs),
+// where the page is served from http://localhost, and canonical/hreflang
+// tags baked into the static HTML must point at the real domain regardless
+// of where they were generated. Matches the domain hardcoded in index.html,
+// public/sitemap.xml, and the JSON-LD graph.
+const SITE_ORIGIN = 'https://101techlabs.com';
+
 // Absolute URL for a given (lang, pathname) pair, honoring the base path
 // GitHub Pages serves this app from — used for the hreflang link tags.
 const absoluteUrl = (target: Lang, basePathname: string) => {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   const path = target === 'hi' ? (basePathname === '/' ? '/hi' : `/hi${basePathname}`) : basePathname;
-  return `${window.location.origin}${base}${path === '/' ? '/' : path}`;
+  return `${SITE_ORIGIN}${base}${path === '/' ? '/' : path}`;
 };
 
 const upsertAlternateLink = (hreflang: string, href: string) => {

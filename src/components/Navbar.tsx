@@ -47,7 +47,7 @@ export const Navbar = () => {
             >
               <picture>
                 <source srcSet="/logo-64.webp" type="image/webp" />
-                <img src="/logo-64.png" width={32} height={32} alt="" className="w-8 h-8 rounded-lg glow-blue" />
+                <img src="/logo-64.png" width={32} height={32} alt="101TechLabs" className="w-8 h-8 rounded-lg glow-blue" />
               </picture>
               <span>{metadata.name.split(' ')[0]}<span className="text-accent-blue"> {metadata.name.split(' ').slice(1).join(' ')}</span></span>
             </Link>
@@ -82,7 +82,7 @@ export const Navbar = () => {
               <button
                 type="button"
                 onClick={toggleTheme}
-                aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                aria-label={theme === 'dark' ? nav.ariaSwitchToLight : nav.ariaSwitchToDark}
                 className="p-2 -m-2 text-secondary-text hover:text-accent-blue transition-colors"
               >
                 {theme === 'dark' ? <Sun size={18} aria-hidden="true" /> : <Moon size={18} aria-hidden="true" />}
@@ -151,7 +151,7 @@ export const Navbar = () => {
               type="button"
               onClick={toggleTheme}
               tabIndex={isOpen ? undefined : -1}
-              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-label={theme === 'dark' ? nav.ariaSwitchToLight : nav.ariaSwitchToDark}
               className="p-3 -m-3 text-secondary-text hover:text-accent-blue transition-colors"
             >
               {theme === 'dark' ? <Sun size={24} aria-hidden="true" /> : <Moon size={24} aria-hidden="true" />}

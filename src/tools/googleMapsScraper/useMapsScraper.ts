@@ -15,11 +15,15 @@ export const MAX_SEARCHES_PER_SESSION = 5;
 // swap is visible before it's clickable again.
 const RESTART_COOLDOWN_MS = 600;
 
+// A code rather than a literal message — this hook has no language context,
+// so the component (which does) maps each code to translated copy.
+export type MapsScraperErrorCode = 'empty-query' | 'fetch-failed';
+
 export function useMapsScraper() {
   const [results, setResults] = useState<MapsListing[]>([]);
   const [running, setRunning] = useState(false);
   const [stopping, setStopping] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<MapsScraperErrorCode | null>(null);
   const [searchesUsed, setSearchesUsed] = useState(0);
   const [targetCount, setTargetCount] = useState(0);
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -31,7 +35,7 @@ export function useMapsScraper() {
     if (running || stopping || sessionLimitReached) return;
     const trimmed = query.trim();
     if (!trimmed) {
-      setError('Enter a search term, like "coffee shops in Austin, TX".');
+      setError('empty-query');
       return;
     }
 
@@ -64,7 +68,7 @@ export function useMapsScraper() {
       });
     } catch (err) {
       if (!(err instanceof DOMException && err.name === 'AbortError')) {
-        setError('Something went wrong fetching results. Try again.');
+        setError('fetch-failed');
       }
     } finally {
       // Only the session that's still current may flip `running` off — a

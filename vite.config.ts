@@ -53,8 +53,17 @@ export default defineConfig(({mode}) => {
     build: {
       rollupOptions: {
         output: {
+          // Splits the animation/icon/QR libraries out of the main bundle —
+          // they're sizeable and change far less often than app code, so a
+          // separate chunk means a redeploy doesn't force revisitors to
+          // re-download them. Matters more now that content paints from the
+          // prerendered HTML (see scripts/prerender.mjs) rather than waiting
+          // on this bundle to hydrate.
           manualChunks: {
             sentry: ['@sentry/react'],
+            motion: ['motion'],
+            icons: ['lucide-react', 'react-icons'],
+            qrcode: ['qrcode.react'],
           },
         },
       },

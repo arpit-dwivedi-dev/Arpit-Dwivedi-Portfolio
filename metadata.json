@@ -20,7 +20,11 @@
       "langEnglishNative": "English",
       "langHindiNative": "हिन्दी",
       "langHindiGloss": "Hindi",
-      "langEnglishGloss": "English"
+      "langEnglishGloss": "English",
+      "skipToMainContent": "Skip to main content",
+      "ariaSwitchToLight": "Switch to light mode",
+      "ariaSwitchToDark": "Switch to dark mode",
+      "breadcrumbHome": "Home"
     },
     "techStack": {
       "frontend": ["Angular", "RxJS", "NgRx", "Angular Material", "TypeScript", "React", "Tailwind CSS"],
@@ -145,6 +149,20 @@
           { "title": "AI & Automation", "subtitle": "Where It Actually Helps" }
         ]
       }
+    },
+    "aboutPage": {
+      "srTitle": "About 101 Tech Labs",
+      "heading": "Working With Us",
+      "paragraphs": [
+        "Every project starts with a discovery call, not a sales pitch — we want to understand what you actually need before talking about cost. From there you get a written, fixed-scope proposal, so the number you agree to is the number you pay.",
+        "Arpit Dwivedi, the founder, stays hands-on through the whole build — there's no handoff between an account manager and whoever actually writes the code. If you have a question mid-project, you're talking to the person building it.",
+        "We don't disappear after launch. Fixes, small updates, and follow-up work are part of how we work, not a separate retainer you have to negotiate into existence."
+      ],
+      "workLabel": "Recent Work",
+      "workItems": [
+        "Rashtriya Swasthya Sangathan — a donation and outreach platform for an NGO running blood donation camps and mobile health clinics across India.",
+        "SA Ethics Biotech — a corporate site for an ISO 9001:2015 & ISO 13485:2016 certified medical device manufacturer."
+      ]
     },
     "techStackSection": {
       "label": "Technical Arsenal",
@@ -285,6 +303,24 @@
         }
       }
     },
+    "contactPage": {
+      "srTitle": "Contact 101 Tech Labs",
+      "heading": "Before You Reach Out",
+      "items": [
+        {
+          "question": "How much does a project cost?",
+          "answer": "It depends on scope. After a discovery call, we send a fixed-scope proposal so you know the cost upfront, before any work starts."
+        },
+        {
+          "question": "How long does a typical project take?",
+          "answer": "A business website usually ships in 1–3 weeks; larger systems like booking platforms or custom software typically take 4–12 weeks depending on scope."
+        },
+        {
+          "question": "Do you work with businesses outside India?",
+          "answer": "Yes — we work remotely with clients worldwide."
+        }
+      ]
+    },
     "featuredProject": {
       "label": "Featured Work",
       "title": "Featured",
@@ -301,6 +337,29 @@
       "label": "How We Help",
       "title": "What We",
       "titleAccent": "Do"
+    },
+    "servicesPage": {
+      "srTitle": "Services — 101 Tech Labs",
+      "heading": "How a Project Runs",
+      "intro": "Whichever service you start with, the path from first call to launch looks the same:",
+      "steps": [
+        {
+          "title": "Discovery Call",
+          "description": "A quick call to understand what you need, your timeline, and whether we're the right fit."
+        },
+        {
+          "title": "Proposal & Scope",
+          "description": "A clear written scope and cost estimate, so there are no surprise line items later."
+        },
+        {
+          "title": "Build & Iterate",
+          "description": "Regular check-ins as we build, with room to adjust as you see it take shape."
+        },
+        {
+          "title": "Launch & Support",
+          "description": "We deploy, hand over what you need, and stay reachable for fixes and follow-up work."
+        }
+      ]
     },
     "projectsSection": {
       "label": "Portfolio",
@@ -330,7 +389,123 @@
     },
     "footer": {
       "rights": "All rights reserved.",
-      "techNote": "Built on modern, reliable technology."
+      "techNote": "Built on modern, reliable technology.",
+      "navTools": "Tools",
+      "navAbout": "About",
+      "navServices": "Services",
+      "navContact": "Contact",
+      "navPrivacyPolicy": "Privacy Policy",
+      "navTerms": "Terms",
+      "navEditorialPolicy": "Editorial Policy"
+    },
+    "mapsScraperTool": {
+      "howItWorksTitle": "How It Works",
+      "howItWorksSteps": [
+        "Enter what you're looking for — e.g. \"coffee shops\" — and, optionally, a location.",
+        "Choose how many results you want, up to {maxResults} free per search.",
+        "Export the results as CSV, Excel, or JSON with one click."
+      ],
+      "featuresTitle": "Features",
+      "features": [
+        "Name, address, phone, website, rating, and hours for every result",
+        "Export to CSV, Excel (.xls), or JSON",
+        "Live progress and screen-reader-friendly status while a search runs",
+        "No account, install, or signup required"
+      ],
+      "useCasesTitle": "Use Cases",
+      "useCases": [
+        "Agencies building a local business prospect list",
+        "Local SEO audits — checking a client's listing against nearby competitors",
+        "Franchise or expansion research — checking business density in a target area",
+        "Compiling a public business directory for research or journalism"
+      ],
+      "advantagesTitle": "Advantages",
+      "advantages": [
+        "Faster than scrolling and copying listings by hand",
+        "Structured, exportable output instead of screenshots",
+        "Nothing to install — runs in the browser"
+      ],
+      "limitationsTitle": "Limitations",
+      "limitations": [
+        "Free tier caps at {maxResults} results per search, {maxSearches} searches per session",
+        "Built for quick lookups, not high-volume or production data pipelines",
+        "Higher limits available on request — see \"Go Premium\" above"
+      ],
+      "faqTitle": "FAQ",
+      "faq": [
+        {
+          "question": "Is the Google Maps Business Finder free to use?",
+          "answer": "Yes. You get up to {maxResults} results per search and {maxSearches} searches per browser session, with no account or signup required."
+        },
+        {
+          "question": "What data does it export?",
+          "answer": "Business name, address, phone number, website, rating, and hours — as a CSV, Excel (.xls), or JSON file."
+        },
+        {
+          "question": "What happens when I hit the free session limit?",
+          "answer": "Searches are capped per session to keep the free tool fast and available for everyone. Refresh the page to reset your count, or reach out for premium access with higher limits."
+        },
+        {
+          "question": "Does this replace the official Google Places API?",
+          "answer": "No. It's built for quick, low-volume manual lookups — agency prospecting, local SEO checks, one-off research — not as a production data pipeline."
+        }
+      ],
+      "relatedToolsTitle": "Related Tools",
+      "moreComingSoon": "More {category} are on the way.",
+      "browseAllTools": "Browse all tools",
+      "crmCta": "Need this data flowing straight into your CRM or outreach tool automatically?",
+      "talkToUs": "Talk to us",
+      "freeToolLabel": "Free Tool",
+      "backTo": "Back to {category}",
+      "heroDescription": "Find businesses on Google Maps and pull their name, address, phone, website, rating, and hours — into a table you can export.",
+      "searchLabel": "Search",
+      "locationLabel": "Location",
+      "optionalLabel": "(optional)",
+      "resultsLabel": "Results",
+      "searchPlaceholder": "e.g. coffee shops",
+      "locationPlaceholder": "e.g. Austin, TX",
+      "resultsOptionLabel": "{n} results",
+      "morePremiumOption": "More (Premium)",
+      "stopButton": "Stop",
+      "runSearchButton": "Run search",
+      "sessionStatus": "{used}/{max} searches used this session",
+      "sessionLimitNote": " — refresh to reset",
+      "resultsHeading": "Results",
+      "buyMeCoffee": "Buy me a coffee",
+      "exportButton": "Export",
+      "exportCsv": "CSV (.csv)",
+      "exportExcel": "Excel (.xls)",
+      "exportJson": "JSON (.json)",
+      "emptyState": "Nothing yet — run a search to see results here.",
+      "progressAriaLabel": "Search progress",
+      "closeAriaLabel": "Close",
+      "upiModalHeading": "Buy me a coffee",
+      "upiModalBody": "Scan the QR or use the UPI details below. Thank you for the support!",
+      "upiIdLabel": "UPI ID",
+      "upiNumberLabel": "UPI Number",
+      "copyButton": "Copy",
+      "copiedButton": "Copied",
+      "premiumModalHeading": "Go Premium",
+      "premiumModalBody": "Need more than 15 results per search? That's available on our premium plan — reach out and we'll set you up.",
+      "contactUsButton": "Contact us",
+      "statusSearching": "Searching — {loaded} of {target} results loaded",
+      "statusLoaded": "{count} results loaded",
+      "errorEmptyQuery": "Enter a search term, like \"coffee shops in Austin, TX\".",
+      "errorFetchFailed": "Something went wrong fetching results. Try again.",
+      "screenshotAlt": "Google Maps Business Finder search form with a 'coffee shops' query, an 'Austin, TX' location, and a 10-results option selected"
+    },
+    "toolsPage": {
+      "breadcrumb": "Tools",
+      "eyebrow": "Free Tools",
+      "titleStart": "Small tools,",
+      "titleAccent": "no signup",
+      "description": "Things we built for our own work that turned out useful enough to share. Free to run, no account needed.",
+      "categoriesAriaLabel": "Tool categories",
+      "searchAriaLabel": "Search tools",
+      "searchPlaceholder": "Search tools…",
+      "noToolsMatch": "No tools match \"{query}\" yet.",
+      "toolCategoryEyebrow": "Tool Category",
+      "noCategoryTools": "No {category} yet — check back soon."
     }
   }
 }

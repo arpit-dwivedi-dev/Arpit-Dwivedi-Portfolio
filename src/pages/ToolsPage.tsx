@@ -8,13 +8,14 @@ import { ToolCard } from '../components/tools/ToolCard';
 import { AdSlot } from '../components/ads/AdSlot';
 import { Breadcrumbs } from '../components/seo/Breadcrumbs';
 import { useLanguage } from '../i18n/LanguageContext';
-import { TOOLS, TOOL_CATEGORIES, getToolsByCategory } from '../tools/registry';
+import { TOOLS, TOOL_CATEGORIES, getToolsByCategory, categoryTitle, toolTitle, toolDescription } from '../tools/registry';
 
 // Ad sits after the first row of results, not inside the grid.
 const CARDS_BEFORE_AD = 6;
 
 export const ToolsPage = () => {
-  const { lang } = useLanguage();
+  const { lang, content } = useLanguage();
+  const t = content.toolsPage;
   const [searchParams, setSearchParams] = useSearchParams();
   const basePath = lang === 'hi' ? '/hi/tools' : '/tools';
   // Backs the WebSite SearchAction in index.html's JSON-LD (/tools?q=...) —
@@ -29,9 +30,9 @@ export const ToolsPage = () => {
     const q = query.trim().toLowerCase();
     if (!q) return TOOLS;
     return TOOLS.filter(
-      (tool) => tool.title.toLowerCase().includes(q) || tool.description.toLowerCase().includes(q),
+      (tool) => toolTitle(tool, lang).toLowerCase().includes(q) || toolDescription(tool, lang).toLowerCase().includes(q),
     );
-  }, [query]);
+  }, [query, lang]);
 
   const firstRow = filtered.slice(0, CARDS_BEFORE_AD);
   const rest = filtered.slice(CARDS_BEFORE_AD);
@@ -48,28 +49,26 @@ export const ToolsPage = () => {
         <div className="max-w-7xl mx-auto px-6">
           <Breadcrumbs
             className="mb-8"
-            items={[{ name: 'Home', href: lang === 'hi' ? '/hi' : '/' }, { name: 'Tools' }]}
+            items={[{ name: content.nav.breadcrumbHome, href: lang === 'hi' ? '/hi' : '/' }, { name: t.breadcrumb }]}
           />
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
-            <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-2 block">Free Tools</span>
+            <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-2 block">{t.eyebrow}</span>
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-              Small tools, <span className="text-gradient">no signup</span>
+              {t.titleStart} <span className="text-gradient">{t.titleAccent}</span>
             </h1>
-            <p className="text-secondary-text max-w-2xl mx-auto text-lg">
-              Things we built for our own work that turned out useful enough to share. Free to run, no account needed.
-            </p>
+            <p className="text-secondary-text max-w-2xl mx-auto text-lg">{t.description}</p>
           </motion.div>
 
           {populatedCategories.length > 1 && (
-            <nav aria-label="Tool categories" className="flex flex-wrap justify-center gap-2 mb-12">
+            <nav aria-label={t.categoriesAriaLabel} className="flex flex-wrap justify-center gap-2 mb-12">
               {populatedCategories.map((category) => (
                 <a
                   key={category.slug}
                   href={`${basePath}/${category.slug}`}
                   className="px-4 py-2 rounded-full bg-bg-secondary border border-ink/5 text-sm text-secondary-text hover:text-ink hover:border-accent-blue/30 transition-colors"
                 >
-                  {category.title}
+                  {categoryTitle(category, lang)}
                 </a>
               ))}
             </nav>
@@ -82,7 +81,7 @@ export const ToolsPage = () => {
           >
             <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-secondary-text" aria-hidden="true" />
             <label htmlFor="tools-search" className="sr-only">
-              Search tools
+              {t.searchAriaLabel}
             </label>
             <input
               id="tools-search"
@@ -92,21 +91,21 @@ export const ToolsPage = () => {
                 const value = e.target.value;
                 setSearchParams(value ? { q: value } : {}, { replace: true });
               }}
-              placeholder="Search tools…"
+              placeholder={t.searchPlaceholder}
               className="w-full bg-bg-secondary border border-ink/10 rounded-xl pl-11 pr-4 py-3 text-ink focus:border-accent-blue focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure transition-colors"
             />
           </form>
 
           {filtered.length === 0 ? (
-            <p className="text-center text-secondary-text">No tools match "{query}" yet.</p>
+            <p className="text-center text-secondary-text">{t.noToolsMatch.replace('{query}', query)}</p>
           ) : (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {firstRow.map((tool, idx) => (
                   <ToolCard
                     key={tool.id}
-                    title={tool.title}
-                    description={tool.description}
+                    title={toolTitle(tool, lang)}
+                    description={toolDescription(tool, lang)}
                     icon={tool.icon}
                     href={`${basePath}/${tool.category}/${tool.path}`}
                     index={idx}
@@ -121,8 +120,8 @@ export const ToolsPage = () => {
                   {rest.map((tool, idx) => (
                     <ToolCard
                       key={tool.id}
-                      title={tool.title}
-                      description={tool.description}
+                      title={toolTitle(tool, lang)}
+                      description={toolDescription(tool, lang)}
                       icon={tool.icon}
                       href={`${basePath}/${tool.category}/${tool.path}`}
                       index={idx}

@@ -9,7 +9,8 @@ import { useLanguage } from '../i18n/LanguageContext';
 // A dedicated, indexable /services route — the five services previously
 // only existed as a same-page anchor (#experience) on the homepage.
 export const ServicesPage = () => {
-  const { lang } = useLanguage();
+  const { lang, content } = useLanguage();
+  const { servicesPage } = content;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -23,12 +24,30 @@ export const ServicesPage = () => {
         <div className="max-w-7xl mx-auto px-6">
           <Breadcrumbs
             className="mb-8"
-            items={[{ name: 'Home', href: lang === 'hi' ? '/hi' : '/' }, { name: 'Services' }]}
+            items={[{ name: content.nav.breadcrumbHome, href: lang === 'hi' ? '/hi' : '/' }, { name: content.footer.navServices }]}
           />
         </div>
-        <h1 className="sr-only">Services — 101 Tech Labs</h1>
+        <h1 className="sr-only">{servicesPage.srTitle}</h1>
         <Services />
         <Industries />
+
+        <section className="py-24 bg-bg-secondary">
+          <div className="max-w-4xl mx-auto px-6">
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">{servicesPage.heading}</h2>
+            <p className="text-secondary-text text-base md:text-lg mb-12">{servicesPage.intro}</p>
+            <ol className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              {servicesPage.steps.map((step, i) => (
+                <li key={step.title} className="flex gap-4">
+                  <span className="text-accent-blue font-mono text-2xl font-bold shrink-0">{String(i + 1).padStart(2, '0')}</span>
+                  <div>
+                    <h3 className="font-bold text-ink mb-1">{step.title}</h3>
+                    <p className="text-secondary-text text-sm leading-relaxed">{step.description}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
       </main>
 
       <Footer />

@@ -1,4 +1,5 @@
 import { Navbar } from '../components/Navbar';
+import { HomeJsonLd } from '../components/seo/HomeJsonLd';
 import { Hero } from '../components/Hero';
 import { FeaturedProject } from '../components/FeaturedProject';
 import { About } from '../components/AboutTech';
@@ -44,6 +45,7 @@ export const HomePage = () => {
       </div>
 
       <Navbar />
+      <HomeJsonLd />
 
       <main id="main-content">
         <Hero />

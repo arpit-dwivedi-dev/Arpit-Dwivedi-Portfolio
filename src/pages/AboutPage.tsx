@@ -10,7 +10,8 @@ import { useLanguage } from '../i18n/LanguageContext';
 // existed as a same-page anchor (#about) on the homepage, so it had no URL
 // of its own for Google to rank or for other pages to link to directly.
 export const AboutPage = () => {
-  const { lang } = useLanguage();
+  const { lang, content } = useLanguage();
+  const { aboutPage } = content;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -24,12 +25,31 @@ export const AboutPage = () => {
         <div className="max-w-7xl mx-auto px-6">
           <Breadcrumbs
             className="mb-8"
-            items={[{ name: 'Home', href: lang === 'hi' ? '/hi' : '/' }, { name: 'About' }]}
+            items={[{ name: content.nav.breadcrumbHome, href: lang === 'hi' ? '/hi' : '/' }, { name: content.footer.navAbout }]}
           />
         </div>
-        <h1 className="sr-only">About 101 Tech Labs</h1>
+        <h1 className="sr-only">{aboutPage.srTitle}</h1>
         <About />
         <Team />
+
+        <section className="py-24 bg-bg-pure">
+          <div className="max-w-3xl mx-auto px-6">
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-8">{aboutPage.heading}</h2>
+            <div className="space-y-5 text-base md:text-lg text-secondary-text leading-relaxed">
+              {aboutPage.paragraphs.map((p) => (
+                <p key={p}>{p}</p>
+              ))}
+            </div>
+            <h3 className="text-accent-purple font-mono text-sm tracking-widest uppercase mt-12 mb-4">
+              {aboutPage.workLabel}
+            </h3>
+            <ul className="space-y-3 text-base text-secondary-text leading-relaxed list-disc list-inside">
+              {aboutPage.workItems.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        </section>
       </main>
 
       <Footer />

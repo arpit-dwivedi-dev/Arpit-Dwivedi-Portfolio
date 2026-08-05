@@ -413,15 +413,15 @@ export const Footer = () => {
   // own URL for Google (and AdSense review) to find independent of the
   // one-page scroll experience.
   const siteLinks = [
-    { name: 'Tools', href: withLang('/tools') },
-    { name: 'About', href: withLang('/about') },
-    { name: 'Services', href: withLang('/services') },
-    { name: 'Contact', href: withLang('/contact') },
+    { name: footer.navTools, href: withLang('/tools') },
+    { name: footer.navAbout, href: withLang('/about') },
+    { name: footer.navServices, href: withLang('/services') },
+    { name: footer.navContact, href: withLang('/contact') },
   ];
   const legalLinks = [
-    { name: 'Privacy Policy', href: withLang('/privacy-policy') },
-    { name: 'Terms', href: withLang('/terms') },
-    { name: 'Editorial Policy', href: withLang('/editorial-policy') },
+    { name: footer.navPrivacyPolicy, href: withLang('/privacy-policy') },
+    { name: footer.navTerms, href: withLang('/terms') },
+    { name: footer.navEditorialPolicy, href: withLang('/editorial-policy') },
   ];
 
   return (

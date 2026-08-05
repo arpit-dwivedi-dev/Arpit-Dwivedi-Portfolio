@@ -30,7 +30,7 @@ export const ProjectsPage = () => {
           >
             <Breadcrumbs
               className="mb-4"
-              items={[{ name: 'Home', href: homeHref }, { name: 'Projects' }]}
+              items={[{ name: content.nav.breadcrumbHome, href: homeHref }, { name: projectsSection.pageTitleAccent }]}
             />
 
             <Link

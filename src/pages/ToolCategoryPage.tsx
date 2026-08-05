@@ -6,10 +6,11 @@ import { Footer } from '../components/AchievementsContact';
 import { ToolCard } from '../components/tools/ToolCard';
 import { Breadcrumbs } from '../components/seo/Breadcrumbs';
 import { useLanguage } from '../i18n/LanguageContext';
-import { getToolCategory, getToolsByCategory } from '../tools/registry';
+import { getToolCategory, getToolsByCategory, categoryTitle, categoryDescription, toolTitle, toolDescription } from '../tools/registry';
 
 export const ToolCategoryPage = () => {
-  const { lang } = useLanguage();
+  const { lang, content } = useLanguage();
+  const t = content.toolsPage;
   const { category: categorySlug } = useParams<{ category: string }>();
   const basePath = lang === 'hi' ? '/hi/tools' : '/tools';
 
@@ -36,16 +37,16 @@ export const ToolCategoryPage = () => {
           <Breadcrumbs
             className="mb-8"
             items={[
-              { name: 'Home', href: lang === 'hi' ? '/hi' : '/' },
-              { name: 'Tools', href: basePath },
-              { name: category.title },
+              { name: content.nav.breadcrumbHome, href: lang === 'hi' ? '/hi' : '/' },
+              { name: t.breadcrumb, href: basePath },
+              { name: categoryTitle(category, lang) },
             ]}
           />
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16">
-            <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-2 block">Tool Category</span>
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">{category.title}</h1>
-            <p className="text-secondary-text max-w-2xl mx-auto text-lg">{category.description}</p>
+            <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-2 block">{t.toolCategoryEyebrow}</span>
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">{categoryTitle(category, lang)}</h1>
+            <p className="text-secondary-text max-w-2xl mx-auto text-lg">{categoryDescription(category, lang)}</p>
           </motion.div>
 
           {tools.length > 0 ? (
@@ -53,8 +54,8 @@ export const ToolCategoryPage = () => {
               {tools.map((tool, idx) => (
                 <ToolCard
                   key={tool.id}
-                  title={tool.title}
-                  description={tool.description}
+                  title={toolTitle(tool, lang)}
+                  description={toolDescription(tool, lang)}
                   icon={tool.icon}
                   href={`${basePath}/${tool.category}/${tool.path}`}
                   index={idx}
@@ -62,7 +63,7 @@ export const ToolCategoryPage = () => {
               ))}
             </div>
           ) : (
-            <p className="text-center text-secondary-text">No {category.title.toLowerCase()} yet — check back soon.</p>
+            <p className="text-center text-secondary-text">{t.noCategoryTools.replace('{category}', categoryTitle(category, lang).toLowerCase())}</p>
           )}
         </div>
       </main>

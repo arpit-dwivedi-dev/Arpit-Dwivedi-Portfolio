@@ -8,7 +8,8 @@ import { useLanguage } from '../i18n/LanguageContext';
 // A dedicated, indexable /contact route — AdSense review and general trust
 // both expect a locatable contact page independent of the homepage anchor.
 export const ContactPage = () => {
-  const { lang } = useLanguage();
+  const { lang, content } = useLanguage();
+  const { contactPage } = content;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -22,11 +23,25 @@ export const ContactPage = () => {
         <div className="max-w-7xl mx-auto px-6">
           <Breadcrumbs
             className="mb-2"
-            items={[{ name: 'Home', href: lang === 'hi' ? '/hi' : '/' }, { name: 'Contact' }]}
+            items={[{ name: content.nav.breadcrumbHome, href: lang === 'hi' ? '/hi' : '/' }, { name: content.footer.navContact }]}
           />
         </div>
-        <h1 className="sr-only">Contact 101 Tech Labs</h1>
+        <h1 className="sr-only">{contactPage.srTitle}</h1>
         <Contact compact />
+
+        <section className="py-16 bg-bg-secondary">
+          <div className="max-w-3xl mx-auto px-6">
+            <h2 className="text-2xl font-bold tracking-tight mb-6">{contactPage.heading}</h2>
+            <div className="space-y-6">
+              {contactPage.items.map((item) => (
+                <div key={item.question}>
+                  <h3 className="font-semibold text-ink mb-1">{item.question}</h3>
+                  <p className="text-secondary-text text-sm leading-relaxed">{item.answer}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
       </main>
 
       <Footer />

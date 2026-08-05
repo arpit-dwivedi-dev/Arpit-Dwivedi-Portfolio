@@ -4,8 +4,22 @@ import { HomePage } from './pages/HomePage';
 import { ScrollToHash } from './components/ScrollToHash';
 import { WhatsAppButton } from './components/WhatsAppButton';
 import { Analytics } from './components/Analytics';
-import { LanguageProvider } from './i18n/LanguageContext';
+import { LanguageProvider, useLanguage } from './i18n/LanguageContext';
 import { ThemeProvider } from './theme/ThemeContext';
+
+// A plain <a> here can't reach useLanguage() — this component sits inside
+// LanguageProvider so it's the one that translates the skip link.
+const SkipLink = () => {
+  const { content } = useLanguage();
+  return (
+    <a
+      href="#main-content"
+      className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-accent-blue focus:text-bg-pure focus:px-4 focus:py-2 focus:rounded-lg focus:font-bold"
+    >
+      {content.nav.skipToMainContent}
+    </a>
+  );
+};
 
 // Code-split off the main bundle — not needed for the home page's LCP.
 const ProjectsPage = lazy(() => import('./pages/ProjectsPage').then((m) => ({ default: m.ProjectsPage })));
@@ -53,12 +67,7 @@ export default function App() {
     <ThemeProvider>
       <Router basename={basename}>
         <LanguageProvider>
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-accent-blue focus:text-bg-pure focus:px-4 focus:py-2 focus:rounded-lg focus:font-bold"
-          >
-            Skip to main content
-          </a>
+          <SkipLink />
           <ScrollToHash />
           <Analytics />
           <Routes>
