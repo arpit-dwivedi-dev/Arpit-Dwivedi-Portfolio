@@ -65,7 +65,7 @@ export const InvoiceGeneratorPage = () => {
   const { invoice, totals, savedAt, update, updateItem, addItem, removeItem, loadInvoice, newInvoice, save, saveAsDefault } =
     useInvoiceGenerator();
 
-  const [history, setHistory] = useState<InvoiceData[]>([]);
+  const [history, setHistory] = useState<InvoiceData[]>(() => listInvoices());
   const [historyOpen, setHistoryOpen] = useState(false);
   const [defaultSavedAt, setDefaultSavedAt] = useState<number | null>(null);
   const [logoError, setLogoError] = useState(false);
