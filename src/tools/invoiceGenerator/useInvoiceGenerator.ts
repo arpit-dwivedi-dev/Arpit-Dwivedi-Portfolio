@@ -30,7 +30,7 @@ export const createBlankInvoice = (): InvoiceData => {
     discountPercent: 0,
     shippingEnabled: false,
     shippingAmount: 0,
-    currency: defaults?.currency ?? 'USD',
+    currency: defaults?.currency ?? 'INR',
     amountPaid: 0,
     updatedAt: Date.now(),
   };
