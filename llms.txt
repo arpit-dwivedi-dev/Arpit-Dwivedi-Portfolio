@@ -13,7 +13,6 @@ Key facts:
 - [About](https://101techlabs.com/about): company background and team.
 - [Services](https://101techlabs.com/services): detailed breakdown of service offerings.
 - [Tools](https://101techlabs.com/tools): free/paid tools built by 101 Tech Labs.
-- [Google Maps Business Finder](https://101techlabs.com/tools/lead-generation/google-maps-business-finder): lead-generation tool for finding local businesses by name/category and location, exports results as CSV/Excel/JSON.
 - [Invoice Generator](https://101techlabs.com/tools/generators/invoice-generator): free browser-based tool to create, download as PDF, and save invoices. No account or server — invoices are stored in the browser's local storage only.
 - [Invoicing Guides](https://101techlabs.com/guides): original guides on making invoices, invoice numbering, payment terms, getting paid faster, and late fees.
 - [Contact](https://101techlabs.com/contact): get in touch / request a quote.
