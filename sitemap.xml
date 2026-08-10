@@ -141,7 +141,7 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/tools/lead-generation/google-maps-business-finder" />
     <lastmod>2026-08-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://101techlabs.com/hi/tools/lead-generation/google-maps-business-finder</loc>
@@ -150,7 +150,7 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/tools/lead-generation/google-maps-business-finder" />
     <lastmod>2026-08-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.4</priority>
   </url>
 
   <url>
@@ -241,6 +241,348 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/invoice-late-fees" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/invoice-late-fees" />
     <lastmod>2026-08-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/how-to-reduce-late-payments</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/how-to-reduce-late-payments" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/how-to-reduce-late-payments" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/accept-online-payments</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/accept-online-payments" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/accept-online-payments" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/invoice-follow-up</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/invoice-follow-up" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/invoice-follow-up" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/invoice-reminder-templates</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/invoice-reminder-templates" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/invoice-reminder-templates" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/overdue-invoices</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/overdue-invoices" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/overdue-invoices" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/collection-letter-templates</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/collection-letter-templates" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/collection-letter-templates" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/collect-unpaid-invoices</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/collect-unpaid-invoices" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/collect-unpaid-invoices" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/bad-debt</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/bad-debt" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/bad-debt" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/quote-vs-invoice</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/quote-vs-invoice" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/quote-vs-invoice" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/estimate-vs-quote</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/estimate-vs-quote" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/estimate-vs-quote" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/invoice-vs-receipt</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/invoice-vs-receipt" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/invoice-vs-receipt" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/invoice-statuses</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/invoice-statuses" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/invoice-statuses" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/credit-notes</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/credit-notes" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/credit-notes" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/credit-memo-vs-credit-note</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/credit-memo-vs-credit-note" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/credit-memo-vs-credit-note" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/purchase-order</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/purchase-order" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/purchase-order" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/purchase-order-vs-invoice</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/purchase-order-vs-invoice" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/purchase-order-vs-invoice" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/receipt</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/receipt" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/receipt" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/commercial-invoice</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/commercial-invoice" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/commercial-invoice" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/pro-forma-invoice</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/pro-forma-invoice" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/pro-forma-invoice" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/recurring-invoices</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/recurring-invoices" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/recurring-invoices" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/customer-statements</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/customer-statements" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/customer-statements" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/invoice-deposits</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/invoice-deposits" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/invoice-deposits" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/progress-invoicing</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/progress-invoicing" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/progress-invoicing" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/payment-plans</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/payment-plans" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/payment-plans" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/retainer-agreements</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/retainer-agreements" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/retainer-agreements" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/cash-flow</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/cash-flow" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/cash-flow" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/gross-profit-vs-net-profit</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/gross-profit-vs-net-profit" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/gross-profit-vs-net-profit" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/how-to-read-financial-statements</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/how-to-read-financial-statements" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/how-to-read-financial-statements" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/how-to-price-your-services</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/how-to-price-your-services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/how-to-price-your-services" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/accounts-receivable</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/accounts-receivable" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/accounts-receivable" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/invoice-aging-report</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/invoice-aging-report" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/invoice-aging-report" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/days-sales-outstanding</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/days-sales-outstanding" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/days-sales-outstanding" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/accounts-receivable-turnover</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/accounts-receivable-turnover" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/accounts-receivable-turnover" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/cash-application</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/cash-application" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/cash-application" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/payment-reconciliation</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/payment-reconciliation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/payment-reconciliation" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/invoice-disputes</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/invoice-disputes" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/invoice-disputes" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/working-capital</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/working-capital" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/working-capital" />
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/revenue-forecasting</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/revenue-forecasting" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/revenue-forecasting" />
+    <lastmod>2026-08-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
