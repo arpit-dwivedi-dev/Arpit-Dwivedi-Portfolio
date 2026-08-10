@@ -43,6 +43,12 @@ const GoogleMapsScraperPage = lazy(() =>
 const InvoiceGeneratorPage = lazy(() =>
   import('./pages/tools/InvoiceGeneratorPage').then((m) => ({ default: m.InvoiceGeneratorPage })),
 );
+const QRCodeGeneratorPage = lazy(() =>
+  import('./pages/tools/QRCodeGeneratorPage').then((m) => ({ default: m.QRCodeGeneratorPage })),
+);
+const QRRedirectPage = lazy(() =>
+  import('./pages/tools/QRRedirectPage').then((m) => ({ default: m.QRRedirectPage })),
+);
 const GuidesPage = lazy(() => import('./pages/GuidesPage').then((m) => ({ default: m.GuidesPage })));
 const GuidePage = lazy(() => import('./pages/GuidePage').then((m) => ({ default: m.GuidePage })));
 
@@ -109,6 +115,12 @@ export default function App() {
             <Route path="/hi/tools/lead-generation/google-maps-business-finder" element={lazyRoute(GoogleMapsScraperPage)} />
             <Route path="/tools/generators/invoice-generator" element={lazyRoute(InvoiceGeneratorPage)} />
             <Route path="/hi/tools/generators/invoice-generator" element={lazyRoute(InvoiceGeneratorPage)} />
+            <Route path="/tools/generators/qr-code-generator" element={lazyRoute(QRCodeGeneratorPage)} />
+            <Route path="/hi/tools/generators/qr-code-generator" element={lazyRoute(QRCodeGeneratorPage)} />
+            {/* Not a content page — the smart-redirect target embedded inside
+               Multi-URL / dual-platform App QR codes. See QRRedirectPage. */}
+            <Route path="/tools/generators/qr-code-generator/go" element={lazyRoute(QRRedirectPage)} />
+            <Route path="/hi/tools/generators/qr-code-generator/go" element={lazyRoute(QRRedirectPage)} />
 
             {/* English-only content hub — original guides written in-house
                (not scraped from competitors) covering invoicing topics for

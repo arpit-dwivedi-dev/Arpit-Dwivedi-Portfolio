@@ -29,10 +29,26 @@ import { downloadInvoicePdf, shareInvoicePdf } from '../../tools/invoiceGenerato
 import { CURRENCIES, getCurrencySymbol } from '../../tools/invoiceGenerator/types';
 import type { InvoiceData } from '../../tools/invoiceGenerator/types';
 import { TOOLS, getToolCategory, getRelatedTools, categoryTitle, toolTitle, toolDescription } from '../../tools/registry';
+import { getGuideBySlug } from '../../content/guides/data';
 
 const TOOL = TOOLS.find((t) => t.id === 'invoice-generator')!;
 const TOOL_CATEGORY = getToolCategory(TOOL.category)!;
 const RELATED_TOOLS = getRelatedTools(TOOL);
+
+// Curated rather than pulled from every guide's relatedSlugs — this is the
+// tool page, so the picks lean toward guides someone filling out an invoice
+// right now would actually want (terms, numbering, getting paid), not a
+// generic "everything" list. Guides are English-only (see App.tsx route
+// comment), so this section only renders for lang === 'en'.
+const RELATED_GUIDE_SLUGS = [
+  'how-to-make-an-invoice',
+  'invoice-payment-terms',
+  'invoice-number-guide',
+  'how-to-get-paid-faster',
+  'accept-online-payments',
+  'quote-vs-invoice',
+] as const;
+const RELATED_GUIDES = RELATED_GUIDE_SLUGS.map((slug) => getGuideBySlug(slug)!).filter(Boolean);
 
 // A hard client-side cap, not a real storage-quota check — most browsers
 // give localStorage 5-10MB total, and a base64 logo triggers ~33% overhead
@@ -173,7 +189,7 @@ export const InvoiceGeneratorPage = () => {
                 <span aria-hidden="true" className="hidden sm:block" />
                 <h1 className="text-2xl md:text-4xl font-bold tracking-tight text-gradient">{toolTitle(TOOL, lang)}</h1>
                 <Link
-                  to={lang === 'hi' ? '/hi' : '/guides/how-to-make-an-invoice'}
+                  to={lang === 'hi' ? '/hi' : '/guides'}
                   className="sm:justify-self-end shrink-0 inline-flex items-center gap-2 px-4 py-2 bg-ink/5 text-ink font-bold rounded-xl hover:bg-ink/10 border border-ink/10 transition-all text-sm whitespace-nowrap"
                 >
                   <FileDown size={15} aria-hidden="true" />
@@ -770,7 +786,7 @@ export const InvoiceGeneratorPage = () => {
             <p className="text-secondary-text text-sm">{t.guidesCtaBody}</p>
           </div>
           <Link
-            to={lang === 'hi' ? '/hi' : '/guides/how-to-make-an-invoice'}
+            to={lang === 'hi' ? '/hi' : '/guides'}
             className="shrink-0 inline-flex items-center gap-2 px-5 py-3 bg-ink/5 text-ink font-bold rounded-xl hover:bg-ink/10 transition-all"
           >
             <FileDown size={16} aria-hidden="true" />
@@ -801,6 +817,25 @@ export const InvoiceGeneratorPage = () => {
             </p>
           )}
         </div>
+
+        {lang !== 'hi' && (
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight mb-4">Related Guides</h2>
+            <ul className="grid sm:grid-cols-2 gap-3">
+              {RELATED_GUIDES.map((guide) => (
+                <li key={guide.slug}>
+                  <Link
+                    to={`/guides/${guide.slug}`}
+                    className="block p-4 rounded-2xl bg-bg-secondary border border-ink/5 hover:border-accent-blue/30 transition-colors"
+                  >
+                    <span className="font-bold text-ink">{guide.title}</span>
+                    <p className="text-secondary-text text-sm mt-1">{guide.description}</p>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div className="p-6 rounded-3xl glass border-ink/10 flex flex-wrap items-center justify-between gap-4">
           <p className="text-ink font-medium">{t.crmCta}</p>

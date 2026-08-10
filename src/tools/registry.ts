@@ -1,4 +1,4 @@
-import { MapPin, Receipt, type LucideIcon } from 'lucide-react';
+import { MapPin, QrCode, Receipt, type LucideIcon } from 'lucide-react';
 import type { Lang } from '../i18n/types';
 
 export interface ToolCategory {
@@ -113,6 +113,18 @@ export const TOOLS: ToolDefinition[] = [
     icon: Receipt,
     category: 'generators',
     path: 'invoice-generator',
+    featured: true,
+  },
+  {
+    id: 'qr-code-generator',
+    title: 'QR Code Generator',
+    description: 'Create a QR code for a URL, contact card, text, SMS, email, phone number, or social link — customize the colors and download it as a PNG or SVG.',
+    titleHi: 'QR कोड जनरेटर',
+    descriptionHi: 'URL, कॉन्टैक्ट कार्ड, टेक्स्ट, SMS, ईमेल, फ़ोन नंबर, या सोशल लिंक के लिए QR कोड बनाएं — रंग कस्टमाइज़ करें और PNG या SVG के रूप में डाउनलोड करें।',
+    icon: QrCode,
+    category: 'generators',
+    path: 'qr-code-generator',
+    relatedToolIds: ['invoice-generator'],
     featured: true,
   },
 ];

@@ -627,6 +627,183 @@
       "crmCta": "Need recurring invoices, payment reminders, or a client billing system built for you?",
       "talkToUs": "Talk to us"
     },
+    "qrCodeGeneratorTool": {
+      "freeToolLabel": "Free Tool",
+      "backTo": "Back to {category}",
+      "privacyNoteLead": "Heads up —",
+      "privacyNote": "this tool has no server. The QR code is built entirely in your browser — nothing you type is ever uploaded anywhere.",
+      "typeTabsAriaLabel": "QR code content type",
+      "previewEmptyHint": "Fill in the form to see your QR code here",
+      "downloadPngButton": "Download PNG",
+      "downloadSvgButton": "SVG",
+      "copyImageButton": "Copy",
+      "copiedButton": "Copied",
+      "customizeHeading": "Customize",
+      "foregroundLabel": "Foreground",
+      "backgroundLabel": "Background",
+      "types": {
+        "url": {
+          "label": "URL",
+          "heading": "Redirect to a web page",
+          "description": "Point the QR code straight at any web address.",
+          "fieldLabel": "URL",
+          "placeholder": "https://example.com"
+        },
+        "pdf": {
+          "label": "PDF",
+          "heading": "Link to a PDF",
+          "description": "Paste a link to a PDF you've already uploaded somewhere (Google Drive, Dropbox, your own site) — this tool doesn't host files.",
+          "fieldLabel": "PDF link",
+          "placeholder": "https://drive.google.com/file/d/...",
+          "helpNote": "The PDF needs to be hosted somewhere already reachable by URL — this tool only encodes the link, it doesn't store or host the file itself."
+        },
+        "multiUrl": {
+          "label": "Multi-URL",
+          "heading": "Redirect to one of several links",
+          "description": "Add two or more links — each scan opens one of them at random. Useful for splitting scans across several destinations, like multiple review or booking pages.",
+          "urlFieldLabel": "Link {index}",
+          "addUrlButton": "Add another link",
+          "removeUrlLabel": "Remove link",
+          "minUrlsNote": "With only one link filled in, the QR code just points straight at it — no redirect step."
+        },
+        "contact": {
+          "label": "Contact",
+          "heading": "Share contact details",
+          "description": "Scanning this saves a contact card straight into the phone's address book.",
+          "prefixLabel": "Prefix",
+          "firstNameLabel": "First name",
+          "lastNameLabel": "Last name",
+          "organizationLabel": "Organization",
+          "titleLabel": "Title",
+          "emailLabel": "Email",
+          "mobileLabel": "Mobile",
+          "homePhoneLabel": "Home phone",
+          "faxLabel": "Fax",
+          "streetLabel": "Street",
+          "cityLabel": "City",
+          "regionLabel": "State/Region",
+          "postcodeLabel": "Postcode",
+          "countryLabel": "Country",
+          "websiteLabel": "Website"
+        },
+        "text": {
+          "label": "Plain Text",
+          "heading": "Display a short message",
+          "description": "Encode any text — scanning shows the message, with no link or app involved.",
+          "fieldLabel": "Message",
+          "placeholder": "Enter text here"
+        },
+        "app": {
+          "label": "App",
+          "heading": "Link to an app download",
+          "description": "Add your App Store and/or Google Play link. Add both and the same QR code sends iPhones to the App Store and Android phones to Google Play automatically.",
+          "iosLabel": "App Store link (iOS)",
+          "iosPlaceholder": "https://apps.apple.com/app/...",
+          "androidLabel": "Google Play link (Android)",
+          "androidPlaceholder": "https://play.google.com/store/apps/details?id=...",
+          "bothNote": "Fill in just one platform for a direct link, or both for a link that sends each visitor to the right store automatically."
+        },
+        "sms": {
+          "label": "SMS",
+          "heading": "Pre-fill a text message",
+          "description": "Scanning opens the messaging app with the number and message already filled in.",
+          "phoneLabel": "Phone number",
+          "phonePlaceholder": "+91 98765 43210",
+          "messageLabel": "Message",
+          "messagePlaceholder": "Enter text here"
+        },
+        "email": {
+          "label": "Email",
+          "heading": "Pre-fill an email",
+          "description": "Scanning opens the email app with the recipient, subject, and body already filled in.",
+          "toLabel": "Email address",
+          "toPlaceholder": "hello@example.com",
+          "subjectLabel": "Subject",
+          "subjectPlaceholder": "Email subject",
+          "bodyLabel": "Message",
+          "bodyPlaceholder": "Enter text here"
+        },
+        "phone": {
+          "label": "Phone",
+          "heading": "Link a phone number",
+          "description": "Scanning opens the dialer with the number ready to call.",
+          "phoneLabel": "Phone number",
+          "phonePlaceholder": "+91 98765 43210"
+        },
+        "social": {
+          "label": "Social",
+          "heading": "Link a social profile",
+          "description": "Pick a platform and paste the link to your page or profile.",
+          "platformLabel": "Platform",
+          "urlLabel": "Profile or page link"
+        }
+      },
+      "howItWorksTitle": "How It Works",
+      "howItWorksSteps": [
+        "Pick a content type — a web page, a contact card, plain text, an SMS, an email, a phone number, an app link, or a social profile.",
+        "Fill in the fields for that type — the QR code on the right updates as you type.",
+        "Customize the colors and error correction if you like, then download it as a PNG or SVG, or copy it straight to your clipboard."
+      ],
+      "featuresTitle": "Features",
+      "features": [
+        "Nine content types in one tool — URL, PDF link, multi-URL, contact card, plain text, app link, SMS, email, and phone",
+        "Live preview that updates as you type, with adjustable error correction",
+        "Foreground and background color customization with quick presets",
+        "Download as a high-resolution PNG or a scalable SVG, or copy the image directly",
+        "Runs entirely in your browser — nothing you enter is ever uploaded or stored"
+      ],
+      "useCasesTitle": "Use Cases",
+      "useCases": [
+        "Printed menus, posters, or packaging that link to a web page or PDF",
+        "Business cards or name badges that save your contact details in one scan",
+        "Store signage that opens WhatsApp, dials your phone, or pre-fills an email",
+        "App download cards that send iPhone and Android users to the right store automatically"
+      ],
+      "advantagesTitle": "Advantages",
+      "advantages": [
+        "No account or signup needed to generate or download a QR code",
+        "Nothing you type is ever sent to a server — the code is built in your browser",
+        "Free, unlimited downloads with no watermark"
+      ],
+      "limitationsTitle": "Limitations",
+      "limitations": [
+        "There's no save/history for generated QR codes — download the ones you need before leaving the page",
+        "\"Multi-URL\" redirects to a random link on each scan rather than tracking scan counts or letting you edit the destinations after printing (that needs a backend, which this tool doesn't have)",
+        "A QR code can't be edited once printed — if the destination link changes, you'll need to generate and reprint a new code"
+      ],
+      "faqTitle": "FAQ",
+      "faq": [
+        {
+          "question": "Is this QR code generator really free?",
+          "answer": "Yes — generating, customizing, and downloading QR codes is completely free, with no account, signup, or watermark."
+        },
+        {
+          "question": "Do my QR codes expire?",
+          "answer": "No. Every QR code this tool makes (except Multi-URL and dual-platform App links) encodes your content directly, so it works for as long as the destination link or content is valid — there's no subscription or expiry tied to this tool."
+        },
+        {
+          "question": "What's the difference between PNG and SVG?",
+          "answer": "PNG is a fixed-resolution image, good for most uses. SVG is a vector file that stays sharp at any size, which is better if you're printing the code very large, like on a poster or banner."
+        },
+        {
+          "question": "Will the QR code still scan if I change the colors?",
+          "answer": "Yes, as long as there's enough contrast between the foreground and background colors. Very light foreground colors or low-contrast combinations can make a QR code harder for some scanners to read — the built-in presets are chosen to scan reliably."
+        },
+        {
+          "question": "How does the \"Multi-URL\" option work without a server?",
+          "answer": "The QR code encodes a link back to this site with your list of URLs built into the link itself. When someone scans it, their browser picks one of your URLs at random and redirects — no database or account needed on our end."
+        },
+        {
+          "question": "Can I upload a PDF to be hosted here?",
+          "answer": "No — this tool doesn't store or host files. For the PDF type, paste a link to a PDF you've already uploaded elsewhere (Google Drive, Dropbox, your own website), and the QR code will point straight to it."
+        }
+      ],
+      "relatedToolsTitle": "Related Tools",
+      "moreComingSoon": "More {category} are on the way.",
+      "browseAllTools": "Browse all tools",
+      "crmCta": "Need QR codes with scan tracking, editable destinations, or bulk generation built for you?",
+      "talkToUs": "Talk to us"
+    },
     "toolsPage": {
       "breadcrumb": "Tools",
       "eyebrow": "Free Tools",
