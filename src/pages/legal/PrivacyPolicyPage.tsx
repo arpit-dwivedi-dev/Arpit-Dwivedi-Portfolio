@@ -23,12 +23,11 @@ const COPY = {
           { label: 'Contact form submissions', text: 'the name, email address, and message you submit, used only to respond to your inquiry.' },
           { label: 'Free tool inputs', text: 'search terms you enter into a tool (e.g. the Google Maps Business Finder) are used to run that search and are not stored on our servers after your session ends.' },
           { label: 'Analytics', text: 'we use Google Analytics and Google Tag Manager to understand aggregate site usage (pages viewed, approximate location, device type). This does not identify you personally.' },
-          { label: 'Advertising', text: 'we use Google AdSense to show ads on our free tools pages. Google and its partners may use cookies to serve ads based on your visits to this and other sites.', adSettingsLinkText: 'You can manage ad personalization at' },
         ],
       },
       {
         title: 'Third parties we use',
-        body: 'Google Analytics, Google Tag Manager, and Google AdSense (analytics and advertising); Web3Forms (contact form delivery); WhatsApp Business (if you message us via the WhatsApp button). Each operates under its own privacy policy.',
+        body: 'Google Analytics and Google Tag Manager (analytics); Web3Forms (contact form delivery); WhatsApp Business (if you message us via the WhatsApp button). Each operates under its own privacy policy.',
       },
       {
         title: "What we don't do",
@@ -36,7 +35,7 @@ const COPY = {
       },
       {
         title: 'Your choices',
-        body: 'You can request a copy of, or deletion of, any personal data you\'ve sent us (e.g. via the contact form) by emailing the address below. Most browsers let you block or delete cookies; doing so may affect analytics and ad personalization but not the free tools themselves.',
+        body: 'You can request a copy of, or deletion of, any personal data you\'ve sent us (e.g. via the contact form) by emailing the address below. Most browsers let you block or delete cookies; doing so may affect analytics but not the free tools themselves.',
         hasEmailLink: true,
       },
       {
@@ -71,12 +70,11 @@ const COPY = {
           { label: 'कॉन्टैक्ट फ़ॉर्म सबमिशन', text: 'आपका नाम, ईमेल एड्रेस, और मैसेज — जिसका उपयोग सिर्फ़ आपकी पूछताछ का जवाब देने के लिए किया जाता है।' },
           { label: 'फ्री टूल इनपुट', text: 'किसी टूल में आपके द्वारा डाले गए सर्च टर्म (जैसे Google Maps Business Finder) उस सर्च को चलाने के लिए इस्तेमाल होते हैं और आपका सेशन खत्म होने के बाद हमारे सर्वर पर स्टोर नहीं होते।' },
           { label: 'एनालिटिक्स', text: 'हम Google Analytics और Google Tag Manager का उपयोग साइट के कुल इस्तेमाल (देखे गए पेज, अनुमानित लोकेशन, डिवाइस टाइप) को समझने के लिए करते हैं। इससे आपकी व्यक्तिगत पहचान नहीं होती।' },
-          { label: 'विज्ञापन', text: 'हम अपने फ्री टूल पेजों पर विज्ञापन दिखाने के लिए Google AdSense का उपयोग करते हैं। Google और उसके पार्टनर्स इस और अन्य साइटों पर आपके विज़िट के आधार पर विज्ञापन दिखाने के लिए कुकीज़ का उपयोग कर सकते हैं।', adSettingsLinkText: 'आप विज्ञापन पर्सनलाइज़ेशन को यहां मैनेज कर सकते हैं:' },
         ],
       },
       {
         title: 'हम जिन थर्ड पार्टीज़ का उपयोग करते हैं',
-        body: 'Google Analytics, Google Tag Manager, और Google AdSense (एनालिटिक्स और विज्ञापन); Web3Forms (कॉन्टैक्ट फ़ॉर्म डिलीवरी); WhatsApp Business (यदि आप WhatsApp बटन से मैसेज करते हैं)। हर एक अपनी खुद की प्राइवेसी पॉलिसी के तहत काम करता है।',
+        body: 'Google Analytics और Google Tag Manager (एनालिटिक्स); Web3Forms (कॉन्टैक्ट फ़ॉर्म डिलीवरी); WhatsApp Business (यदि आप WhatsApp बटन से मैसेज करते हैं)। हर एक अपनी खुद की प्राइवेसी पॉलिसी के तहत काम करता है।',
       },
       {
         title: 'हम क्या नहीं करते',
@@ -84,7 +82,7 @@ const COPY = {
       },
       {
         title: 'आपके विकल्प',
-        body: 'आप हमें भेजे गए किसी भी व्यक्तिगत डेटा (जैसे कॉन्टैक्ट फ़ॉर्म के ज़रिए) की कॉपी या उसे डिलीट करने का अनुरोध नीचे दिए ईमेल पर मैसेज करके कर सकते हैं। ज़्यादातर ब्राउज़र आपको कुकीज़ ब्लॉक या डिलीट करने देते हैं; ऐसा करने से एनालिटिक्स और विज्ञापन पर्सनलाइज़ेशन प्रभावित हो सकते हैं, लेकिन फ्री टूल्स खुद प्रभावित नहीं होते।',
+        body: 'आप हमें भेजे गए किसी भी व्यक्तिगत डेटा (जैसे कॉन्टैक्ट फ़ॉर्म के ज़रिए) की कॉपी या उसे डिलीट करने का अनुरोध नीचे दिए ईमेल पर मैसेज करके कर सकते हैं। ज़्यादातर ब्राउज़र आपको कुकीज़ ब्लॉक या डिलीट करने देते हैं; ऐसा करने से एनालिटिक्स प्रभावित हो सकती है, लेकिन फ्री टूल्स खुद प्रभावित नहीं होते।',
         hasEmailLink: true,
       },
       {
@@ -138,16 +136,6 @@ export const PrivacyPolicyPage = () => {
                     {section.list.map((item) => (
                       <li key={item.label}>
                         <strong className="text-ink">{item.label}</strong> — {item.text}
-                        {item.adSettingsLinkText ? (
-                          <>
-                            {' '}
-                            {item.adSettingsLinkText}{' '}
-                            <a href="https://adssettings.google.com" target="_blank" rel="noreferrer" className="text-accent-blue hover:underline">
-                              adssettings.google.com
-                            </a>
-                            .
-                          </>
-                        ) : null}
                       </li>
                     ))}
                   </ul>

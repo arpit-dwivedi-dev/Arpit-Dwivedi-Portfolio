@@ -89,6 +89,10 @@ export interface ToolDefinition {
   relatedToolIds?: string[];
   /** Manual "Popular Tools" flag — swap to real 30-day GA4 pageviews once that data exists. */
   featured?: boolean;
+  /** Excluded from ToolsPage/CategoryPage listings, search, and related-tools
+   *  suggestions — but the route and component stay live for anyone with a
+   *  direct link. Use for tools pulled from discovery without deleting them. */
+  hidden?: boolean;
 }
 
 // Adding tool #2 is a new entry here — ToolCard, ToolsPage, and CategoryPage don't change.
@@ -103,6 +107,7 @@ export const TOOLS: ToolDefinition[] = [
     category: 'lead-generation',
     path: 'google-maps-business-finder',
     featured: true,
+    hidden: true,
   },
   {
     id: 'invoice-generator',
@@ -138,17 +143,17 @@ export const getToolCategory = (slug: string): ToolCategory | undefined =>
   TOOL_CATEGORIES.find((category) => category.slug === slug);
 
 export const getToolsByCategory = (categorySlug: string): ToolDefinition[] =>
-  TOOLS.filter((tool) => tool.category === categorySlug);
+  TOOLS.filter((tool) => tool.category === categorySlug && !tool.hidden);
 
 export const getRelatedTools = (tool: ToolDefinition, limit = 3): ToolDefinition[] => {
   const manual = (tool.relatedToolIds ?? [])
     .map((id) => TOOLS.find((candidate) => candidate.id === id))
-    .filter((candidate): candidate is ToolDefinition => Boolean(candidate));
+    .filter((candidate): candidate is ToolDefinition => Boolean(candidate) && !candidate.hidden);
 
   if (manual.length >= limit) return manual.slice(0, limit);
 
   const sameCategoryFallback = TOOLS.filter(
-    (candidate) => candidate.category === tool.category && candidate.id !== tool.id && !manual.includes(candidate),
+    (candidate) => candidate.category === tool.category && candidate.id !== tool.id && !candidate.hidden && !manual.includes(candidate),
   );
 
   return [...manual, ...sameCategoryFallback].slice(0, limit);

@@ -5,13 +5,9 @@ import { Search } from 'lucide-react';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/AchievementsContact';
 import { ToolCard } from '../components/tools/ToolCard';
-import { AdSlot } from '../components/ads/AdSlot';
 import { Breadcrumbs } from '../components/seo/Breadcrumbs';
 import { useLanguage } from '../i18n/LanguageContext';
 import { TOOLS, TOOL_CATEGORIES, getToolsByCategory, categoryTitle, toolTitle, toolDescription } from '../tools/registry';
-
-// Ad sits after the first row of results, not inside the grid.
-const CARDS_BEFORE_AD = 6;
 
 export const ToolsPage = () => {
   const { lang, content } = useLanguage();
@@ -27,15 +23,13 @@ export const ToolsPage = () => {
   }, []);
 
   const filtered = useMemo(() => {
+    const visible = TOOLS.filter((tool) => !tool.hidden);
     const q = query.trim().toLowerCase();
-    if (!q) return TOOLS;
-    return TOOLS.filter(
+    if (!q) return visible;
+    return visible.filter(
       (tool) => toolTitle(tool, lang).toLowerCase().includes(q) || toolDescription(tool, lang).toLowerCase().includes(q),
     );
   }, [query, lang]);
-
-  const firstRow = filtered.slice(0, CARDS_BEFORE_AD);
-  const rest = filtered.slice(CARDS_BEFORE_AD);
 
   // Categories are only worth their own listed/linked page once they hold a
   // tool — an empty category page is thin content, not a topical hub.
@@ -101,7 +95,7 @@ export const ToolsPage = () => {
           ) : (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-                {firstRow.map((tool, idx) => (
+                {filtered.map((tool, idx) => (
                   <ToolCard
                     key={tool.id}
                     title={toolTitle(tool, lang)}
@@ -112,23 +106,6 @@ export const ToolsPage = () => {
                   />
                 ))}
               </div>
-
-              <AdSlot slot={import.meta.env.VITE_ADSENSE_SLOT_TOOLS_LISTING} className="my-10 sm:my-16" />
-
-              {rest.length > 0 && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-                  {rest.map((tool, idx) => (
-                    <ToolCard
-                      key={tool.id}
-                      title={toolTitle(tool, lang)}
-                      description={toolDescription(tool, lang)}
-                      icon={tool.icon}
-                      href={`${basePath}/${tool.category}/${tool.path}`}
-                      index={idx}
-                    />
-                  ))}
-                </div>
-              )}
             </>
           )}
         </div>

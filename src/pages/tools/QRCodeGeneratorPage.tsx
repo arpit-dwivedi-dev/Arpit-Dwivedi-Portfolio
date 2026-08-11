@@ -22,10 +22,10 @@ import { FaDiscord, FaFacebook, FaInstagram, FaLinkedin, FaSpotify, FaTelegram, 
 import { QRCodeCanvas, QRCodeSVG } from 'qrcode.react';
 import { Navbar } from '../../components/Navbar';
 import { Footer } from '../../components/AchievementsContact';
-import { AdSlot } from '../../components/ads/AdSlot';
 import { Breadcrumbs } from '../../components/seo/Breadcrumbs';
 import { JsonLd } from '../../components/seo/JsonLd';
 import { useLanguage } from '../../i18n/LanguageContext';
+import { trackEvent } from '../../monitoring';
 import { useQrCodeGenerator } from '../../tools/qrCodeGenerator/useQrCodeGenerator';
 import { downloadCanvasAsPng, downloadSvgElement, copyCanvasToClipboard } from '../../tools/qrCodeGenerator/download';
 import { QR_COLOR_PRESETS, SOCIAL_PLATFORMS } from '../../tools/qrCodeGenerator/types';
@@ -99,19 +99,24 @@ export const QRCodeGeneratorPage = () => {
 
   const handleDownloadPng = () => {
     if (!qrValue || !canvasRef.current) return;
+    trackEvent('tool_used', { tool_name: TOOL.id, action: 'download_png', qr_type: activeType });
     downloadCanvasAsPng(canvasRef.current, 'qr-code.png');
   };
 
   const handleDownloadSvg = () => {
     if (!qrValue) return;
     const svgEl = svgRef.current?.querySelector('svg');
-    if (svgEl) downloadSvgElement(svgEl, 'qr-code.svg');
+    if (svgEl) {
+      trackEvent('tool_used', { tool_name: TOOL.id, action: 'download_svg', qr_type: activeType });
+      downloadSvgElement(svgEl, 'qr-code.svg');
+    }
   };
 
   const handleCopyImage = async () => {
     if (!qrValue || !canvasRef.current) return;
     const ok = await copyCanvasToClipboard(canvasRef.current);
     if (ok) {
+      trackEvent('tool_used', { tool_name: TOOL.id, action: 'copy', qr_type: activeType });
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     }
@@ -562,10 +567,6 @@ export const QRCodeGeneratorPage = () => {
         </div>
       </main>
 
-      <div className="max-w-7xl mx-auto px-6">
-        <AdSlot slot={import.meta.env.VITE_ADSENSE_SLOT_INVOICE} className="my-10" />
-      </div>
-
       <JsonLd
         data={{
           '@context': 'https://schema.org',
@@ -670,7 +671,8 @@ export const QRCodeGeneratorPage = () => {
         <div className="p-6 rounded-3xl glass border-ink/10 flex flex-wrap items-center justify-between gap-4">
           <p className="text-ink font-medium">{t.crmCta}</p>
           <Link
-            to={lang === 'hi' ? '/hi/contact' : '/contact'}
+            to={`${lang === 'hi' ? '/hi/contact' : '/contact'}?source=${TOOL.id}`}
+            onClick={() => trackEvent('tool_to_contact_click', { tool_name: TOOL.id })}
             className="shrink-0 inline-flex items-center gap-2 px-5 py-3 bg-accent-blue text-bg-pure font-bold rounded-xl hover:glow-blue transition-all"
           >
             {t.talkToUs}

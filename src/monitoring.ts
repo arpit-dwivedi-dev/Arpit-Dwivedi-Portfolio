@@ -56,12 +56,19 @@ export const reportError = async (error: Error, info: ErrorInfo) => {
 // ID is configured. GA4's own Realtime report shows active-users-right-now
 // without any extra code.
 export const trackPageView = (path: string, title?: string) => {
-  if (!GA_MEASUREMENT_ID || typeof window.gtag !== 'function') return;
-  window.gtag('event', 'page_view', {
+  trackEvent('page_view', {
     page_path: path,
     page_title: title,
     page_location: window.location.href,
   });
+};
+
+// Generic GA4 custom-event dispatcher — used to attribute conversions (leads,
+// tool usage) back to the specific tool/page that drove them, since page_view
+// alone can't tell "traffic" apart from "traffic that actually did something".
+export const trackEvent = (eventName: string, params?: Record<string, unknown>) => {
+  if (!GA_MEASUREMENT_ID || typeof window.gtag !== 'function') return;
+  window.gtag('event', eventName, params);
 };
 
 declare global {

@@ -5,7 +5,7 @@ import { useState, FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import metadata from '../../metadata.json';
 import { useLanguage } from '../i18n/LanguageContext';
-import { AdSlot } from './ads/AdSlot';
+import { trackEvent } from '../monitoring';
 
 export const Achievements = () => {
   const { content } = useLanguage();
@@ -206,14 +206,21 @@ interface ContactProps {
    *  page, where the page wrapper already clears the fixed navbar, so the
    *  homepage's full py-24 top padding just adds a redundant gap on top of it. */
   compact?: boolean;
+  /** Where the visitor arrived from (e.g. a tool id like "invoice-generator"
+   *  forwarded via ?source= from a tool page's CTA). Tags both the GA4
+   *  submission event and the outbound form payload so leads can be
+   *  attributed back to the page that drove them, not just counted as one
+   *  undifferentiated "contact" bucket. */
+  source?: string;
 }
 
-export const Contact = ({ compact = false }: ContactProps = {}) => {
+export const Contact = ({ compact = false, source }: ContactProps = {}) => {
   const { content } = useLanguage();
   const { contact } = content;
   const [values, setValues] = useState({ name: '', email: '', message: '' });
   const [errors, setErrors] = useState<{ name?: string; email?: string; message?: string }>({});
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const leadSource = source ?? (compact ? 'contact_page' : 'homepage');
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -238,9 +245,10 @@ export const Contact = ({ compact = false }: ContactProps = {}) => {
       // No access key configured (e.g. local dev without .env) — fall back to
       // opening the visitor's own mail client rather than silently failing.
       const mailtoSubject = encodeURIComponent(subject);
-      const body = encodeURIComponent(`${values.message}\n\nFrom: ${values.name} (${values.email})`);
+      const body = encodeURIComponent(`${values.message}\n\nFrom: ${values.name} (${values.email})\nSource: ${leadSource}`);
       window.location.href = `mailto:${contact.email}?subject=${mailtoSubject}&body=${body}`;
       setStatus('sent');
+      trackEvent('contact_form_submit', { source: leadSource });
       return;
     }
 
@@ -255,12 +263,14 @@ export const Contact = ({ compact = false }: ContactProps = {}) => {
           name: values.name,
           email: values.email,
           message: values.message,
+          source: leadSource,
         }),
       });
       const data = await res.json();
       if (data.success) {
         setStatus('sent');
         setValues({ name: '', email: '', message: '' });
+        trackEvent('contact_form_submit', { source: leadSource });
       } else {
         setStatus('error');
       }
@@ -426,9 +436,6 @@ export const Footer = () => {
 
   return (
     <footer className="pt-10 pb-10 border-t border-ink/5 bg-bg-pure">
-      <div className="max-w-7xl mx-auto px-6">
-        <AdSlot slot={import.meta.env.VITE_ADSENSE_SLOT_FOOTER} className="mb-8" />
-      </div>
       <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
         <div>
           <div className="text-xl font-bold tracking-tighter">

@@ -5,11 +5,11 @@ import { Check, ChevronDown, Coffee, Copy, Crown, Download, Info, Loader2, Mail,
 import { QRCodeSVG } from 'qrcode.react';
 import { Navbar } from '../../components/Navbar';
 import { Footer } from '../../components/AchievementsContact';
-import { AdSlot } from '../../components/ads/AdSlot';
 import { Select } from '../../components/ui/Select';
 import { Breadcrumbs } from '../../components/seo/Breadcrumbs';
 import { JsonLd } from '../../components/seo/JsonLd';
 import { useLanguage } from '../../i18n/LanguageContext';
+import { trackEvent } from '../../monitoring';
 import { useMapsScraper, MAX_RESULTS_PER_SEARCH, MAX_SEARCHES_PER_SESSION } from '../../tools/googleMapsScraper/useMapsScraper';
 import { isLiveMode } from '../../tools/googleMapsScraper/dataSource';
 import { toCsv, downloadCsv, toJson, downloadJson, toExcel, downloadExcel } from '../../lib/csv';
@@ -101,6 +101,7 @@ export const GoogleMapsScraperPage = () => {
     // the hook's own "enter a search term" validation, not silently become
     // "in Austin, TX" with no subject.
     const combined = query.trim() && location.trim() ? `${query.trim()} in ${location.trim()}` : query.trim();
+    if (combined) trackEvent('tool_used', { tool_name: TOOL.id, action: 'run' });
     run(combined, Number(count));
   };
 
@@ -419,10 +420,6 @@ export const GoogleMapsScraperPage = () => {
         </div>
       </main>
 
-      <div className="max-w-7xl mx-auto px-6">
-        <AdSlot slot={import.meta.env.VITE_ADSENSE_SLOT_SCRAPER} className="my-10" />
-      </div>
-
       <JsonLd
         data={{
           '@context': 'https://schema.org',
@@ -541,7 +538,8 @@ export const GoogleMapsScraperPage = () => {
         <div className="p-6 rounded-3xl glass border-ink/10 flex flex-wrap items-center justify-between gap-4">
           <p className="text-ink font-medium">{t.crmCta}</p>
           <Link
-            to={lang === 'hi' ? '/hi/contact' : '/contact'}
+            to={`${lang === 'hi' ? '/hi/contact' : '/contact'}?source=${TOOL.id}`}
+            onClick={() => trackEvent('tool_to_contact_click', { tool_name: TOOL.id })}
             className="shrink-0 inline-flex items-center gap-2 px-5 py-3 bg-accent-blue text-bg-pure font-bold rounded-xl hover:glow-blue transition-all"
           >
             {t.talkToUs}

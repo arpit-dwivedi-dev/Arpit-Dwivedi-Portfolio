@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
 import { Contact } from '../components/AchievementsContact';
 import { Footer } from '../components/AchievementsContact';
@@ -10,6 +11,10 @@ import { useLanguage } from '../i18n/LanguageContext';
 export const ContactPage = () => {
   const { lang, content } = useLanguage();
   const { contactPage } = content;
+  // Tool-page CTAs link here with ?source=<tool-id> so submissions can be
+  // attributed back to the tool that drove the lead — see Contact's `source` prop.
+  const [searchParams] = useSearchParams();
+  const source = searchParams.get('source') ?? undefined;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -27,7 +32,7 @@ export const ContactPage = () => {
           />
         </div>
         <h1 className="sr-only">{contactPage.srTitle}</h1>
-        <Contact compact />
+        <Contact compact source={source} />
 
         <section className="py-16 bg-bg-secondary">
           <div className="max-w-3xl mx-auto px-6">

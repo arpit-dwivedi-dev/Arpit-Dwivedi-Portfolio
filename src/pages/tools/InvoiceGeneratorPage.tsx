@@ -18,11 +18,11 @@ import {
 import { QRCodeSVG } from 'qrcode.react';
 import { Navbar } from '../../components/Navbar';
 import { Footer } from '../../components/AchievementsContact';
-import { AdSlot } from '../../components/ads/AdSlot';
 import { Select } from '../../components/ui/Select';
 import { Breadcrumbs } from '../../components/seo/Breadcrumbs';
 import { JsonLd } from '../../components/seo/JsonLd';
 import { useLanguage } from '../../i18n/LanguageContext';
+import { trackEvent } from '../../monitoring';
 import { useInvoiceGenerator } from '../../tools/invoiceGenerator/useInvoiceGenerator';
 import { listInvoices, deleteInvoice } from '../../tools/invoiceGenerator/storage';
 import { downloadInvoicePdf, shareInvoicePdf } from '../../tools/invoiceGenerator/pdf';
@@ -104,8 +104,14 @@ export const InvoiceGeneratorPage = () => {
     setTimeout(() => setCopiedField((current) => (current === field ? null : current)), 1500);
   };
 
+  const handleDownload = () => {
+    trackEvent('tool_used', { tool_name: TOOL.id, action: 'download' });
+    downloadInvoicePdf(invoice);
+  };
+
   const handleShare = async () => {
     setSharing(true);
+    trackEvent('tool_used', { tool_name: TOOL.id, action: 'share' });
     try {
       const outcome = await shareInvoicePdf(invoice);
       if (outcome === 'emailed') {
@@ -627,7 +633,7 @@ export const InvoiceGeneratorPage = () => {
             >
               <button
                 type="button"
-                onClick={() => downloadInvoicePdf(invoice)}
+                onClick={handleDownload}
                 className="w-full py-3 bg-accent-blue text-bg-pure font-bold rounded-xl hover:glow-blue transition-all flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure"
               >
                 <Download size={16} aria-hidden="true" />
@@ -698,10 +704,6 @@ export const InvoiceGeneratorPage = () => {
           </div>
         </div>
       </main>
-
-      <div className="max-w-7xl mx-auto px-6">
-        <AdSlot slot={import.meta.env.VITE_ADSENSE_SLOT_INVOICE} className="my-10" />
-      </div>
 
       <JsonLd
         data={{
@@ -840,7 +842,8 @@ export const InvoiceGeneratorPage = () => {
         <div className="p-6 rounded-3xl glass border-ink/10 flex flex-wrap items-center justify-between gap-4">
           <p className="text-ink font-medium">{t.crmCta}</p>
           <Link
-            to={lang === 'hi' ? '/hi/contact' : '/contact'}
+            to={`${lang === 'hi' ? '/hi/contact' : '/contact'}?source=${TOOL.id}`}
+            onClick={() => trackEvent('tool_to_contact_click', { tool_name: TOOL.id })}
             className="shrink-0 inline-flex items-center gap-2 px-5 py-3 bg-accent-blue text-bg-pure font-bold rounded-xl hover:glow-blue transition-all"
           >
             {t.talkToUs}
