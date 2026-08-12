@@ -93,6 +93,11 @@ export interface ToolDefinition {
    *  suggestions — but the route and component stay live for anyone with a
    *  direct link. Use for tools pulled from discovery without deleting them. */
   hidden?: boolean;
+  /** One real decision made while building this tool — surfaced on the
+   *  homepage's free-tools section per positioning.md ("make the thinking
+   *  visible"). English only, like guides/data.ts — not translated, so it's
+   *  simply omitted from the Hindi homepage rather than left half-translated. */
+  judgment?: string;
 }
 
 // Adding tool #2 is a new entry here — ToolCard, ToolsPage, and CategoryPage don't change.
@@ -119,6 +124,7 @@ export const TOOLS: ToolDefinition[] = [
     category: 'generators',
     path: 'invoice-generator',
     featured: true,
+    judgment: "Invoice history is saved under a versioned key, on purpose — there's no backend to run a migration against, so a future data-shape change just starts a fresh history instead of crashing on old records.",
   },
   {
     id: 'qr-code-generator',
@@ -131,6 +137,7 @@ export const TOOLS: ToolDefinition[] = [
     path: 'qr-code-generator',
     relatedToolIds: ['invoice-generator'],
     featured: true,
+    judgment: 'Multi-URL and dual-platform QR codes encode all their routing data directly into the URL itself — no backend or database needed to resolve a scan.',
   },
 ];
 

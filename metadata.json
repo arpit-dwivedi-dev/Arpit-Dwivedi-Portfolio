@@ -26,17 +26,10 @@
       "ariaSwitchToDark": "Switch to dark mode",
       "breadcrumbHome": "Home"
     },
-    "techStack": {
-      "frontend": ["Angular", "RxJS", "NgRx", "Angular Material", "TypeScript", "React", "Tailwind CSS"],
-      "backend": ["Node.js", "Express.js", "REST APIs", "Microservices", "Socket.io"],
-      "database": ["MongoDB", "MySQL", "Redis", "PostgreSQL"],
-      "devops": ["Docker", "CI/CD", "GitHub Actions", "VPS", "Nginx", "AWS"],
-      "testing": ["Jest", "Puppeteer", "Lighthouse", "TDD"]
-    },
     "services": [
       {
         "title": "Business Websites",
-        "description": "A professional, mobile-friendly website that makes it easy for customers to find you, see what you offer, and get in touch — built the same way we build larger platforms, using React and Angular.",
+        "description": "A professional, mobile-friendly website that makes it easy for customers to find you, see what you offer, and get in touch — built the same way we build larger platforms, just smaller in scope.",
         "highlights": ["Mobile-friendly design", "Fast load times", "Easy to update"]
       },
       {
@@ -55,9 +48,9 @@
         "highlights": ["Google Business setup", "Local search visibility", "Site speed & structure"]
       },
       {
-        "title": "AI & LLM Engineering",
-        "description": "Production AI features that plug into your actual data and systems — not a generic chatbot bolted on top.",
-        "highlights": ["RAG pipelines", "LLM integration", "Agentic workflows", "Data engineering"]
+        "title": "Full-Stack Application Development",
+        "description": "The full build — frontend, backend, and the account and data layer in between — not just the parts that show up in a demo.",
+        "highlights": ["Authentication & user accounts", "Data modeling", "API design"]
       }
     ],
     "projects": [
@@ -77,34 +70,17 @@
         "link": "https://arpit-dwivedi-dev.github.io/S-A-Ethics-Biotech-Pvt.-Ltd./"
       }
     ],
-    "impactMetrics": [
-      { "label": "Performance Optimization", "value": "99.9%" },
-      { "label": "AI Automation", "value": "95%" },
-      { "label": "Modules Delivered", "value": "15+" },
-      { "label": "Client Rating", "value": "5.0 ★" },
-      { "label": "Cost Savings", "value": "₹10–15L" }
-    ],
     "hero": {
       "badge": "BUILDING SINCE 2026",
-      "title": "We build AI agents and custom software",
-      "titleAccent": "that automate business operations.",
-      "subtitle": "From AI automation to enterprise software — we build products that streamline operations, reduce repetitive work, and scale with your business.",
+      "title": "We build full-stack web applications",
+      "titleAccent": "with the backend work most teams outsource.",
+      "subtitle": "Real authentication, real data modeling, a backend built to hold up under real users — with AI added when it actually solves something, not because it's expected in the pitch.",
       "buttons": {
         "projects": "View Projects",
         "contact": "Get a Quote"
       },
-      "stats": [
-        { "value": "2", "label": "Client Projects Delivered" },
-        { "value": "Remote-First", "label": "Serving Clients Worldwide" }
-      ],
       "terminal": {
         "filename": "101_tech_labs -- portfolio_v2.ts",
-        "code": {
-          "name": "101 Tech Labs",
-          "role": "Full-Stack & AI Engineering",
-          "stack": ["MEAN/MERN", "AI", "DevOps"],
-          "mission": "Building Scalable Systems"
-        },
         "systemLoad": "System Load",
         "welcomeLine1": "Welcome to 101 Tech Labs Terminal v2.0.0",
         "welcomeLine2": "Type \"help\" to see available commands.",
@@ -115,24 +91,31 @@
         "ariaSendCommand": "Send command"
       },
       "terminalCommands": {
-        "about": "101 Tech Labs builds websites, booking systems, and automation for local businesses — plus larger enterprise software platforms when the job calls for it.",
-        "skills": "Stack: Angular, React, Node.js, Express, MongoDB, TypeScript, AI/LLMs, Docker, AWS.",
-        "projects": "Projects: Rashtriya Swasthya Sangathan (NGO donation platform), SA Ethics Biotech (medical device manufacturer).",
+        "about": "101 Tech Labs builds full-stack web applications — backend and identity work included, not subcontracted — with AI added where it actually helps.",
+        "skills": "What we actually do: full-stack web application development, backend and identity engineering (auth, sessions, data modeling), AI features where they earn their place.",
+        "projects": "Projects: Rashtriya Swasthya Sangathan — delivered, paid NGO donation platform. SA Ethics Biotech — an unpaid concept build, not in production. See /projects for the full picture.",
         "contact": "Email: 101techlabs@gmail.com | GitHub: @101techlabs | Web: 101techlabs.com",
-        "whoami": "101 Tech Labs — a full-stack & AI engineering practice helping local businesses get online, building since 2026.",
+        "whoami": "101 Tech Labs — full-stack web applications with real backend and identity engineering, AI where it earns its place. Building since 2026.",
         "location": "Serving clients worldwide, remote-first.",
         "help": "Available commands: [about, skills, projects, contact, whoami, location, clear, exit]",
         "exit": "Safe mode engaged. To restart, refresh your terminal session."
       }
+    },
+    "freeToolsSection": {
+      "label": "Try Before You Trust",
+      "title": "Free Tools,",
+      "titleAccent": "Built and Maintained",
+      "description": "Live software, not screenshots. Use them free, no signup — then judge for yourself.",
+      "viewAll": "See All Tools"
     },
     "about": {
       "label": "Who We Are",
       "title": "About",
       "titleAccent": "Us",
       "paragraphs": [
-        "We build websites, booking systems, and everyday automation for **local businesses** — shops, restaurants, clinics, and service providers who need a professional online presence without hiring a full IT department.",
-        "We also build larger systems for **growing teams** — HR systems, scheduling software, internal dashboards, and custom workflows. That range means whatever your business needs, from a five-page website to a custom booking system, we can build it cleanly.",
-        "We keep things simple: clear answers, fair pricing, and a website or system that actually gets used — not a technical showcase nobody asked for."
+        "We build full-stack web applications — the kind with real accounts, real data, and **a backend built to survive actual users**, not a static site pretending to be one.",
+        "That includes the part most teams subcontract: authentication, session handling, data modeling. AI gets added on top when it solves something specific, not because every pitch expects one.",
+        "We keep things simple: clear answers, fair pricing, and software that actually gets used — not a technical showcase nobody asked for."
       ],
       "features": [
         "Fast Page Speed",
@@ -164,16 +147,9 @@
         "SA Ethics Biotech — a corporate site for an ISO 9001:2015 & ISO 13485:2016 certified medical device manufacturer."
       ]
     },
-    "techStackSection": {
-      "label": "Technical Arsenal",
-      "title": "Tech",
-      "titleAccent": "Stack",
-      "categories": {
-        "frontend": "Frontend",
-        "backend": "Backend",
-        "database": "Database",
-        "devops": "DevOps"
-      }
+    "homeProjectsNote": {
+      "text": "One paid, delivered client project so far — plus an early concept build that never made it to production.",
+      "linkLabel": "See both, honestly labeled"
     },
     "devops": {
       "label": "Infrastructure",
@@ -184,21 +160,6 @@
         "Docker Containerization",
         "GitHub Actions CI/CD",
         "VPS Hosting & Nginx Configuration"
-      ]
-    },
-    "localTrust": {
-      "label": "Who We've Worked With",
-      "title": "Real Clients,",
-      "titleAccent": "Real Work",
-      "description": "From equipment manufacturers to nonprofits — organizations we've built and shipped software for.",
-      "phone": "+91 70715 20965",
-      "serviceArea": "Serving businesses worldwide",
-      "callLabel": "Call Us",
-      "serviceAreaLabel": "Service Area",
-      "visitSite": "Visit Site",
-      "clients": [
-        { "name": "SA Ethics Biotech", "description": "Medical device & blood bank equipment manufacturer.", "url": "https://www.saethicsbio.com/" },
-        { "name": "Rashtriya Swasthya Sangathan", "description": "Healthcare nonprofit running blood donation camps and mobile clinics across India.", "url": "https://www.rashtriyaswasthyasangathan.org/" }
       ]
     },
     "team": {
@@ -219,9 +180,9 @@
       "titleAccent": "On Purpose",
       "reasons": [
         { "title": "Direct Access", "description": "You talk directly to the engineer building your software — not a sales rep or a project manager relaying messages." },
-        { "title": "Reliable Engineering", "description": "Clean architecture, secure foundations, and practical automation applied to projects of any size." },
-        { "title": "Full-Stack + AI, One Vendor", "description": "Frontend, backend, DevOps, and AI/automation under one roof — no juggling multiple agencies to ship one product." },
-        { "title": "Fast & Affordable", "description": "Low overhead, no bloat — the savings get passed on to you, without cutting corners on delivery speed or quality." }
+        { "title": "The Backend Isn't Outsourced", "description": "Authentication, data modeling, the account layer underneath the UI — handled in-house, not quietly handed off to a subcontractor." },
+        { "title": "Reliable Engineering", "description": "Clean architecture and secure foundations, applied whether the project is small or genuinely complex." },
+        { "title": "See the Work, Not Just Hear About It", "description": "Two free tools, live right now, built and maintained by the same person who'd build yours — try them before you ever have to trust a pitch." }
       ]
     },
     "industries": {
@@ -248,15 +209,6 @@
       ],
       "cta": "Start a Project"
     },
-    "testimonialsSection": {
-      "label": "Client Feedback",
-      "title": "What Clients",
-      "titleAccent": "Say",
-      "items": [
-        { "quote": "Outstanding service, smooth communication, and exceptional quality. Everything was delivered ahead of schedule with great attention to detail. Highly recommended.", "name": "SA Ethics Biotech", "rating": 5 },
-        { "quote": "Professional, reliable, and incredibly fast. The entire process was seamless, and the final product exceeded expectations while staying within budget.", "name": "Rashtriya Swasthya Sangathan", "rating": 5 }
-      ]
-    },
     "faq": {
       "label": "Questions",
       "title": "Frequently Asked",
@@ -266,7 +218,7 @@
         { "question": "How long does a typical project take?", "answer": "A business website usually ships in 1–3 weeks; larger systems like booking platforms or custom software typically take 4–12 weeks depending on scope." },
         { "question": "Do you work with businesses outside India?", "answer": "Yes — we work remotely with clients worldwide." },
         { "question": "What happens after launch?", "answer": "We stay reachable for fixes, updates, and follow-up work. This isn't a build-and-disappear engagement." },
-        { "question": "Do you build with AI and LLMs?", "answer": "Yes — from RAG pipelines and data workflows to LLM-integrated features and agentic automation, when it actually solves the problem." }
+        { "question": "Do you build with AI and LLMs?", "answer": "Yes — but only when it solves a real problem, not as a default add-on. It usually shows up as a specific feature inside a larger application, not as the whole build." }
       ]
     },
     "contact": {
@@ -376,11 +328,6 @@
       "viewGithub": "View Github Repository",
       "viewLive": "View Live Project",
       "viewDetails": "View {title} project details"
-    },
-    "achievementsSection": {
-      "label": "Impact Metrics",
-      "title": "Real-World",
-      "titleAccent": "Impact"
     },
     "architecture": {
       "loadBalancer": "LOAD BALANCER (NGINX)",

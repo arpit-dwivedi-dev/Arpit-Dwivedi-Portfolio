@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { Navbar } from '../components/Navbar';
 import { Services } from '../components/ExperienceProjects';
-import { Industries } from '../components/TrustSections';
 import { Footer } from '../components/AchievementsContact';
 import { Breadcrumbs } from '../components/seo/Breadcrumbs';
 import { useLanguage } from '../i18n/LanguageContext';
@@ -29,7 +28,6 @@ export const ServicesPage = () => {
         </div>
         <h1 className="sr-only">{servicesPage.srTitle}</h1>
         <Services />
-        <Industries />
 
         <section className="py-24 bg-bg-secondary">
           <div className="max-w-4xl mx-auto px-6">

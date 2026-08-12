@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { UserCheck, ShieldCheck, Layers, Rocket, HeartPulse, HandHeart, Building2, Store, Star, ChevronDown } from 'lucide-react';
+import { UserCheck, ShieldCheck, Layers, Rocket, ChevronDown } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
 
 const reasonIcons = [UserCheck, ShieldCheck, Layers, Rocket];
@@ -54,93 +54,18 @@ export const WhyChooseUs = () => {
   );
 };
 
-const industryIcons = [HeartPulse, HandHeart, Building2, Store];
-const industryColors = ['accent-blue', 'accent-purple', 'accent-blue', 'accent-purple'];
+// Industries component deleted 2026-08-12 — 3 of its 4 categories rested on
+// zero real evidence: "Enterprise HR & Operations" was a disguised reference
+// to the off-site-only HRMS design work, "Manufacturing & Equipment" was
+// built entirely on the unpaid SA Ethics Biotech demo, and "Local Businesses
+// & Hospitality" had no supporting project at all. Only "Nonprofits & NGOs"
+// (Rashtriya Swasthya Sangathan) is real — too thin on its own to justify an
+// "Industries We Serve" grid. See positioning.md's industry-vertical note.
 
-export const Industries = () => {
-  const { content } = useLanguage();
-  const { industries } = content;
-
-  return (
-    <section className="py-24 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <span className="text-accent-purple font-mono text-sm tracking-widest uppercase mb-2 block">{industries.label}</span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">{industries.title} <span className="text-gradient">{industries.titleAccent}</span></h2>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {industries.items.map((item, idx) => {
-            const Icon = industryIcons[idx % industryIcons.length];
-            const color = industryColors[idx % industryColors.length];
-            return (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="p-6 rounded-3xl glass border-ink/5 hover:border-accent-purple/20 transition-all"
-              >
-                <div className={`${reasonClassMap[color]} w-12 h-12 rounded-2xl flex items-center justify-center mb-6`}>
-                  <Icon size={24} aria-hidden="true" />
-                </div>
-                <h3 className="text-lg font-bold text-ink mb-2">{item.title}</h3>
-                <p className="text-secondary-text text-sm leading-relaxed">{item.description}</p>
-              </motion.div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-export const Testimonials = () => {
-  const { content } = useLanguage();
-  const { testimonialsSection } = content;
-
-  return (
-    <section className="py-24 relative overflow-hidden bg-bg-secondary">
-      <div className="max-w-4xl mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-2 block">{testimonialsSection.label}</span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">{testimonialsSection.title} <span className="text-gradient">{testimonialsSection.titleAccent}</span></h2>
-        </motion.div>
-
-        <div className={testimonialsSection.items.length > 1 ? 'grid grid-cols-1 md:grid-cols-2 gap-6' : 'grid grid-cols-1'}>
-          {testimonialsSection.items.map((item) => (
-            <motion.div
-              key={item.name}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="p-8 rounded-3xl glass border-ink/5 text-center flex flex-col items-center gap-4"
-            >
-              <div className="flex gap-1" aria-hidden="true">
-                {Array.from({ length: item.rating }).map((_, i) => (
-                  <Star key={i} size={18} className="text-accent-blue fill-accent-blue" />
-                ))}
-              </div>
-              <p className="text-ink text-lg leading-relaxed">&ldquo;{item.quote}&rdquo;</p>
-              <div className="text-sm font-bold text-secondary-text uppercase tracking-widest font-mono">{item.name}</div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
+// Testimonials component deleted 2026-08-12 — it rendered quotes that were
+// never actually said or sent by either named client (confirmed with the
+// founder during the content-rewrite project). Never commented back in
+// without real, verifiable quotes. See positioning.md.
 
 export const FAQ = () => {
   const { content } = useLanguage();

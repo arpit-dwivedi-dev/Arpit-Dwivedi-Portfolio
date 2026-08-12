@@ -103,9 +103,9 @@ type RouteKey =
 const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; description: string }>> = {
   en: {
     home: {
-      title: '101 Tech Labs — AI Automation & Custom Software Development, Noida',
+      title: '101 Tech Labs — Full-Stack Web Applications, Noida',
       description:
-        'Noida-based software studio building AI agents, RAG pipelines, and custom enterprise platforms — including HRMS systems — for businesses across India and remote clients worldwide. Get a fixed-scope quote.',
+        'Full-stack web applications with real backend and identity engineering, built in-house. AI added where it earns its place. Noida-based, remote-first, worldwide clients.',
     },
     projects: {
       title: 'Case Studies & Client Work | 101 Tech Labs',

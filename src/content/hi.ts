@@ -28,7 +28,6 @@ export const hiContent: SiteContent = {
     ariaSwitchToDark: 'डार्क मोड में बदलें',
     breadcrumbHome: 'होम',
   },
-  techStack: metadata.content.techStack,
   services: [
     {
       title: 'बिज़नेस वेबसाइट',
@@ -73,13 +72,6 @@ export const hiContent: SiteContent = {
       link: 'https://www.saethicsbio.com/',
     },
   ],
-  impactMetrics: [
-    { label: 'परफॉर्मेंस ऑप्टिमाइज़ेशन', value: '99.9%' },
-    { label: 'AI ऑटोमेशन', value: '95%' },
-    { label: 'डिलीवर किए गए मॉड्यूल्स', value: '15+' },
-    { label: 'क्लाइंट रेटिंग', value: '5.0 ★' },
-    { label: 'लागत बचत', value: '₹10–15L' },
-  ],
   hero: {
     badge: '2026 से बना रहे हैं',
     title: 'हम AI एजेंट और कस्टम सॉफ़्टवेयर बनाते हैं',
@@ -89,18 +81,8 @@ export const hiContent: SiteContent = {
       projects: 'प्रोजेक्ट्स देखें',
       contact: 'कोटेशन पाएं',
     },
-    stats: [
-      { value: '2', label: 'डिलीवर किए गए क्लाइंट प्रोजेक्ट्स' },
-      { value: 'रिमोट-फर्स्ट', label: 'दुनियाभर में क्लाइंट्स की सेवा' },
-    ],
     terminal: {
       filename: '101_tech_labs -- portfolio_v2.ts',
-      code: {
-        name: '101 Tech Labs',
-        role: 'फुल-स्टैक और AI इंजीनियरिंग',
-        stack: ['MEAN/MERN', 'AI', 'DevOps'],
-        mission: 'स्केलेबल सिस्टम बनाना',
-      },
       systemLoad: 'सिस्टम लोड',
       welcomeLine1: '101 Tech Labs टर्मिनल v2.0.0 में आपका स्वागत है',
       welcomeLine2: 'उपलब्ध कमांड देखने के लिए "help" टाइप करें।',
@@ -120,6 +102,13 @@ export const hiContent: SiteContent = {
       help: 'उपलब्ध कमांड: [about, skills, projects, contact, whoami, location, clear, exit]',
       exit: 'सेफ मोड सक्रिय। फिर से शुरू करने के लिए अपना टर्मिनल सेशन रीफ़्रेश करें।',
     },
+  },
+  freeToolsSection: {
+    label: 'पहले इस्तेमाल करें, फिर भरोसा करें',
+    title: 'फ्री टूल्स,',
+    titleAccent: 'बने और मेंटेन किए हुए',
+    description: 'असली सॉफ़्टवेयर, स्क्रीनशॉट नहीं। फ्री इस्तेमाल करें, कोई साइनअप नहीं — फिर खुद फैसला करें।',
+    viewAll: 'सभी टूल्स देखें',
   },
   about: {
     label: 'हम कौन हैं',
@@ -155,16 +144,9 @@ export const hiContent: SiteContent = {
       'SA Ethics Biotech — ISO 9001:2015 और ISO 13485:2016 सर्टिफ़ाइड मेडिकल डिवाइस निर्माता के लिए एक कॉर्पोरेट साइट।',
     ],
   },
-  techStackSection: {
-    label: 'टेक्निकल आर्सेनल',
-    title: 'टेक',
-    titleAccent: 'स्टैक',
-    categories: {
-      frontend: 'फ्रंटएंड',
-      backend: 'बैकएंड',
-      database: 'डेटाबेस',
-      devops: 'DevOps',
-    },
+  homeProjectsNote: {
+    text: 'अब तक एक पेड, डिलीवर किया गया क्लाइंट प्रोजेक्ट — साथ ही एक शुरुआती कॉन्सेप्ट बिल्ड जो कभी प्रोडक्शन में नहीं गया।',
+    linkLabel: 'दोनों को ईमानदारी से देखें',
   },
   devops: {
     label: 'इंफ्रास्ट्रक्चर',
@@ -172,21 +154,6 @@ export const hiContent: SiteContent = {
     titleAccent: 'शुरू से',
     description: 'हम डिप्लॉयमेंट को उबाऊ बनाते हैं — कोई सरप्राइज़ नहीं, कोई मैन्युअल स्टेप नहीं, कोई अनप्लांड डाउनटाइम नहीं। इनकमिंग ट्रैफ़िक को कई ऐप सर्वरों में लोड-बैलेंस किया जाता है, जो सभी एक शेयर्ड डेटाबेस क्लस्टर पर आधारित होते हैं।',
     list: ['हर बार ऑटोमेटेड डिप्लॉय (CI/CD)', 'Docker से एक जैसा एनवायरनमेंट', 'सही तरीके से कॉन्फ़िगर की गई प्रोडक्शन होस्टिंग (VPS + Nginx)'],
-  },
-  localTrust: {
-    label: 'हमने किनके साथ काम किया है',
-    title: 'असली क्लाइंट्स,',
-    titleAccent: 'असली काम',
-    description: 'इक्विपमेंट मैन्युफ़ैक्चरर्स से लेकर नॉनप्रॉफ़िट्स तक — वे संगठन जिनके लिए हमने सॉफ़्टवेयर बनाया और डिलीवर किया है।',
-    phone: '+91 70715 20965',
-    serviceArea: 'दुनियाभर में व्यवसायों की सेवा',
-    callLabel: 'हमें कॉल करें',
-    serviceAreaLabel: 'सेवा क्षेत्र',
-    visitSite: 'साइट देखें',
-    clients: [
-      { name: 'SA Ethics Biotech', description: 'मेडिकल डिवाइस और ब्लड बैंक इक्विपमेंट निर्माता।', url: 'https://www.saethicsbio.com/' },
-      { name: 'राष्ट्रीय स्वास्थ्य संगठन', description: 'भारत भर में रक्तदान शिविर और मोबाइल क्लीनिक चलाने वाला हेल्थकेयर नॉनप्रॉफ़िट।', url: 'https://www.rashtriyaswasthyasangathan.org/' },
-    ],
   },
   team: {
     label: 'इसके पीछे कौन है',
@@ -234,15 +201,6 @@ export const hiContent: SiteContent = {
       { title: 'लॉन्च और सपोर्ट', description: 'हम डिप्लॉय करते हैं, जो चाहिए वह सौंपते हैं, और फिक्स व फ़ॉलो-अप काम के लिए उपलब्ध रहते हैं।' },
     ],
     cta: 'प्रोजेक्ट शुरू करें',
-  },
-  testimonialsSection: {
-    label: 'क्लाइंट फ़ीडबैक',
-    title: 'क्लाइंट्स',
-    titleAccent: 'क्या कहते हैं',
-    items: [
-      { quote: 'उत्कृष्ट सेवा, सहज संवाद, और असाधारण गुणवत्ता। समयसीमा से पहले, बारीकी से ध्यान देते हुए सब कुछ डिलीवर किया गया। पूरी तरह अनुशंसित।', name: 'SA Ethics Biotech', rating: 5 },
-      { quote: 'पेशेवर, भरोसेमंद, और बेहद तेज़। पूरी प्रक्रिया निर्बाध रही, और अंतिम प्रोडक्ट बजट के भीतर रहते हुए उम्मीदों से बढ़कर रहा।', name: 'Rashtriya Swasthya Sangathan', rating: 5 },
-    ],
   },
   faq: {
     label: 'सवाल',
@@ -363,11 +321,6 @@ export const hiContent: SiteContent = {
     viewGithub: 'GitHub रिपॉज़िटरी देखें',
     viewLive: 'लाइव प्रोजेक्ट देखें',
     viewDetails: '{title} प्रोजेक्ट का विवरण देखें',
-  },
-  achievementsSection: {
-    label: 'इम्पैक्ट मेट्रिक्स',
-    title: 'रियल-वर्ल्ड',
-    titleAccent: 'इम्पैक्ट',
   },
   architecture: {
     loadBalancer: 'लोड बैलेंसर (NGINX)',

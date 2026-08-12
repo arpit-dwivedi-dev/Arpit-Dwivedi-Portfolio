@@ -1,12 +1,13 @@
+import { Link } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
 import { HomeJsonLd } from '../components/seo/HomeJsonLd';
 import { Hero } from '../components/Hero';
-import { FeaturedProject } from '../components/FeaturedProject';
+import { FreeTools } from '../components/FreeToolsShowcase';
 import { About } from '../components/AboutTech';
 import { Team, Process } from '../components/TeamProcess';
-import { WhyChooseUs, Industries, Testimonials, FAQ } from '../components/TrustSections';
-import { Services, Projects } from '../components/ExperienceProjects';
-import { DevOpsArchitecture, Clients, Contact, Footer } from '../components/AchievementsContact';
+import { WhyChooseUs, FAQ } from '../components/TrustSections';
+import { Services } from '../components/ExperienceProjects';
+import { DevOpsArchitecture, Contact, Footer } from '../components/AchievementsContact';
 import { motion, useScroll, useSpring } from 'motion/react';
 import { useLanguage } from '../i18n/LanguageContext';
 
@@ -18,8 +19,9 @@ export const HomePage = () => {
     restDelta: 0.001
   });
 
-  const { content } = useLanguage();
-  const { navLinks } = content;
+  const { lang, content } = useLanguage();
+  const { navLinks, homeProjectsNote } = content;
+  const projectsHref = lang === 'hi' ? '/hi/projects' : '/projects';
 
   return (
     <div className="relative bg-bg-pure selection:bg-accent-blue/30 selection:text-accent-blue overflow-x-hidden">
@@ -49,17 +51,28 @@ export const HomePage = () => {
 
       <main id="main-content">
         <Hero />
-        <FeaturedProject />
-        <Clients />
+        <FreeTools />
         <About />
         <Services />
-        <Industries />
         <WhyChooseUs />
         <Team />
-        <Projects />
+
+        {/* Single low-key line, not a section — positioning.md's PORTFOLIO
+            rule allows either a modest /work-style page or "a single
+            low-key line further down" instead of homepage prominence.
+            /projects (kept as the URL, not a new /work page — see Phase 3
+            SEO notes) holds the full delivered/demo breakdown. */}
+        <div className="text-center pb-24 px-6">
+          <p className="text-secondary-text text-sm">
+            {homeProjectsNote.text}{' '}
+            <Link to={projectsHref} className="text-accent-blue hover:text-ink transition-colors font-medium">
+              {homeProjectsNote.linkLabel}
+            </Link>
+          </p>
+        </div>
+
         <DevOpsArchitecture />
         <Process />
-        {/* <Testimonials /> */}
         <FAQ />
         <Contact />
       </main>

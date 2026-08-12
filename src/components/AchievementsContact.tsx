@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Zap, Server, Mail, Send, Phone, MapPin, ExternalLink } from 'lucide-react';
+import { Zap, Server, Mail, Send } from 'lucide-react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { useState, FormEvent } from 'react';
 import { Link } from 'react-router-dom';
@@ -7,46 +7,10 @@ import metadata from '../../metadata.json';
 import { useLanguage } from '../i18n/LanguageContext';
 import { trackEvent } from '../monitoring';
 
-export const Achievements = () => {
-  const { content } = useLanguage();
-  const { impactMetrics, achievementsSection } = content;
-
-  return (
-    <section className="py-24 relative overflow-hidden bg-bg-secondary">
-      <div className="max-w-7xl mx-auto px-6">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-20"
-        >
-          <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-2 block">{achievementsSection.label}</span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">{achievementsSection.title} <span className="text-gradient">{achievementsSection.titleAccent}</span></h2>
-        </motion.div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
-          {impactMetrics.map((metric, idx) => (
-            <motion.div
-              key={metric.label}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
-              className="p-8 rounded-3xl glass border-ink/5 hover:border-accent-blue/20 transition-all text-center group"
-            >
-              <div className="text-4xl font-extrabold text-ink mb-2 group-hover:text-accent-blue transition-colors tracking-tighter">
-                {metric.value}
-              </div>
-              <div className="text-[10px] uppercase tracking-widest text-secondary-text font-mono">
-                {metric.label}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
+// Achievements component deleted 2026-08-12 — its five impact-metric stats
+// (99.9% performance, 95% AI automation, etc.) were never measured; confirmed
+// invented placeholders with the founder during the content-rewrite project.
+// Never commented back in without real, measured numbers. See positioning.md.
 
 export const DevOpsArchitecture = () => {
   const { content } = useLanguage();
@@ -135,67 +99,13 @@ export const DevOpsArchitecture = () => {
   );
 };
 
-export const Clients = () => {
-  const { content } = useLanguage();
-  const { localTrust } = content;
-
-  return (
-    <section className="py-24 relative overflow-hidden bg-bg-secondary">
-      <div className="max-w-7xl mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-2 block">{localTrust.label}</span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">{localTrust.title} <span className="text-gradient">{localTrust.titleAccent}</span></h2>
-          <p className="text-secondary-text max-w-xl mx-auto">{localTrust.description}</p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-          <a href={`tel:+${localTrust.phone.replace(/\D/g, '')}`} className="p-6 rounded-2xl glass border-ink/5 flex items-center gap-4 group hover:border-accent-blue/20 transition-all">
-            <div className="w-12 h-12 rounded-xl bg-accent-blue/10 flex items-center justify-center text-accent-blue">
-              <Phone size={20} aria-hidden="true" />
-            </div>
-            <div>
-              <div className="text-xs font-mono text-secondary-text uppercase tracking-widest">{localTrust.callLabel}</div>
-              <div className="text-lg font-bold text-ink group-hover:text-accent-blue transition-colors">{localTrust.phone}</div>
-            </div>
-          </a>
-          <div className="p-6 rounded-2xl glass border-ink/5 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-accent-purple/10 flex items-center justify-center text-accent-purple">
-              <MapPin size={20} aria-hidden="true" />
-            </div>
-            <div>
-              <div className="text-xs font-mono text-secondary-text uppercase tracking-widest">{localTrust.serviceAreaLabel}</div>
-              <div className="text-lg font-bold text-ink">{localTrust.serviceArea}</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {localTrust.clients.map((client) => (
-            <a
-              key={client.name}
-              href={client.url}
-              target="_blank"
-              rel="noreferrer"
-              className="p-6 rounded-2xl glass border-ink/5 hover:border-accent-blue/20 transition-all group flex flex-col gap-3"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="text-sm font-bold text-ink group-hover:text-accent-blue transition-colors">{client.name}</div>
-                <ExternalLink size={16} className="text-secondary-text shrink-0 group-hover:text-accent-blue transition-colors" aria-hidden="true" />
-              </div>
-              <p className="text-secondary-text text-sm leading-relaxed">{client.description}</p>
-              <span className="text-[10px] font-mono text-accent-blue uppercase tracking-widest mt-auto">{localTrust.visitSite}</span>
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
+// Clients component ("Real Clients, Real Work") deleted 2026-08-12 — it
+// presented SA Ethics Biotech (an unpaid demo, never adopted by the client)
+// as equal to Rashtriya Swasthya Sangathan (real, paid, delivered work), and
+// sat in prominent above-the-fold homepage position — exactly what
+// positioning.md's PORTFOLIO rule says to demote. The honest, bucketed
+// version of this content now lives on /projects. localTrust data deleted
+// with it — nothing else referenced it. See positioning.md.
 
 // Web3Forms access key — safe to expose client-side, it only lets people submit
 // mail to the inbox that generated it. Get one free at https://web3forms.com/.
