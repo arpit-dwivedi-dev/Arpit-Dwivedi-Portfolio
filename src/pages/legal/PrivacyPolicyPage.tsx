@@ -21,7 +21,7 @@ const COPY = {
         title: 'Information we collect',
         list: [
           { label: 'Contact form submissions', text: 'the name, email address, and message you submit, used only to respond to your inquiry.' },
-          { label: 'Free tool inputs', text: 'search terms you enter into a tool (e.g. the Google Maps Business Finder) are used to run that search and are not stored on our servers after your session ends.' },
+          { label: 'Free tool inputs', text: 'what you enter into a tool (e.g. invoice details in the Invoice Generator, or content in the QR Code Generator) stays in your browser — none of it is sent to or stored on our servers.' },
           { label: 'Analytics', text: 'we use Google Analytics and Google Tag Manager to understand aggregate site usage (pages viewed, approximate location, device type). This does not identify you personally.' },
         ],
       },
@@ -68,7 +68,7 @@ const COPY = {
         title: 'हम कौन सी जानकारी इकट्ठा करते हैं',
         list: [
           { label: 'कॉन्टैक्ट फ़ॉर्म सबमिशन', text: 'आपका नाम, ईमेल एड्रेस, और मैसेज — जिसका उपयोग सिर्फ़ आपकी पूछताछ का जवाब देने के लिए किया जाता है।' },
-          { label: 'फ्री टूल इनपुट', text: 'किसी टूल में आपके द्वारा डाले गए सर्च टर्म (जैसे Google Maps Business Finder) उस सर्च को चलाने के लिए इस्तेमाल होते हैं और आपका सेशन खत्म होने के बाद हमारे सर्वर पर स्टोर नहीं होते।' },
+          { label: 'फ्री टूल इनपुट', text: 'आप किसी टूल में जो भी डालते हैं (जैसे इनवॉइस जनरेटर में इनवॉइस डिटेल्स, या QR कोड जनरेटर में कॉन्टेंट) वह आपके ब्राउज़र में ही रहता है — इसमें से कुछ भी हमारे सर्वर पर भेजा या स्टोर नहीं होता।' },
           { label: 'एनालिटिक्स', text: 'हम Google Analytics और Google Tag Manager का उपयोग साइट के कुल इस्तेमाल (देखे गए पेज, अनुमानित लोकेशन, डिवाइस टाइप) को समझने के लिए करते हैं। इससे आपकी व्यक्तिगत पहचान नहीं होती।' },
         ],
       },

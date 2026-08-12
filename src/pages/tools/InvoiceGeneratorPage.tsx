@@ -740,6 +740,13 @@ export const InvoiceGeneratorPage = () => {
           </ol>
         </div>
 
+        {lang !== 'hi' && (
+          <div className="p-6 rounded-2xl bg-bg-secondary border border-ink/5">
+            <span className="text-accent-blue font-mono uppercase tracking-widest text-[10px] block mb-2">{t.judgmentHeading}</span>
+            <p className="text-secondary-text text-sm leading-relaxed">{t.judgmentText}</p>
+          </div>
+        )}
+
         <div>
           <h2 className="text-2xl font-bold tracking-tight mb-4">{t.featuresTitle}</h2>
           <ul className="grid sm:grid-cols-2 gap-3 text-secondary-text">

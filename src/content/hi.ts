@@ -141,9 +141,10 @@ export const hiContent: SiteContent = {
     ],
     workLabel: 'हाल का काम',
     workItems: [
-      'राष्ट्रीय स्वास्थ्य संगठन — एक NGO के लिए डोनेशन और आउटरीच प्लेटफ़ॉर्म, जो भारत भर में रक्तदान शिविर और मोबाइल हेल्थ क्लीनिक चलाता है।',
-      'SA Ethics Biotech — ISO 9001:2015 और ISO 13485:2016 सर्टिफ़ाइड मेडिकल डिवाइस निर्माता के लिए एक कॉर्पोरेट साइट।',
+      'राष्ट्रीय स्वास्थ्य संगठन — एक हेल्थकेयर NGO के लिए डोनेशन और आउटरीच प्लेटफ़ॉर्म। अब तक का एकमात्र डिलीवर किया गया, पेड क्लाइंट प्रोजेक्ट।',
     ],
+    workMoreText: 'प्रोजेक्ट्स पेज पर यह भी: एक अनपेड कॉन्सेप्ट बिल्ड जिसे क्लाइंट ने कभी अपनाया नहीं — ईमानदारी से डिज़ाइन वर्क के रूप में दिखाया गया, डिलीवर किए गए काम के रूप में नहीं।',
+    workMoreLinkLabel: 'पूरी तस्वीर देखें',
   },
   homeProjectsNote: {
     text: 'अब तक एक पेड, डिलीवर किया गया क्लाइंट प्रोजेक्ट — साथ ही एक शुरुआती कॉन्सेप्ट बिल्ड जो कभी प्रोडक्शन में नहीं गया।',
@@ -504,6 +505,11 @@ export const hiContent: SiteContent = {
     historyDeleteButton: 'डिलीट करें',
     historyStorageNote: 'सेव किए गए इनवॉइस केवल इस ब्राउज़र की लोकल स्टोरेज में रहते हैं। अपने ब्राउज़र का डेटा साफ़ करने से ये मिट जाएंगे — ज़रूरी इनवॉइस को PDF के रूप में बैकअप रखें।',
     closeAriaLabel: 'बंद करें',
+    // Rendered English-only (lang !== 'hi' gate in InvoiceGeneratorPage.tsx,
+    // same pattern as the page's existing Related Guides section) — kept
+    // here only so this object stays exhaustive under SiteContent's typing.
+    judgmentHeading: 'A decision made building this',
+    judgmentText: "Invoice history is saved under a versioned key, on purpose — there's no backend to run a migration against, so a future data-shape change just starts a fresh history instead of crashing on old records.",
     howItWorksTitle: 'यह कैसे काम करता है',
     howItWorksSteps: [
       'अपना बिज़नेस विवरण, क्लाइंट का बिलिंग पता, और एक या ज़्यादा लाइन आइटम भरें।',
@@ -680,6 +686,10 @@ export const hiContent: SiteContent = {
         urlLabel: 'प्रोफ़ाइल या पेज लिंक',
       },
     },
+    // Rendered English-only (lang !== 'hi' gate in QRCodeGeneratorPage.tsx) —
+    // kept here only so this object stays exhaustive under SiteContent's typing.
+    judgmentHeading: 'A decision made building this',
+    judgmentText: 'Multi-URL and dual-platform QR codes encode all their routing data directly into the URL itself — no backend or database needed to resolve a scan.',
     howItWorksTitle: 'यह कैसे काम करता है',
     howItWorksSteps: [
       'एक कंटेंट टाइप चुनें — वेब पेज, कॉन्टैक्ट कार्ड, प्लेन टेक्स्ट, SMS, ईमेल, फ़ोन नंबर, ऐप लिंक, या सोशल प्रोफ़ाइल।',

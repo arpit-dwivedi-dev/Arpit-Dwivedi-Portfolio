@@ -20,7 +20,7 @@ const COPY = {
       {
         title: 'Free tools',
         list: [
-          'Our free tools (e.g. the Google Maps Business Finder) are provided "as is," without warranty of any kind, for personal and light professional use.',
+          'Our free tools (e.g. the Invoice Generator and QR Code Generator) are provided "as is," without warranty of any kind, for personal and light professional use.',
           'Free-tier usage limits (results per search, searches per session) are enforced to keep the tools fast and available to everyone. Attempting to circumvent these limits through automated means is not permitted.',
           'Higher-volume or commercial use requires contacting us directly for a paid arrangement.',
           'We may change, limit, or discontinue a free tool at any time.',
@@ -62,7 +62,7 @@ const COPY = {
       {
         title: 'फ्री टूल्स',
         list: [
-          'हमारे फ्री टूल्स (जैसे Google Maps Business Finder) "जैसा है वैसा" उपलब्ध हैं, बिना किसी वारंटी के, व्यक्तिगत और सामान्य पेशेवर उपयोग के लिए।',
+          'हमारे फ्री टूल्स (जैसे इनवॉइस जनरेटर और QR कोड जनरेटर) "जैसा है वैसा" उपलब्ध हैं, बिना किसी वारंटी के, व्यक्तिगत और सामान्य पेशेवर उपयोग के लिए।',
           'फ्री-टियर उपयोग सीमाएं (हर सर्च में नतीजे, सेशन में सर्च) टूल्स को सबके लिए तेज़ और उपलब्ध रखने के लिए लागू की जाती हैं। ऑटोमेटेड तरीकों से इन सीमाओं को बायपास करने की कोशिश की अनुमति नहीं है।',
           'ज़्यादा-वॉल्यूम या कमर्शियल उपयोग के लिए पेड अरेंजमेंट हेतु हमसे सीधे संपर्क करना ज़रूरी है।',
           'हम किसी भी समय किसी फ्री टूल को बदल, सीमित, या बंद कर सकते हैं।',

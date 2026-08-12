@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
 import { About } from '../components/AboutTech';
 import { Team } from '../components/TeamProcess';
@@ -48,6 +49,12 @@ export const AboutPage = () => {
                 <li key={item}>{item}</li>
               ))}
             </ul>
+            <p className="text-sm text-secondary-text mt-4">
+              {aboutPage.workMoreText}{' '}
+              <Link to={lang === 'hi' ? '/hi/projects' : '/projects'} className="text-accent-blue hover:text-ink transition-colors font-medium">
+                {aboutPage.workMoreLinkLabel}
+              </Link>
+            </p>
           </div>
         </section>
       </main>

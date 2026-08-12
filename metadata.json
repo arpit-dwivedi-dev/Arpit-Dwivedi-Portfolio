@@ -144,9 +144,10 @@
       ],
       "workLabel": "Recent Work",
       "workItems": [
-        "Rashtriya Swasthya Sangathan — a donation and outreach platform for an NGO running blood donation camps and mobile health clinics across India.",
-        "SA Ethics Biotech — a corporate site for an ISO 9001:2015 & ISO 13485:2016 certified medical device manufacturer."
-      ]
+        "Rashtriya Swasthya Sangathan — a donation and outreach platform for a healthcare NGO. The one delivered, paid client project so far."
+      ],
+      "workMoreText": "Also on the projects page: an unpaid concept build that was never adopted by the client, shown honestly as design work, not delivered work.",
+      "workMoreLinkLabel": "See the full picture"
     },
     "homeProjectsNote": {
       "text": "One paid, delivered client project so far — plus an early concept build that never made it to production.",
@@ -511,6 +512,8 @@
       "historyDeleteButton": "Delete",
       "historyStorageNote": "Saved invoices live in this browser's local storage only. Clearing your browser data will erase them — back up anything important as a PDF.",
       "closeAriaLabel": "Close",
+      "judgmentHeading": "A decision made building this",
+      "judgmentText": "Invoice history is saved under a versioned key, on purpose — there's no backend to run a migration against, so a future data-shape change just starts a fresh history instead of crashing on old records.",
       "howItWorksTitle": "How It Works",
       "howItWorksSteps": [
         "Fill in your business details, the client's billing address, and one or more line items.",
@@ -687,6 +690,8 @@
           "urlLabel": "Profile or page link"
         }
       },
+      "judgmentHeading": "A decision made building this",
+      "judgmentText": "Multi-URL and dual-platform QR codes encode all their routing data directly into the URL itself — no backend or database needed to resolve a scan.",
       "howItWorksTitle": "How It Works",
       "howItWorksSteps": [
         "Pick a content type — a web page, a contact card, plain text, an SMS, an email, a phone number, an app link, or a social profile.",
