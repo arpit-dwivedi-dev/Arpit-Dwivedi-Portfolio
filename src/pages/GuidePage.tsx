@@ -8,6 +8,7 @@ import { Breadcrumbs } from '../components/seo/Breadcrumbs';
 import { JsonLd } from '../components/seo/JsonLd';
 import { useLanguage } from '../i18n/LanguageContext';
 import { getGuideBySlug, getRelatedGuides } from '../content/guides/data';
+import { guideDetailContent as t } from '../content/guides/pageContent';
 
 const SITE_ORIGIN = 'https://101techlabs.com';
 
@@ -65,7 +66,7 @@ export const GuidePage = () => {
             className="mb-8"
             items={[
               { name: content.nav.breadcrumbHome, href: lang === 'hi' ? '/hi' : '/' },
-              { name: 'Guides', href: '/guides' },
+              { name: t.breadcrumbLabel, href: '/guides' },
               { name: guide.title },
             ]}
           />
@@ -76,9 +77,9 @@ export const GuidePage = () => {
             <div className="flex items-center gap-4 text-secondary-text text-sm">
               <span className="inline-flex items-center gap-1.5">
                 <Clock size={14} aria-hidden="true" />
-                {guide.readTimeMinutes} min read
+                {guide.readTimeMinutes} {t.readTimeSuffix}
               </span>
-              <span>Updated {new Date(guide.updatedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              <span>{t.updatedPrefix} {new Date(guide.updatedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
             </div>
           </motion.header>
 
@@ -103,7 +104,7 @@ export const GuidePage = () => {
           </div>
 
           <section className="mt-14">
-            <h2 className="text-2xl font-bold tracking-tight text-ink mb-4">FAQ</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-ink mb-4">{t.faqHeading}</h2>
             <div className="space-y-4">
               {guide.faq.map((item) => (
                 <div key={item.question} className="p-4 rounded-2xl bg-bg-secondary border border-ink/5">
@@ -115,18 +116,18 @@ export const GuidePage = () => {
           </section>
 
           <div className="mt-14 p-6 rounded-3xl glass border-ink/10 flex flex-wrap items-center justify-between gap-4">
-            <p className="text-ink font-medium">Put this into practice with a real invoice.</p>
+            <p className="text-ink font-medium">{t.ctaText}</p>
             <Link
               to="/tools/generators/invoice-generator"
               className="shrink-0 inline-flex items-center gap-2 px-5 py-3 bg-accent-blue text-bg-pure font-bold rounded-xl hover:glow-blue transition-all"
             >
-              Try the free Invoice Generator
+              {t.ctaButton}
             </Link>
           </div>
 
           {related.length > 0 && (
             <section className="mt-14">
-              <h2 className="text-2xl font-bold tracking-tight text-ink mb-4">Related Guides</h2>
+              <h2 className="text-2xl font-bold tracking-tight text-ink mb-4">{t.relatedHeading}</h2>
               <ul className="grid sm:grid-cols-2 gap-3">
                 {related.map((r) => (
                   <li key={r.slug}>

@@ -7,6 +7,7 @@ import { Footer } from '../components/AchievementsContact';
 import { Breadcrumbs } from '../components/seo/Breadcrumbs';
 import { useLanguage } from '../i18n/LanguageContext';
 import { GUIDES } from '../content/guides/data';
+import { guidesIndexContent as t } from '../content/guides/pageContent';
 
 // Fixed display order rather than derived from data insertion order, so the
 // tab order stays intentional (most commercial-intent category first) even
@@ -47,20 +48,20 @@ export const GuidesPage = () => {
         <div className="max-w-5xl mx-auto px-6">
           <Breadcrumbs
             className="mb-3 sm:mb-6"
-            items={[{ name: content.nav.breadcrumbHome, href: lang === 'hi' ? '/hi' : '/' }, { name: 'Guides' }]}
+            items={[{ name: content.nav.breadcrumbHome, href: lang === 'hi' ? '/hi' : '/' }, { name: t.breadcrumbLabel }]}
           />
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8 sm:mb-12">
-            <span className="text-accent-blue font-mono text-xs sm:text-sm tracking-widest uppercase mb-1 sm:mb-2 block">Invoicing Guides</span>
+            <span className="text-accent-blue font-mono text-xs sm:text-sm tracking-widest uppercase mb-1 sm:mb-2 block">{t.eyebrow}</span>
             <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight mb-3 sm:mb-5">
-              Learn <span className="text-gradient">Invoicing</span>
+              {t.title} <span className="text-gradient">{t.titleAccent}</span>
             </h1>
             <p className="text-secondary-text max-w-2xl mx-auto text-base sm:text-lg">
-              No-fluff invoicing guides for freelancers and small businesses — not accountants.
+              {t.description}
             </p>
           </motion.div>
 
-          <div className="flex flex-wrap justify-center gap-2 mb-8" role="tablist" aria-label="Filter guides by category">
+          <div className="flex flex-wrap justify-center gap-2 mb-8" role="tablist" aria-label={t.categoriesAriaLabel}>
             <button
               type="button"
               role="tab"
@@ -72,7 +73,7 @@ export const GuidesPage = () => {
                   : 'bg-bg-secondary text-secondary-text border border-ink/5 hover:text-ink hover:border-accent-blue/30'
               }`}
             >
-              All Guides <span className="opacity-70">({GUIDES.length})</span>
+              {t.allGuidesLabel} <span className="opacity-70">({GUIDES.length})</span>
             </button>
             {categories.map(({ category, count }) => (
               <button
@@ -113,7 +114,7 @@ export const GuidesPage = () => {
                   <p className="text-secondary-text text-sm leading-relaxed flex-grow mb-3">{guide.description}</p>
                   <span className="inline-flex items-center gap-1.5 text-xs text-secondary-text/70">
                     <Clock size={12} aria-hidden="true" />
-                    {guide.readTimeMinutes} min read
+                    {guide.readTimeMinutes} {t.readTimeSuffix}
                   </span>
                 </Link>
               </motion.div>
@@ -121,12 +122,12 @@ export const GuidesPage = () => {
           </div>
 
           <div className="mt-10 sm:mt-14 p-6 rounded-3xl glass border-ink/10 flex flex-wrap items-center justify-between gap-4">
-            <p className="text-ink font-medium">Ready to put this into practice?</p>
+            <p className="text-ink font-medium">{t.ctaText}</p>
             <Link
               to="/tools/generators/invoice-generator"
               className="shrink-0 inline-flex items-center gap-2 px-5 py-3 bg-accent-blue text-bg-pure font-bold rounded-xl hover:glow-blue transition-all"
             >
-              Try the free Invoice Generator
+              {t.ctaButton}
             </Link>
           </div>
         </div>

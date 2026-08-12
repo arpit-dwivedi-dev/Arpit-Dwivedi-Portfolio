@@ -30,6 +30,7 @@ import { CURRENCIES, getCurrencySymbol } from '../../tools/invoiceGenerator/type
 import type { InvoiceData } from '../../tools/invoiceGenerator/types';
 import { TOOLS, getToolCategory, getRelatedTools, categoryTitle, toolTitle, toolDescription } from '../../tools/registry';
 import { getGuideBySlug } from '../../content/guides/data';
+import { guideDetailContent } from '../../content/guides/pageContent';
 
 const TOOL = TOOLS.find((t) => t.id === 'invoice-generator')!;
 const TOOL_CATEGORY = getToolCategory(TOOL.category)!;
@@ -822,7 +823,7 @@ export const InvoiceGeneratorPage = () => {
 
         {lang !== 'hi' && (
           <div>
-            <h2 className="text-2xl font-bold tracking-tight mb-4">Related Guides</h2>
+            <h2 className="text-2xl font-bold tracking-tight mb-4">{guideDetailContent.relatedHeading}</h2>
             <ul className="grid sm:grid-cols-2 gap-3">
               {RELATED_GUIDES.map((guide) => (
                 <li key={guide.slug}>
