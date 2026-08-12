@@ -15,6 +15,7 @@ interface ProjectCardProps {
     metrics?: { label: string; value: string }[];
     subtitle?: string;
     featured?: boolean;
+    status?: 'demo';
     [key: string]: any;
   };
   index: number;
@@ -23,10 +24,16 @@ interface ProjectCardProps {
 export const ProjectCard = ({ project, index }: ProjectCardProps) => {
   const { content } = useLanguage();
   const { projectCard } = content;
+  const isDemo = project.status === 'demo';
   const primaryHref = project.link || (project.github ? `https://github.com/${project.github}` : undefined);
 
   const details = (
     <>
+      {isDemo && (
+        <span className="inline-flex self-start mb-4 px-3 py-1 rounded-full bg-ink/5 border border-ink/10 text-[10px] font-mono uppercase tracking-widest text-secondary-text">
+          {projectCard.demoBadge}
+        </span>
+      )}
       <h3 className="text-2xl font-bold text-ink mb-4 group-hover:text-accent-blue transition-colors">{project.title}</h3>
       <p className="text-secondary-text text-sm mb-8 leading-relaxed flex-grow">
         {project.description}
@@ -83,7 +90,7 @@ export const ProjectCard = ({ project, index }: ProjectCardProps) => {
               target="_blank"
               rel="noopener noreferrer"
               className="w-11 h-11 rounded-xl bg-ink/5 flex items-center justify-center text-ink hover:text-accent-blue transition-colors relative z-10"
-              aria-label={projectCard.viewLive}
+              aria-label={isDemo ? projectCard.viewDemo : projectCard.viewLive}
             >
               <ExternalLink size={20} />
             </a>

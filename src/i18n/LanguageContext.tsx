@@ -244,7 +244,11 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const isHindi = location.pathname === '/hi' || location.pathname.startsWith('/hi/');
   const lang: Lang = isHindi ? 'hi' : 'en';
 
-  const content = isHindi ? hiContent : metadata.content;
+  // Cast needed for `projects[].status`: SiteContent narrows it to the
+  // literal 'demo' (see types.ts), but a plain JSON import only infers
+  // `string` — the runtime value is correct, TS just can't prove the
+  // literal narrowing through metadata.json.
+  const content = isHindi ? hiContent : (metadata.content as SiteContent);
 
   useEffect(() => {
     document.documentElement.lang = lang;

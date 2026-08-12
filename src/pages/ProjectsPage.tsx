@@ -10,6 +10,11 @@ export const ProjectsPage = () => {
   const { lang, content } = useLanguage();
   const { projects, projectsSection } = content;
   const homeHref = lang === 'hi' ? '/hi' : '/';
+  // Delivered and demo/concept work are never blended into one grid — see
+  // positioning.md and the founder's explicit instruction that unpaid,
+  // never-adopted demo work gets its own clearly-labeled bucket.
+  const deliveredProjects = projects.filter((project) => project.status !== 'demo');
+  const demoProjects = projects.filter((project) => project.status === 'demo');
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -44,11 +49,28 @@ export const ProjectsPage = () => {
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((project, idx) => (
-              <ProjectCard key={project.title} project={project} index={idx} />
-            ))}
-          </div>
+          {deliveredProjects.length > 0 && (
+            <div className="mb-16">
+              <h2 className="text-xl font-bold text-ink mb-6">{projectsSection.deliveredHeading}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {deliveredProjects.map((project, idx) => (
+                  <ProjectCard key={project.title} project={project} index={idx} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {demoProjects.length > 0 && (
+            <div>
+              <h2 className="text-xl font-bold text-ink mb-2">{projectsSection.demoHeading}</h2>
+              <p className="text-secondary-text text-sm max-w-2xl mb-6">{projectsSection.demoIntro}</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {demoProjects.map((project, idx) => (
+                  <ProjectCard key={project.title} project={project} index={idx} />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </main>
 
