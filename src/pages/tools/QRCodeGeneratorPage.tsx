@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 import {
   Check,
+  Coffee,
   Copy,
   Download,
   FileText,
@@ -17,6 +18,7 @@ import {
   Text,
   Trash2,
   User,
+  X,
 } from 'lucide-react';
 import { FaDiscord, FaFacebook, FaInstagram, FaLinkedin, FaSpotify, FaTelegram, FaWhatsapp, FaYoutube } from 'react-icons/fa';
 import { QRCodeCanvas, QRCodeSVG } from 'qrcode.react';
@@ -41,6 +43,16 @@ const RELATED_TOOLS = getRelatedTools(TOOL);
 // real domain regardless of where the page happens to be running.
 const SITE_ORIGIN = 'https://101techlabs.com';
 const REDIRECT_PAGE_URL = `${SITE_ORIGIN}/tools/generators/qr-code-generator/go`;
+
+// Shown in the preview before the user has typed anything, so the panel
+// never looks broken/empty on first load — never used for downloads/copy,
+// which stay gated on the real qrValue.
+const PLACEHOLDER_QR_VALUE = 'https://101techlabs.com/';
+
+const UPI_ID = 'marpit697.ad@ybl';
+const UPI_NUMBER = '7071520965';
+const UPI_PAYEE_NAME = 'Arpit Dwivedi';
+const UPI_LINK = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(UPI_PAYEE_NAME)}&cu=INR`;
 
 const SOCIAL_ICONS: Record<string, typeof FaFacebook> = {
   facebook: FaFacebook,
@@ -88,6 +100,14 @@ export const QRCodeGeneratorPage = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [copied, setCopied] = useState(false);
   const [clipboardSupported, setClipboardSupported] = useState(false);
+  const [upiModalOpen, setUpiModalOpen] = useState(false);
+  const [copiedField, setCopiedField] = useState<'upi' | 'number' | null>(null);
+
+  const handleCopyUpi = (field: 'upi' | 'number', value: string) => {
+    navigator.clipboard.writeText(value).catch(() => {});
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 1500);
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -453,17 +473,17 @@ export const QRCodeGeneratorPage = () => {
             </div>
 
             <div className="space-y-6 lg:pl-6 lg:border-l lg:border-ink/10 lg:sticky lg:top-28">
-              <div className="flex justify-center">
+              <div className="flex flex-col items-center gap-2">
                 <div className="p-2.5 rounded-xl bg-white">
-                  {qrValue ? (
-                    <div ref={svgRef}>
-                      <QRCodeSVG value={qrValue} size={150} bgColor={style.bgColor} fgColor={style.fgColor} level={style.level} />
-                    </div>
-                  ) : (
-                    <div className="w-[150px] h-[150px] flex items-center justify-center text-center text-xs text-secondary-text/70 px-3">
-                      {t.previewEmptyHint}
-                    </div>
-                  )}
+                  <div ref={svgRef}>
+                    <QRCodeSVG
+                      value={qrValue || PLACEHOLDER_QR_VALUE}
+                      size={150}
+                      bgColor={style.bgColor}
+                      fgColor={style.fgColor}
+                      level={style.level}
+                    />
+                  </div>
                   {/* Offscreen, higher-resolution render used only for PNG download / clipboard copy. */}
                   {qrValue && (
                     <div className="hidden">
@@ -471,6 +491,7 @@ export const QRCodeGeneratorPage = () => {
                     </div>
                   )}
                 </div>
+                {!qrValue && <p className="text-center text-[11px] text-secondary-text/70 px-3">{t.previewEmptyHint}</p>}
               </div>
 
               <div className="space-y-3">
@@ -505,6 +526,14 @@ export const QRCodeGeneratorPage = () => {
                     </button>
                   )}
                 </div>
+                <button
+                  type="button"
+                  onClick={() => setUpiModalOpen(true)}
+                  className="w-full py-2 bg-[#FFDD00]/10 text-[#FFDD00] font-bold rounded-xl hover:bg-[#FFDD00]/20 transition-all flex items-center justify-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure text-xs"
+                >
+                  <Coffee size={14} aria-hidden="true" />
+                  {t.buyMeCoffee}
+                </button>
               </div>
 
               <div className="pt-5 border-t border-ink/10 space-y-4">
@@ -688,6 +717,84 @@ export const QRCodeGeneratorPage = () => {
       </section>
 
       <Footer />
+
+      <AnimatePresence>
+        {upiModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4"
+            onClick={() => setUpiModalOpen(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="qr-upi-modal-heading"
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-sm rounded-3xl bg-bg-secondary border border-ink/10 p-6 shadow-2xl"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 id="qr-upi-modal-heading" className="text-lg font-bold text-ink flex items-center gap-2">
+                  <Coffee size={18} className="text-[#FFDD00]" aria-hidden="true" />
+                  {t.upiModalHeading}
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setUpiModalOpen(false)}
+                  aria-label={t.closeAriaLabel}
+                  className="p-1.5 rounded-lg hover:bg-ink/10 text-secondary-text transition-colors"
+                >
+                  <X size={18} aria-hidden="true" />
+                </button>
+              </div>
+
+              <p className="text-sm text-secondary-text mb-4">{t.upiModalBody}</p>
+
+              <div className="flex justify-center mb-4">
+                <div className="p-3 rounded-2xl bg-white">
+                  <QRCodeSVG value={UPI_LINK} size={180} bgColor="#ffffff" fgColor="#000000" level="M" includeMargin={false} />
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-center justify-between gap-2 px-4 py-3 rounded-xl bg-ink/5">
+                  <div className="min-w-0">
+                    <p className="text-xs font-mono text-secondary-text">{t.upiIdLabel}</p>
+                    <p className="text-sm font-bold text-ink truncate">{UPI_ID}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleCopyUpi('upi', UPI_ID)}
+                    className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-accent-blue/10 text-accent-blue text-xs font-bold hover:bg-accent-blue/20 transition-all"
+                  >
+                    {copiedField === 'upi' ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
+                    {copiedField === 'upi' ? t.copiedButton : t.copyButton}
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-between gap-2 px-4 py-3 rounded-xl bg-ink/5">
+                  <div className="min-w-0">
+                    <p className="text-xs font-mono text-secondary-text">{t.upiNumberLabel}</p>
+                    <p className="text-sm font-bold text-ink truncate">{UPI_NUMBER}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleCopyUpi('number', UPI_NUMBER)}
+                    className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-accent-blue/10 text-accent-blue text-xs font-bold hover:bg-accent-blue/20 transition-all"
+                  >
+                    {copiedField === 'number' ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
+                    {copiedField === 'number' ? t.copiedButton : t.copyButton}
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(0,209,255,0.03),transparent_70%)]" />
