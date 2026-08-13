@@ -24,9 +24,9 @@ export interface BlogDetailContent {
 export const blogIndexContent: BlogIndexContent = {
   breadcrumbLabel: 'Blog',
   eyebrow: 'Engineering Notes',
-  title: 'Backend, Identity,',
-  titleAccent: 'and Judgment Calls',
-  description: 'Real technical writing on the decisions behind full-stack applications — not lorem ipsum, not a fabricated case study.',
+  title: 'Explore. Learn.',
+  titleAccent: 'Build Better.',
+  description: 'Insights, ideas, and practical knowledge from the world of software, technology, and digital products.',
   allPostsLabel: 'All Posts',
   categoriesAriaLabel: 'Filter posts by category',
   readTimeSuffix: 'min read',

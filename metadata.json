@@ -9,6 +9,7 @@
       { "name": "Services", "href": "#experience" },
       { "name": "Projects", "href": "#projects" },
       { "name": "Free Tools", "href": "/free-tools" },
+      { "name": "Blog", "href": "/blog" },
       { "name": "Contact", "href": "#contact" }
     ],
     "nav": {
