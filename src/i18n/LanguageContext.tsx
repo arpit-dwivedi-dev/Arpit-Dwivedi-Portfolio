@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import metadata from '../../metadata.json';
 import { hiContent } from '../content/hi';
 import { getGuideBySlug } from '../content/guides/data';
+import { getBlogPostBySlug } from '../content/blog/data';
 import type { SiteContent, Lang } from './types';
 
 export type { SiteContent, Lang };
@@ -98,7 +99,8 @@ type RouteKey =
   | 'toolsGenerators'
   | 'invoiceGenerator'
   | 'qrCodeGenerator'
-  | 'guides';
+  | 'guides'
+  | 'blog';
 
 const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; description: string }>> = {
   en: {
@@ -167,6 +169,10 @@ const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; description: st
       title: 'Invoicing Guides | 101 Tech Labs',
       description: 'Practical guides on making invoices, setting payment terms, invoice numbering, and getting paid on time.',
     },
+    blog: {
+      title: 'Engineering Notes | 101 Tech Labs',
+      description: 'Real technical writing on the decisions behind full-stack applications — backend, identity, and judgment calls.',
+    },
   },
   hi: {
     home: {
@@ -230,11 +236,16 @@ const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; description: st
       description:
         'URL, कॉन्टैक्ट कार्ड, प्लेन टेक्स्ट, SMS, ईमेल, फ़ोन नंबर, या सोशल लिंक के लिए QR कोड बनाएं। रंग कस्टमाइज़ करें और PNG या SVG के रूप में डाउनलोड करें — फ्री, कोई साइनअप नहीं, कोई सर्वर नहीं।',
     },
-    // No /hi/guides route exists yet (see App.tsx) — kept here only so this
-    // Record<Lang, Record<RouteKey, ...>> stays exhaustive under tsc.
+    // No /hi/guides or /hi/blog route exists yet (see App.tsx) — kept here
+    // only so this Record<Lang, Record<RouteKey, ...>> stays exhaustive
+    // under tsc.
     guides: {
       title: 'Invoicing Guides | 101 Tech Labs',
       description: 'Practical guides on making invoices, setting payment terms, invoice numbering, and getting paid on time.',
+    },
+    blog: {
+      title: 'Engineering Notes | 101 Tech Labs',
+      description: 'Real technical writing on the decisions behind full-stack applications — backend, identity, and judgment calls.',
     },
   },
 };
@@ -275,14 +286,18 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
       '/tools/generators/invoice-generator': 'invoiceGenerator',
       '/tools/generators/qr-code-generator': 'qrCodeGenerator',
       '/guides': 'guides',
+      '/blog': 'blog',
     };
     const routeKey: RouteKey = ROUTE_KEY_BY_PATH[basePathname] ?? 'home';
-    // Guide slugs are dynamic (/guides/:slug) so they can't live in the
-    // static map above — look the specific guide up and override the
-    // generic "guides" meta with its title/description when one matches.
+    // Guide/post slugs are dynamic (/guides/:slug, /blog/:slug) so they can't
+    // live in the static map above — look the specific item up and override
+    // the generic "guides"/"blog" meta with its title/description when one
+    // matches.
     const guideMatch = basePathname.startsWith('/guides/') ? getGuideBySlug(basePathname.slice('/guides/'.length)) : undefined;
-    const meta = guideMatch
-      ? { title: `${guideMatch.title} | 101 Tech Labs`, description: guideMatch.description }
+    const blogMatch = basePathname.startsWith('/blog/') ? getBlogPostBySlug(basePathname.slice('/blog/'.length)) : undefined;
+    const dynamicMatch = guideMatch ?? blogMatch;
+    const meta = dynamicMatch
+      ? { title: `${dynamicMatch.title} | 101 Tech Labs`, description: dynamicMatch.description }
       : ROUTE_META[lang][routeKey];
     const canonicalHref = absoluteUrl(lang, basePathname);
 
@@ -298,10 +313,11 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 
   const toPath: LanguageContextValue['toPath'] = (target) => {
     const basePathname = stripHiPrefix(location.pathname);
-    // Guides are English-only (see App.tsx) — no /hi/guides route exists,
-    // so switching to Hindi from one would land on a blank, unmatched URL.
-    // Send those to the Hindi home page instead of a dead link.
-    if (target === 'hi' && basePathname.startsWith('/guides')) {
+    // Guides and blog posts are English-only (see App.tsx) — no /hi/guides
+    // or /hi/blog route exists, so switching to Hindi from one would land on
+    // a blank, unmatched URL. Send those to the Hindi home page instead of a
+    // dead link.
+    if (target === 'hi' && (basePathname.startsWith('/guides') || basePathname.startsWith('/blog'))) {
       return '/hi';
     }
     const path = target === 'hi' ? (basePathname === '/' ? '/hi' : `/hi${basePathname}`) : basePathname;

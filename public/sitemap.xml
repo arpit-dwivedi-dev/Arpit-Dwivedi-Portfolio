@@ -624,4 +624,21 @@
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
   </url>
+
+  <url>
+    <loc>https://101techlabs.com/blog</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/blog" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/blog" />
+    <lastmod>2026-08-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://101techlabs.com/blog/rs256-vs-hs256-jwt-multi-tenant</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/blog/rs256-vs-hs256-jwt-multi-tenant" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/blog/rs256-vs-hs256-jwt-multi-tenant" />
+    <lastmod>2026-08-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>

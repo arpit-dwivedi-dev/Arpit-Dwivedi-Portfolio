@@ -51,6 +51,8 @@ const QRRedirectPage = lazy(() =>
 );
 const GuidesPage = lazy(() => import('./pages/GuidesPage').then((m) => ({ default: m.GuidesPage })));
 const GuidePage = lazy(() => import('./pages/GuidePage').then((m) => ({ default: m.GuidePage })));
+const BlogPage = lazy(() => import('./pages/BlogPage').then((m) => ({ default: m.BlogPage })));
+const BlogPostPage = lazy(() => import('./pages/BlogPostPage').then((m) => ({ default: m.BlogPostPage })));
 
 // A null Suspense fallback means a direct visit to a lazy route (shared link,
 // bookmark) paints nothing — not even the navbar — until the chunk downloads
@@ -128,6 +130,14 @@ export default function App() {
                itself, and 5 Hindi long-form articles is its own project. */}
             <Route path="/guides" element={lazyRoute(GuidesPage)} />
             <Route path="/guides/:slug" element={lazyRoute(GuidePage)} />
+
+            {/* English-only, same reasoning as /guides above. Separate from
+               /guides on purpose (Phase 3 decision, content-rewrite project):
+               /guides stays invoicing-only; /blog covers broader topics
+               inside the actual company positioning (backend/identity
+               engineering, full-stack application development). */}
+            <Route path="/blog" element={lazyRoute(BlogPage)} />
+            <Route path="/blog/:slug" element={lazyRoute(BlogPostPage)} />
 
             {/* Legacy /free-tools URLs — redirect rather than 404 now that a
                handful of these may already be indexed or bookmarked. A true
