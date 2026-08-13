@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+  <title>101 Tech Labs — Engineering Notes</title>
+  <link>https://101techlabs.com/blog</link>
+  <description>Real technical writing on the decisions behind full-stack applications.</description>
+  <language>en</language>
+  <item>
+    <title>RS256 vs HS256: Choosing a JWT Signing Algorithm for Multi-Tenant Systems</title>
+    <link>https://101techlabs.com/blog/rs256-vs-hs256-jwt-multi-tenant</link>
+    <guid isPermaLink="true">https://101techlabs.com/blog/rs256-vs-hs256-jwt-multi-tenant</guid>
+    <description>HS256 and RS256 solve the same problem differently — one shares a secret, one doesn’t. Here’s why that distinction matters more once more than one service needs to verify a token.</description>
+    <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>A Backend &amp; Identity Glossary: JWT, JWKS, Multi-Tenancy, and More</title>
+    <link>https://101techlabs.com/blog/backend-identity-glossary</link>
+    <guid isPermaLink="true">https://101techlabs.com/blog/backend-identity-glossary</guid>
+    <description>Plain definitions for the terms that come up most when talking about authentication and multi-tenant backend architecture — not a complete course, a working reference.</description>
+    <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>argon2id vs bcrypt vs scrypt: Choosing a Password Hashing Algorithm</title>
+    <link>https://101techlabs.com/blog/argon2id-vs-bcrypt-vs-scrypt</link>
+    <guid isPermaLink="true">https://101techlabs.com/blog/argon2id-vs-bcrypt-vs-scrypt</guid>
+    <description>Three real options for hashing passwords, what actually separates them, and why argon2id is the current default recommendation — not a trend, a specific set of tradeoffs.</description>
+    <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>In-House vs. Outsourced Backend Engineering: What Actually Changes</title>
+    <link>https://101techlabs.com/blog/in-house-vs-outsourced-backend-engineering</link>
+    <guid isPermaLink="true">https://101techlabs.com/blog/in-house-vs-outsourced-backend-engineering</guid>
+    <description>The tradeoff isn’t cost vs. quality — it’s who owns the decisions that are expensive to unwind later. What actually changes when backend work is subcontracted instead of owned.</description>
+    <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+  </item>
+</channel>
+</rss>

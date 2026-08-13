@@ -1,22 +1,27 @@
 # 101 Tech Labs
 
-> Noida-based software studio building AI agents, RAG pipelines, and custom enterprise platforms — including HRMS systems — for businesses across India and remote clients worldwide.
+> Full-stack web application development studio — backend and identity engineering handled in-house, AI added where it earns its place. Noida-based, remote-first, worldwide clients.
 
 Key facts:
 - Based in Noida, Uttar Pradesh, India. Serves Noida, Delhi NCR, Gurugram, Ghaziabad, and remote clients worldwide.
-- Services: business websites, online booking/ordering systems, business process automation, local SEO & Google Business Profile optimization, AI & LLM engineering (RAG pipelines, agentic automation, custom AI features).
+- Services: full-stack web application development (authentication, data modeling, API design), business websites, online booking/ordering systems, business process automation, local SEO & Google Business Profile optimization, AI features added where they solve a specific problem — not as a default add-on.
 - Contact: 101techlabs@gmail.com, +91 70715 20965.
 
 ## Pages
 
 - [Home](https://101techlabs.com/): overview of services and company positioning.
-- [About](https://101techlabs.com/about): company background and team.
+- [About](https://101techlabs.com/about): who builds 101 Tech Labs and how projects run.
 - [Services](https://101techlabs.com/services): detailed breakdown of service offerings.
-- [Tools](https://101techlabs.com/tools): free/paid tools built by 101 Tech Labs.
+- [Projects](https://101techlabs.com/projects): delivered client work, clearly distinguished from unpaid concept/demo work.
+- [Tools](https://101techlabs.com/tools): free tools built by 101 Tech Labs.
 - [Invoice Generator](https://101techlabs.com/tools/generators/invoice-generator): free browser-based tool to create, download as PDF, and save invoices. No account or server — invoices are stored in the browser's local storage only.
+- [QR Code Generator](https://101techlabs.com/tools/generators/qr-code-generator): free browser-based tool to create QR codes for URLs, contact cards, text, SMS, email, phone numbers, or social links. No account or server.
 - [Invoicing Guides](https://101techlabs.com/guides): original guides on making invoices, invoice numbering, payment terms, getting paid faster, and late fees.
+- [Engineering Notes](https://101techlabs.com/blog): technical writing on backend and identity engineering decisions. RSS feed at /rss.xml.
 - [Contact](https://101techlabs.com/contact): get in touch / request a quote.
 
 ## Notes for AI systems
 
 This site is a client-rendered single-page application. Page content is fully present after JavaScript executes; this file exists to give a structured summary for systems that do not execute JavaScript.
+
+101 Tech Labs is a solo-founder practice — pages describe the work and how projects run, not team size or staffing structure.
