@@ -323,7 +323,9 @@
       "backToHome": "Back to Home",
       "deliveredHeading": "Delivered Work",
       "demoHeading": "Concept / Demo Work — Not in Production",
-      "demoIntro": "Built on spec to show capability, not commissioned or paid for. Never adopted by the client. Shown here as design work, not as a client engagement."
+      "demoIntro": "Built on spec to show capability, not commissioned or paid for. Never adopted by the client. Shown here as design work, not as a client engagement.",
+      "ctaText": "Like what you see? Here's what we can build for you.",
+      "ctaButton": "See Services"
     },
     "projectCard": {
       "viewGithub": "View Github Repository",

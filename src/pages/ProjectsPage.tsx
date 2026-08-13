@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
+import { ArrowRight } from 'lucide-react';
 import { ProjectCard } from '../components/ProjectCard';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/AchievementsContact';
@@ -71,6 +73,19 @@ export const ProjectsPage = () => {
               </div>
             </div>
           )}
+
+          {/* Phase 7 internal-linking fix: no forward path existed from
+              proof to services — a dead end in the free tools → proof →
+              services → contact priority path. */}
+          <div className="flex flex-wrap items-center justify-center gap-4 mt-16 p-6 rounded-3xl glass border-ink/10 text-center">
+            <p className="text-ink font-medium">{projectsSection.ctaText}</p>
+            <Link
+              to={lang === 'hi' ? '/hi/services' : '/services'}
+              className="shrink-0 inline-flex items-center gap-2 px-5 py-3 bg-accent-blue text-bg-pure font-bold rounded-xl hover:glow-blue transition-all group"
+            >
+              {projectsSection.ctaButton} <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+            </Link>
+          </div>
         </div>
       </main>
 

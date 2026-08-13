@@ -1,4 +1,6 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 import { Navbar } from '../components/Navbar';
 import { Services } from '../components/ExperienceProjects';
 import { Footer } from '../components/AchievementsContact';
@@ -44,6 +46,18 @@ export const ServicesPage = () => {
                 </li>
               ))}
             </ol>
+
+            {/* Phase 7 internal-linking fix: this page previously had no
+                forward path to contact — a dead end in the free tools →
+                proof → services → contact priority path. */}
+            <div className="flex justify-center mt-16">
+              <Link
+                to={lang === 'hi' ? '/hi/contact' : '/contact'}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-accent-blue text-bg-pure font-bold hover:glow-blue transition-all group"
+              >
+                {content.process.cta} <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+              </Link>
+            </div>
           </div>
         </section>
       </main>

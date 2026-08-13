@@ -4,6 +4,7 @@ import { Navbar } from '../components/Navbar';
 import { Contact } from '../components/AchievementsContact';
 import { Footer } from '../components/AchievementsContact';
 import { Breadcrumbs } from '../components/seo/Breadcrumbs';
+import { JsonLd } from '../components/seo/JsonLd';
 import { useLanguage } from '../i18n/LanguageContext';
 
 // A dedicated, indexable /contact route — AdSense review and general trust
@@ -36,6 +37,18 @@ export const ContactPage = () => {
 
         <section className="py-16 bg-bg-secondary">
           <div className="max-w-3xl mx-auto px-6">
+            <JsonLd
+              data={{
+                '@context': 'https://schema.org',
+                '@type': 'FAQPage',
+                inLanguage: lang,
+                mainEntity: contactPage.items.map((item) => ({
+                  '@type': 'Question',
+                  name: item.question,
+                  acceptedAnswer: { '@type': 'Answer', text: item.answer },
+                })),
+              }}
+            />
             <h2 className="text-2xl font-bold tracking-tight mb-6">{contactPage.heading}</h2>
             <div className="space-y-6">
               {contactPage.items.map((item) => (
