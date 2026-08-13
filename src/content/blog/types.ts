@@ -11,13 +11,12 @@ export interface BlogFaqItem {
 
 export interface BlogComparisonRow {
   label: string;
-  a: string;
-  b: string;
+  /** One value per entry in BlogComparisonTable.columns, same order. */
+  values: string[];
 }
 
 export interface BlogComparisonTable {
-  columnA: string;
-  columnB: string;
+  columns: string[];
   rows: BlogComparisonRow[];
 }
 

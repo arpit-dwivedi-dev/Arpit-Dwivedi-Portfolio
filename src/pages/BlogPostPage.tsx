@@ -42,7 +42,7 @@ export const BlogPostPage = () => {
           description: post.description,
           datePublished: post.publishedDate,
           dateModified: post.updatedDate,
-          author: { '@id': `${SITE_ORIGIN}/#organization` },
+          author: { '@id': `${SITE_ORIGIN}/#founder` },
           publisher: { '@id': `${SITE_ORIGIN}/#organization` },
           mainEntityOfPage: url,
           inLanguage: 'en',
@@ -111,16 +111,18 @@ export const BlogPostPage = () => {
                 <thead>
                   <tr className="border-b border-ink/10">
                     <th className="text-left py-3 pr-4 font-bold text-ink"></th>
-                    <th className="text-left py-3 px-4 font-bold text-ink">{post.comparisonTable.columnA}</th>
-                    <th className="text-left py-3 px-4 font-bold text-ink">{post.comparisonTable.columnB}</th>
+                    {post.comparisonTable.columns.map((column) => (
+                      <th key={column} className="text-left py-3 px-4 font-bold text-ink">{column}</th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
                   {post.comparisonTable.rows.map((row) => (
                     <tr key={row.label} className="border-b border-ink/5">
                       <td className="py-3 pr-4 text-secondary-text font-medium whitespace-nowrap">{row.label}</td>
-                      <td className="py-3 px-4 text-secondary-text">{row.a}</td>
-                      <td className="py-3 px-4 text-secondary-text">{row.b}</td>
+                      {row.values.map((value, idx) => (
+                        <td key={post.comparisonTable!.columns[idx]} className="py-3 px-4 text-secondary-text">{value}</td>
+                      ))}
                     </tr>
                   ))}
                 </tbody>

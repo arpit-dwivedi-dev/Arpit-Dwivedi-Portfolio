@@ -313,6 +313,25 @@
           "title": "Launch & Support",
           "description": "We deploy, hand over what you need, and stay reachable for fixes and follow-up work."
         }
+      ],
+      "faqHeading": "Questions",
+      "faq": [
+        {
+          "question": "Do you build the backend, or just the frontend?",
+          "answer": "Both — the backend is the part most agencies quietly hand off to a subcontractor. It's built in-house here."
+        },
+        {
+          "question": "What does \"backend and identity engineering\" actually mean, day to day?",
+          "answer": "Authentication, session and token handling, data modeling, API design — the parts of an application that don't show up in a demo but decide whether it holds up under real users."
+        },
+        {
+          "question": "Do you work with pre-funding or early-stage startups?",
+          "answer": "Yes — most of what gets built here is for teams that need something built properly on a limited budget, not a polished enterprise engagement."
+        },
+        {
+          "question": "Can you join an existing codebase, or does it have to be a new build?",
+          "answer": "Either. That's exactly what a discovery call is for — the honest answer depends on the state of what's already there."
+        }
       ]
     },
     "projectsSection": {

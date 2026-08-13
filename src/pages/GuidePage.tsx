@@ -42,7 +42,7 @@ export const GuidePage = () => {
           description: guide.description,
           datePublished: guide.publishedDate,
           dateModified: guide.updatedDate,
-          author: { '@id': `${SITE_ORIGIN}/#organization` },
+          author: { '@id': `${SITE_ORIGIN}/#founder` },
           publisher: { '@id': `${SITE_ORIGIN}/#organization` },
           mainEntityOfPage: url,
           inLanguage: 'en',

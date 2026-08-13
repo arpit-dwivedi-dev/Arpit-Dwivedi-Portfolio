@@ -5,6 +5,7 @@ import { Navbar } from '../components/Navbar';
 import { Services } from '../components/ExperienceProjects';
 import { Footer } from '../components/AchievementsContact';
 import { Breadcrumbs } from '../components/seo/Breadcrumbs';
+import { JsonLd } from '../components/seo/JsonLd';
 import { useLanguage } from '../i18n/LanguageContext';
 
 // A dedicated, indexable /services route — the five services previously
@@ -57,6 +58,35 @@ export const ServicesPage = () => {
               >
                 {content.process.cta} <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
               </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Phase 7c AI-visibility addition: this was the one page with zero
+            FAQ content despite being the most likely page to get cited for
+            hiring/service questions. */}
+        <section className="py-24">
+          <div className="max-w-3xl mx-auto px-6">
+            <JsonLd
+              data={{
+                '@context': 'https://schema.org',
+                '@type': 'FAQPage',
+                inLanguage: lang,
+                mainEntity: servicesPage.faq.map((item) => ({
+                  '@type': 'Question',
+                  name: item.question,
+                  acceptedAnswer: { '@type': 'Answer', text: item.answer },
+                })),
+              }}
+            />
+            <h2 className="text-2xl font-bold tracking-tight mb-6">{servicesPage.faqHeading}</h2>
+            <div className="space-y-4">
+              {servicesPage.faq.map((item) => (
+                <div key={item.question} className="p-4 rounded-2xl bg-bg-secondary border border-ink/5">
+                  <h3 className="font-bold text-ink mb-1">{item.question}</h3>
+                  <p className="text-secondary-text text-sm leading-relaxed">{item.answer}</p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
