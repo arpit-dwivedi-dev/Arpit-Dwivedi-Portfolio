@@ -73,9 +73,9 @@
     ],
     "hero": {
       "badge": "BUILDING SINCE 2026",
-      "title": "We build full-stack web applications",
-      "titleAccent": "with the backend work most teams outsource.",
-      "subtitle": "Real authentication, real data modeling, a backend built to hold up under real users — with AI added when it actually solves something, not because it's expected in the pitch.",
+      "title": "We build software",
+      "titleAccent": "made for the real world.",
+      "subtitle": "From scalable backends to thoughtful AI integrations, we build the technology your product needs to launch, grow, and keep up.",
       "buttons": {
         "projects": "View Projects",
         "contact": "Get a Quote"
@@ -111,12 +111,13 @@
     },
     "about": {
       "label": "Who We Are",
-      "title": "About",
-      "titleAccent": "Us",
+      "title": "We build software",
+      "titleAccent": "with purpose.",
       "paragraphs": [
-        "We build full-stack web applications — the kind with real accounts, real data, and **a backend built to survive actual users**, not a static site pretending to be one.",
-        "That includes the part most teams subcontract: authentication, session handling, data modeling. AI gets added on top when it solves something specific, not because every pitch expects one.",
-        "We keep things simple: clear answers, fair pricing, and software that actually gets used — not a technical showcase nobody asked for."
+        "We partner with ambitious businesses to design and build digital products that are thoughtful, reliable, and built to grow.",
+        "From the first idea to a production-ready product, we bring product thinking and engineering together — creating experiences that feel simple on the surface and work beautifully underneath.",
+        "We believe great software doesn't need unnecessary complexity. It needs clear thinking, strong engineering, and a genuine understanding of the people using it.",
+        "**Thoughtful design. Solid engineering. Technology that moves your business forward.**"
       ],
       "features": [
         "Fast Page Speed",
@@ -144,13 +145,13 @@
       ],
       "workLabel": "Recent Work",
       "workItems": [
-        "Rashtriya Swasthya Sangathan — a donation and outreach platform for a healthcare NGO. The one delivered, paid client project so far."
+        "Rashtriya Swasthya Sangathan — a donation and outreach platform for a healthcare NGO, delivered and paid in full."
       ],
       "workMoreText": "Also on the projects page: an unpaid concept build that was never adopted by the client, shown honestly as design work, not delivered work.",
       "workMoreLinkLabel": "See the full picture"
     },
     "homeProjectsNote": {
-      "text": "One paid, delivered client project so far — plus an early concept build that never made it to production.",
+      "text": "Real, paid client work — plus an early concept build that never made it to production.",
       "linkLabel": "See both, honestly labeled"
     },
     "devops": {

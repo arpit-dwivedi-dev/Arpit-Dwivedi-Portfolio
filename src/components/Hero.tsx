@@ -86,7 +86,7 @@ export const Hero = () => {
             {hero.badge}
           </div>
           
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.1] mb-6 whitespace-pre-line">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.1] mb-6 whitespace-pre-line">
             {hero.title} <span className="text-gradient">{hero.titleAccent}</span>
           </h1>
           
