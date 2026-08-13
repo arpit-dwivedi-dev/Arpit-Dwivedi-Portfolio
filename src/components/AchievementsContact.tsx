@@ -334,6 +334,10 @@ export const Footer = () => {
   // one-page scroll experience.
   const siteLinks = [
     { name: footer.navTools, href: withLang('/tools') },
+    // Guides/Blog are English-only (no /hi route — see App.tsx), so these
+    // two deliberately skip withLang() rather than link to a dead /hi/blog.
+    { name: footer.navGuides, href: '/guides' },
+    { name: footer.navBlog, href: '/blog' },
     { name: footer.navAbout, href: withLang('/about') },
     { name: footer.navServices, href: withLang('/services') },
     { name: footer.navContact, href: withLang('/contact') },

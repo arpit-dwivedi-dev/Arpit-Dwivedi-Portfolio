@@ -336,6 +336,8 @@ export const hiContent: SiteContent = {
     rights: 'सर्वाधिकार सुरक्षित।',
     techNote: 'आधुनिक, भरोसेमंद तकनीक पर बना।',
     navTools: 'टूल्स',
+    navGuides: 'गाइड्स',
+    navBlog: 'ब्लॉग',
     navAbout: 'हमारे बारे में',
     navServices: 'सेवाएं',
     navContact: 'संपर्क करें',
