@@ -14,7 +14,6 @@ export const hiContent: SiteContent = {
     { name: 'संपर्क करें', href: '#contact' },
   ],
   nav: {
-    ariaGithub: 'GitHub',
     ariaLinkedin: 'LinkedIn',
     ariaOpenMenu: 'मेनू खोलें',
     ariaCloseMenu: 'मेनू बंद करें',
@@ -97,7 +96,7 @@ export const hiContent: SiteContent = {
       about: '101 Tech Labs स्थानीय व्यवसायों के लिए वेबसाइट, बुकिंग सिस्टम और ऑटोमेशन बनाता है — और ज़रूरत पड़ने पर बड़े एंटरप्राइज़ सॉफ़्टवेयर प्लेटफ़ॉर्म भी।',
       skills: 'स्टैक: Angular, React, Node.js, Express, MongoDB, TypeScript, AI/LLMs, Docker, AWS.',
       projects: 'प्रोजेक्ट्स: राष्ट्रीय स्वास्थ्य संगठन (NGO डोनेशन प्लेटफ़ॉर्म), SA Ethics Biotech (मेडिकल डिवाइस निर्माता)।',
-      contact: 'ईमेल: 101techlabs@gmail.com | GitHub: @101techlabs | वेब: 101techlabs.com',
+      contact: 'ईमेल: 101techlabs@gmail.com | वेब: 101techlabs.com',
       whoami: '101 Tech Labs — एक फुल-स्टैक और AI इंजीनियरिंग प्रैक्टिस, 2026 से स्थानीय व्यवसायों को ऑनलाइन लाने में मदद कर रही है।',
       location: 'दुनियाभर के क्लाइंट्स की सेवा करते हैं, रिमोट-फर्स्ट।',
       help: 'उपलब्ध कमांड: [about, skills, projects, contact, whoami, location, clear, exit]',
@@ -223,8 +222,7 @@ export const hiContent: SiteContent = {
     description: 'हम नए प्रोजेक्ट्स, तकनीकी चुनौतियों, या ऐसे काम पर चर्चा के लिए तैयार हैं जिसमें फुल-स्टैक रेंज चाहिए — एक साधारण वेबसाइट से लेकर कहीं ज़्यादा जटिल चीज़ तक।',
     email: '101techlabs@gmail.com',
     linkedin: '101 Tech Labs',
-    linkedinUrl: 'https://www.linkedin.com/company/133407777/',
-    github: '101techlabs',
+    linkedinUrl: 'https://www.linkedin.com/company/101techlabs',
     whatsapp: {
       number: '917071520965',
       message: 'नमस्ते 101 Tech Labs',

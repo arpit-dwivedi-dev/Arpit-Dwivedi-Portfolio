@@ -1,6 +1,6 @@
 import { motion } from 'motion/react';
 import { Zap, Server, Mail, Send } from 'lucide-react';
-import { FaGithub, FaLinkedin } from 'react-icons/fa';
+import { FaLinkedin } from 'react-icons/fa';
 import { useState, FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import metadata from '../../metadata.json';
@@ -206,11 +206,10 @@ export const Contact = ({ compact = false, source }: ContactProps = {}) => {
               {contact.description}
             </p>
 
-            {/* PLACEHOLDER: contact.github below resolves to a placeholder URL (101techlabs) — confirm real profile exists before launch */}
             {/* items-start (not center): each link's width is just its own icon+text
-                content, which varies (email address vs. "101 Tech Labs" vs.
-                "101techlabs") — centering them independently put every row's icon at
-                a different x-position instead of a straight left-aligned column. */}
+                content, which varies (email address vs. "101 Tech Labs") — centering
+                them independently put every row's icon at a different x-position
+                instead of a straight left-aligned column. */}
             <div className="space-y-6 flex flex-col items-start">
               <a href={`mailto:${contact.email}`} className="flex items-center gap-4 group w-full max-w-sm lg:max-w-none">
                 <div className="w-12 h-12 rounded-xl bg-ink/5 flex items-center justify-center text-ink group-hover:bg-accent-blue group-hover:text-bg-pure transition-all">
@@ -228,15 +227,6 @@ export const Contact = ({ compact = false, source }: ContactProps = {}) => {
                 <div>
                   <div className="text-xs font-mono text-secondary-text uppercase tracking-widest">LinkedIn</div>
                   <div className="text-lg font-bold text-ink group-hover:text-accent-blue transition-colors">{contact.linkedin}</div>
-                </div>
-              </a>
-              <a href={`https://github.com/${contact.github}`} target="_blank" rel="noreferrer" className="flex items-center gap-4 group">
-                <div className="w-12 h-12 rounded-xl bg-ink/5 flex items-center justify-center text-ink group-hover:bg-accent-blue group-hover:text-bg-pure transition-all">
-                  <FaGithub size={20} />
-                </div>
-                <div>
-                  <div className="text-xs font-mono text-secondary-text uppercase tracking-widest">GitHub</div>
-                  <div className="text-lg font-bold text-ink group-hover:text-accent-blue transition-colors">{contact.github}</div>
                 </div>
               </a>
             </div>

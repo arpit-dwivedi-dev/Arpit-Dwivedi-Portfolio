@@ -3,8 +3,6 @@ import { ArrowRight, Terminal as TerminalIcon, Send } from 'lucide-react';
 import { useState, useRef, useEffect, FormEvent } from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
 
-// NOTE: contact.github/linkedin (referenced via terminalCommands.contact) resolve to
-// placeholder company URLs (101techlabs) — confirm real profiles exist before launch.
 
 export const Hero = () => {
   const { content } = useLanguage();
