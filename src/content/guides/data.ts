@@ -2983,6 +2983,93 @@ export const GUIDES: Guide[] = [
     ],
     relatedSlugs: ['cash-flow', 'accounts-receivable'],
   },
+  {
+    slug: 'how-to-make-a-qr-code',
+    title: 'How to Make a QR Code: A Step-by-Step Guide',
+    description:
+      'How to pick the right QR code type, keep it scannable after printing, and understand the difference between static and smart-redirect codes — with a practical checklist.',
+    category: 'QR Codes',
+    readTimeMinutes: 7,
+    publishedDate: '2026-08-13',
+    updatedDate: '2026-08-13',
+    intro: [
+      'A QR code is only as useful as what happens after the scan. Most of the QR codes that fail in the wild aren’t broken technically — they’re the wrong type for the job, printed too small, or built from a link that changed after the flyer already went to press.',
+      'This guide covers how to choose the right QR code type, keep it reliably scannable once it leaves your screen, and avoid the handful of mistakes that account for almost every "why won’t this scan" problem.',
+    ],
+    sections: [
+      {
+        heading: 'Picking the right QR code type',
+        paragraphs: [
+          'What a QR code actually does when someone scans it depends entirely on the type of data encoded into it — the pattern itself just carries information, so choosing the right encoding matters more than any styling choice.',
+        ],
+        bullets: [
+          'URL — opens any web page directly; the simplest and most reliable option for menus, portfolios, or landing pages.',
+          'PDF — points at a hosted PDF link (menu, brochure, resume) so it opens straight in the phone’s browser.',
+          'Multi-URL — splits scans across two or more links at random, useful for A/B testing which of several landing pages performs better.',
+          'Contact card — encodes a vCard, so scanning saves a name, phone, email, and address straight into the recipient’s contacts app with no typing.',
+          'Plain text — shows raw text on screen; good for short instructions or notes without opening any app.',
+          'App download — combines an iOS and an Android store link into one code that sends each visitor to the correct store automatically.',
+          'SMS / Email / Phone — pre-fills a text message, email draft, or dial screen so the recipient only has to hit send or call.',
+          'Social profile — links straight to a Facebook, Instagram, LinkedIn, WhatsApp, YouTube, Spotify, Telegram, or Discord profile.',
+        ],
+      },
+      {
+        heading: 'Static codes vs. smart-redirect codes',
+        paragraphs: [
+          'Most of the types above encode your data directly into the black-and-white pattern — the phone’s camera decodes the URL, text, or contact card right there, with no server involved. That’s a static QR code: it works forever, even offline, and nothing you scan is ever sent anywhere else.',
+          'Multi-URL and combined App codes work differently, because a single pattern can’t literally point at two destinations. Those two route through a small page first, which reads the destinations out of the code itself and immediately forwards the visitor — picking one link at random for Multi-URL, or checking whether the phone is iOS or Android for App links. No account or database is involved; the logic runs entirely in the visitor’s own browser off data baked into the link. The trade-off is that these two types need an internet connection to resolve, unlike a plain static code.',
+        ],
+      },
+      {
+        heading: 'Colors, contrast, and error correction',
+        paragraphs: [
+          'A QR code scans by contrast, not by color — the pattern needs to stand out clearly from its background. Dark modules on a light background scan reliably; light-on-dark or two similarly-bright colors often don’t, even if they look fine on a screen.',
+          'Error correction controls how much of the code can be damaged, dirty, or partially obscured and still scan. Higher levels are worth choosing if the code will be printed small, laminated, or handled roughly, but they also make the pattern denser — for a clean digital screen, a lower level keeps the code simpler without adding real risk.',
+        ],
+      },
+      {
+        heading: 'Sizing and placement for print',
+        paragraphs: [
+          'As a rule of thumb, a QR code needs to be roughly one-tenth of its scanning distance across — a code meant to be scanned from arm’s length (about 30 cm) should be at least 3 cm square; one on a poster read from 2 metres away needs to be closer to 20 cm.',
+          'Leave a clear quiet zone — blank space — around the whole code, at least as wide as one of its own modules. Cropping it tight against text, images, or the edge of a card is the single most common reason a code that looks fine on screen fails to scan in person.',
+        ],
+      },
+      {
+        heading: 'Test before you publish or print',
+        paragraphs: [
+          'Scan the code yourself with at least two different phones and camera apps before it goes anywhere permanent — some default camera apps read QR codes more strictly than others, and a code that works on one may not on another.',
+          'For Multi-URL and App codes specifically, test from both an iOS and an Android device to confirm each one lands on the destination you actually intended.',
+          'Because a static code bakes its destination in permanently, printing one for a link you don’t fully control yet — a "coming soon" page, an early beta URL — is a common way to end up with a stack of flyers pointing nowhere. Confirm the destination is final before it goes to print.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'Do QR codes expire?',
+        answer:
+          'No — a QR code itself doesn’t expire; it’s just a pattern encoding whatever data you gave it. What can go stale is the destination: a URL, a hosted PDF, or a phone number can change or get taken down, at which point the still-valid code just leads nowhere useful.',
+      },
+      {
+        question: 'Can I change what a QR code points to after it’s printed?',
+        answer:
+          'Not for a static code — the destination is baked into the pattern itself, so changing it means printing a new code. If you expect the destination to change later, point the code at a URL you control rather than the final page, so you can update where that URL leads without reprinting.',
+      },
+      {
+        question: 'What’s the difference between a static and a dynamic QR code?',
+        answer:
+          'A static code encodes its final destination directly and never needs a server to resolve — reliable, and it works forever, but fixed once printed. A dynamic code encodes a short link to a service that looks up and redirects to the real destination, which can be changed after printing, at the cost of depending on that service staying online.',
+      },
+      {
+        question: 'Why won’t my QR code scan?',
+        answer:
+          'Usually one of four things: not enough contrast between the code and its background, the code is too small or blurry for the scanning distance, there’s no clear blank margin around it, or — for URL and PDF codes — the underlying link itself is broken. Test-scan with more than one phone before ruling out the code itself.',
+      },
+    ],
+    relatedSlugs: [],
+    ctaText: 'Put this into practice with a real QR code.',
+    ctaToolHref: '/tools/generators/qr-code-generator',
+    ctaToolLabel: 'Try the free QR Code Generator',
+  },
 ];
 
 export const getGuideBySlug = (slug: string): Guide | undefined => GUIDES.find((guide) => guide.slug === slug);

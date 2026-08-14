@@ -116,12 +116,12 @@ export const GuidePage = () => {
           </section>
 
           <div className="mt-14 p-6 rounded-3xl glass border-ink/10 flex flex-wrap items-center justify-between gap-4">
-            <p className="text-ink font-medium">{t.ctaText}</p>
+            <p className="text-ink font-medium">{guide.ctaText ?? t.ctaText}</p>
             <Link
-              to="/tools/generators/invoice-generator"
+              to={guide.ctaToolHref ?? '/tools/generators/invoice-generator'}
               className="shrink-0 inline-flex items-center gap-2 px-5 py-3 bg-accent-blue text-bg-pure font-bold rounded-xl hover:glow-blue transition-all"
             >
-              {t.ctaButton}
+              {guide.ctaToolLabel ?? t.ctaButton}
             </Link>
           </div>
 

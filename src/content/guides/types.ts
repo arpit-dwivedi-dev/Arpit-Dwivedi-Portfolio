@@ -22,4 +22,10 @@ export interface Guide {
   sections: GuideSection[];
   faq: GuideFaqItem[];
   relatedSlugs: string[];
+  /** Overrides the guide-detail CTA copy/link/label, which otherwise
+   *  defaults to the Invoice Generator — needed for guides about a
+   *  different tool. */
+  ctaText?: string;
+  ctaToolHref?: string;
+  ctaToolLabel?: string;
 }

@@ -12,7 +12,7 @@ import { guidesIndexContent as t } from '../content/guides/pageContent';
 // Fixed display order rather than derived from data insertion order, so the
 // tab order stays intentional (most commercial-intent category first) even
 // as guides get added or reordered within data.ts.
-const CATEGORY_ORDER = ['Getting Paid', 'Document Basics', 'Client Billing', 'Business Finance'];
+const CATEGORY_ORDER = ['Getting Paid', 'Document Basics', 'Client Billing', 'Business Finance', 'QR Codes'];
 
 // English-only for now — see the App.tsx route comment for why. Still
 // renders inside the shared Navbar/Footer so language switching elsewhere
