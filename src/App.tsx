@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { HomePage } from './pages/HomePage';
 import { ScrollToHash } from './components/ScrollToHash';
 import { WhatsAppButton } from './components/WhatsAppButton';
+import { ChatBot } from './components/ChatBot';
 import { Analytics } from './components/Analytics';
 import { LanguageProvider, useLanguage } from './i18n/LanguageContext';
 import { ThemeProvider } from './theme/ThemeContext';
@@ -160,6 +161,7 @@ export default function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           <WhatsAppButton />
+          <ChatBot />
         </LanguageProvider>
       </Router>
     </ThemeProvider>

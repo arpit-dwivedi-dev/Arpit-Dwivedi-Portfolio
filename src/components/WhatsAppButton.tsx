@@ -21,11 +21,13 @@ export const WhatsAppButton = () => {
       // full-screen overlay rendered inside the navbar, and this button used
       // to tie with it on z-index and (by DOM order) paint on top, floating
       // over the open mobile menu.
-      className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-[#128C7E] flex items-center justify-center shadow-[0_0_20px_rgba(18,140,126,0.5)] text-white"
+      // Smaller on narrow screens — at full size, this stacked with ChatBot's
+      // launcher read as two oversized circles crowding a small viewport.
+      className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-40 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#128C7E] flex items-center justify-center shadow-[0_0_20px_rgba(18,140,126,0.5)] text-white"
     >
       {/* #128C7E (WhatsApp's own darker brand teal) instead of #25D366 — the white icon
           on #25D366 measured 1.98:1, failing WCAG 1.4.11's 3:1 minimum. This measures 4.14:1. */}
-      <FaWhatsapp size={28} />
+      <FaWhatsapp size={22} />
     </motion.a>
   );
 };

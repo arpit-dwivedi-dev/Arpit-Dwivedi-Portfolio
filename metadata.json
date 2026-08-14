@@ -257,6 +257,59 @@
         }
       }
     },
+    "chatbot": {
+      "openLabel": "Open chat",
+      "closeLabel": "Close chat",
+      "title": "Ira",
+      "greeting": "Hey, I'm Ira — ask about our services, pricing, or how we work. Pick a question below, or type your own.",
+      "inputPlaceholder": "Type a message…",
+      "inputAriaLabel": "Message",
+      "sendLabel": "Send message",
+      "typingLabel": "Typing…",
+      "messagesLabel": "Chat conversation",
+      "quickReplies": [
+        {
+          "question": "What do you build?",
+          "answer": "Business websites, online booking and ordering systems, workflow automation, local SEO, and full-stack application development.",
+          "keywords": ["what do you build", "what do you do", "services", "offer", "build websites", "what can you build"]
+        },
+        {
+          "question": "How much does a project cost?",
+          "answer": "It depends on scope. After a discovery call, we send a fixed-scope proposal so you know the cost upfront, before any work starts.",
+          "keywords": ["cost", "price", "pricing", "budget", "how much", "quote", "expensive", "cheap"]
+        },
+        {
+          "question": "How long does a project take?",
+          "answer": "A business website usually ships in 1–3 weeks; larger systems like booking platforms or custom software typically take 4–12 weeks depending on scope.",
+          "keywords": ["how long", "timeline", "weeks", "how fast", "duration", "when can", "turnaround"]
+        },
+        {
+          "question": "Do you build with AI?",
+          "answer": "Yes — but only when it solves a real problem, not as a default add-on. It usually shows up as a specific feature inside a larger application, not as the whole build.",
+          "keywords": ["ai", "llm", "artificial intelligence", "chatbot", "automation", "machine learning"]
+        },
+        {
+          "question": "Do you work outside India?",
+          "answer": "Yes — we work remotely with clients worldwide.",
+          "keywords": ["outside india", "worldwide", "international", "remote client", "other countries", "global", "abroad"]
+        },
+        {
+          "question": "What happens after launch?",
+          "answer": "We stay reachable for fixes, updates, and follow-up work. This isn't a build-and-disappear engagement.",
+          "keywords": ["after launch", "support", "maintenance", "bug fix", "post launch", "ongoing"]
+        }
+      ],
+      "handoff": {
+        "question": "Talk to a real person",
+        "answer": "You can reach us directly at {email}, or use the WhatsApp button on this page.",
+        "keywords": ["human", "real person", "talk to someone", "speak to", "agent", "call you", "someone real"]
+      },
+      "greetingReply": {
+        "answer": "Hey! Ask about pricing, timelines, or what we build — or tap a question below.",
+        "keywords": ["hi", "hello", "hey", "yo", "good morning", "good evening"]
+      },
+      "fallbackReply": "Good one for a real person — email {email} or message us on WhatsApp and we'll get back to you."
+    },
     "contactPage": {
       "srTitle": "Contact 101 Tech Labs",
       "heading": "Before You Reach Out",
