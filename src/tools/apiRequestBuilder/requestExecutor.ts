@@ -6,6 +6,9 @@ import { validateUrl } from './urlUtils';
 export interface ExecuteOptions {
   timeoutMs?: number;
   signal?: AbortSignal;
+  /** Rewrites the resolved target URL (e.g. to route through an opt-in CORS proxy) right
+   *  before fetch — kept separate from resolveRequest so cURL export never includes it. */
+  rewriteUrl?: (url: string) => string;
 }
 
 const DEFAULT_TIMEOUT_MS = 30_000;
@@ -58,9 +61,11 @@ export const executeRequest = async (request: ApiRequest, options: ExecuteOption
   const onExternalAbort = () => controller.abort();
   externalSignal?.addEventListener('abort', onExternalAbort);
 
+  const fetchUrl = options.rewriteUrl ? options.rewriteUrl(resolved.url) : resolved.url;
+
   const start = performance.now();
   try {
-    const response = await fetch(resolved.url, {
+    const response = await fetch(fetchUrl, {
       method: request.method,
       headers: resolved.headers,
       body: resolved.bodyInit,
@@ -102,7 +107,7 @@ export const executeRequest = async (request: ApiRequest, options: ExecuteOption
       throw new RequestExecutionError({
         kind: 'network-or-cors',
         message:
-          'The request failed before a response came back. This is almost always either a network problem (no connection, DNS failure, the server is down) or your browser blocking the request because the API does not allow requests from this origin (CORS). The browser does not expose enough detail to tell which — check the Network tab in DevTools for more.',
+          'The request failed before a response came back. This is almost always either a network problem (no connection, DNS failure, the server is down) or your browser blocking the request because the API does not allow requests from this origin (CORS). The browser does not expose enough detail to tell which — check the Network tab in DevTools for more. If it is CORS, you can opt into routing this request through a proxy from the CORS Proxy button in the toolbar.',
       });
     }
     const message = err instanceof Error ? err.message : 'Something went wrong sending this request.';

@@ -6,6 +6,7 @@ import {
   Copy,
   Download,
   Loader2,
+  Route,
   Send,
   Timer,
   WifiOff,
@@ -22,6 +23,8 @@ interface ResponseViewerProps {
   response: ApiResponse | null;
   error: RequestFailure | null;
   elapsedMs: number | null;
+  /** Origin of the proxy this response actually came through, if the direct request was blocked and 'auto' mode fell back to one. */
+  viaProxy: string | null;
   onCancel: () => void;
 }
 
@@ -37,7 +40,7 @@ const ERROR_COPY: Record<RequestFailure['kind'], { title: string; icon: typeof A
 type BodyView = 'pretty' | 'raw';
 type ResponseTab = 'body' | 'headers';
 
-export const ResponseViewer = ({ sending, response, error, elapsedMs, onCancel }: ResponseViewerProps) => {
+export const ResponseViewer = ({ sending, response, error, elapsedMs, viaProxy, onCancel }: ResponseViewerProps) => {
   const [tab, setTab] = useState<ResponseTab>('body');
   const [bodyView, setBodyView] = useState<BodyView>('pretty');
   const [copied, setCopied] = useState(false);
@@ -127,6 +130,15 @@ export const ResponseViewer = ({ sending, response, error, elapsedMs, onCancel }
           <span className="inline-flex items-center gap-1 text-amber-400 text-xs">
             <AlertTriangle size={12} aria-hidden="true" />
             Truncated for display
+          </span>
+        )}
+        {viaProxy && (
+          <span
+            className="inline-flex items-center gap-1 text-amber-400 text-xs"
+            title="The direct request was blocked (CORS/network); this response came back through a public proxy instead."
+          >
+            <Route size={12} aria-hidden="true" />
+            via {viaProxy}
           </span>
         )}
       </div>

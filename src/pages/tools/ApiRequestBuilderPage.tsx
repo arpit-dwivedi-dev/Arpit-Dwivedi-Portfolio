@@ -1,10 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
+import { Link } from 'react-router-dom';
+import { QRCodeSVG } from 'qrcode.react';
 import {
+  BookOpen,
   Check,
   ClipboardPaste,
+  Coffee,
   Copy,
   History,
+  Route,
   Save,
   Send as SendIcon,
   ShieldCheck,
@@ -30,9 +35,14 @@ import {
   upsertSavedRequest,
   renameSavedRequest,
   deleteSavedRequest,
+  getCorsProxySettings,
+  saveCorsProxySettings,
 } from '../../tools/apiRequestBuilder/storage';
+import { resolveCustomProxy, type CorsProxySettings } from '../../tools/apiRequestBuilder/corsProxy';
+import { CorsProxyModal } from '../../components/tools/apiRequestBuilder/CorsProxyModal';
 import { nextId, type ApiRequest, type HistoryEntry, type SavedRequest } from '../../tools/apiRequestBuilder/types';
 import { generateCurlCommand } from '../../tools/apiRequestBuilder/curlGenerator';
+import { parseCurlCommand } from '../../tools/apiRequestBuilder/curlParser';
 import { buildUrlWithParams, decodeUrlComponent, encodeUrlComponent, splitUrlIntoParams, validateUrl } from '../../tools/apiRequestBuilder/urlUtils';
 import { MethodSelect } from '../../components/tools/apiRequestBuilder/MethodSelect';
 import { RequestTabs } from '../../components/tools/apiRequestBuilder/RequestTabs';
@@ -45,11 +55,19 @@ import { HistoryList } from '../../components/tools/apiRequestBuilder/HistoryLis
 import { SavedRequestsList } from '../../components/tools/apiRequestBuilder/SavedRequestsList';
 import { SaveRequestModal } from '../../components/tools/apiRequestBuilder/SaveRequestModal';
 import { CurlImportModal } from '../../components/tools/apiRequestBuilder/CurlImportModal';
+import { Modal } from '../../components/tools/apiRequestBuilder/Modal';
 import { smallButtonClass } from '../../components/tools/apiRequestBuilder/sharedClasses';
 
 const TOOL = TOOLS.find((t) => t.id === 'api-request-builder')!;
 const TOOL_CATEGORY = getToolCategory(TOOL.category)!;
 const SITE_ORIGIN = 'https://101techlabs.com';
+
+// Same UPI details used on the other free-tool pages (QR Code Generator, Invoice
+// Generator) — duplicated per-page rather than shared, matching that convention.
+const UPI_ID = 'marpit697.ad@ybl';
+const UPI_NUMBER = '7071520965';
+const UPI_PAYEE_NAME = 'Arpit Dwivedi';
+const UPI_LINK = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(UPI_PAYEE_NAME)}&cu=INR`;
 
 type DrawerTab = 'history' | 'saved';
 
@@ -65,13 +83,42 @@ export const ApiRequestBuilderPage = () => {
   const [drawerTab, setDrawerTab] = useState<DrawerTab>('history');
   const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [curlModalOpen, setCurlModalOpen] = useState(false);
+  const [corsProxyModalOpen, setCorsProxyModalOpen] = useState(false);
+  const [corsProxySettings, setCorsProxySettings] = useState<CorsProxySettings>(getCorsProxySettings);
+  const [coffeeModalOpen, setCoffeeModalOpen] = useState(false);
+  const [copiedUpiField, setCopiedUpiField] = useState<'upi' | 'number' | null>(null);
   const [currentSavedId, setCurrentSavedId] = useState<string | null>(null);
   const [urlCopied, setUrlCopied] = useState(false);
   const [curlCopied, setCurlCopied] = useState(false);
+  const [pasteNotice, setPasteNotice] = useState<{ tone: 'ok' | 'error'; message: string } | null>(null);
   const urlInputRef = useRef<HTMLInputElement>(null);
+  const pasteNoticeTimeoutRef = useRef<number | null>(null);
+
+  const handleCopyUpi = (field: 'upi' | 'number', value: string) => {
+    navigator.clipboard.writeText(value).catch(() => {});
+    setCopiedUpiField(field);
+    window.setTimeout(() => setCopiedUpiField(null), 1500);
+  };
+
+  const showPasteNotice = (tone: 'ok' | 'error', message: string) => {
+    setPasteNotice({ tone, message });
+    if (pasteNoticeTimeoutRef.current) window.clearTimeout(pasteNoticeTimeoutRef.current);
+    pasteNoticeTimeoutRef.current = window.setTimeout(() => setPasteNotice(null), 5000);
+  };
+
+  const customProxy = resolveCustomProxy(corsProxySettings);
+
+  const handleCorsProxySettingsChange = (next: CorsProxySettings) => {
+    setCorsProxySettings(next);
+    saveCorsProxySettings(next);
+  };
 
   const refreshHistory = () => setHistory(listHistory());
   const refreshSaved = () => setSaved(listSavedRequests());
+
+  useEffect(() => () => {
+    if (pasteNoticeTimeoutRef.current) window.clearTimeout(pasteNoticeTimeoutRef.current);
+  }, []);
 
   useEffect(() => {
     refreshHistory();
@@ -85,7 +132,7 @@ export const ApiRequestBuilderPage = () => {
       if (!meta) return;
       if (e.key === 'Enter') {
         e.preventDefault();
-        builder.send();
+        void builder.send(corsProxySettings).then(refreshHistory);
       } else if (e.key.toLowerCase() === 's') {
         e.preventDefault();
         setSaveModalOpen(true);
@@ -98,14 +145,35 @@ export const ApiRequestBuilderPage = () => {
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [builder.send]);
+  }, [builder.send, corsProxySettings]);
 
   const handleSend = () => {
-    void builder.send().then(refreshHistory);
+    void builder.send(corsProxySettings).then(refreshHistory);
   };
 
   const handleUrlPaste = (e: { clipboardData: DataTransfer; preventDefault: () => void }) => {
     const pasted = e.clipboardData.getData('text');
+    const trimmed = pasted.trim();
+
+    // Pasting a whole curl command into the URL bar sets up the entire request —
+    // method, headers, body, auth — not just the URL, same as the Import cURL modal.
+    if (/^curl\s/i.test(trimmed)) {
+      e.preventDefault();
+      const result = parseCurlCommand(trimmed);
+      if (result.ok && result.request) {
+        handleCurlImport(result.request);
+        showPasteNotice(
+          'ok',
+          result.warnings.length > 0
+            ? `Imported from pasted curl command — ${result.warnings.join(' ')}`
+            : 'Imported method, headers, body, and auth from the pasted curl command.',
+        );
+      } else {
+        showPasteNotice('error', result.error ?? "Couldn't parse that as a curl command.");
+      }
+      return;
+    }
+
     if (!pasted.includes('?')) return;
     e.preventDefault();
     const { base, params } = splitUrlIntoParams(pasted);
@@ -243,16 +311,66 @@ export const ApiRequestBuilderPage = () => {
             </div>
           </motion.div>
 
-          <div
-            role="status"
-            className="flex items-start gap-2 px-3 py-2 rounded-xl bg-accent-blue/5 border border-accent-blue/20 mb-4 text-xs text-secondary-text leading-snug"
-          >
-            <ShieldCheck size={14} className="text-accent-blue shrink-0 mt-0.5" aria-hidden="true" />
-            <p>
-              <strong className="text-ink">Runs entirely in your browser.</strong> Requests are sent directly to the target API via{' '}
-              <code className="font-mono text-ink">fetch()</code> — nothing passes through our servers. History and saved requests are
-              stored only in this browser's local storage.
-            </p>
+          {/* Method + URL + Send — the tool itself, front and center before any notes */}
+          <div className="flex items-stretch mb-1">
+            <MethodSelect value={builder.request.method} onChange={builder.setMethod} />
+            <div className="flex-1 relative">
+              <input
+                ref={urlInputRef}
+                type="text"
+                value={builder.request.url}
+                onChange={(e) => builder.setUrl(e.target.value)}
+                onPaste={handleUrlPaste}
+                placeholder="https://api.example.com/endpoint — or paste a curl command"
+                title="You can also paste a full curl command here to import method, headers, body, and auth all at once."
+                aria-label="Request URL"
+                aria-invalid={!urlValidation.valid}
+                spellCheck={false}
+                className="w-full h-full border-y border-ink/10 bg-ink/[0.03] focus:bg-ink/5 focus:border-accent-blue px-3 py-2.5 text-sm font-mono text-ink placeholder:text-secondary-text/50 focus:outline-none transition-colors"
+              />
+            </div>
+            {builder.sending ? (
+              <button
+                type="button"
+                onClick={builder.cancel}
+                className="shrink-0 flex items-center gap-2 px-5 py-2.5 border border-red-400/30 bg-red-400/10 text-red-400 font-bold text-sm hover:bg-red-400/20 transition-colors"
+              >
+                <X size={15} aria-hidden="true" />
+                Cancel
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleSend}
+                disabled={!builder.request.url.trim()}
+                className="shrink-0 flex items-center gap-2 px-5 py-2.5 bg-accent-blue text-bg-pure font-bold text-sm hover:glow-blue transition-all disabled:opacity-40 disabled:pointer-events-none"
+              >
+                <SendIcon size={15} aria-hidden="true" />
+                Send
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setCoffeeModalOpen(true)}
+              title="Buy me a coffee"
+              aria-label="Buy me a coffee"
+              className="shrink-0 flex items-center px-3 rounded-r-xl border-y border-r border-[#FFDD00]/30 bg-[#FFDD00]/10 text-[#FFDD00] hover:bg-[#FFDD00]/20 transition-colors"
+            >
+              <Coffee size={16} aria-hidden="true" />
+            </button>
+          </div>
+          {!urlValidation.valid && <p className="text-xs text-red-400 mb-3">{urlValidation.error}</p>}
+          {urlValidation.valid && pasteNotice && (
+            <p className={`text-xs mb-3 ${pasteNotice.tone === 'ok' ? 'text-emerald-400' : 'text-red-400'}`}>{pasteNotice.message}</p>
+          )}
+          {urlValidation.valid && !pasteNotice && <div className="mb-3" />}
+
+          <div className="flex items-center justify-between mb-3">
+            <button type="button" onClick={() => setSaveModalOpen(true)} className={smallButtonClass}>
+              <Save size={13} aria-hidden="true" />
+              {currentSavedId ? `Update "${currentSavedName}"` : 'Save'}
+            </button>
+            <span className="text-[11px] font-mono text-secondary-text hidden sm:inline">Ctrl/Cmd+Enter to send · Ctrl/Cmd+S to save</span>
           </div>
 
           {/* Toolbar */}
@@ -299,56 +417,39 @@ export const ApiRequestBuilderPage = () => {
               <Trash2 size={13} aria-hidden="true" />
               Clear
             </button>
-          </div>
-
-          {/* Method + URL + Send */}
-          <div className="flex items-stretch mb-1">
-            <MethodSelect value={builder.request.method} onChange={builder.setMethod} />
-            <div className="flex-1 relative">
-              <input
-                ref={urlInputRef}
-                type="text"
-                value={builder.request.url}
-                onChange={(e) => builder.setUrl(e.target.value)}
-                onPaste={handleUrlPaste}
-                placeholder="https://api.example.com/endpoint"
-                aria-label="Request URL"
-                aria-invalid={!urlValidation.valid}
-                spellCheck={false}
-                className="w-full h-full border-y border-ink/10 bg-ink/[0.03] focus:bg-ink/5 focus:border-accent-blue px-3 py-2.5 text-sm font-mono text-ink placeholder:text-secondary-text/50 focus:outline-none transition-colors"
-              />
-            </div>
-            {builder.sending ? (
-              <button
-                type="button"
-                onClick={builder.cancel}
-                className="shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-r-xl bg-red-400/10 border border-red-400/30 text-red-400 font-bold text-sm hover:bg-red-400/20 transition-colors"
-              >
-                <X size={15} aria-hidden="true" />
-                Cancel
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleSend}
-                disabled={!builder.request.url.trim()}
-                className="shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-r-xl bg-accent-blue text-bg-pure font-bold text-sm hover:glow-blue transition-all disabled:opacity-40 disabled:pointer-events-none"
-              >
-                <SendIcon size={15} aria-hidden="true" />
-                Send
-              </button>
-            )}
-          </div>
-          {!urlValidation.valid && <p className="text-xs text-red-400 mb-3">{urlValidation.error}</p>}
-          {urlValidation.valid && <div className="mb-3" />}
-
-          <div className="flex items-center justify-between mb-4">
-            <button type="button" onClick={() => setSaveModalOpen(true)} className={smallButtonClass}>
-              <Save size={13} aria-hidden="true" />
-              {currentSavedId ? `Update "${currentSavedName}"` : 'Save'}
+            <button
+              type="button"
+              onClick={() => setCorsProxyModalOpen(true)}
+              className={`${smallButtonClass} ${customProxy ? '!border-amber-400/40 !text-amber-400' : ''}`}
+            >
+              <Route size={13} aria-hidden="true" />
+              CORS Proxy
+              {customProxy ? ': On' : corsProxySettings.mode === 'auto' ? ': Auto' : ': Off'}
             </button>
-            <span className="text-[11px] font-mono text-secondary-text hidden sm:inline">Ctrl/Cmd+Enter to send · Ctrl/Cmd+S to save</span>
+            <Link to={lang === 'hi' ? '/hi' : '/guides'} className={smallButtonClass}>
+              <BookOpen size={13} aria-hidden="true" />
+              Guide
+            </Link>
           </div>
+
+          {/* Trust/status notes — kept short and below the tool itself, not ahead of it. */}
+          <p className="text-xs text-secondary-text mb-4 leading-snug">
+            <ShieldCheck size={12} className="inline -mt-0.5 mr-1 text-accent-blue" aria-hidden="true" />
+            Sent directly from your browser via <code className="font-mono text-ink">fetch()</code> — nothing passes through our
+            servers; history/saved requests stay in local storage.
+            {customProxy && (
+              <>
+                {' '}
+                <span className="text-amber-400/90">
+                  <Route size={12} className="inline -mt-0.5 mr-1" aria-hidden="true" />
+                  CORS proxy active — every request currently routes through <code className="font-mono">{customProxy.origin}</code>.{' '}
+                  <button type="button" onClick={() => setCorsProxyModalOpen(true)} className="underline hover:text-amber-300">
+                    Change
+                  </button>
+                </span>
+              </>
+            )}
+          </p>
 
           {showEmptyState ? (
             <div className="rounded-2xl border border-ink/10 bg-bg-secondary/40 p-6 mb-8">
@@ -438,6 +539,7 @@ export const ApiRequestBuilderPage = () => {
                   response={builder.response}
                   error={builder.error}
                   elapsedMs={builder.elapsedMs}
+                  viaProxy={builder.viaProxy}
                   onCancel={builder.cancel}
                 />
               </div>
@@ -447,7 +549,11 @@ export const ApiRequestBuilderPage = () => {
           <p className="text-xs text-secondary-text mt-8 leading-relaxed max-w-2xl">
             If a request fails immediately with no response, your browser most likely blocked it because the target API does not
             allow requests from this origin (CORS) — or there's a network issue reaching it. This is a browser/API configuration
-            constraint, not a bug in this tool; there is no proxy here to route around it.
+            constraint, not a bug in this tool. By default nothing routes around it — you can opt into a{' '}
+            <button type="button" onClick={() => setCorsProxyModalOpen(true)} className="underline hover:text-ink">
+              CORS proxy
+            </button>{' '}
+            from the toolbar above, which sends the request through a server you choose instead of directly from your browser.
           </p>
         </div>
       </main>
@@ -500,6 +606,68 @@ export const ApiRequestBuilderPage = () => {
       />
 
       <CurlImportModal open={curlModalOpen} onClose={() => setCurlModalOpen(false)} onImport={handleCurlImport} />
+
+      <CorsProxyModal
+        open={corsProxyModalOpen}
+        onClose={() => setCorsProxyModalOpen(false)}
+        settings={corsProxySettings}
+        onChange={handleCorsProxySettingsChange}
+      />
+
+      <Modal
+        open={coffeeModalOpen}
+        onClose={() => setCoffeeModalOpen(false)}
+        titleId="api-builder-upi-heading"
+        title={
+          <span className="flex items-center gap-2">
+            <Coffee size={18} className="text-[#FFDD00]" aria-hidden="true" />
+            Buy me a coffee
+          </span>
+        }
+        maxWidthClassName="max-w-sm"
+      >
+        <p className="text-sm text-secondary-text mb-4">
+          This tool is free, with no signup and no ads gating it. If it saved you time, a coffee is always appreciated.
+        </p>
+
+        <div className="flex justify-center mb-4">
+          <div className="p-3 rounded-2xl bg-white">
+            <QRCodeSVG value={UPI_LINK} size={180} bgColor="#ffffff" fgColor="#000000" level="M" includeMargin={false} />
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <div className="flex items-center justify-between gap-2 px-4 py-3 rounded-xl bg-ink/5">
+            <div className="min-w-0">
+              <p className="text-xs font-mono text-secondary-text">UPI ID</p>
+              <p className="text-sm font-bold text-ink truncate">{UPI_ID}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => handleCopyUpi('upi', UPI_ID)}
+              className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-accent-blue/10 text-accent-blue text-xs font-bold hover:bg-accent-blue/20 transition-all"
+            >
+              {copiedUpiField === 'upi' ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
+              {copiedUpiField === 'upi' ? 'Copied' : 'Copy'}
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between gap-2 px-4 py-3 rounded-xl bg-ink/5">
+            <div className="min-w-0">
+              <p className="text-xs font-mono text-secondary-text">UPI Number</p>
+              <p className="text-sm font-bold text-ink truncate">{UPI_NUMBER}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => handleCopyUpi('number', UPI_NUMBER)}
+              className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-accent-blue/10 text-accent-blue text-xs font-bold hover:bg-accent-blue/20 transition-all"
+            >
+              {copiedUpiField === 'number' ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
+              {copiedUpiField === 'number' ? 'Copied' : 'Copy'}
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

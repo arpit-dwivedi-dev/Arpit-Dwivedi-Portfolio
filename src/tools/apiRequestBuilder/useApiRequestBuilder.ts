@@ -15,8 +15,14 @@ import {
 } from './types';
 import { executeRequest, RequestExecutionError } from './requestExecutor';
 import { addHistoryEntry } from './storage';
+import { buildProxiedUrl, eligiblePoolCandidates, proxyOrigin, resolveCustomProxy, type CorsProxySettings } from './corsProxy';
 
 export type RequestTab = 'params' | 'headers' | 'body' | 'auth';
+
+const toFailure = (err: unknown): RequestFailure =>
+  err instanceof RequestExecutionError
+    ? { kind: err.kind, message: err.message }
+    : { kind: 'unknown', message: err instanceof Error ? err.message : 'Something went wrong.' };
 
 export const useApiRequestBuilder = (initial?: ApiRequest) => {
   const [request, setRequest] = useState<ApiRequest>(initial ?? createBlankRequest());
@@ -25,6 +31,9 @@ export const useApiRequestBuilder = (initial?: ApiRequest) => {
   const [response, setResponse] = useState<ApiResponse | null>(null);
   const [error, setError] = useState<RequestFailure | null>(null);
   const [elapsedMs, setElapsedMs] = useState<number | null>(null);
+  /** Origin of the proxy actually used for the last successful send, if any — surfaced in the UI so a
+   *  fallback through a third party is never invisible, even though it happens automatically in 'auto' mode. */
+  const [viaProxy, setViaProxy] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
   const loadRequest = useCallback((next: ApiRequest) => {
@@ -32,6 +41,7 @@ export const useApiRequestBuilder = (initial?: ApiRequest) => {
     setResponse(null);
     setError(null);
     setElapsedMs(null);
+    setViaProxy(null);
   }, []);
 
   const resetRequest = useCallback(() => {
@@ -94,18 +104,19 @@ export const useApiRequestBuilder = (initial?: ApiRequest) => {
 
   const setAuth = useCallback((auth: Authentication) => setRequest((r) => ({ ...r, auth })), []);
 
-  const send = useCallback(async () => {
+  const send = useCallback(async (proxySettings: CorsProxySettings) => {
     if (sending) return;
     const controller = new AbortController();
     abortRef.current = controller;
     setSending(true);
     setError(null);
     setResponse(null);
+    setViaProxy(null);
     const startedAt = Date.now();
 
-    try {
-      const result = await executeRequest(request, { signal: controller.signal });
+    const recordSuccess = (result: ApiResponse, proxyOriginUsed: string | null) => {
       setResponse(result);
+      setViaProxy(proxyOriginUsed);
       addHistoryEntry({
         id: nextId(),
         timestamp: startedAt,
@@ -114,15 +125,84 @@ export const useApiRequestBuilder = (initial?: ApiRequest) => {
         statusText: result.statusText,
         timeMs: result.timeMs,
       });
-    } catch (err) {
-      const failure: RequestFailure =
-        err instanceof RequestExecutionError
-          ? { kind: err.kind, message: err.message }
-          : { kind: 'unknown', message: err instanceof Error ? err.message : 'Something went wrong.' };
+    };
+
+    const recordFailure = (failure: RequestFailure) => {
       setError(failure);
       setElapsedMs(Date.now() - startedAt);
       if (failure.kind !== 'aborted') {
         addHistoryEntry({ id: nextId(), timestamp: startedAt, request, error: failure.message });
+      }
+    };
+
+    try {
+      const customProxy = resolveCustomProxy(proxySettings);
+      if (customProxy) {
+        // The user's own infrastructure — used up front for every request while
+        // configured, unlike the pool fallback below which only kicks in on failure.
+        const result = await executeRequest(request, {
+          signal: controller.signal,
+          rewriteUrl: (url) => buildProxiedUrl(customProxy.template, url),
+        });
+        recordSuccess(result, customProxy.origin);
+        return;
+      }
+
+      if (proxySettings.mode !== 'auto') {
+        // 'off', or 'custom' selected with no URL filled in yet — direct only, no fallback.
+        const result = await executeRequest(request, { signal: controller.signal });
+        recordSuccess(result, null);
+        return;
+      }
+
+      // 'auto' — try direct first so a working API never gets routed through a third party.
+      try {
+        const result = await executeRequest(request, { signal: controller.signal });
+        recordSuccess(result, null);
+        return;
+      } catch (directErr) {
+        const directFailure = toFailure(directErr);
+        if (directFailure.kind !== 'network-or-cors' || controller.signal.aborted) {
+          recordFailure(directFailure);
+          return;
+        }
+
+        const hasHeaders = request.headers.some((h) => h.enabled && h.key.trim() !== '');
+        const hasAuth = request.auth.type !== 'none';
+        const candidates = eligiblePoolCandidates(request.method, hasHeaders || hasAuth);
+
+        if (candidates.length === 0) {
+          recordFailure({
+            kind: 'network-or-cors',
+            message: `${directFailure.message} No available public proxy can safely forward this request (custom headers, auth, or a non-GET method) — configure your own private proxy in CORS Proxy settings for full control.`,
+          });
+          return;
+        }
+
+        for (const candidate of candidates) {
+          try {
+            const result = await executeRequest(request, {
+              signal: controller.signal,
+              timeoutMs: 12_000,
+              rewriteUrl: (url) => buildProxiedUrl(candidate.template, url),
+            });
+            recordSuccess(result, proxyOrigin(candidate.template));
+            return;
+          } catch (proxyErr) {
+            if (controller.signal.aborted) {
+              recordFailure({ kind: 'aborted', message: 'Request cancelled.' });
+              return;
+            }
+            void proxyErr; // try the next candidate
+          }
+        }
+
+        recordFailure({
+          kind: 'network-or-cors',
+          message: `Direct request was blocked, and the public CORS proxy fallback (${candidates
+            .map((c) => c.label)
+            .join(', ')}) also failed or was unreachable. Try again in a moment, or configure your own private proxy in CORS Proxy settings.`,
+        });
       }
     } finally {
       setSending(false);
@@ -142,6 +222,7 @@ export const useApiRequestBuilder = (initial?: ApiRequest) => {
     response,
     error,
     elapsedMs,
+    viaProxy,
     loadRequest,
     resetRequest,
     setMethod,

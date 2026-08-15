@@ -1,10 +1,12 @@
 import type { ApiRequest, HistoryEntry, SavedRequest } from './types';
+import { DEFAULT_CORS_PROXY_SETTINGS, type CorsProxySettings } from './corsProxy';
 
 // Versioned keys — bumping the suffix (not migrating in place) is deliberate:
 // this tool has no backend to run a migration against, so a shape change
 // just starts fresh rather than risk crashing on old records.
 const HISTORY_KEY = '101tl_api_builder_history_v1';
 const SAVED_KEY = '101tl_api_builder_saved_v1';
+const CORS_PROXY_KEY = '101tl_api_builder_cors_proxy_v1';
 const MAX_HISTORY_ENTRIES = 50;
 
 const readJson = <T,>(key: string, fallback: T): T => {
@@ -98,3 +100,9 @@ export const deleteSavedRequest = (id: string): void => {
   const all = readJson<SavedRequest[]>(SAVED_KEY, []).filter((existing) => existing.id !== id);
   writeJson(SAVED_KEY, all);
 };
+
+// Off by default, and only ever changed by an explicit action in the CORS
+// Proxy settings modal — never flipped on implicitly.
+export const getCorsProxySettings = (): CorsProxySettings => readJson(CORS_PROXY_KEY, DEFAULT_CORS_PROXY_SETTINGS);
+
+export const saveCorsProxySettings = (settings: CorsProxySettings): void => writeJson(CORS_PROXY_KEY, settings);
