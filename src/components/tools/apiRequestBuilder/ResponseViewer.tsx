@@ -200,7 +200,7 @@ export const ResponseViewer = ({ sending, response, error, elapsedMs, viaProxy, 
           ) : response.isJson && parsedJson !== null && bodyView === 'pretty' ? (
             <JsonTreeView data={parsedJson as never} />
           ) : (
-            <pre className="text-[13px] font-mono text-ink whitespace-pre-wrap break-all leading-relaxed">{response.body}</pre>
+            <pre className="text-[13px] font-mono text-ink whitespace-pre-wrap break-words leading-relaxed">{response.body}</pre>
           )}
         </div>
       )}

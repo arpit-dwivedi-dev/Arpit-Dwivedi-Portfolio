@@ -40,7 +40,7 @@ export const HistoryList = ({ entries, onLoad, onDelete, onClear }: HistoryListP
               type="button"
               onClick={() => onDelete(entry.id)}
               aria-label="Delete history entry"
-              className="shrink-0 p-2 mr-1 rounded-lg text-secondary-text opacity-0 group-hover:opacity-100 hover:text-red-400 hover:bg-red-400/10 transition-all"
+              className="shrink-0 p-2 mr-1 rounded-lg text-secondary-text hover:text-red-400 hover:bg-red-400/10 transition-colors"
             >
               <Trash2 size={14} aria-hidden="true" />
             </button>

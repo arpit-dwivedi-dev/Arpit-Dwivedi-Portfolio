@@ -89,8 +89,11 @@ interface JsonTreeViewProps {
   data: JsonValue;
 }
 
+// whitespace-pre (no wrap) rather than pre-wrap/break-all: long unbroken values like
+// URL paths stay intact and scroll horizontally with the panel instead of splitting
+// mid-word, matching how VS Code and browser devtools render long JSON lines.
 export const JsonTreeView = ({ data }: JsonTreeViewProps) => (
-  <div className="font-mono text-[13px] leading-relaxed whitespace-pre-wrap break-all">
+  <div className="font-mono text-[13px] leading-relaxed whitespace-pre">
     <JsonNode value={data} depth={0} />
   </div>
 );

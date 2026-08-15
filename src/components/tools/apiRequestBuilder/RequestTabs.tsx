@@ -37,7 +37,7 @@ export const RequestTabs = ({ active, onChange, paramsCount, headersCount, bodyA
             aria-selected={isActive}
             aria-controls={`tabpanel-${tab.id}`}
             onClick={() => onChange(tab.id)}
-            className={`relative flex items-center gap-1.5 px-4 py-2.5 text-sm font-mono font-medium transition-colors ${
+            className={`relative flex items-center gap-1.5 px-4 py-3 sm:py-2.5 text-sm font-mono font-medium transition-colors ${
               isActive ? 'text-accent-blue' : 'text-secondary-text hover:text-ink'
             }`}
           >

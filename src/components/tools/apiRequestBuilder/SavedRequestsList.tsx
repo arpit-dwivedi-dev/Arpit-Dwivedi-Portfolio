@@ -66,7 +66,7 @@ export const SavedRequestsList = ({ items, onLoad, onRename, onDelete }: SavedRe
                 type="button"
                 onClick={() => startEditing(item)}
                 aria-label="Rename saved request"
-                className="shrink-0 p-2 rounded-lg text-secondary-text opacity-0 group-hover:opacity-100 hover:text-ink hover:bg-ink/10 transition-all"
+                className="shrink-0 p-2 rounded-lg text-secondary-text hover:text-ink hover:bg-ink/10 transition-colors"
               >
                 <Pencil size={14} aria-hidden="true" />
               </button>
@@ -74,7 +74,7 @@ export const SavedRequestsList = ({ items, onLoad, onRename, onDelete }: SavedRe
                 type="button"
                 onClick={() => onDelete(item.id)}
                 aria-label="Delete saved request"
-                className="shrink-0 p-2 mr-1 rounded-lg text-secondary-text opacity-0 group-hover:opacity-100 hover:text-red-400 hover:bg-red-400/10 transition-all"
+                className="shrink-0 p-2 mr-1 rounded-lg text-secondary-text hover:text-red-400 hover:bg-red-400/10 transition-colors"
               >
                 <Trash2 size={14} aria-hidden="true" />
               </button>

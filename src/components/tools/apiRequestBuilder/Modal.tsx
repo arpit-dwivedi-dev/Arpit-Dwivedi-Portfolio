@@ -39,7 +39,7 @@ export const Modal = ({ open, onClose, titleId, title, children, maxWidthClassNa
             aria-modal="true"
             aria-labelledby={titleId}
             onClick={(e) => e.stopPropagation()}
-            className={`w-full ${maxWidthClassName} rounded-2xl bg-bg-secondary border border-ink/10 p-6 shadow-2xl max-h-[85vh] overflow-y-auto scrollbar-thin`}
+            className={`w-full ${maxWidthClassName} rounded-2xl bg-bg-secondary border border-ink/10 p-4 sm:p-6 shadow-2xl max-h-[85dvh] overflow-y-auto scrollbar-thin`}
           >
             <div className="flex items-center justify-between mb-4">
               <h3 id={titleId} className="text-lg font-bold text-ink">

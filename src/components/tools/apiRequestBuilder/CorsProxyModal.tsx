@@ -23,13 +23,12 @@ const MODE_COPY: Record<CorsProxyMode, string> = {
 
 export const CorsProxyModal = ({ open, onClose, settings, onChange }: CorsProxyModalProps) => (
   <Modal open={open} onClose={onClose} titleId="cors-proxy-heading" title="CORS proxy" maxWidthClassName="max-w-xl">
-    <div className="flex items-start gap-2 rounded-lg border border-amber-400/25 bg-amber-400/5 p-2.5 mb-3 text-xs text-amber-400/90 leading-snug">
+    <div className="flex items-start gap-2 rounded-lg border border-amber-400/25 bg-amber-400/5 p-2 sm:p-2.5 mb-2.5 sm:mb-3 text-xs text-amber-400/90 leading-snug">
       <AlertTriangle size={14} className="shrink-0 mt-0.5" aria-hidden="true" />
       <p>
-        <strong className="text-amber-300">Use your own private proxy for real credentials.</strong> Any proxy — including the
-        automatic public fallback in Auto mode — can see this request's URL, headers, and body, including tokens in the{' '}
-        <strong>Auth tab</strong>. Free public proxies can also be slow or go down without notice (it happened during our testing).
-        Don't rely on one for anything sensitive; self-host instead (options below).
+        <strong className="text-amber-300">Use your own proxy for real credentials.</strong> Any proxy — including the public
+        Auto fallback — can see this request's URL, headers, and body (<strong>Auth tab</strong> tokens included). Public proxies
+        can be slow or go down. Self-host for anything sensitive (options below).
       </p>
     </div>
 
@@ -38,11 +37,11 @@ export const CorsProxyModal = ({ open, onClose, settings, onChange }: CorsProxyM
       <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="CORS proxy mode">
         {(
           [
-            ['off', 'Off'],
-            ['auto', 'Auto (recommended)'],
-            ['custom', 'Custom URL'],
-          ] as Array<[CorsProxyMode, string]>
-        ).map(([mode, label]) => (
+            ['off', 'Off', ''],
+            ['auto', 'Auto', ' (recommended)'],
+            ['custom', 'Custom URL', ''],
+          ] as Array<[CorsProxyMode, string, string]>
+        ).map(([mode, label, suffix]) => (
           <button
             key={mode}
             type="button"
@@ -56,6 +55,7 @@ export const CorsProxyModal = ({ open, onClose, settings, onChange }: CorsProxyM
             }`}
           >
             {label}
+            {suffix && <span className="hidden sm:inline">{suffix}</span>}
           </button>
         ))}
       </div>
@@ -63,7 +63,7 @@ export const CorsProxyModal = ({ open, onClose, settings, onChange }: CorsProxyM
     </fieldset>
 
     {settings.mode === 'auto' && (
-      <div className="mt-3">
+      <div className="mt-2.5 sm:mt-3">
         <p className={`${labelClass} mb-1.5`}>Fallback order</p>
         <div className="grid sm:grid-cols-2 gap-2">
           {CORS_PROXY_POOL.map((proxy, idx) => (
@@ -91,7 +91,7 @@ export const CorsProxyModal = ({ open, onClose, settings, onChange }: CorsProxyM
     )}
 
     {settings.mode === 'custom' && (
-      <div className="mt-3">
+      <div className="mt-2.5 sm:mt-3">
         <label htmlFor="cors-proxy-custom-url" className={`${labelClass} block mb-1.5`}>
           Proxy URL template
         </label>
@@ -109,11 +109,11 @@ export const CorsProxyModal = ({ open, onClose, settings, onChange }: CorsProxyM
           method, headers, and body.
         </p>
 
-        <div className="mt-2.5 pt-2.5 border-t border-ink/10">
+        <div className="mt-2 pt-2 sm:mt-2.5 sm:pt-2.5 border-t border-ink/10">
           <p className={`${labelClass} mb-1.5`}>Self-host for free</p>
-          <div className="grid sm:grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
             {SELF_HOSTABLE_PROXIES.map((proxy) => (
-              <div key={proxy.label} className="px-2.5 py-2 rounded-lg border border-ink/10">
+              <div key={proxy.label} className="px-2.5 py-1.5 sm:py-2 rounded-lg border border-ink/10">
                 <a
                   href={proxy.sourceUrl}
                   target="_blank"
@@ -130,7 +130,7 @@ export const CorsProxyModal = ({ open, onClose, settings, onChange }: CorsProxyM
       </div>
     )}
 
-    <div className="flex justify-end mt-4">
+    <div className="flex justify-end mt-3 sm:mt-4">
       <button
         type="button"
         onClick={onClose}

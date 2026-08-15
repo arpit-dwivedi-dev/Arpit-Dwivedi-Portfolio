@@ -9,6 +9,7 @@ import {
   Coffee,
   Copy,
   History,
+  MoreHorizontal,
   Route,
   Save,
   Send as SendIcon,
@@ -57,7 +58,7 @@ import { SavedRequestsList } from '../../components/tools/apiRequestBuilder/Save
 import { SaveRequestModal } from '../../components/tools/apiRequestBuilder/SaveRequestModal';
 import { CurlImportModal } from '../../components/tools/apiRequestBuilder/CurlImportModal';
 import { Modal } from '../../components/tools/apiRequestBuilder/Modal';
-import { smallButtonClass } from '../../components/tools/apiRequestBuilder/sharedClasses';
+import { smallButtonClass, METHOD_COLORS } from '../../components/tools/apiRequestBuilder/sharedClasses';
 
 const TOOL = TOOLS.find((t) => t.id === 'api-request-builder')!;
 const TOOL_CATEGORY = getToolCategory(TOOL.category)!;
@@ -73,6 +74,10 @@ const UPI_NUMBER = '7071520965';
 const UPI_PAYEE_NAME = 'Arpit Dwivedi';
 const UPI_LINK = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(UPI_PAYEE_NAME)}&cu=INR`;
 
+// 44px min height keeps every row a comfortable thumb target inside the mobile "More" sheet.
+const moreMenuItemClass =
+  'w-full flex items-center gap-3 px-3 py-3 min-h-[44px] rounded-xl text-sm font-medium text-ink hover:bg-ink/5 transition-colors disabled:opacity-40 disabled:pointer-events-none';
+
 type DrawerTab = 'history' | 'saved';
 
 export const ApiRequestBuilderPage = () => {
@@ -85,6 +90,7 @@ export const ApiRequestBuilderPage = () => {
   const [saved, setSaved] = useState<SavedRequest[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerTab, setDrawerTab] = useState<DrawerTab>('history');
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [curlModalOpen, setCurlModalOpen] = useState(false);
   const [corsProxyModalOpen, setCorsProxyModalOpen] = useState(false);
@@ -292,7 +298,7 @@ export const ApiRequestBuilderPage = () => {
         }}
       />
 
-      <main id="main-content" className="pt-28 pb-16">
+      <main id="main-content" className="pt-28 pb-24 sm:pb-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="mb-4">
             <Breadcrumbs
@@ -315,10 +321,15 @@ export const ApiRequestBuilderPage = () => {
             </div>
           </motion.div>
 
-          {/* Method + URL + Send — the tool itself, front and center before any notes */}
-          <div className="flex items-stretch mb-1">
-            <MethodSelect value={builder.request.method} onChange={builder.setMethod} />
-            <div className="flex-1 relative">
+          {/* Method + URL + Send — the tool itself, front and center before any notes.
+              On mobile the URL input needs the full row to itself (it's the primary
+              input of the whole tool) so method/send/coffee drop to a second line
+              below it via flex-wrap + order; on sm+ they're one unbroken bar again. */}
+          <div className="flex flex-wrap sm:flex-nowrap items-stretch gap-x-0 gap-y-2 sm:gap-y-0 mb-1">
+            <div className="order-2 sm:order-none">
+              <MethodSelect value={builder.request.method} onChange={builder.setMethod} />
+            </div>
+            <div className="order-1 sm:order-none basis-full sm:basis-auto sm:flex-1 relative">
               <input
                 ref={urlInputRef}
                 type="text"
@@ -330,14 +341,14 @@ export const ApiRequestBuilderPage = () => {
                 aria-label="Request URL"
                 aria-invalid={!urlValidation.valid}
                 spellCheck={false}
-                className="w-full h-full border-y border-ink/10 bg-ink/[0.03] focus:bg-ink/5 focus:border-accent-blue px-3 py-2.5 text-sm font-mono text-ink placeholder:text-secondary-text/50 focus:outline-none transition-colors"
+                className="w-full h-full rounded-xl border border-ink/10 sm:rounded-none sm:border-y sm:border-x-0 bg-ink/[0.03] focus:bg-ink/5 focus:border-accent-blue px-3 py-2.5 text-sm font-mono text-ink placeholder:text-secondary-text/50 focus:outline-none transition-colors"
               />
             </div>
             {builder.sending ? (
               <button
                 type="button"
                 onClick={builder.cancel}
-                className="shrink-0 flex items-center gap-2 px-5 py-2.5 border border-red-400/30 bg-red-400/10 text-red-400 font-bold text-sm hover:bg-red-400/20 transition-colors"
+                className="order-3 sm:order-none flex-1 sm:flex-initial justify-center shrink-0 flex items-center gap-2 px-5 py-2.5 border border-red-400/30 bg-red-400/10 text-red-400 font-bold text-sm hover:bg-red-400/20 transition-colors"
               >
                 <X size={15} aria-hidden="true" />
                 Cancel
@@ -347,7 +358,7 @@ export const ApiRequestBuilderPage = () => {
                 type="button"
                 onClick={handleSend}
                 disabled={!builder.request.url.trim()}
-                className="shrink-0 flex items-center gap-2 px-5 py-2.5 bg-accent-blue text-bg-pure font-bold text-sm hover:glow-blue transition-all disabled:opacity-40 disabled:pointer-events-none"
+                className="order-3 sm:order-none flex-1 sm:flex-initial justify-center shrink-0 flex items-center gap-2 px-5 py-2.5 bg-accent-blue text-bg-pure font-bold text-sm hover:glow-blue transition-all disabled:opacity-40 disabled:pointer-events-none"
               >
                 <SendIcon size={15} aria-hidden="true" />
                 Send
@@ -358,7 +369,7 @@ export const ApiRequestBuilderPage = () => {
               onClick={() => setCoffeeModalOpen(true)}
               title="Buy me a coffee"
               aria-label="Buy me a coffee"
-              className="shrink-0 flex items-center px-3 rounded-r-xl border-y border-r border-[#FFDD00]/30 bg-[#FFDD00]/10 text-[#FFDD00] hover:bg-[#FFDD00]/20 transition-colors"
+              className="order-4 sm:order-none shrink-0 flex items-center px-3 rounded-r-xl border-y border-r border-[#FFDD00]/30 bg-[#FFDD00]/10 text-[#FFDD00] hover:bg-[#FFDD00]/20 transition-colors"
             >
               <Coffee size={16} aria-hidden="true" />
             </button>
@@ -369,7 +380,7 @@ export const ApiRequestBuilderPage = () => {
           )}
           {urlValidation.valid && !pasteNotice && <div className="mb-3" />}
 
-          <div className="flex items-center justify-between mb-3">
+          <div className="hidden sm:flex items-center justify-between mb-3">
             <button type="button" onClick={() => setSaveModalOpen(true)} className={smallButtonClass}>
               <Save size={13} aria-hidden="true" />
               {currentSavedId ? `Update "${currentSavedName}"` : 'Save'}
@@ -377,8 +388,8 @@ export const ApiRequestBuilderPage = () => {
             <span className="text-[11px] font-mono text-secondary-text hidden sm:inline">Ctrl/Cmd+Enter to send · Ctrl/Cmd+S to save</span>
           </div>
 
-          {/* Toolbar */}
-          <div className="flex flex-wrap items-center gap-2 mb-3">
+          {/* Toolbar (desktop) — every action gets its own visible button. */}
+          <div className="hidden sm:flex flex-wrap items-center gap-2 mb-3">
             <button type="button" onClick={() => { setDrawerTab('history'); setDrawerOpen(true); }} className={smallButtonClass}>
               <History size={13} aria-hidden="true" />
               History
@@ -436,6 +447,29 @@ export const ApiRequestBuilderPage = () => {
             </Link>
           </div>
 
+          {/* Toolbar (mobile) — only the actions people reach for on every request stay
+              on screen; everything else lives one tap away in the "More" sheet so a
+              first-time visitor hits Params/Headers/Body without scrolling past nine
+              buttons first. */}
+          <div className="flex sm:hidden items-center gap-2 mb-3">
+            <button type="button" onClick={() => setSaveModalOpen(true)} className={smallButtonClass}>
+              <Save size={13} aria-hidden="true" />
+              {currentSavedId ? 'Update' : 'Save'}
+            </button>
+            <button type="button" onClick={() => { setDrawerTab('history'); setDrawerOpen(true); }} className={smallButtonClass}>
+              <History size={13} aria-hidden="true" />
+              History
+            </button>
+            <button type="button" onClick={handleClearRequest} className={smallButtonClass}>
+              <Trash2 size={13} aria-hidden="true" />
+              Clear
+            </button>
+            <button type="button" onClick={() => setMoreMenuOpen(true)} className={`${smallButtonClass} ml-auto`}>
+              <MoreHorizontal size={13} aria-hidden="true" />
+              More
+            </button>
+          </div>
+
           {/* Trust/status notes — kept short and below the tool itself, not ahead of it. */}
           <p className="text-xs text-secondary-text mb-4 leading-snug">
             <ShieldCheck size={12} className="inline -mt-0.5 mr-1 text-accent-blue" aria-hidden="true" />
@@ -478,7 +512,7 @@ export const ApiRequestBuilderPage = () => {
             </div>
           ) : (
             <>
-              <div className="rounded-2xl border border-ink/10 bg-bg-secondary/40 p-4 sm:p-5 mb-6">
+              <div className="rounded-2xl border border-ink/10 bg-bg-secondary/40 p-3 sm:p-5 mb-6">
                 <RequestTabs
                   active={builder.activeTab}
                   onChange={(tab: RequestTab) => builder.setActiveTab(tab)}
@@ -536,7 +570,7 @@ export const ApiRequestBuilderPage = () => {
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-ink/10 bg-bg-secondary/40 p-4 sm:p-5">
+              <div className="rounded-2xl border border-ink/10 bg-bg-secondary/40 p-3 sm:p-5">
                 <h2 className="text-xs font-mono uppercase tracking-widest text-secondary-text mb-4">Response</h2>
                 <ResponseViewer
                   sending={builder.sending}
@@ -548,6 +582,43 @@ export const ApiRequestBuilderPage = () => {
                 />
               </div>
             </>
+          )}
+
+          {/* Mobile-only floating action bar — testing a request means scrolling down
+              past Params/Response, so Send needs to stay reachable without a trip
+              back to the top every time. Desktop already has Send in view at all times. */}
+          {!showEmptyState && (
+            // right-20 rather than right-3 — the site-wide WhatsApp/chat launchers are
+            // fixed at bottom-right (see WhatsAppButton.tsx, ChatBot.tsx), and a full-width
+            // bar would otherwise render its Send button right underneath them.
+            <div className="sm:hidden fixed bottom-3 left-3 right-20 z-40 flex items-center gap-2 rounded-2xl border border-ink/10 bg-bg-secondary/95 backdrop-blur-md shadow-2xl px-3 py-2">
+              <span className={`shrink-0 font-mono text-xs font-bold ${METHOD_COLORS[builder.request.method]}`}>
+                {builder.request.method}
+              </span>
+              <span className="flex-1 min-w-0 truncate font-mono text-xs text-secondary-text">
+                {builder.request.url || 'No URL set'}
+              </span>
+              {builder.sending ? (
+                <button
+                  type="button"
+                  onClick={builder.cancel}
+                  className="shrink-0 flex items-center justify-center gap-1.5 min-h-[44px] px-4 rounded-xl border border-red-400/30 bg-red-400/10 text-red-400 font-bold text-xs hover:bg-red-400/20 transition-colors"
+                >
+                  <X size={14} aria-hidden="true" />
+                  Cancel
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleSend}
+                  disabled={!builder.request.url.trim()}
+                  className="shrink-0 flex items-center justify-center gap-1.5 min-h-[44px] px-4 rounded-xl bg-accent-blue text-bg-pure font-bold text-xs hover:glow-blue transition-all disabled:opacity-40 disabled:pointer-events-none"
+                >
+                  <SendIcon size={14} aria-hidden="true" />
+                  Send
+                </button>
+              )}
+            </div>
           )}
 
           <p className="text-xs text-secondary-text mt-8 leading-relaxed max-w-2xl">
@@ -619,6 +690,84 @@ export const ApiRequestBuilderPage = () => {
         ) : (
           <SavedRequestsList items={saved} onLoad={handleLoadSaved} onRename={handleRenameSaved} onDelete={handleDeleteSaved} />
         )}
+      </Drawer>
+
+      {/* Mobile-only overflow sheet for the toolbar actions that don't need to be
+          one tap away — same handlers as the desktop buttons, just closes itself
+          after firing so the sheet doesn't linger over the result of the action. */}
+      <Drawer open={moreMenuOpen} onClose={() => setMoreMenuOpen(false)} titleId="more-actions-heading" title="More actions">
+        <div className="p-2">
+          <button
+            type="button"
+            onClick={() => { setDrawerTab('saved'); setMoreMenuOpen(false); setDrawerOpen(true); }}
+            className={moreMenuItemClass}
+          >
+            <Star size={16} aria-hidden="true" />
+            Saved requests
+          </button>
+          <button
+            type="button"
+            onClick={() => { setCurlModalOpen(true); setMoreMenuOpen(false); }}
+            className={moreMenuItemClass}
+          >
+            <ClipboardPaste size={16} aria-hidden="true" />
+            Import cURL
+          </button>
+          <button
+            type="button"
+            onClick={() => { void handleCopyCurl(); setMoreMenuOpen(false); }}
+            className={moreMenuItemClass}
+          >
+            <Terminal size={16} aria-hidden="true" />
+            Copy as cURL
+          </button>
+          <button
+            type="button"
+            onClick={() => { void handleCopyUrl(); setMoreMenuOpen(false); }}
+            disabled={!builder.request.url.trim()}
+            className={moreMenuItemClass}
+          >
+            <Copy size={16} aria-hidden="true" />
+            Copy URL
+          </button>
+          <button
+            type="button"
+            onClick={() => { builder.setUrl(encodeUrlComponent(builder.request.url)); setMoreMenuOpen(false); }}
+            disabled={!builder.request.url.trim()}
+            className={moreMenuItemClass}
+          >
+            <span className="w-4 text-center text-xs font-mono" aria-hidden="true">%</span>
+            Encode URL
+          </button>
+          <button
+            type="button"
+            onClick={() => { builder.setUrl(decodeUrlComponent(builder.request.url)); setMoreMenuOpen(false); }}
+            disabled={!builder.request.url.trim()}
+            className={moreMenuItemClass}
+          >
+            <span className="w-4 text-center text-xs font-mono" aria-hidden="true">%</span>
+            Decode URL
+          </button>
+          <button
+            type="button"
+            onClick={() => { setCorsProxyModalOpen(true); setMoreMenuOpen(false); }}
+            className={moreMenuItemClass}
+          >
+            <Route size={16} aria-hidden="true" className={customProxy ? 'text-amber-400' : ''} />
+            CORS Proxy
+            <span className={`ml-auto text-xs font-mono ${customProxy ? 'text-amber-400' : 'text-secondary-text'}`}>
+              {customProxy ? 'On' : corsProxySettings.mode === 'auto' ? 'Auto' : 'Off'}
+            </span>
+          </button>
+          <Link
+            to={lang === 'hi' ? '/hi' : '/guides/how-to-test-an-api'}
+            onClick={() => setMoreMenuOpen(false)}
+            className={moreMenuItemClass}
+          >
+            <BookOpen size={16} aria-hidden="true" />
+            Guide
+          </Link>
+        </div>
       </Drawer>
 
       <SaveRequestModal
