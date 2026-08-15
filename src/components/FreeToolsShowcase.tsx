@@ -25,7 +25,7 @@ export const FreeTools = () => {
           className="text-center mb-16"
         >
           <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-2 block">{t.label}</span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">{t.title} <span className="text-gradient">{t.titleAccent}</span></h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">{t.title} <span className="text-accent-blue">{t.titleAccent}</span></h2>
           <p className="text-secondary-text max-w-xl mx-auto mt-4">{t.description}</p>
         </motion.div>
 
@@ -40,7 +40,7 @@ export const FreeTools = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
-              className="group p-8 rounded-3xl bg-bg-secondary border border-ink/5 hover:border-accent-blue/30 transition-all flex flex-col gap-4"
+              className="group h-full p-8 rounded-3xl bg-bg-secondary border border-ink/5 hover:border-accent-blue/30 transition-all flex flex-col gap-4"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="bg-accent-blue/10 text-accent-blue w-12 h-12 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -52,7 +52,7 @@ export const FreeTools = () => {
               <p className="text-secondary-text text-sm leading-relaxed">{toolDescription(tool, lang)}</p>
               {tool.judgment && lang === 'en' && (
                 <p className="text-xs text-secondary-text/80 leading-relaxed pt-4 mt-auto border-t border-ink/5">
-                  <span className="text-accent-blue font-mono uppercase tracking-widest text-[10px] block mb-1.5">A decision made building this</span>
+                  <span className="text-accent-blue font-mono uppercase tracking-widest text-[10px] block mb-1.5">Why it's built this way</span>
                   {tool.judgment}
                 </p>
               )}
@@ -61,11 +61,14 @@ export const FreeTools = () => {
         </div>
 
         <div className="mt-10 text-center">
+          {/* Was a small low-contrast text link under a section positioned as
+              central trust-building — bumped to a proper bordered button so
+              it reads as "more tools exist," not an afterthought. */}
           <Link
             to={basePath}
-            className="inline-flex items-center gap-2 text-accent-blue hover:text-ink transition-colors font-mono text-sm group"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-accent-blue/30 text-accent-blue font-bold hover:bg-accent-blue hover:text-bg-pure hover:border-accent-blue transition-all group"
           >
-            {t.viewAll} <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+            {t.viewAll} <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
           </Link>
         </div>
       </div>

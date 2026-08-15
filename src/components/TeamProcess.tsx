@@ -1,11 +1,16 @@
 import { motion } from 'motion/react';
-import { CheckCircle2, ArrowRight } from 'lucide-react';
+import { useState } from 'react';
+import { CheckCircle2, ArrowRight, FolderGit2 } from 'lucide-react';
+import { FaLinkedin } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 
 export const Team = () => {
-  const { content } = useLanguage();
-  const { team } = content;
+  const { lang, content } = useLanguage();
+  const { team, contact } = content;
   const { founder } = team;
+  const [photoFailed, setPhotoFailed] = useState(false);
+  const projectsHref = lang === 'hi' ? '/hi/projects' : '/projects';
 
   return (
     <section className="py-24 relative overflow-hidden">
@@ -17,7 +22,7 @@ export const Team = () => {
           className="text-center mb-16"
         >
           <span className="text-accent-purple font-mono text-sm tracking-widest uppercase mb-2 block">{team.label}</span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">{team.title} <span className="text-gradient">{team.titleAccent}</span></h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">{team.title} <span className="text-accent-blue">{team.titleAccent}</span></h2>
         </motion.div>
 
         <motion.div
@@ -27,14 +32,25 @@ export const Team = () => {
           transition={{ duration: 0.8 }}
           className="p-8 md:p-10 rounded-3xl glass border-ink/5 flex flex-col sm:flex-row gap-8 items-center sm:items-start text-center sm:text-left"
         >
-          <div className="w-20 h-20 rounded-2xl bg-accent-purple/10 text-accent-purple flex items-center justify-center text-2xl font-bold shrink-0">
-            {founder.initials}
-          </div>
+          {/* Falls back to the initials tile if /founder.jpg 404s or the
+              lang bio doesn't ship one — never leaves a broken <img> spot. */}
+          {photoFailed ? (
+            <div className="w-20 h-20 rounded-2xl bg-accent-purple/10 text-accent-purple flex items-center justify-center text-2xl font-bold shrink-0">
+              {founder.initials}
+            </div>
+          ) : (
+            <img
+              src="/founder.jpg"
+              alt={founder.name}
+              onError={() => setPhotoFailed(true)}
+              className="w-20 h-20 rounded-2xl object-cover shrink-0 ring-1 ring-ink/10"
+            />
+          )}
           <div>
             <h3 className="text-xl font-bold text-ink">{founder.name}</h3>
             <p className="text-accent-blue font-mono text-xs uppercase tracking-widest mb-4">{founder.role}</p>
             <p className="text-secondary-text text-sm md:text-base leading-relaxed mb-6">{founder.bio}</p>
-            <ul className="flex flex-wrap justify-center sm:justify-start gap-2 list-none">
+            <ul className="flex flex-wrap justify-center sm:justify-start gap-2 list-none mb-6">
               {founder.highlights.map(h => (
                 <li key={h} className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-ink/5 text-[10px] font-mono text-ink">
                   <CheckCircle2 size={10} className="text-accent-blue" aria-hidden="true" />
@@ -42,6 +58,16 @@ export const Team = () => {
                 </li>
               ))}
             </ul>
+            {/* Direct access, not outsourced — so the proof of that lives
+                right here, not just buried in the footer. */}
+            <div className="flex flex-wrap justify-center sm:justify-start gap-4">
+              <a href={contact.linkedinUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-sm font-medium text-secondary-text hover:text-accent-blue transition-colors">
+                <FaLinkedin size={16} /> LinkedIn
+              </a>
+              <Link to={projectsHref} className="inline-flex items-center gap-2 text-sm font-medium text-secondary-text hover:text-accent-blue transition-colors">
+                <FolderGit2 size={16} aria-hidden="true" /> {team.founderWorkLinkLabel}
+              </Link>
+            </div>
           </div>
         </motion.div>
       </div>
@@ -63,7 +89,7 @@ export const Process = () => {
           className="text-center mb-16"
         >
           <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-2 block">{process.label}</span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">{process.title} <span className="text-gradient">{process.titleAccent}</span></h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">{process.title} <span className="text-accent-blue">{process.titleAccent}</span></h2>
           <p className="text-secondary-text max-w-xl mx-auto">{process.description}</p>
         </motion.div>
 

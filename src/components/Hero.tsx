@@ -136,6 +136,7 @@ export const Hero = () => {
               <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50" />
               <div className="w-2.5 h-2.5 rounded-full bg-green-500/50" />
               <div className="ml-4 text-[10px] font-mono text-secondary-text">{hero.terminal.filename}</div>
+              <div className="ml-auto text-[9px] font-mono text-accent-blue/70 uppercase tracking-widest">Interactive demo</div>
             </div>
             
             <div className="h-full pt-10 pb-4 px-6 font-mono text-sm overflow-y-auto scrollbar-hide">

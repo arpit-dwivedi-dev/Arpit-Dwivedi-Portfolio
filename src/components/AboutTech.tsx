@@ -26,7 +26,7 @@ export const About = () => {
           className="text-center lg:text-left"
         >
           <span className="text-accent-purple font-mono text-sm tracking-widest uppercase mb-2 block">{about.label}</span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-8">{about.title} <span className="text-gradient">{about.titleAccent}</span></h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-8">{about.title} <span className="text-accent-blue">{about.titleAccent}</span></h2>
           
           <div className="space-y-6 text-base md:text-lg text-secondary-text leading-relaxed">
             {about.paragraphs.map((p) => (

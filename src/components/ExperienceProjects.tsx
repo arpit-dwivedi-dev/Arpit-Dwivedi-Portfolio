@@ -23,13 +23,19 @@ export const Services = () => {
           className="text-center mb-20"
         >
           <span className="text-accent-purple font-mono text-sm tracking-widest uppercase mb-2 block">{servicesSection.label}</span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">{servicesSection.title} <span className="text-gradient">{servicesSection.titleAccent}</span></h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">{servicesSection.title} <span className="text-accent-blue">{servicesSection.titleAccent}</span></h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* 5 cards on a 3-col grid leaves row 2 with a dangling empty slot.
+            grid-cols-6 lets the first 3 cards fill row 1 exactly (2 cols
+            each) and the last 2 sit centered on row 2 instead of hugging
+            the left edge — a 3-2 layout instead of 3-2-gap. */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
           {services.map((service, idx) => {
             const Icon = serviceIcons[idx % serviceIcons.length];
             const color = serviceColors[idx % serviceColors.length];
+            const spanClass =
+              idx < 3 ? 'lg:col-span-2' : idx === 3 ? 'lg:col-span-2 lg:col-start-2' : 'md:col-span-2 lg:col-span-2 lg:col-start-4';
             return (
               <motion.div
                 key={service.title}
@@ -37,7 +43,7 @@ export const Services = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
-                className="p-6 rounded-3xl glass border-ink/5 hover:border-accent-blue/20 transition-all group"
+                className={`p-6 rounded-3xl glass border-ink/5 hover:border-accent-blue/20 transition-all group ${spanClass}`}
               >
                 <div className={`${serviceClassMap[color]} w-12 h-12 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
                   <Icon size={24} aria-hidden="true" />

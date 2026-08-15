@@ -28,7 +28,7 @@ export const DevOpsArchitecture = () => {
             className="text-center lg:text-left"
           >
             <span className="text-accent-purple-text font-mono text-sm tracking-widest uppercase mb-2 block">{devops.label}</span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-8">{devops.title} <span className="text-gradient">{devops.titleAccent}</span></h2>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-8">{devops.title} <span className="text-accent-blue">{devops.titleAccent}</span></h2>
             
             <div className="space-y-6 text-base md:text-lg text-secondary-text leading-relaxed">
               <p>
@@ -339,7 +339,12 @@ export const Footer = () => {
   ];
 
   return (
-    <footer className="pt-10 pb-10 border-t border-ink/5 bg-bg-pure">
+    // pb-32 below md: the fixed chat + WhatsApp launchers stack to about
+    // 9rem tall in that bottom-right corner, and the footer nav (which is
+    // centered full-width until md's row layout kicks in) was landing right
+    // under them with only pb-10 of clearance — the buttons sat on top of
+    // "Services" et al. once scrolled to the bottom.
+    <footer className="pt-10 pb-32 md:pb-10 border-t border-ink/5 bg-bg-pure">
       <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
         <div>
           <div className="text-xl font-bold tracking-tighter">

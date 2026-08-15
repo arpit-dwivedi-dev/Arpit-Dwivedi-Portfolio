@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { UserCheck, ShieldCheck, Layers, Rocket, ChevronDown } from 'lucide-react';
+import { UserCheck, ShieldCheck, Layers, Rocket, Plus, Minus } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
 
 const reasonIcons = [UserCheck, ShieldCheck, Layers, Rocket];
@@ -24,7 +24,7 @@ export const WhyChooseUs = () => {
           className="text-center mb-16"
         >
           <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-2 block">{whyChooseUs.label}</span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">{whyChooseUs.title} <span className="text-gradient">{whyChooseUs.titleAccent}</span></h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">{whyChooseUs.title} <span className="text-accent-blue">{whyChooseUs.titleAccent}</span></h2>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -82,7 +82,7 @@ export const FAQ = () => {
           className="text-center mb-16"
         >
           <span className="text-accent-purple font-mono text-sm tracking-widest uppercase mb-2 block">{faq.label}</span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">{faq.title} <span className="text-gradient">{faq.titleAccent}</span></h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">{faq.title} <span className="text-accent-blue">{faq.titleAccent}</span></h2>
         </motion.div>
 
         <div className="space-y-4">
@@ -98,7 +98,9 @@ export const FAQ = () => {
                   className="w-full flex items-center justify-between gap-4 p-6 text-left"
                 >
                   <span className="font-bold text-ink">{item.question}</span>
-                  <ChevronDown size={20} className={`shrink-0 text-secondary-text transition-transform ${isOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+                  <span className="shrink-0 w-6 h-6 rounded-full bg-ink/5 flex items-center justify-center text-secondary-text">
+                    {isOpen ? <Minus size={14} aria-hidden="true" /> : <Plus size={14} aria-hidden="true" />}
+                  </span>
                 </button>
                 <AnimatePresence initial={false}>
                   {isOpen && (

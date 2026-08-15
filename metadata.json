@@ -175,7 +175,8 @@
         "role": "Founder & Software Engineer",
         "bio": "Arpit leads 101 Tech Labs and stays hands-on with every project, from the first call to shipped code — so nothing gets lost in handoffs between a project manager and a developer.",
         "highlights": ["Real-World Engineering Background", "Full-Stack & AI Engineering", "Direct Access, No Middlemen"]
-      }
+      },
+      "founderWorkLinkLabel": "See the work"
     },
     "whyChooseUs": {
       "label": "Why Choose Us",
