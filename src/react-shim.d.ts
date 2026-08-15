@@ -9,12 +9,16 @@ declare module 'react' {
   export function useRef<T = undefined>(): { current: T | undefined };
   export function useMemo<T>(factory: () => T, deps: readonly any[]): T;
   export function useCallback<T extends (...args: any[]) => any>(callback: T, deps: readonly any[]): T;
-  export type FormEvent = any;
-  export type KeyboardEvent = any;
+  export type FormEvent<T = any> = any;
+  export type KeyboardEvent<T = any> = any;
+  export type PointerEvent<T = any> = any;
+  export type MouseEvent<T = any> = any;
   export type ChangeEvent<T = any> = any;
   export type Dispatch<A> = (value: A) => void;
   export type SetStateAction<S> = S | ((prevState: S) => S);
   export type ReactNode = any;
+  export type RefObject<T> = { current: T | null };
+  export function memo<T>(component: T): T;
   // Provide a minimal React namespace for JSX and FC usage
   export interface FunctionComponent<P = {}> {
     (props: P & { children?: any }): any;
@@ -57,5 +61,11 @@ declare module 'react/jsx-runtime' {
 declare namespace JSX {
   interface IntrinsicElements {
     [elem: string]: any;
+  }
+  // Lets TS accept `key` (and other framework-managed props) on custom
+  // function components, not just intrinsic elements — mirrors what
+  // @types/react provides via JSX.IntrinsicAttributes.
+  interface IntrinsicAttributes {
+    key?: string | number | null;
   }
 }

@@ -1,4 +1,4 @@
-import { MapPin, QrCode, Receipt, Send, type LucideIcon } from 'lucide-react';
+import { Database, MapPin, QrCode, Receipt, Send, type LucideIcon } from 'lucide-react';
 import type { Lang } from '../i18n/types';
 
 export interface ToolCategory {
@@ -150,6 +150,18 @@ export const TOOLS: ToolDefinition[] = [
     path: 'api-request-builder',
     featured: true,
     judgment: 'Requests go straight from your browser to the target API over fetch() — there is no proxy in between, so it only works against APIs that already allow browser CORS requests, same constraint any frontend app would hit.',
+  },
+  {
+    id: 'dbml-diagram-builder',
+    title: 'DBML Diagram Builder',
+    description: 'Write DBML and watch an interactive ER diagram build itself — drag tables, auto-layout relationships, and export as DBML, PNG, or SVG. No signup, no server.',
+    titleHi: 'DBML डायग्राम बिल्डर',
+    descriptionHi: 'DBML लिखें और एक इंटरैक्टिव ER डायग्राम अपने आप बनते देखें — टेबल ड्रैग करें, रिलेशनशिप का ऑटो-लेआउट पाएं, और DBML, PNG, या SVG के रूप में एक्सपोर्ट करें। कोई साइनअप नहीं, कोई सर्वर नहीं।',
+    icon: Database,
+    category: 'developer',
+    path: 'dbml-diagram-builder',
+    featured: true,
+    judgment: 'Node positions are keyed by table name and stored per-diagram — editing a column keeps every table exactly where you dragged it, and only a genuinely new table gets auto-placed.',
   },
 ];
 

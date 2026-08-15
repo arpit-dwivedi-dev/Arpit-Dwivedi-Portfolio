@@ -1,5 +1,5 @@
 import { lazy, Suspense, type ComponentType } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { HomePage } from './pages/HomePage';
 import { ScrollToHash } from './components/ScrollToHash';
 import { WhatsAppButton } from './components/WhatsAppButton';
@@ -7,6 +7,24 @@ import { ChatBot } from './components/ChatBot';
 import { Analytics } from './components/Analytics';
 import { LanguageProvider, useLanguage } from './i18n/LanguageContext';
 import { ThemeProvider } from './theme/ThemeContext';
+
+// The DBML builder is a full-screen IDE-like tool with its own dark chrome
+// and a bottom-right minimap — the site-wide WhatsApp/ChatBot bubbles float
+// on top of that canvas and collide with it, so they're suppressed there.
+const FULL_SCREEN_TOOL_PATHS = ['/tools/developer/dbml-diagram-builder'];
+const GlobalWidgets = () => {
+  const location = useLocation();
+  const isFullScreenTool = FULL_SCREEN_TOOL_PATHS.some(
+    (path) => location.pathname === path || location.pathname === `/hi${path}`,
+  );
+  if (isFullScreenTool) return null;
+  return (
+    <>
+      <WhatsAppButton />
+      <ChatBot />
+    </>
+  );
+};
 
 // A plain <a> here can't reach useLanguage() — this component sits inside
 // LanguageProvider so it's the one that translates the skip link.
@@ -52,6 +70,9 @@ const QRRedirectPage = lazy(() =>
 );
 const ApiRequestBuilderPage = lazy(() =>
   import('./pages/tools/ApiRequestBuilderPage').then((m) => ({ default: m.ApiRequestBuilderPage })),
+);
+const DbmlDiagramBuilderPage = lazy(() =>
+  import('./pages/tools/DbmlDiagramBuilderPage').then((m) => ({ default: m.DbmlDiagramBuilderPage })),
 );
 const GuidesPage = lazy(() => import('./pages/GuidesPage').then((m) => ({ default: m.GuidesPage })));
 const GuidePage = lazy(() => import('./pages/GuidePage').then((m) => ({ default: m.GuidePage })));
@@ -125,6 +146,7 @@ export default function App() {
             <Route path="/hi/tools/generators/qr-code-generator" element={lazyRoute(QRCodeGeneratorPage)} />
             <Route path="/tools/developer/api-request-builder" element={lazyRoute(ApiRequestBuilderPage)} />
             <Route path="/hi/tools/developer/api-request-builder" element={lazyRoute(ApiRequestBuilderPage)} />
+            <Route path="/tools/developer/dbml-diagram-builder" element={lazyRoute(DbmlDiagramBuilderPage)} />
             {/* Not a content page — the smart-redirect target embedded inside
                Multi-URL / dual-platform App QR codes. See QRRedirectPage. */}
             <Route path="/tools/generators/qr-code-generator/go" element={lazyRoute(QRRedirectPage)} />
@@ -167,8 +189,7 @@ export default function App() {
                the visitor sees a blank page. */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-          <WhatsAppButton />
-          <ChatBot />
+          <GlobalWidgets />
         </LanguageProvider>
       </Router>
     </ThemeProvider>

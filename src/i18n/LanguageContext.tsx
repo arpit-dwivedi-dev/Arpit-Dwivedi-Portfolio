@@ -99,6 +99,7 @@ type RouteKey =
   | 'toolsGenerators'
   | 'invoiceGenerator'
   | 'qrCodeGenerator'
+  | 'dbmlDiagramBuilder'
   | 'guides'
   | 'blog';
 
@@ -164,6 +165,11 @@ const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; description: st
       title: 'QR Code Generator (Free Tool) | 101 Tech Labs',
       description:
         'Create a QR code for a URL, contact card, plain text, SMS, email, phone number, or social link. Customize the colors and download as PNG or SVG — free, no signup, no server.',
+    },
+    dbmlDiagramBuilder: {
+      title: 'DBML Diagram Builder — Free Database Schema Tool | 101 Tech Labs',
+      description:
+        'Write DBML and see a live, interactive ER diagram — runs entirely in your browser. Import/export DBML, PNG, and SVG, with local save and shareable links. No signup, no server.',
     },
     guides: {
       title: 'Invoicing Guides | 101 Tech Labs',
@@ -236,9 +242,14 @@ const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; description: st
       description:
         'URL, कॉन्टैक्ट कार्ड, प्लेन टेक्स्ट, SMS, ईमेल, फ़ोन नंबर, या सोशल लिंक के लिए QR कोड बनाएं। रंग कस्टमाइज़ करें और PNG या SVG के रूप में डाउनलोड करें — फ्री, कोई साइनअप नहीं, कोई सर्वर नहीं।',
     },
-    // No /hi/guides or /hi/blog route exists yet (see App.tsx) — kept here
-    // only so this Record<Lang, Record<RouteKey, ...>> stays exhaustive
-    // under tsc.
+    // No /hi/dbml-diagram-builder, /hi/guides, or /hi/blog route exists yet
+    // (see App.tsx) — kept here only so this Record<Lang, Record<RouteKey,
+    // ...>> stays exhaustive under tsc.
+    dbmlDiagramBuilder: {
+      title: 'DBML Diagram Builder — Free Database Schema Tool | 101 Tech Labs',
+      description:
+        'Write DBML and see a live, interactive ER diagram — runs entirely in your browser. Import/export DBML, PNG, and SVG, with local save and shareable links. No signup, no server.',
+    },
     guides: {
       title: 'Invoicing Guides | 101 Tech Labs',
       description: 'Practical guides on making invoices, setting payment terms, invoice numbering, and getting paid on time.',
@@ -285,6 +296,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
       '/tools/generators': 'toolsGenerators',
       '/tools/generators/invoice-generator': 'invoiceGenerator',
       '/tools/generators/qr-code-generator': 'qrCodeGenerator',
+      '/tools/developer/dbml-diagram-builder': 'dbmlDiagramBuilder',
       '/guides': 'guides',
       '/blog': 'blog',
     };
