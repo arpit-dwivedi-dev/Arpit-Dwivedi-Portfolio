@@ -131,17 +131,19 @@ export default function App() {
             <Route path="/hi/tools/generators/qr-code-generator/go" element={lazyRoute(QRRedirectPage)} />
 
             {/* English-only content hub — original guides written in-house
-               (not scraped from competitors) covering invoicing topics for
-               SEO/GEO. No Hindi routes yet; low priority next to the tool
-               itself, and 5 Hindi long-form articles is its own project. */}
+               (not scraped from competitors) covering how-to topics for each
+               free tool (invoicing, QR codes, API testing) for SEO/GEO. No
+               Hindi routes yet; low priority next to the tools themselves,
+               and 5 Hindi long-form articles is its own project. */}
             <Route path="/guides" element={lazyRoute(GuidesPage)} />
             <Route path="/guides/:slug" element={lazyRoute(GuidePage)} />
 
             {/* English-only, same reasoning as /guides above. Separate from
                /guides on purpose (Phase 3 decision, content-rewrite project):
-               /guides stays invoicing-only; /blog covers broader topics
-               inside the actual company positioning (backend/identity
-               engineering, full-stack application development). */}
+               /guides stays scoped to the free tools' own how-to content;
+               /blog covers broader topics inside the actual company
+               positioning (backend/identity engineering, full-stack
+               application development). */}
             <Route path="/blog" element={lazyRoute(BlogPage)} />
             <Route path="/blog/:slug" element={lazyRoute(BlogPostPage)} />
 

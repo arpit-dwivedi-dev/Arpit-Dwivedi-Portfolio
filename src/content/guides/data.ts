@@ -3070,6 +3070,198 @@ export const GUIDES: Guide[] = [
     ctaToolHref: '/tools/generators/qr-code-generator',
     ctaToolLabel: 'Try the free QR Code Generator',
   },
+  {
+    slug: 'how-to-test-an-api',
+    title: 'How to Test an API: A Beginner’s Guide to HTTP Requests',
+    description:
+      'What "testing an API" actually means — HTTP methods, headers, query params, request bodies, and auth — with a practical walkthrough of building and reading a request.',
+    category: 'Developer Tools',
+    readTimeMinutes: 10,
+    publishedDate: '2026-08-15',
+    updatedDate: '2026-08-15',
+    intro: [
+      'Testing an API just means sending it a request by hand and looking at what comes back — no different in principle from what your app’s code does every time it calls that same endpoint. The difference is you get to see every part of the exchange: the exact URL, the headers, the body, the status code, the response — instead of it happening invisibly inside application code.',
+      'This guide walks through the pieces of an HTTP request one at a time, then how to read what the API sends back, using the same structure a browser-based request builder gives you.',
+    ],
+    sections: [
+      {
+        heading: 'HTTP methods: what each one is for',
+        paragraphs: [
+          'The method tells the server what kind of operation you’re asking for. Using the right one matters — some APIs reject the wrong method outright, and using GET for something that changes data is a common source of confusing bugs (browsers and proxies are allowed to cache or re-run GET requests, which is unsafe if a GET is secretly deleting something).',
+        ],
+        bullets: [
+          'GET — fetch data, no side effects. Should be safe to repeat.',
+          'POST — create something new, or trigger an action that isn’t a simple update.',
+          'PUT — replace a resource entirely with what you send.',
+          'PATCH — update part of a resource, leaving the rest as-is.',
+          'DELETE — remove a resource.',
+          'HEAD — same as GET but returns only headers, no body; useful for checking if something exists without downloading it.',
+          'OPTIONS — asks the server what methods/headers are allowed; browsers send this automatically as a CORS "preflight" before certain cross-origin requests.',
+        ],
+      },
+      {
+        heading: 'Query parameters vs. headers vs. body',
+        paragraphs: [
+          'These three carry different kinds of information, and mixing them up is one of the most common reasons a request that "looks right" still fails.',
+          'Query parameters (the ?key=value part of a URL) are for filtering, pagination, or options that identify what you want — page=2, sort=name, format=json. They’re visible in logs and browser history, so avoid putting secrets there.',
+          'Headers carry metadata about the request itself: what format you’re sending (Content-Type), what you’ll accept back (Accept), and authentication (Authorization). They describe the request, not the data being acted on.',
+          'The body carries the actual data for POST, PUT, and PATCH — the new record, the updated fields, the file being uploaded. GET and HEAD requests conventionally don’t have one; sending a body with GET works in a browser-based tool, but many servers and proxies will ignore or reject it.',
+        ],
+      },
+      {
+        heading: 'Request body formats',
+        paragraphs: [
+          'What you set as the body needs to match what the API expects, signaled by the Content-Type header.',
+        ],
+        bullets: [
+          'JSON (application/json) — the most common format for modern APIs; a plain JSON object or array as the body.',
+          'Form URL Encoded (application/x-www-form-urlencoded) — key=value pairs joined with &, the same format a plain HTML form submits.',
+          'Multipart Form Data (multipart/form-data) — required when uploading files alongside other fields; each part of the body is a separate named field.',
+          'Plain text — anything that isn’t structured data: a raw string, XML, CSV, or another custom format the API expects verbatim.',
+        ],
+      },
+      {
+        heading: 'Authentication',
+        paragraphs: [
+          'Most non-public APIs require proving who you are on every request, since HTTP itself has no memory between requests.',
+        ],
+        bullets: [
+          'Bearer token — an Authorization: Bearer <token> header; the most common scheme for modern APIs (OAuth access tokens, API tokens, JWTs).',
+          'Basic auth — a username and password combined and base64-encoded into the Authorization header; older but still common for internal tools and simple APIs.',
+          'API key — a token sent either as a custom header (X-API-Key is a common name) or as a query parameter, depending on what the provider expects.',
+        ],
+      },
+      {
+        heading: 'Reading the response',
+        paragraphs: [
+          'The status code is the first thing to check — it tells you the outcome before you even look at the body. 2xx means success, 3xx means redirect, 4xx means the request itself was the problem (bad input, missing auth, not found), and 5xx means the server failed while handling an otherwise-valid request.',
+          'Response headers often carry information the body doesn’t: Content-Type tells you how to parse the body, rate-limit headers tell you how many requests you have left, and caching headers tell you how long the response is valid for.',
+          'The body is the actual data (or error message) the API sends back — usually JSON for modern APIs, which is worth viewing pretty-printed rather than as one unbroken line once responses get any size to them.',
+        ],
+      },
+      {
+        heading: 'Working efficiently: history, saved requests, and cURL',
+        paragraphs: [
+          'Once you’re testing the same endpoint repeatedly — tweaking a header, retrying after a fix — rebuilding the request from scratch each time wastes the exact minutes a request builder is meant to save. Saving a request with a name (like "Login" or "Create User") turns it into a one-click resend instead.',
+          'Local history serves a different purpose: a running log of exactly what you sent and got back, useful for comparing "what changed" between a working attempt and a broken one.',
+          'cURL import/export matters most when a request needs to travel outside the tool — a curl command from a teammate’s Slack message, an API provider’s documentation example, or a request you want to paste into a bug report or script. Pasting one in should reconstruct the whole request; exporting one should reproduce it exactly.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'Do I need something like Postman, or is a browser-based tool enough?',
+        answer:
+          'For most day-to-day testing — trying an endpoint, checking a response, debugging headers or auth — a browser-based tool covers it with zero install. Desktop apps add things like team workspaces, mock servers, and automated test suites, which matter once testing is a shared, ongoing part of a team’s workflow rather than a one-off check.',
+      },
+      {
+        question: 'Why does my request need a Content-Type header?',
+        answer:
+          'Content-Type tells the server how to parse the body you sent. Send JSON without it (or with the wrong value) and many servers will fail to parse the body at all, even though the JSON itself is perfectly valid — the parsing failure happens before your data is even looked at.',
+      },
+      {
+        question: 'What’s the difference between a 401 and a 403 response?',
+        answer:
+          '401 Unauthorized means the server doesn’t know who you are — your credentials are missing or invalid. 403 Forbidden means it does know who you are, but you don’t have permission for this specific action. Sending a token fixes a 401; a 403 usually means the token is valid but lacks the right permissions.',
+      },
+      {
+        question: 'Can I test an API that requires login first?',
+        answer:
+          'Yes — most APIs that require login issue a token (from a separate login/auth endpoint) that you then attach to subsequent requests via the Authorization header. Test the login endpoint first to get a token, then paste that token into the Auth tab for the requests that need it.',
+      },
+    ],
+    relatedSlugs: ['what-is-a-cors-error'],
+    ctaText: 'Put this into practice with a real request.',
+    ctaToolHref: '/tools/developer/api-request-builder',
+    ctaToolLabel: 'Try the free API Request Builder',
+  },
+  {
+    slug: 'what-is-a-cors-error',
+    title: 'What Is a CORS Error, and How Do You Fix It?',
+    description:
+      'Why "blocked by CORS policy" shows up in your console, what’s actually enforcing it, and the real ways to fix it depending on whether you control the API.',
+    category: 'Developer Tools',
+    readTimeMinutes: 7,
+    publishedDate: '2026-08-15',
+    updatedDate: '2026-08-15',
+    intro: [
+      'A CORS error is one of the most common things a web developer runs into, and one of the most commonly misunderstood — it’s not a bug in your code, not a bug in the API, and not something you can fix by changing anything in your JavaScript. It’s the browser enforcing a rule that only the server on the other end can change.',
+      'This guide explains what’s actually happening, why it exists, and what your real options are depending on whether you control the API you’re calling.',
+    ],
+    sections: [
+      {
+        heading: 'What CORS actually is',
+        paragraphs: [
+          'CORS (Cross-Origin Resource Sharing) is a browser security rule: by default, JavaScript running on one origin (say, https://yourapp.com) can’t read the response from a request to a different origin (https://api.example.com), even though the request itself often goes out and the server responds normally. The browser gets the response and then throws it away before your code ever sees it, unless the server explicitly said it’s okay.',
+          'That "explicitly said it’s okay" is an Access-Control-Allow-Origin response header. If the API doesn’t send one that matches your origin, the browser blocks your JavaScript from reading the response — regardless of whether the request itself succeeded on the server.',
+        ],
+      },
+      {
+        heading: 'Why it exists',
+        paragraphs: [
+          'Without this rule, any website you visit could silently make authenticated requests to other sites you’re logged into — your bank, your email — using cookies your browser sends automatically, and read the responses. CORS (alongside the older same-origin policy it extends) exists specifically to stop that.',
+          'It’s worth internalizing: CORS protects the person visiting the API-calling site, not the API itself. A server that skips CORS headers entirely isn’t "insecure" in the way an open database would be — it’s just not opted in to being called from arbitrary browser JavaScript, which is a deliberate default, not an oversight.',
+        ],
+      },
+      {
+        heading: 'Why it works from Postman/curl but not the browser',
+        paragraphs: [
+          'CORS is enforced by browsers specifically, not by HTTP as a protocol. A command-line tool like curl, a desktop app like Postman, or a server calling another server all bypass it entirely — there’s no browser involved to enforce the rule. That’s the single most common reason "it works everywhere except my frontend" reports happen: everywhere else was never subject to the restriction in the first place.',
+        ],
+      },
+      {
+        heading: 'If you control the API',
+        paragraphs: [
+          'This is the real fix: add CORS headers on the server. In most frameworks this is a one-line middleware — Express’s cors package, Django’s django-cors-headers, Spring’s @CrossOrigin, and equivalents in every major framework. Set the allowed origin to your actual frontend domain (or a specific allowlist) rather than a wildcard if the request also sends credentials like cookies — browsers reject the combination of Access-Control-Allow-Origin: * with credentialed requests specifically.',
+        ],
+      },
+      {
+        heading: 'If you don’t control the API',
+        paragraphs: [
+          'If the API is a third party that hasn’t opted in to browser CORS for your origin, there’s no client-side trick that changes that — CORS isn’t a client capability gap, it’s enforced by the browser regardless of what JavaScript tries. The real options are: check if the provider has a CORS-enabled endpoint or offers one on request, route the call through your own backend so the browser is only ever talking to your own origin, or — for quick testing only — route through a CORS proxy that fetches the response server-side and adds the header for you.',
+          'A CORS proxy is a genuine convenience for testing, but it’s a real trade-off: the proxy operator sees everything in that request, including any auth headers or tokens. It’s fine for poking at a public API; it’s not something to route production traffic — or anything with real credentials — through by default.',
+        ],
+      },
+      {
+        heading: 'Common CORS mistakes to check for',
+        paragraphs: [
+          'A handful of specific misconfigurations account for most "I added CORS headers and it still doesn’t work" reports.',
+        ],
+        bullets: [
+          'Access-Control-Allow-Origin: * combined with credentials (cookies, Authorization headers with credentials: "include") — browsers reject this combination outright.',
+          'Headers added to the actual response but not to the OPTIONS preflight response — browsers check the preflight response’s headers before ever sending the real request for non-simple requests.',
+          'A typo or trailing slash mismatch between the allowed origin and the actual origin — these are checked as exact strings, not patterns, unless the server explicitly handles wildcards.',
+          'CORS headers added to the wrong layer — a CDN, load balancer, or reverse proxy in front of the API can strip or override headers the application itself sends.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'Is a CORS error a security vulnerability?',
+        answer:
+          'No — it’s the opposite. CORS blocking your request means the security feature is working as designed. A vulnerability would be an API that should restrict cross-origin access but doesn’t (or does so incorrectly, like allowing * with credentials); a CORS error itself is just the browser refusing to hand your JavaScript a response it wasn’t authorized to read.',
+      },
+      {
+        question: 'Can I just disable CORS in my browser?',
+        answer:
+          'Browser flags and extensions that disable CORS exist, but they only affect your own browser during testing — they don’t change how the API behaves for anyone else, including your users in production. Relying on one is a sign the API itself still needs a real fix before anything depending on it can ship.',
+      },
+      {
+        question: 'Does adding a CORS proxy "fix" CORS?',
+        answer:
+          'It works around it for testing, but it doesn’t fix the underlying cause — the API still isn’t opted in to browser access from your origin. A proxy fetches the response on a server (where CORS doesn’t apply) and re-serves it with the right header added. That’s fine for checking whether an endpoint works; it’s not a substitute for the API actually adding CORS support if you need this to work reliably in production.',
+      },
+      {
+        question: 'Why does my request fail with no error details, just "CORS error"?',
+        answer:
+          'This is a deliberate browser limitation, not a missing detail — for security reasons, browsers don’t expose why a cross-origin response was blocked (which header was missing, what the actual response was) to your JavaScript. To see what actually happened, check the Network tab in your browser’s DevTools, which shows the real response and headers even though your code can’t access them.',
+      },
+    ],
+    relatedSlugs: ['how-to-test-an-api'],
+    ctaText: 'See this handled for you, automatically.',
+    ctaToolHref: '/tools/developer/api-request-builder',
+    ctaToolLabel: 'Try the free API Request Builder',
+  },
 ];
 
 export const getGuideBySlug = (slug: string): Guide | undefined => GUIDES.find((guide) => guide.slug === slug);

@@ -25,6 +25,7 @@ import { JsonLd } from '../../components/seo/JsonLd';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { trackEvent } from '../../monitoring';
 import { TOOLS, getToolCategory, categoryTitle, toolTitle } from '../../tools/registry';
+import { getGuideBySlug } from '../../content/guides/data';
 import { useApiRequestBuilder, type RequestTab } from '../../tools/apiRequestBuilder/useApiRequestBuilder';
 import { EXAMPLE_REQUESTS } from '../../tools/apiRequestBuilder/exampleRequests';
 import {
@@ -61,6 +62,9 @@ import { smallButtonClass } from '../../components/tools/apiRequestBuilder/share
 const TOOL = TOOLS.find((t) => t.id === 'api-request-builder')!;
 const TOOL_CATEGORY = getToolCategory(TOOL.category)!;
 const SITE_ORIGIN = 'https://101techlabs.com';
+
+const RELATED_GUIDE_SLUGS = ['how-to-test-an-api', 'what-is-a-cors-error'] as const;
+const RELATED_GUIDES = RELATED_GUIDE_SLUGS.map((slug) => getGuideBySlug(slug)!).filter(Boolean);
 
 // Same UPI details used on the other free-tool pages (QR Code Generator, Invoice
 // Generator) — duplicated per-page rather than shared, matching that convention.
@@ -426,7 +430,7 @@ export const ApiRequestBuilderPage = () => {
               CORS Proxy
               {customProxy ? ': On' : corsProxySettings.mode === 'auto' ? ': Auto' : ': Off'}
             </button>
-            <Link to={lang === 'hi' ? '/hi' : '/guides'} className={smallButtonClass}>
+            <Link to={lang === 'hi' ? '/hi' : '/guides/how-to-test-an-api'} className={smallButtonClass}>
               <BookOpen size={13} aria-hidden="true" />
               Guide
             </Link>
@@ -555,6 +559,25 @@ export const ApiRequestBuilderPage = () => {
             </button>{' '}
             from the toolbar above, which sends the request through a server you choose instead of directly from your browser.
           </p>
+
+          {RELATED_GUIDES.length > 0 && (
+            <div className="mt-10 pt-8 border-t border-ink/10">
+              <h2 className="text-lg font-bold text-ink mb-4">Guides</h2>
+              <ul className="grid sm:grid-cols-2 gap-3">
+                {RELATED_GUIDES.map((guide) => (
+                  <li key={guide.slug}>
+                    <Link
+                      to={`/guides/${guide.slug}`}
+                      className="block p-4 rounded-2xl bg-bg-secondary border border-ink/5 hover:border-accent-blue/30 transition-colors"
+                    >
+                      <span className="font-bold text-ink">{guide.title}</span>
+                      <p className="text-secondary-text text-sm mt-1">{guide.description}</p>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </main>
 
