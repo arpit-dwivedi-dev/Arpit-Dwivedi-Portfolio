@@ -1,4 +1,4 @@
-import { MapPin, QrCode, Receipt, type LucideIcon } from 'lucide-react';
+import { MapPin, QrCode, Receipt, Send, type LucideIcon } from 'lucide-react';
 import type { Lang } from '../i18n/types';
 
 export interface ToolCategory {
@@ -138,6 +138,18 @@ export const TOOLS: ToolDefinition[] = [
     relatedToolIds: ['invoice-generator'],
     featured: true,
     judgment: 'Multi-URL and dual-platform QR codes encode all their routing data directly into the URL itself — no backend or database needed to resolve a scan.',
+  },
+  {
+    id: 'api-request-builder',
+    title: 'API Request Builder',
+    description: 'Build, send, and inspect HTTP requests from your browser — Postman-style params, headers, body, and auth, with cURL import/export and local history. No signup, no server in the middle.',
+    titleHi: 'API रिक्वेस्ट बिल्डर',
+    descriptionHi: 'अपने ब्राउज़र से HTTP रिक्वेस्ट बनाएं, भेजें, और जांचें — पैरामीटर, हेडर, बॉडी, और ऑथ के साथ, cURL इम्पोर्ट/एक्सपोर्ट और लोकल हिस्ट्री के साथ। कोई साइनअप नहीं, बीच में कोई सर्वर नहीं।',
+    icon: Send,
+    category: 'developer',
+    path: 'api-request-builder',
+    featured: true,
+    judgment: 'Requests go straight from your browser to the target API over fetch() — there is no proxy in between, so it only works against APIs that already allow browser CORS requests, same constraint any frontend app would hit.',
   },
 ];
 

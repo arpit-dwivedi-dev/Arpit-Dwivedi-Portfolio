@@ -50,6 +50,9 @@ const QRCodeGeneratorPage = lazy(() =>
 const QRRedirectPage = lazy(() =>
   import('./pages/tools/QRRedirectPage').then((m) => ({ default: m.QRRedirectPage })),
 );
+const ApiRequestBuilderPage = lazy(() =>
+  import('./pages/tools/ApiRequestBuilderPage').then((m) => ({ default: m.ApiRequestBuilderPage })),
+);
 const GuidesPage = lazy(() => import('./pages/GuidesPage').then((m) => ({ default: m.GuidesPage })));
 const GuidePage = lazy(() => import('./pages/GuidePage').then((m) => ({ default: m.GuidePage })));
 const BlogPage = lazy(() => import('./pages/BlogPage').then((m) => ({ default: m.BlogPage })));
@@ -120,6 +123,8 @@ export default function App() {
             <Route path="/hi/tools/generators/invoice-generator" element={lazyRoute(InvoiceGeneratorPage)} />
             <Route path="/tools/generators/qr-code-generator" element={lazyRoute(QRCodeGeneratorPage)} />
             <Route path="/hi/tools/generators/qr-code-generator" element={lazyRoute(QRCodeGeneratorPage)} />
+            <Route path="/tools/developer/api-request-builder" element={lazyRoute(ApiRequestBuilderPage)} />
+            <Route path="/hi/tools/developer/api-request-builder" element={lazyRoute(ApiRequestBuilderPage)} />
             {/* Not a content page — the smart-redirect target embedded inside
                Multi-URL / dual-platform App QR codes. See QRRedirectPage. */}
             <Route path="/tools/generators/qr-code-generator/go" element={lazyRoute(QRRedirectPage)} />
