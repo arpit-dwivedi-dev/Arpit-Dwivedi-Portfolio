@@ -32,6 +32,7 @@ interface CollectionsBrowserProps {
   onExportCollection: (id: string) => void;
   onImportFile: (file: File) => void;
   onOpenOpenApiImport: () => void;
+  onOpenPostmanImport: () => void;
   onCreateFolder: (collectionId: string, parentFolderId: string | null) => void;
   onRenameFolder: (id: string, name: string) => void;
   onDeleteFolder: (id: string) => void;
@@ -58,6 +59,7 @@ export const CollectionsBrowser = ({
   onExportCollection,
   onImportFile,
   onOpenOpenApiImport,
+  onOpenPostmanImport,
   onCreateFolder,
   onRenameFolder,
   onDeleteFolder,
@@ -297,6 +299,14 @@ export const CollectionsBrowser = ({
         >
           <FileUp size={14} aria-hidden="true" />
           Import OpenAPI
+        </button>
+        <button
+          type="button"
+          onClick={onOpenPostmanImport}
+          className="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-secondary-text hover:text-ink transition-colors"
+        >
+          <FileUp size={14} aria-hidden="true" />
+          Import Postman Collection
         </button>
         <button
           type="button"

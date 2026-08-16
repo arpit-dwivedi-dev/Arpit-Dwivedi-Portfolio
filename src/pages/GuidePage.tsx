@@ -6,6 +6,7 @@ import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/AchievementsContact';
 import { Breadcrumbs } from '../components/seo/Breadcrumbs';
 import { JsonLd } from '../components/seo/JsonLd';
+import { ApiExampleCard } from '../components/guides/ApiExampleCard';
 import { useLanguage } from '../i18n/LanguageContext';
 import { getGuideBySlug, getGuideRedirectTarget, getRelatedGuides } from '../content/guides/data';
 import { guideCategoryTitle, guidePath } from '../content/guides/categories';
@@ -130,6 +131,13 @@ export const GuidePage = () => {
                     <ul className="space-y-2 list-disc list-inside pt-1">
                       {section.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}
                     </ul>
+                  )}
+                  {section.examples && section.examples.length > 0 && (
+                    <div className="space-y-4 pt-2">
+                      {section.examples.map((example) => (
+                        <ApiExampleCard key={example.title} example={example} />
+                      ))}
+                    </div>
                   )}
                 </div>
               </section>

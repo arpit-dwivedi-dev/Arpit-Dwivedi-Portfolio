@@ -31,11 +31,13 @@ import { JsonLd } from '../../components/seo/JsonLd';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { useTheme } from '../../theme/ThemeContext';
 import { trackEvent } from '../../monitoring';
-import { TOOLS, getToolCategory, categoryTitle, toolTitle } from '../../tools/registry';
+import { TOOLS, getToolCategory, getRelatedTools, categoryTitle, toolTitle, toolDescription } from '../../tools/registry';
 import { getGuideBySlug } from '../../content/guides/data';
 import { guidePath } from '../../content/guides/categories';
 import { useApiRequestBuilder, type RequestTab } from '../../tools/apiRequestBuilder/useApiRequestBuilder';
 import { EXAMPLE_REQUESTS } from '../../tools/apiRequestBuilder/exampleRequests';
+import { API_REQUEST_BUILDER_FAQ, API_REQUEST_BUILDER_GUIDE_SLUGS } from '../../tools/apiRequestBuilder/seoContent';
+import { CODE_LANGUAGE_LABELS } from '../../tools/apiRequestBuilder/codeGenerators';
 import {
   listHistory,
   deleteHistoryEntry,
@@ -90,6 +92,7 @@ import { buildShareUrl, decodeShareRequest, readShareParam } from '../../tools/a
 import { MAX_IMPORT_TEXT_LENGTH, buildExportPayload, parseExportPayload } from '../../tools/apiRequestBuilder/exportFormat';
 import { buildImportPlan } from '../../tools/apiRequestBuilder/importFormat';
 import type { OpenApiImportPlan } from '../../tools/apiRequestBuilder/openapi';
+import type { PostmanImportPlan } from '../../tools/apiRequestBuilder/postman';
 import { MethodSelect } from '../../components/tools/apiRequestBuilder/MethodSelect';
 import { RequestTabs } from '../../components/tools/apiRequestBuilder/RequestTabs';
 import { KeyValueEditor } from '../../components/tools/apiRequestBuilder/KeyValueEditor';
@@ -103,6 +106,7 @@ import { SaveRequestModal } from '../../components/tools/apiRequestBuilder/SaveR
 import { MoveRequestModal } from '../../components/tools/apiRequestBuilder/MoveRequestModal';
 import { CurlImportModal } from '../../components/tools/apiRequestBuilder/CurlImportModal';
 import { OpenApiImportModal } from '../../components/tools/apiRequestBuilder/OpenApiImportModal';
+import { PostmanImportModal } from '../../components/tools/apiRequestBuilder/PostmanImportModal';
 import { CodeGenModal } from '../../components/tools/apiRequestBuilder/CodeGenModal';
 import { ShareModal } from '../../components/tools/apiRequestBuilder/ShareModal';
 import { Modal } from '../../components/tools/apiRequestBuilder/Modal';
@@ -114,13 +118,16 @@ const TOOL = TOOLS.find((t) => t.id === 'api-request-builder')!;
 const TOOL_CATEGORY = getToolCategory(TOOL.category)!;
 const SITE_ORIGIN = 'https://101techlabs.com';
 
-const RELATED_GUIDE_SLUGS = ['how-to-test-an-api', 'what-is-a-cors-error'] as const;
-const RELATED_GUIDES = RELATED_GUIDE_SLUGS.map((slug) => getGuideBySlug(slug)!).filter(Boolean);
+const RELATED_GUIDES = API_REQUEST_BUILDER_GUIDE_SLUGS.map((slug) => getGuideBySlug(slug)!).filter(Boolean);
+// Named individually (rather than indexed off RELATED_GUIDES) so the deep-link
+// targets below stay correct even if the guide list above is ever reordered.
+const HOW_TO_TEST_GUIDE = getGuideBySlug('how-to-test-an-api')!;
+const CORS_GUIDE = getGuideBySlug('what-is-a-cors-error')!;
+const RELATED_TOOLS = getRelatedTools(TOOL);
 
 // Same UPI details used on the other free-tool pages (QR Code Generator, Invoice
 // Generator) — duplicated per-page rather than shared, matching that convention.
 const UPI_ID = 'marpit697.ad@ybl';
-const UPI_NUMBER = '7071520965';
 const UPI_PAYEE_NAME = 'Arpit Dwivedi';
 const UPI_LINK = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(UPI_PAYEE_NAME)}&cu=INR`;
 
@@ -183,11 +190,11 @@ export const ApiRequestBuilderPage = () => {
   const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [curlModalOpen, setCurlModalOpen] = useState(false);
   const [openApiModalOpen, setOpenApiModalOpen] = useState(false);
+  const [postmanModalOpen, setPostmanModalOpen] = useState(false);
   const [codeGenModalOpen, setCodeGenModalOpen] = useState(false);
   const [corsProxyModalOpen, setCorsProxyModalOpen] = useState(false);
   const [corsProxySettings, setCorsProxySettings] = useState<CorsProxySettings>(getCorsProxySettings);
   const [coffeeModalOpen, setCoffeeModalOpen] = useState(false);
-  const [copiedUpiField, setCopiedUpiField] = useState<'upi' | 'number' | null>(null);
   const [currentSavedId, setCurrentSavedId] = useState<string | null>(null);
   const [urlCopied, setUrlCopied] = useState(false);
   const [curlCopied, setCurlCopied] = useState(false);
@@ -205,12 +212,6 @@ export const ApiRequestBuilderPage = () => {
   const [moveModalOpen, setMoveModalOpen] = useState(false);
   const urlInputRef = useRef<HTMLInputElement>(null);
   const noticeTimeoutRef = useRef<number | null>(null);
-
-  const handleCopyUpi = (field: 'upi' | 'number', value: string) => {
-    navigator.clipboard.writeText(value).catch(() => {});
-    setCopiedUpiField(field);
-    window.setTimeout(() => setCopiedUpiField(null), 1500);
-  };
 
   const showNotice = (tone: 'ok' | 'error', message: string) => {
     setNotice({ tone, message });
@@ -419,6 +420,24 @@ export const ApiRequestBuilderPage = () => {
   // requests/environment) before this fires — the user has already seen and confirmed the
   // preview there, so this only ever persists via the existing storage APIs and refreshes.
   const handleOpenApiImport = (plan: OpenApiImportPlan) => {
+    upsertCollection(plan.collection);
+    for (const folder of plan.folders) upsertFolder(folder);
+    for (const request of plan.requests) upsertSavedRequest(request);
+    if (plan.environment) upsertEnvironment(plan.environment);
+    refreshCollectionsAndFolders();
+    refreshSaved();
+    if (plan.environment) refreshEnvironments();
+
+    showNotice(
+      'ok',
+      `Imported "${plan.collection.name}" — ${plan.folders.length} folder${plan.folders.length === 1 ? '' : 's'}, ${plan.requests.length} request${plan.requests.length === 1 ? '' : 's'}.`,
+    );
+  };
+
+  // Same contract as handleOpenApiImport: the Postman modal already parsed, validated, and built
+  // the whole plan before this fires and the user has already seen/confirmed the preview there, so
+  // this only ever persists via the existing storage APIs and refreshes.
+  const handlePostmanImport = (plan: PostmanImportPlan) => {
     upsertCollection(plan.collection);
     for (const folder of plan.folders) upsertFolder(folder);
     for (const request of plan.requests) upsertSavedRequest(request);
@@ -665,6 +684,18 @@ export const ApiRequestBuilderPage = () => {
         }}
       />
 
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: API_REQUEST_BUILDER_FAQ.map((item) => ({
+            '@type': 'Question',
+            name: item.question,
+            acceptedAnswer: { '@type': 'Answer', text: item.answer },
+          })),
+        }}
+      />
+
       <main id="main-content" className="pt-28 pb-24 sm:pb-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="mb-4">
@@ -868,7 +899,8 @@ export const ApiRequestBuilderPage = () => {
           <p className="text-xs text-secondary-text mb-4 leading-snug">
             <ShieldCheck size={12} className="inline -mt-0.5 mr-1 text-accent-blue" aria-hidden="true" />
             Sent directly from your browser via <code className="font-mono text-ink">fetch()</code> — nothing passes through our
-            servers; history/saved requests stay in local storage.
+            servers, unless a CORS-blocked request falls back to a public proxy (Auto mode, on by default; shown next to the
+            response when it happens). History/saved requests stay in local storage.
             {customProxy && (
               <>
                 {' '}
@@ -1022,34 +1054,213 @@ export const ApiRequestBuilderPage = () => {
             </div>
           )}
 
-          <p className="text-xs text-secondary-text mt-8 leading-relaxed max-w-2xl">
-            If a request fails immediately with no response, your browser most likely blocked it because the target API does not
-            allow requests from this origin (CORS) — or there's a network issue reaching it. This is a browser/API configuration
-            constraint, not a bug in this tool. By default nothing routes around it — you can opt into a{' '}
-            <button type="button" onClick={() => setCorsProxyModalOpen(true)} className="underline hover:text-ink">
-              CORS proxy
-            </button>{' '}
-            from the toolbar above, which sends the request through a server you choose instead of directly from your browser.
-          </p>
-
-          {RELATED_GUIDES.length > 0 && (
-            <div id="related-guides" className="mt-10 pt-8 border-t border-ink/10 scroll-mt-24">
-              <h2 className="text-lg font-bold text-ink mb-4">Guides</h2>
-              <ul className="grid sm:grid-cols-2 gap-3">
-                {RELATED_GUIDES.map((guide) => (
-                  <li key={guide.slug}>
-                    <Link
-                      to={guidePath(guide)}
-                      className="block p-4 rounded-2xl bg-bg-secondary border border-ink/5 hover:border-accent-blue/30 transition-colors"
-                    >
-                      <span className="font-bold text-ink">{guide.title}</span>
-                      <p className="text-secondary-text text-sm mt-1">{guide.description}</p>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+          {/* SEO/content layer — a working tool first, a short explanation of it second. Kept
+              below the tool and its empty-state examples so a first-time visitor lands on
+              something usable, not a wall of text (see PART 15 of the content brief). */}
+          <div className="mt-10 pt-8 border-t border-ink/10 space-y-12">
+            <div className="max-w-2xl">
+              <h2 className="text-lg font-bold text-ink mb-3">What Is an API Request Builder?</h2>
+              <p className="text-secondary-text text-sm leading-relaxed">
+                An API request builder lets you construct and send an HTTP request — choosing a method (GET, POST, PUT, PATCH,
+                DELETE, and more), setting query parameters and headers, adding a request body, and attaching authentication —
+                then inspect exactly what the server sends back. It's the same exchange your application code makes every time
+                it calls that same endpoint, just visible and editable by hand instead of hidden inside your code. For a full
+                walkthrough of each piece, read{' '}
+                <Link to={guidePath(HOW_TO_TEST_GUIDE)} className="text-accent-blue hover:underline">
+                  How to Test an API
+                </Link>
+                .
+              </p>
             </div>
-          )}
+
+            <div className="max-w-2xl">
+              <h2 className="text-lg font-bold text-ink mb-3">Test REST APIs Directly in Your Browser</h2>
+              <p className="text-secondary-text text-sm leading-relaxed">
+                This tool runs entirely in your browser and sends requests with the standard{' '}
+                <code className="font-mono text-ink">fetch()</code> API — no install, no account. Because it's browser-based, it
+                runs into the same constraint any frontend app does: a request only succeeds against a target API that
+                explicitly allows cross-origin browser requests, or through a proxy you opt into. See{' '}
+                <a href="#cors" className="text-accent-blue hover:underline">
+                  CORS and browser-based testing
+                </a>{' '}
+                below for the details.
+              </p>
+            </div>
+
+            <div>
+              <h2 className="text-lg font-bold text-ink mb-4">Features</h2>
+              <div className="grid sm:grid-cols-3 gap-3">
+                <div className="p-4 rounded-2xl bg-bg-secondary border border-ink/5">
+                  <h3 className="font-bold text-ink text-sm mb-2">Request building</h3>
+                  <ul className="text-secondary-text text-xs leading-relaxed space-y-1 list-disc list-inside">
+                    <li>GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS</li>
+                    <li>Query parameters and custom headers</li>
+                    <li>Bearer, Basic, and API key authentication</li>
+                    <li>JSON, form URL-encoded, multipart, and raw bodies</li>
+                  </ul>
+                </div>
+                <div className="p-4 rounded-2xl bg-bg-secondary border border-ink/5">
+                  <h3 className="font-bold text-ink text-sm mb-2">Response inspection</h3>
+                  <ul className="text-secondary-text text-xs leading-relaxed space-y-1 list-disc list-inside">
+                    <li>Status code and timing</li>
+                    <li>Full response headers</li>
+                    <li>Pretty-printed JSON, XML, and text</li>
+                    <li>Image and binary response preview</li>
+                  </ul>
+                </div>
+                <div className="p-4 rounded-2xl bg-bg-secondary border border-ink/5">
+                  <h3 className="font-bold text-ink text-sm mb-2">Developer workflow</h3>
+                  <ul className="text-secondary-text text-xs leading-relaxed space-y-1 list-disc list-inside">
+                    <li>Environments and variables</li>
+                    <li>Collections, folders, and saved requests</li>
+                    <li>Local request history</li>
+                    <li>cURL, OpenAPI, and Postman import</li>
+                    <li>Code generation and shareable links</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="max-w-2xl">
+              <h2 className="text-lg font-bold text-ink mb-3">How to Test an API</h2>
+              <ol className="text-secondary-text text-sm leading-relaxed space-y-1.5 list-decimal list-inside">
+                <li>Enter the API URL.</li>
+                <li>Choose the HTTP method.</li>
+                <li>Add query parameters or headers.</li>
+                <li>Configure authentication, if the API needs it.</li>
+                <li>Add a request body, if the method takes one.</li>
+                <li>Pick an environment, if the request uses variables.</li>
+                <li>Send the request.</li>
+                <li>Inspect the status, headers, and body in the response.</li>
+              </ol>
+            </div>
+
+            <div id="cors" className="max-w-2xl scroll-mt-24">
+              <h2 className="text-lg font-bold text-ink mb-3">CORS and Browser-Based API Testing</h2>
+              <div className="text-secondary-text text-sm leading-relaxed space-y-3">
+                <p>
+                  Browsers enforce a same-origin security rule: JavaScript on one origin can't read a response from a different
+                  origin unless that server explicitly allows it via an{' '}
+                  <code className="font-mono text-ink">Access-Control-Allow-Origin</code> header. That applies to any
+                  browser-based tool, this one included — a request that works from curl or a desktop app can still fail here,
+                  because those tools aren't subject to the restriction at all. Credentials sent as cookies are also still
+                  governed by your browser's own cookie and CORS policy on top of this, regardless of what's set in the Auth tab.
+                </p>
+                <p>
+                  If a direct request is blocked, this tool can automatically retry it through a small pool of public CORS
+                  proxies in{' '}
+                  <button type="button" onClick={() => setCorsProxyModalOpen(true)} className="text-accent-blue hover:underline">
+                    Auto mode
+                  </button>{' '}
+                  — the default — or through a proxy URL you configure yourself. A proxy fetches the response on a server, where
+                  CORS doesn't apply, and adds the missing header back; this tool doesn't and can't bypass CORS on its own.
+                </p>
+                <p>
+                  Routing through any proxy is a real trust boundary: whichever server handles the request can see its URL,
+                  headers, and body, including auth tokens. Use your own proxy — or self-host one of the open-source options in
+                  CORS Proxy settings — for anything with real credentials.
+                </p>
+                <p>
+                  <Link to={guidePath(CORS_GUIDE)} className="text-accent-blue hover:underline">
+                    Read the full CORS explanation →
+                  </Link>
+                </p>
+              </div>
+            </div>
+
+            <div className="max-w-2xl">
+              <h2 className="text-lg font-bold text-ink mb-3">Generate Code From Any Request</h2>
+              <p className="text-secondary-text text-sm leading-relaxed mb-3">
+                Once a request works, generate the equivalent code instead of retyping it —{' '}
+                {Object.values(CODE_LANGUAGE_LABELS).join(', ')} — from the Code button in the toolbar. Test the call here
+                first, then paste the working implementation into your codebase.
+              </p>
+              <pre className="rounded-xl border border-ink/10 bg-ink/5 p-3 text-xs font-mono text-ink overflow-x-auto">
+                <code>{'fetch("https://api.example.com/users", {\n  method: "GET",\n  headers: { "Authorization": "Bearer <token>" }\n})'}</code>
+              </pre>
+            </div>
+
+            <div className="max-w-2xl">
+              <h2 className="text-lg font-bold text-ink mb-3">Bring In Existing API Definitions</h2>
+              <ul className="text-secondary-text text-sm leading-relaxed space-y-1.5 list-disc list-inside mb-3">
+                <li>
+                  <strong className="text-ink font-medium">cURL</strong> — paste a curl command (in the URL bar, or via Import
+                  cURL) to reconstruct the method, headers, body, and auth.
+                </li>
+                <li>
+                  <strong className="text-ink font-medium">OpenAPI 3.0/3.1</strong> — import a spec (JSON or YAML) and every
+                  operation becomes a saved, organized request.
+                </li>
+                <li>
+                  <strong className="text-ink font-medium">Postman Collection</strong> — import a v2.1 collection, folders and
+                  all.
+                </li>
+                <li>
+                  <strong className="text-ink font-medium">Collection JSON</strong> — export or import this tool's own
+                  collections as a portable file, for backup or moving between browsers.
+                </li>
+              </ul>
+              <p className="text-secondary-text text-xs font-mono">
+                Existing definition → import → organize into folders → pick an environment → send and inspect → copy the
+                generated code.
+              </p>
+            </div>
+
+            <div>
+              <h2 className="text-lg font-bold text-ink mb-4">FAQ</h2>
+              <div className="space-y-3">
+                {API_REQUEST_BUILDER_FAQ.map((item) => (
+                  <div key={item.question} className="p-4 rounded-2xl bg-bg-secondary border border-ink/5">
+                    <h3 className="font-bold text-ink text-sm mb-1">{item.question}</h3>
+                    <p className="text-secondary-text text-sm leading-relaxed">{item.answer}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {RELATED_GUIDES.length > 0 && (
+              <div id="related-guides" className="scroll-mt-24">
+                <div className="flex items-baseline justify-between gap-3 mb-4">
+                  <h2 className="text-lg font-bold text-ink">Guides</h2>
+                  <Link to="/guides/developer-tools" className="text-xs font-medium text-accent-blue hover:underline shrink-0">
+                    See all developer guides
+                  </Link>
+                </div>
+                <ul className="grid sm:grid-cols-2 gap-3">
+                  {RELATED_GUIDES.map((guide) => (
+                    <li key={guide.slug}>
+                      <Link
+                        to={guidePath(guide)}
+                        className="block p-4 rounded-2xl bg-bg-secondary border border-ink/5 hover:border-accent-blue/30 transition-colors"
+                      >
+                        <span className="font-bold text-ink">{guide.title}</span>
+                        <p className="text-secondary-text text-sm mt-1">{guide.description}</p>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {RELATED_TOOLS.length > 0 && (
+              <div>
+                <h2 className="text-lg font-bold text-ink mb-4">Related Tools</h2>
+                <ul className="grid sm:grid-cols-2 gap-3">
+                  {RELATED_TOOLS.map((related) => (
+                    <li key={related.id}>
+                      <Link
+                        to={`${toolsBase}/${related.category}/${related.path}`}
+                        className="block p-4 rounded-2xl bg-bg-secondary border border-ink/5 hover:border-accent-blue/30 transition-colors"
+                      >
+                        <span className="font-bold text-ink">{toolTitle(related, lang)}</span>
+                        <p className="text-secondary-text text-sm mt-1">{toolDescription(related, lang)}</p>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
       </main>
 
@@ -1099,6 +1310,7 @@ export const ApiRequestBuilderPage = () => {
             onExportCollection={handleExportCollection}
             onImportFile={(file) => void handleImportFile(file)}
             onOpenOpenApiImport={() => setOpenApiModalOpen(true)}
+            onOpenPostmanImport={() => setPostmanModalOpen(true)}
             onCreateFolder={handleCreateFolder}
             onRenameFolder={handleRenameFolder}
             onDeleteFolder={handleDeleteFolder}
@@ -1280,6 +1492,14 @@ export const ApiRequestBuilderPage = () => {
         onImport={handleOpenApiImport}
       />
 
+      <PostmanImportModal
+        open={postmanModalOpen}
+        onClose={() => setPostmanModalOpen(false)}
+        existingCollectionNames={collections.map((c) => c.name)}
+        existingEnvironmentNames={environments.map((e) => e.name)}
+        onImport={handlePostmanImport}
+      />
+
       <CodeGenModal
         open={codeGenModalOpen}
         onClose={() => setCodeGenModalOpen(false)}
@@ -1323,44 +1543,12 @@ export const ApiRequestBuilderPage = () => {
         maxWidthClassName="max-w-sm"
       >
         <p className="text-sm text-secondary-text mb-4">
-          This tool is free, with no signup and no ads gating it. If it saved you time, a coffee is always appreciated.
+          This tool is free, with no signup and no ads gating it. If you like the work, you can support it — scan the QR and pay.
         </p>
 
-        <div className="flex justify-center mb-4">
+        <div className="flex justify-center">
           <div className="p-3 rounded-2xl bg-white">
             <QRCodeSVG value={UPI_LINK} size={180} bgColor="#ffffff" fgColor="#000000" level="M" includeMargin={false} />
-          </div>
-        </div>
-
-        <div className="space-y-3">
-          <div className="flex items-center justify-between gap-2 px-4 py-3 rounded-xl bg-ink/5">
-            <div className="min-w-0">
-              <p className="text-xs font-mono text-secondary-text">UPI ID</p>
-              <p className="text-sm font-bold text-ink truncate">{UPI_ID}</p>
-            </div>
-            <button
-              type="button"
-              onClick={() => handleCopyUpi('upi', UPI_ID)}
-              className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-accent-blue/10 text-accent-blue text-xs font-bold hover:bg-accent-blue/20 transition-all"
-            >
-              {copiedUpiField === 'upi' ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
-              {copiedUpiField === 'upi' ? 'Copied' : 'Copy'}
-            </button>
-          </div>
-
-          <div className="flex items-center justify-between gap-2 px-4 py-3 rounded-xl bg-ink/5">
-            <div className="min-w-0">
-              <p className="text-xs font-mono text-secondary-text">UPI Number</p>
-              <p className="text-sm font-bold text-ink truncate">{UPI_NUMBER}</p>
-            </div>
-            <button
-              type="button"
-              onClick={() => handleCopyUpi('number', UPI_NUMBER)}
-              className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-accent-blue/10 text-accent-blue text-xs font-bold hover:bg-accent-blue/20 transition-all"
-            >
-              {copiedUpiField === 'number' ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
-              {copiedUpiField === 'number' ? 'Copied' : 'Copy'}
-            </button>
           </div>
         </div>
       </Modal>

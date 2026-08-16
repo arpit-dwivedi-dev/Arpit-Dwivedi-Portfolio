@@ -54,7 +54,6 @@ const REDIRECT_PAGE_URL = `${SITE_ORIGIN}/tools/generators/qr-code-generator/go`
 const PLACEHOLDER_QR_VALUE = 'https://101techlabs.com/';
 
 const UPI_ID = 'marpit697.ad@ybl';
-const UPI_NUMBER = '7071520965';
 const UPI_PAYEE_NAME = 'Arpit Dwivedi';
 const UPI_LINK = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(UPI_PAYEE_NAME)}&cu=INR`;
 
@@ -105,13 +104,6 @@ export const QRCodeGeneratorPage = () => {
   const [copied, setCopied] = useState(false);
   const [clipboardSupported, setClipboardSupported] = useState(false);
   const [upiModalOpen, setUpiModalOpen] = useState(false);
-  const [copiedField, setCopiedField] = useState<'upi' | 'number' | null>(null);
-
-  const handleCopyUpi = (field: 'upi' | 'number', value: string) => {
-    navigator.clipboard.writeText(value).catch(() => {});
-    setCopiedField(field);
-    setTimeout(() => setCopiedField(null), 1500);
-  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -784,41 +776,9 @@ export const QRCodeGeneratorPage = () => {
 
               <p className="text-sm text-secondary-text mb-4">{t.upiModalBody}</p>
 
-              <div className="flex justify-center mb-4">
+              <div className="flex justify-center">
                 <div className="p-3 rounded-2xl bg-white">
                   <QRCodeSVG value={UPI_LINK} size={180} bgColor="#ffffff" fgColor="#000000" level="M" includeMargin={false} />
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center justify-between gap-2 px-4 py-3 rounded-xl bg-ink/5">
-                  <div className="min-w-0">
-                    <p className="text-xs font-mono text-secondary-text">{t.upiIdLabel}</p>
-                    <p className="text-sm font-bold text-ink truncate">{UPI_ID}</p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => handleCopyUpi('upi', UPI_ID)}
-                    className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-accent-blue/10 text-accent-blue text-xs font-bold hover:bg-accent-blue/20 transition-all"
-                  >
-                    {copiedField === 'upi' ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
-                    {copiedField === 'upi' ? t.copiedButton : t.copyButton}
-                  </button>
-                </div>
-
-                <div className="flex items-center justify-between gap-2 px-4 py-3 rounded-xl bg-ink/5">
-                  <div className="min-w-0">
-                    <p className="text-xs font-mono text-secondary-text">{t.upiNumberLabel}</p>
-                    <p className="text-sm font-bold text-ink truncate">{UPI_NUMBER}</p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => handleCopyUpi('number', UPI_NUMBER)}
-                    className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-accent-blue/10 text-accent-blue text-xs font-bold hover:bg-accent-blue/20 transition-all"
-                  >
-                    {copiedField === 'number' ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
-                    {copiedField === 'number' ? t.copiedButton : t.copyButton}
-                  </button>
                 </div>
               </div>
             </motion.div>

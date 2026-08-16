@@ -30,9 +30,9 @@ export const TOOL_CATEGORIES: ToolCategory[] = [
   {
     slug: 'developer',
     title: 'Developer Tools',
-    description: 'Everyday utilities for formatting, testing, and debugging code.',
+    description: 'Test REST APIs and diagram database schemas, right in your browser — no signup required.',
     titleHi: 'डेवलपर टूल्स',
-    descriptionHi: 'कोड फॉर्मेटिंग, टेस्टिंग, और डिबगिंग के लिए रोज़मर्रा की यूटिलिटीज़।',
+    descriptionHi: 'अपने ब्राउज़र में REST API टेस्ट करें और डेटाबेस स्कीमा डायग्राम बनाएं — कोई साइनअप ज़रूरी नहीं।',
   },
   {
     slug: 'ai',
@@ -142,14 +142,15 @@ export const TOOLS: ToolDefinition[] = [
   {
     id: 'api-request-builder',
     title: 'API Request Builder',
-    description: 'Build, send, and inspect HTTP requests from your browser — Postman-style params, headers, body, and auth, with cURL import/export and local history. No signup, no server in the middle.',
+    description: 'Build, send, and inspect HTTP requests from your browser — params, headers, body, and auth, with environments, collections, cURL/OpenAPI/Postman import, and code generation. No signup, no account required.',
     titleHi: 'API रिक्वेस्ट बिल्डर',
-    descriptionHi: 'अपने ब्राउज़र से HTTP रिक्वेस्ट बनाएं, भेजें, और जांचें — पैरामीटर, हेडर, बॉडी, और ऑथ के साथ, cURL इम्पोर्ट/एक्सपोर्ट और लोकल हिस्ट्री के साथ। कोई साइनअप नहीं, बीच में कोई सर्वर नहीं।',
+    descriptionHi: 'अपने ब्राउज़र से HTTP रिक्वेस्ट बनाएं, भेजें, और जांचें — पैरामीटर, हेडर, बॉडी, और ऑथ के साथ, एनवायरनमेंट, कलेक्शन, cURL/OpenAPI/Postman इम्पोर्ट, और कोड जनरेशन के साथ। कोई साइनअप नहीं, कोई अकाउंट ज़रूरी नहीं।',
     icon: Send,
     category: 'developer',
     path: 'api-request-builder',
     featured: true,
-    judgment: 'Requests go straight from your browser to the target API over fetch() — there is no proxy in between, so it only works against APIs that already allow browser CORS requests, same constraint any frontend app would hit.',
+    relatedToolIds: ['dbml-diagram-builder'],
+    judgment: 'By default, requests go straight from your browser to the target API over fetch() — a proxy only enters the picture if a direct request gets CORS-blocked and the automatic fallback kicks in, or you explicitly configure one, so the common case still has nothing in between.',
   },
   {
     id: 'dbml-diagram-builder',
@@ -161,6 +162,7 @@ export const TOOLS: ToolDefinition[] = [
     category: 'developer',
     path: 'dbml-diagram-builder',
     featured: true,
+    relatedToolIds: ['api-request-builder'],
     judgment: 'Node positions are keyed by table name and stored per-diagram — editing a column keeps every table exactly where you dragged it, and only a genuinely new table gets auto-placed.',
   },
 ];

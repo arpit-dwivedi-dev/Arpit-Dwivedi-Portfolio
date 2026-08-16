@@ -1,7 +1,13 @@
+import type { ApiExample } from '../../tools/apiRequestBuilder/example';
+
 export interface GuideSection {
   heading: string;
   paragraphs: string[];
   bullets?: string[];
+  /** Interactive "Open in API Request Builder" examples for this section (see
+   *  src/tools/apiRequestBuilder/example.ts and components/guides/ApiExampleCard.tsx).
+   *  Optional and additive — a section with no examples renders exactly as before. */
+  examples?: ApiExample[];
 }
 
 export interface GuideFaqItem {
