@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import {
+  BookOpen,
   Check,
   Command,
   Database,
@@ -24,6 +25,10 @@ import {
 import { Link } from 'react-router-dom';
 import { DropdownMenu, DropdownItem } from './DropdownMenu';
 import type { UiPrefs } from '../../../tools/dbmlDiagramBuilder/persistence/localStorage';
+import { getGuideBySlug } from '../../../content/guides/data';
+import { guidePath } from '../../../content/guides/categories';
+
+const DBML_GUIDE_PATH = guidePath(getGuideBySlug('how-to-write-dbml')!);
 
 interface HeaderProps {
   documentName: string;
@@ -283,6 +288,15 @@ export function Header({
           </button>
         )}
 
+        <Link
+          to={DBML_GUIDE_PATH}
+          title="DBML guide"
+          aria-label="Read the DBML guide"
+          className="w-8 h-8 hidden md:flex items-center justify-center rounded hover:bg-slate-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
+        >
+          <BookOpen size={16} />
+        </Link>
+
         <button
           type="button"
           onClick={onOpenHelp}
@@ -336,6 +350,15 @@ export function Header({
                 <DropdownItem icon={<HelpCircle size={14} />} onClick={() => { onOpenHelp(); close(); }}>
                   Help & shortcuts
                 </DropdownItem>
+                <Link
+                  to={DBML_GUIDE_PATH}
+                  role="menuitem"
+                  onClick={close}
+                  className="w-full flex items-center gap-2 px-3 py-1.5 text-left text-[13px] text-slate-200 hover:bg-slate-800 focus-visible:bg-slate-800 focus-visible:outline-none"
+                >
+                  <BookOpen size={14} />
+                  DBML guide
+                </Link>
               </>
             )}
           </DropdownMenu>

@@ -31,7 +31,18 @@ const MIME = {
 async function getRoutes() {
   const sitemap = await readFile(path.join(ROOT, 'public/sitemap.xml'), 'utf8');
   const routes = [...sitemap.matchAll(/<loc>https:\/\/101techlabs\.com([^<]*)<\/loc>/g)].map((m) => m[1] || '/');
-  return [...new Set(routes)];
+
+  // Guides flagged noindex are deliberately left out of sitemap.xml (see
+  // generate-sitemap.mjs) but must still resolve to a real HTTP-200 static
+  // file on GitHub Pages if someone has the link — the alternative is the
+  // raw 404-status SPA shell for any client that doesn't execute JS. Adding
+  // them here (not to the sitemap) still gets them prerendered with their
+  // noindex meta tag baked in, without advertising the URL to crawlers.
+  const { GUIDES } = await import(path.join(ROOT, 'src/content/guides/data.ts'));
+  const { guidePath } = await import(path.join(ROOT, 'src/content/guides/categories.ts'));
+  const noindexRoutes = GUIDES.filter((guide) => guide.noindex).map((guide) => guidePath(guide));
+
+  return [...new Set([...routes, ...noindexRoutes])];
 }
 
 // The pristine, un-prerendered SPA shell — captured once, before any route

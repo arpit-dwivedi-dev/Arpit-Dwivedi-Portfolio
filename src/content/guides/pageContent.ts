@@ -6,6 +6,7 @@ export interface GuidesIndexContent {
   description: string;
   allGuidesLabel: string;
   categoriesAriaLabel: string;
+  otherCategoriesLabel: string;
   ctaText: string;
   ctaButton: string;
   readTimeSuffix: string;
@@ -28,14 +29,15 @@ export interface GuideDetailContent {
 // typing.
 export const guidesIndexContent: GuidesIndexContent = {
   breadcrumbLabel: 'Guides',
-  eyebrow: 'Invoicing Guides',
-  title: 'Learn',
-  titleAccent: 'Invoicing',
-  description: 'No-fluff invoicing guides for freelancers and small businesses — not accountants.',
+  eyebrow: 'Free Tool Guides',
+  title: 'No-Fluff',
+  titleAccent: 'Guides',
+  description: 'Practical guides, tutorials, and explanations for the tools and workflows available on 101 Tech Labs.',
   allGuidesLabel: 'All Guides',
-  categoriesAriaLabel: 'Filter guides by category',
+  categoriesAriaLabel: 'Browse guides by category',
+  otherCategoriesLabel: 'Other Categories',
   ctaText: 'Ready to put this into practice?',
-  ctaButton: 'Try the free Invoice Generator',
+  ctaButton: 'Browse the free tools',
   readTimeSuffix: 'min read',
 };
 

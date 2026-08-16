@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import metadata from '../../metadata.json';
 import { hiContent } from '../content/hi';
 import { getGuideBySlug } from '../content/guides/data';
+import { getGuideCategory } from '../content/guides/categories';
 import { getBlogPostBySlug } from '../content/blog/data';
 import type { SiteContent, Lang } from './types';
 
@@ -172,8 +173,8 @@ const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; description: st
         'Write DBML and see a live, interactive ER diagram — runs entirely in your browser. Import/export DBML, PNG, and SVG, with local save and shareable links. No signup, no server.',
     },
     guides: {
-      title: 'Invoicing Guides | 101 Tech Labs',
-      description: 'Practical guides on making invoices, setting payment terms, invoice numbering, and getting paid on time.',
+      title: 'Guides & Tutorials | 101 Tech Labs',
+      description: 'Practical guides, tutorials, and explanations for 101 Tech Labs tools and workflows.',
     },
     blog: {
       title: 'Engineering Notes | 101 Tech Labs',
@@ -251,8 +252,8 @@ const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; description: st
         'Write DBML and see a live, interactive ER diagram — runs entirely in your browser. Import/export DBML, PNG, and SVG, with local save and shareable links. No signup, no server.',
     },
     guides: {
-      title: 'Invoicing Guides | 101 Tech Labs',
-      description: 'Practical guides on making invoices, setting payment terms, invoice numbering, and getting paid on time.',
+      title: 'Guides & Tutorials | 101 Tech Labs',
+      description: 'Practical guides, tutorials, and explanations for 101 Tech Labs tools and workflows.',
     },
     blog: {
       title: 'Engineering Notes | 101 Tech Labs',
@@ -301,16 +302,40 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
       '/blog': 'blog',
     };
     const routeKey: RouteKey = ROUTE_KEY_BY_PATH[basePathname] ?? 'home';
-    // Guide/post slugs are dynamic (/guides/:slug, /blog/:slug) so they can't
-    // live in the static map above — look the specific item up and override
-    // the generic "guides"/"blog" meta with its title/description when one
-    // matches.
-    const guideMatch = basePathname.startsWith('/guides/') ? getGuideBySlug(basePathname.slice('/guides/'.length)) : undefined;
+    // Guide/post slugs are dynamic (/guides/:slug, /guides/:category/:slug,
+    // /blog/:slug) so they can't live in the static map above — look the
+    // specific item up and override the generic "guides"/"blog" meta with
+    // its title/description when one matches. The legacy single-segment
+    // /guides/:slug shape is shared by category pages (/guides/invoicing)
+    // and old flat article URLs (/guides/how-to-make-an-invoice) — see
+    // GuideOrCategoryPage for the render-time resolution; category wins the
+    // same way here. The canonical two-segment /guides/:category/:slug shape
+    // only matches when the guide's own category agrees with the URL
+    // segment, same validation GuidePage does, so a mismatched combination
+    // (e.g. /guides/qr-code/how-to-make-an-invoice) falls through to the
+    // generic "guides" meta rather than describing the wrong article.
+    const guideSegments = basePathname.startsWith('/guides/')
+      ? basePathname.slice('/guides/'.length).split('/')
+      : undefined;
+    const categoryMatch =
+      guideSegments?.length === 1 ? getGuideCategory(guideSegments[0]) : undefined;
+    const legacyGuideMatch =
+      guideSegments?.length === 1 && !categoryMatch ? getGuideBySlug(guideSegments[0]) : undefined;
+    const canonicalGuideMatch =
+      guideSegments?.length === 2
+        ? (() => {
+            const [categorySlug, articleSlug] = guideSegments;
+            const guide = getGuideBySlug(articleSlug);
+            return guide && guide.category === categorySlug ? guide : undefined;
+          })()
+        : undefined;
+    const guideMatch = legacyGuideMatch ?? canonicalGuideMatch;
     const blogMatch = basePathname.startsWith('/blog/') ? getBlogPostBySlug(basePathname.slice('/blog/'.length)) : undefined;
-    const dynamicMatch = guideMatch ?? blogMatch;
-    const meta = dynamicMatch
-      ? { title: `${dynamicMatch.title} | 101 Tech Labs`, description: dynamicMatch.description }
-      : ROUTE_META[lang][routeKey];
+    const meta = categoryMatch
+      ? { title: `${categoryMatch.title} Guides | 101 Tech Labs`, description: categoryMatch.description }
+      : (guideMatch ?? blogMatch)
+        ? { title: `${(guideMatch ?? blogMatch)!.title} | 101 Tech Labs`, description: (guideMatch ?? blogMatch)!.description }
+        : ROUTE_META[lang][routeKey];
     const canonicalHref = absoluteUrl(lang, basePathname);
 
     document.title = meta.title;

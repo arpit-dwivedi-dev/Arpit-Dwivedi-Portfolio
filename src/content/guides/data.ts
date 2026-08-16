@@ -14,7 +14,7 @@ export const GUIDES: Guide[] = [
     title: 'How to Make an Invoice: A Step-by-Step Guide',
     description:
       'What every invoice needs, how to format one, and how to send it so you get paid on time — with a plain checklist you can reuse for every client.',
-    category: 'Document Basics',
+    category: 'invoicing',
     readTimeMinutes: 8,
     publishedDate: '2026-08-05',
     updatedDate: '2026-08-05',
@@ -96,7 +96,7 @@ export const GUIDES: Guide[] = [
     title: 'Invoice Payment Terms Explained: Net 30, Net 15, and Due on Receipt',
     description:
       'What Net 30, Net 15, and Due on Receipt actually mean, how to pick the right terms for a client, and how to write them so there’s no ambiguity about when you get paid.',
-    category: 'Getting Paid',
+    category: 'invoicing',
     readTimeMinutes: 7,
     publishedDate: '2026-08-05',
     updatedDate: '2026-08-05',
@@ -171,7 +171,7 @@ export const GUIDES: Guide[] = [
     title: 'How to Number Your Invoices (Without Losing Track)',
     description:
       'A simple, sustainable invoice numbering system — sequential, date-based, or client-based — plus how to fix a numbering system that’s already inconsistent.',
-    category: 'Document Basics',
+    category: 'invoicing',
     readTimeMinutes: 6,
     publishedDate: '2026-08-05',
     updatedDate: '2026-08-05',
@@ -245,18 +245,25 @@ export const GUIDES: Guide[] = [
     title: 'How to Get Paid Faster: Practical Ways to Speed Up Invoice Payments',
     description:
       'Concrete, low-effort changes to your invoicing process — clearer invoices, upfront deposits, and better timing — that shorten how long clients take to pay.',
-    category: 'Getting Paid',
-    readTimeMinutes: 8,
+    category: 'invoicing',
+    readTimeMinutes: 9,
     publishedDate: '2026-08-05',
-    updatedDate: '2026-08-05',
+    updatedDate: '2026-08-16',
     intro: [
       'Most late payments aren’t caused by clients who don’t want to pay — they’re caused by friction: an unclear invoice, an inconvenient payment method, or simply no reminder before the due date slipped past. Fixing the friction usually does more for your cash flow than chasing harder after the fact.',
     ],
     sections: [
       {
+        heading: 'Find out where the delay is actually happening',
+        paragraphs: [
+          'Before changing anything, look at your last few months of invoices and note where the slowdown happens: does the client open the invoice quickly but sit on it, or does it go unopened for days? Is it the same one or two clients every time, or spread across most of them?',
+          'A pattern tied to specific clients usually points to a relationship or cash-flow issue on their end, which no invoicing change will fully fix. A pattern spread across most clients usually means the invoice itself, your terms, or your reminder process is the weak point — and that’s the part worth fixing first.',
+        ],
+      },
+      {
         heading: 'Make it easy to say yes',
         paragraphs: [
-          'Every extra step between "client opens the invoice" and "client pays it" is a chance for the payment to stall. A clear breakdown of what’s owed, an obvious total, and at least one payment method the client already uses regularly (bank transfer, card, UPI) removes most of that friction.',
+          'Every extra step between "client opens the invoice" and "client pays it" is a chance for the payment to stall. A clear breakdown of what’s owed, a due date stated as an actual calendar date rather than just a term like "Net 30," and at least one payment method the client already uses regularly (bank transfer, card, UPI) removes most of that friction.',
           'If you only accept one narrow payment method, you’re relying on the client to go out of their way to use it. Offering a second option — even a simple one — measurably reduces how often payment gets pushed to "later, when I have time to figure this out."',
         ],
       },
@@ -276,8 +283,12 @@ export const GUIDES: Guide[] = [
       {
         heading: 'Use reminders — before the due date, not just after',
         paragraphs: [
-          'A short reminder two or three days before the due date prevents far more late payments than a reminder after the date has already passed, because it catches invoices that simply got buried in someone’s inbox rather than actively ignored.',
-          'Keep reminders short and neutral in tone: a reference to the invoice number, amount, and due date is usually enough. Save firmer language for genuinely overdue invoices, not upcoming ones.',
+          'A short reminder two or three days before the due date prevents far more late payments than a reminder after the date has already passed, because it catches invoices that simply got buried in someone’s inbox rather than actively ignored. Keep reminders short and neutral in tone — a reference to the invoice number, amount, and due date is usually enough.',
+        ],
+        bullets: [
+          'A few days before due: a short heads-up with the amount and due date',
+          'On the due date: a brief confirmation request',
+          'A few days after: a direct reminder, in firmer language, that it’s now overdue',
         ],
       },
       {
@@ -309,15 +320,20 @@ export const GUIDES: Guide[] = [
         answer:
           'That’s a reasonable option once the pattern is established rather than a one-off. Requiring upfront deposits or moving to Due on Receipt terms for that client is often a softer first step before cutting them off entirely.',
       },
+      {
+        question: 'Should I use the same payment terms for every client?',
+        answer:
+          'No — it’s reasonable to offer better terms to reliable, long-term clients and tighter terms, or deposits, to new clients or ones with a history of paying late.',
+      },
     ],
-    relatedSlugs: ['invoice-payment-terms', 'invoice-late-fees', 'how-to-reduce-late-payments'],
+    relatedSlugs: ['invoice-payment-terms', 'invoice-late-fees', 'invoice-follow-up'],
   },
   {
     slug: 'invoice-late-fees',
     title: 'Invoice Late Fees: How to Charge Them the Right Way',
     description:
       'How to structure a late fee, add it to your invoices and contracts, and enforce it without damaging a client relationship you want to keep.',
-    category: 'Getting Paid',
+    category: 'invoicing',
     readTimeMinutes: 7,
     publishedDate: '2026-08-05',
     updatedDate: '2026-08-05',
@@ -387,87 +403,11 @@ export const GUIDES: Guide[] = [
     relatedSlugs: ['invoice-payment-terms', 'how-to-get-paid-faster', 'bad-debt'],
   },
   {
-    slug: 'how-to-reduce-late-payments',
-    title: 'How to Reduce Late Payments: A Practical Guide',
-    description:
-      'Most late payments are preventable. Practical changes to your invoicing process — terms, reminders, and payment options — that measurably cut how often clients pay late.',
-    category: 'Getting Paid',
-    readTimeMinutes: 8,
-    publishedDate: '2026-08-10',
-    updatedDate: '2026-08-10',
-    intro: [
-      'Late payments feel personal, but they’re usually a process problem, not a character problem. A client who’s paid you on time for a year doesn’t suddenly become dishonest — more often, the invoice got buried, the payment method was inconvenient, or nobody flagged the due date before it passed.',
-      'Reducing late payments is mostly about removing the small frictions that let a payment slip, and building in reminders before a due date is missed rather than only chasing after it.',
-    ],
-    sections: [
-      {
-        heading: 'Find out where payments are actually slipping',
-        paragraphs: [
-          'Before changing anything, look at your last few months of invoices and note where the delay happens: does the client open the invoice quickly but sit on it, or does it sit unopened for days? Is it always the same one or two clients, or is it spread across most of them?',
-          'A pattern with specific clients usually means a relationship or cash-flow issue on their end. A pattern across most clients usually means the invoice itself, your terms, or your reminder process is the weak point — and that’s the part you can fix directly.',
-        ],
-      },
-      {
-        heading: 'Tighten the invoice and the terms',
-        paragraphs: [
-          'An invoice with a vague total, no explicit due date, or line items the client has to decode invites a delay while they figure out what they actually owe. State the due date as a calendar date, not just a term like "Net 30," and keep line items specific enough that no one has to ask you what they’re for.',
-          'Agree on terms before the work starts, in the proposal or contract, so the invoice is confirming something the client already accepted rather than introducing a new condition after the fact.',
-        ],
-      },
-      {
-        heading: 'Remove friction from paying',
-        paragraphs: [
-          'If a client has to log into a portal, mail a cheque, or figure out your bank details from an email signature, that’s an extra step that gives procrastination room to work. Offering at least one payment method the client already uses regularly — card, bank transfer, UPI — cuts the time between "I should pay this" and "I paid this."',
-        ],
-      },
-      {
-        heading: 'Remind before the due date, not just after',
-        paragraphs: [
-          'A short, neutral reminder two or three days before the due date catches invoices that simply got buried, which is the single biggest driver of "accidental" late payment. Save firmer language for invoices that are actually overdue.',
-        ],
-        bullets: [
-          'A few days before due: a short heads-up with the amount and due date',
-          'On the due date: a brief confirmation request',
-          'A few days after: a direct reminder that it’s now overdue',
-        ],
-      },
-      {
-        heading: 'Make the cost of paying late explicit',
-        paragraphs: [
-          'A stated late fee, even a small one, changes how a client prioritizes your invoice against everyone else they owe money to. It works mainly as a deterrent — most clients pay before it ever kicks in — but it needs to be agreed to upfront in the contract, not introduced after the fact.',
-        ],
-      },
-    ],
-    faq: [
-      {
-        question: 'What’s the fastest way to cut down on late payments?',
-        answer:
-          'Send a short reminder a few days before the due date. It catches invoices that were simply forgotten or buried, which causes far more "late" payments than clients deliberately withholding money.',
-      },
-      {
-        question: 'Do stricter payment terms actually reduce late payments?',
-        answer:
-          'Sometimes, but not automatically — a client whose internal approval process only runs monthly will still pay on their own schedule regardless of what the invoice says. Shorter terms help most for clients who control their own payment timing, like individuals or small businesses.',
-      },
-      {
-        question: 'Should I charge every client the same terms?',
-        answer:
-          'No — it’s reasonable to offer better terms to reliable, long-term clients and tighter terms (or deposits) to new clients or ones with a history of paying late.',
-      },
-      {
-        question: 'Is it worth switching invoicing tools just to reduce late payments?',
-        answer:
-          'Only if your current process makes it hard to track due dates and send reminders consistently. The tool matters less than having a repeatable reminder habit — a spreadsheet with reminders sent on schedule will outperform a fancy tool used inconsistently.',
-      },
-    ],
-    relatedSlugs: ['how-to-get-paid-faster', 'invoice-follow-up'],
-  },
-  {
     slug: 'accept-online-payments',
     title: 'How to Accept Online Payments on Your Invoices',
     description:
       'Compare ways to accept credit card, ACH, and other online payments on invoices — fees, setup effort, and how offering one cuts payment friction and gets you paid faster.',
-    category: 'Getting Paid',
+    category: 'invoicing',
     readTimeMinutes: 7,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -540,7 +480,7 @@ export const GUIDES: Guide[] = [
     title: 'Invoice Follow-Up: How to Ask for Payment Without It Being Awkward',
     description:
       'A professional invoice follow-up process — timelines, sample wording, and escalation steps — that gets you paid faster without straining the client relationship.',
-    category: 'Getting Paid',
+    category: 'invoicing',
     readTimeMinutes: 7,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -608,7 +548,7 @@ export const GUIDES: Guide[] = [
     title: 'Invoice Reminder Templates: What to Send and When',
     description:
       'Ready-to-use invoice reminder templates for every stage — before due, due today, and overdue — plus guidance on timing and tone to get invoices paid faster.',
-    category: 'Getting Paid',
+    category: 'invoicing',
     readTimeMinutes: 7,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -680,10 +620,10 @@ export const GUIDES: Guide[] = [
     title: 'Overdue Invoices: A Step-by-Step Guide to Getting Paid',
     description:
       'A step-by-step guide to handling overdue invoices professionally — when to follow up, how to escalate, and how to protect the client relationship while you do it.',
-    category: 'Getting Paid',
-    readTimeMinutes: 8,
+    category: 'invoicing',
+    readTimeMinutes: 9,
     publishedDate: '2026-08-10',
-    updatedDate: '2026-08-10',
+    updatedDate: '2026-08-16',
     intro: [
       'An invoice becomes overdue the moment the due date passes without payment — but how you handle the next few weeks matters far more than the fact that it happened. Most overdue invoices get paid; the ones that don’t are usually mishandled early, either ignored too long or escalated too fast.',
     ],
@@ -707,15 +647,21 @@ export const GUIDES: Guide[] = [
         ],
       },
       {
-        heading: 'Step 4: Put it in writing formally',
+        heading: 'Step 4: Offer a payment plan if it makes sense',
+        paragraphs: [
+          'If a client explains they’re short on cash rather than refusing to pay, a structured payment plan — a portion now, the rest over a few installments — often gets you paid faster and more fully than continuing to demand the full amount at once. It also preserves the relationship better than an all-or-nothing standoff, and it’s worth offering before moving to a formal notice.',
+        ],
+      },
+      {
+        heading: 'Step 5: Put it in writing formally',
         paragraphs: [
           'Past two or three weeks overdue with no resolution, a more formal written notice — sometimes called a collection letter — signals that you’re treating this seriously. State the amount, the original due date, any late fee applied, and a clear deadline for response before further action.',
         ],
       },
       {
-        heading: 'Step 5: Decide on further action',
+        heading: 'Step 6: Decide on further action',
         paragraphs: [
-          'If a formal notice doesn’t resolve it, your realistic options are a collections agency, small claims court (for smaller amounts, depending on your jurisdiction’s threshold), or writing the invoice off as bad debt. Which makes sense depends on the amount owed, the cost and time of pursuing it, and whether preserving the relationship still matters.',
+          'If a formal notice doesn’t resolve it, your realistic options are a collections agency, small claims court (for smaller amounts, depending on your jurisdiction’s threshold), invoice factoring for larger B2B invoices, or writing the invoice off as bad debt. Which makes sense depends on the amount owed, the cost and time of pursuing it, and whether preserving the relationship still matters.',
         ],
       },
     ],
@@ -740,15 +686,25 @@ export const GUIDES: Guide[] = [
         answer:
           'There’s no fixed rule, but a common signal is prolonged silence despite multiple follow-ups through different channels (email and phone), combined with no explanation offered. At that point, it’s reasonable to weigh formal collection against writing it off.',
       },
+      {
+        question: 'Is small claims court worth it for a small invoice?',
+        answer:
+          'It depends on the amount and your jurisdiction’s process — small claims is generally designed to be accessible without a lawyer, but it still costs time and a filing fee, so weigh it against the invoice amount before pursuing it.',
+      },
+      {
+        question: 'Should I offer a discount to get an overdue invoice settled faster?',
+        answer:
+          'It can make sense for a large, aging invoice, where a partial payment now is worth more to your cash flow than holding out for the full amount later — but it should be a deliberate decision, not a default response to every overdue invoice.',
+      },
     ],
-    relatedSlugs: ['collect-unpaid-invoices', 'invoice-late-fees'],
+    relatedSlugs: ['invoice-late-fees', 'collection-letter-templates', 'bad-debt'],
   },
   {
     slug: 'collection-letter-templates',
     title: 'Collection Letter Templates for Unpaid Invoices',
     description:
       'Free collection letter templates for every stage of an unpaid invoice — from a first formal notice to a final demand — with professional wording that avoids damaging the relationship.',
-    category: 'Getting Paid',
+    category: 'invoicing',
     readTimeMinutes: 7,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -814,82 +770,11 @@ export const GUIDES: Guide[] = [
     relatedSlugs: ['overdue-invoices', 'bad-debt'],
   },
   {
-    slug: 'collect-unpaid-invoices',
-    title: 'How to Collect Unpaid Invoices Without Burning the Relationship',
-    description:
-      'A calm, step-by-step process for collecting unpaid invoices — from friendly reminders to formal escalation — while protecting the client relationship as much as possible.',
-    category: 'Getting Paid',
-    readTimeMinutes: 8,
-    publishedDate: '2026-08-10',
-    updatedDate: '2026-08-10',
-    intro: [
-      'Collecting an unpaid invoice is uncomfortable mostly because it feels like a binary choice between staying silent and burning the relationship. In practice there’s a wide middle ground — a calm, gradually escalating process that resolves most unpaid invoices without either outcome.',
-    ],
-    sections: [
-      {
-        heading: 'Start from the assumption it’s fixable',
-        paragraphs: [
-          'Most unpaid invoices aren’t a refusal to pay — they’re a cash-flow crunch, an internal approval delay, or an invoice that got lost. Starting the conversation from that assumption, rather than treating the client as a bad actor, keeps the first few interactions low-friction and usually resolves things faster.',
-        ],
-      },
-      {
-        heading: 'Escalate gradually',
-        paragraphs: [
-          'Move from a friendly reminder, to a direct follow-up, to a phone call, to a formal written notice — in that order, spaced days apart rather than all at once. Skipping straight to a formal or threatening tone on a first-time delay usually damages the relationship more than the late payment itself does.',
-        ],
-      },
-      {
-        heading: 'Offer a payment plan if the amount is large',
-        paragraphs: [
-          'If a client explains they’re short on cash, a structured payment plan — a portion now, the rest over a few installments — often gets you paid faster and more fully than continuing to demand the full amount at once. It also preserves the relationship better than an all-or-nothing standoff.',
-        ],
-      },
-      {
-        heading: 'Know your formal options',
-        paragraphs: ['If informal steps don’t work, a few formal paths exist, each with different tradeoffs:'],
-        bullets: [
-          'Small claims court — often viable for smaller amounts without needing a lawyer, though limits and process vary by jurisdiction.',
-          'A collections agency — takes a cut of what’s recovered but handles the pursuit for you, useful once you don’t want to spend more time chasing it yourself.',
-          'Invoice factoring — selling the unpaid invoice to a third party for a discounted immediate payout, more relevant for larger B2B invoices than freelance work.',
-        ],
-      },
-      {
-        heading: 'Decide when to stop pursuing it',
-        paragraphs: [
-          'Chasing a small unpaid invoice indefinitely can cost more in time and stress than the invoice is worth. If formal options aren’t proportionate to the amount owed, writing it off as bad debt and moving on — while adjusting how you work with that client going forward — is a legitimate business decision, not a failure.',
-        ],
-      },
-    ],
-    faq: [
-      {
-        question: 'What’s the first thing I should do when an invoice goes unpaid?',
-        answer:
-          'Send a friendly, direct reminder that assumes the invoice was simply missed. Most unpaid invoices resolve at this stage without needing anything more formal.',
-      },
-      {
-        question: 'Is small claims court worth it for a small invoice?',
-        answer:
-          'It depends on the amount and your jurisdiction’s process — small claims is generally designed to be accessible without a lawyer, but it still costs time and a filing fee, so it’s worth weighing against the invoice amount before pursuing it.',
-      },
-      {
-        question: 'Should I offer a discount to get an unpaid invoice settled faster?',
-        answer:
-          'It can make sense for a large, aging invoice where getting a partial payment now is worth more to your cash flow than holding out for the full amount later — but it should be a deliberate decision, not a default response to every unpaid invoice.',
-      },
-      {
-        question: 'How do I keep working with a client after collecting a late payment from them?',
-        answer:
-          'Once resolved, it’s reasonable to adjust future terms — a deposit, shorter payment terms, or Due on Receipt — rather than pretending the delay didn’t happen. Most clients understand tighter terms after a late payment; it rarely needs to end the relationship.',
-      },
-    ],
-    relatedSlugs: ['bad-debt', 'collection-letter-templates'],
-  },
-  {
     slug: 'bad-debt',
     title: 'Bad Debt: What It Is and How to Reduce It',
     description:
       'What bad debt is, why invoices become uncollectible, how to spot the warning signs early, and practical ways to reduce bad debt and protect your cash flow.',
-    category: 'Getting Paid',
+    category: 'invoicing',
     readTimeMinutes: 7,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -955,14 +840,14 @@ export const GUIDES: Guide[] = [
           'Requiring a deposit on larger jobs. It caps your maximum loss on any single client to the unpaid remainder rather than the full project value, and it filters out clients who were never going to follow through.',
       },
     ],
-    relatedSlugs: ['collect-unpaid-invoices', 'accounts-receivable'],
+    relatedSlugs: ['overdue-invoices', 'accounts-receivable'],
   },
   {
     slug: 'quote-vs-invoice',
     title: 'Quote vs Invoice: What’s the Difference?',
     description:
       'The difference between a quote and an invoice, when each becomes legally binding, and how both fit into your sales workflow — with plain examples.',
-    category: 'Document Basics',
+    category: 'invoicing',
     readTimeMinutes: 6,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -1028,7 +913,7 @@ export const GUIDES: Guide[] = [
     title: 'Estimate vs Quote: What’s the Difference?',
     description:
       'What an estimate and a quote each mean, when to use one over the other, how they lead to an invoice, and which one to send your customer first.',
-    category: 'Document Basics',
+    category: 'invoicing',
     readTimeMinutes: 6,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -1093,7 +978,7 @@ export const GUIDES: Guide[] = [
     title: 'Invoice vs Receipt: What’s the Difference?',
     description:
       'Invoice vs receipt, explained simply: an invoice asks for payment, a receipt proves it. Learn when to use each, what to include, and how they fit together.',
-    category: 'Document Basics',
+    category: 'invoicing',
     readTimeMinutes: 6,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -1157,7 +1042,7 @@ export const GUIDES: Guide[] = [
     title: 'Invoice Statuses Explained: Draft, Sent, Overdue, Paid, Void',
     description:
       'Draft, sent, overdue, paid, void — learn what every invoice status means and exactly what to do next at each stage of the invoice lifecycle.',
-    category: 'Document Basics',
+    category: 'invoicing',
     readTimeMinutes: 6,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -1231,10 +1116,10 @@ export const GUIDES: Guide[] = [
     title: 'Credit Notes: What They Are and When to Issue One',
     description:
       'What a credit note is, when to issue one, and how it differs from an invoice, refund, and receipt — with examples and a step-by-step template.',
-    category: 'Document Basics',
+    category: 'invoicing',
     readTimeMinutes: 6,
     publishedDate: '2026-08-10',
-    updatedDate: '2026-08-10',
+    updatedDate: '2026-08-16',
     intro: [
       'A credit note is a document that reduces what a client owes — or records money owed back to them — without editing the original invoice. It’s the standard way to correct an invoice after it’s been sent, especially once it’s already been recorded in either party’s books.',
     ],
@@ -1286,7 +1171,12 @@ export const GUIDES: Guide[] = [
       {
         question: 'Is a credit note the same as a credit memo?',
         answer:
-          'Yes — they’re the same document under different regional naming conventions, more commonly "credit memo" in North America and "credit note" elsewhere.',
+          'Yes — they’re the same document under different regional naming conventions, more commonly "credit memo" in North America and "credit note" in the UK, Europe, and much of the rest of the world. Some accounting software picks one term and uses it regardless of region, which is often where the confusion starts.',
+      },
+      {
+        question: 'Is a credit memo different from a debit memo?',
+        answer:
+          'Yes — a credit memo (or credit note) reduces what’s owed, while a debit memo increases it, for example to bill for an undercharge on a prior invoice. They serve opposite purposes despite the similar name.',
       },
       {
         question: 'Do credit notes need their own numbering sequence?',
@@ -1294,70 +1184,14 @@ export const GUIDES: Guide[] = [
           'It’s clearer if they do — a separate sequence (like "CN-") makes it obvious at a glance which documents are corrections versus original invoices.',
       },
     ],
-    relatedSlugs: ['credit-memo-vs-credit-note', 'invoice-disputes'],
-  },
-  {
-    slug: 'credit-memo-vs-credit-note',
-    title: 'Credit Memo vs Credit Note: What’s the Difference?',
-    description:
-      'Credit memo vs credit note explained: they’re the same document under two regional names. Learn when to issue one, what to include, and how it differs from a refund.',
-    category: 'Document Basics',
-    readTimeMinutes: 5,
-    publishedDate: '2026-08-10',
-    updatedDate: '2026-08-10',
-    intro: [
-      'Credit memo and credit note refer to the same thing — a document that reduces what a client owes on a previously issued invoice. The difference between the two terms is regional convention, not function.',
-    ],
-    sections: [
-      {
-        heading: 'Where each term is used',
-        paragraphs: [
-          '"Credit memo" is more common in North American accounting terminology, while "credit note" is more widely used in the UK, Europe, and much of the rest of the world. Some accounting software picks one term and uses it exclusively regardless of region, which is often where the confusion starts.',
-        ],
-      },
-      {
-        heading: 'What it does either way',
-        paragraphs: [
-          'Whichever name is used, the document does the same job: it formally reduces the amount owed on an existing invoice, references that original invoice by number, and states the reason for the adjustment — an overcharge, a return, a cancellation, or a post-invoice discount.',
-        ],
-      },
-      {
-        heading: 'Does it matter which term you use?',
-        paragraphs: [
-          'Not functionally, as long as it’s consistent within your own records and clear to the client. If you work with international clients, using whichever term matches their region (or simply explaining what the document does) avoids confusion more than debating which term is "correct."',
-        ],
-      },
-    ],
-    faq: [
-      {
-        question: 'Which term should I use on my invoicing templates?',
-        answer:
-          'Whichever is more familiar to your typical clients. If you invoice mostly US clients, "credit memo" will read as more standard; for UK, EU, or most other regions, "credit note" is the more familiar term.',
-      },
-      {
-        question: 'Is a credit memo different from a debit memo?',
-        answer:
-          'Yes — a credit memo reduces what’s owed, while a debit memo increases it (for example, to bill for an undercharge on a prior invoice). They serve opposite purposes despite the similar name.',
-      },
-      {
-        question: 'Do both terms require the same information?',
-        answer:
-          'Yes — regardless of which term you use, the document should reference the original invoice, state a reason for the adjustment, and show the amount being credited.',
-      },
-      {
-        question: 'Can I use "credit note" and "credit memo" interchangeably within the same business?',
-        answer:
-          'It’s better not to — pick one term and use it consistently across your templates and records so clients and your own bookkeeping don’t have to guess whether they mean different things.',
-      },
-    ],
-    relatedSlugs: ['credit-notes', 'invoice-disputes'],
+    relatedSlugs: ['invoice-disputes', 'invoice-vs-receipt'],
   },
   {
     slug: 'purchase-order',
     title: 'What Is a Purchase Order? A Plain-English Guide',
     description:
       'What a purchase order is, how POs work, what they include, and how they differ from quotes and invoices — with a real example.',
-    category: 'Document Basics',
+    category: 'invoicing',
     readTimeMinutes: 6,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -1423,7 +1257,7 @@ export const GUIDES: Guide[] = [
     title: 'Purchase Order vs Invoice: What’s the Difference?',
     description:
       'Purchase order vs invoice explained simply: the buyer sends the PO to authorize a purchase, the seller sends the invoice to request payment.',
-    category: 'Document Basics',
+    category: 'invoicing',
     readTimeMinutes: 5,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -1479,7 +1313,7 @@ export const GUIDES: Guide[] = [
     title: 'What Is a Receipt? When to Issue One and What to Include',
     description:
       'What a receipt is, when to issue one, what to include, and how it differs from an invoice and a payment confirmation — with a sample receipt and template.',
-    category: 'Document Basics',
+    category: 'invoicing',
     readTimeMinutes: 6,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -1546,7 +1380,7 @@ export const GUIDES: Guide[] = [
     title: 'Commercial Invoice: What It Is and When You Need One',
     description:
       'What a commercial invoice is, when it’s required, and every field it must include — so your international shipments clear customs without delays.',
-    category: 'Document Basics',
+    category: 'invoicing',
     readTimeMinutes: 7,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -1614,7 +1448,7 @@ export const GUIDES: Guide[] = [
     title: 'Pro Forma Invoice: What It Is and When to Use One',
     description:
       'A pro forma invoice communicates expected costs before payment is due. Learn what it is, when to use one, what to include, and how it differs from an invoice.',
-    category: 'Document Basics',
+    category: 'invoicing',
     readTimeMinutes: 6,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -1679,7 +1513,7 @@ export const GUIDES: Guide[] = [
     title: 'Recurring Invoices: How to Automate Billing for Repeat Clients',
     description:
       'What recurring invoices are, when to use them, and how to automate billing to get paid on time. A practical guide for freelancers and small businesses.',
-    category: 'Client Billing',
+    category: 'invoicing',
     readTimeMinutes: 7,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -1751,7 +1585,7 @@ export const GUIDES: Guide[] = [
     title: 'Customer Statements: What They Are and When to Send Them',
     description:
       'What a customer statement is, how it differs from an invoice, what to include, and when to send one so you get paid faster on outstanding balances.',
-    category: 'Client Billing',
+    category: 'invoicing',
     readTimeMinutes: 6,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -1817,7 +1651,7 @@ export const GUIDES: Guide[] = [
     title: 'Invoice Deposits: How to Request Upfront Payment the Right Way',
     description:
       'When and how to request invoice deposits and partial payments, how much to ask for, and sample wording to get paid upfront without losing clients.',
-    category: 'Client Billing',
+    category: 'invoicing',
     readTimeMinutes: 7,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -1885,7 +1719,7 @@ export const GUIDES: Guide[] = [
     title: 'Progress Invoicing: How to Bill Large Projects in Stages',
     description:
       'Progress invoicing lets you bill large projects in stages as work is completed — how it works, methods, a worked example, and how it differs from deposits.',
-    category: 'Client Billing',
+    category: 'invoicing',
     readTimeMinutes: 7,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -1955,7 +1789,7 @@ export const GUIDES: Guide[] = [
     title: 'Payment Plans: How to Offer Installments Without Hurting Cash Flow',
     description:
       'How to offer customer payment plans that improve collections and protect relationships — when to use them, how to structure installments, and sample wording.',
-    category: 'Client Billing',
+    category: 'invoicing',
     readTimeMinutes: 7,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -2016,14 +1850,14 @@ export const GUIDES: Guide[] = [
           'More so than to an established one — for new clients, it’s reasonable to require a larger first installment upfront, or to reserve payment plans for existing clients with a track record, rather than offering them by default to anyone.',
       },
     ],
-    relatedSlugs: ['invoice-deposits', 'collect-unpaid-invoices'],
+    relatedSlugs: ['invoice-deposits', 'overdue-invoices'],
   },
   {
     slug: 'retainer-agreements',
     title: 'Retainer Agreements: How They Work and How to Invoice Them',
     description:
       'How retainer agreements work, the main types, how to invoice a retainer, and how they differ from recurring invoices, deposits, and progress invoicing.',
-    category: 'Client Billing',
+    category: 'invoicing',
     readTimeMinutes: 7,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -2088,7 +1922,7 @@ export const GUIDES: Guide[] = [
     title: 'Cash Flow: A Plain-English Guide for Small Businesses',
     description:
       'A plain-English guide to small business cash flow — what it is, why it beats profit as a health signal, 10 ways to improve it, and how to forecast it.',
-    category: 'Business Finance',
+    category: 'invoicing',
     readTimeMinutes: 8,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -2160,7 +1994,8 @@ export const GUIDES: Guide[] = [
     title: 'Gross Profit vs Net Profit: What’s the Difference?',
     description:
       'Gross profit shows if your work is profitable; net profit shows if your business is. Learn the difference, how to calculate each, and what the margins mean.',
-    category: 'Business Finance',
+    category: 'invoicing',
+    noindex: true,
     readTimeMinutes: 6,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -2222,7 +2057,8 @@ export const GUIDES: Guide[] = [
     title: 'How to Read Financial Statements: A Beginner’s Guide',
     description:
       'Learn how to read the income statement, balance sheet, and cash flow statement in plain English — and use them to make smarter business decisions.',
-    category: 'Business Finance',
+    category: 'invoicing',
+    noindex: true,
     readTimeMinutes: 9,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -2290,7 +2126,7 @@ export const GUIDES: Guide[] = [
     title: 'How to Price Your Services: A Practical Guide',
     description:
       'How to price your services with confidence — pricing models compared, a step-by-step rate formula, worked examples, and how to raise prices.',
-    category: 'Business Finance',
+    category: 'invoicing',
     readTimeMinutes: 9,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -2367,7 +2203,7 @@ export const GUIDES: Guide[] = [
     title: 'Accounts Receivable: A Plain-English Guide for Small Businesses',
     description:
       'A plain-English guide to accounts receivable for small businesses. Learn the AR process, key metrics, common mistakes, and how to get paid faster.',
-    category: 'Business Finance',
+    category: 'invoicing',
     readTimeMinutes: 8,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -2432,7 +2268,7 @@ export const GUIDES: Guide[] = [
     title: 'Invoice Aging Report: What It Is and How to Use One',
     description:
       'Learn what an invoice aging report is, how to read the aging buckets, and how to use it to prioritize collections and get paid faster — with a sample report.',
-    category: 'Business Finance',
+    category: 'invoicing',
     readTimeMinutes: 7,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -2499,7 +2335,7 @@ export const GUIDES: Guide[] = [
     title: 'Days Sales Outstanding (DSO): What It Is and How to Reduce It',
     description:
       'What Days Sales Outstanding is, the DSO formula, a worked example, what counts as a good DSO, and practical ways to reduce it and get paid faster.',
-    category: 'Business Finance',
+    category: 'invoicing',
     readTimeMinutes: 7,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -2572,7 +2408,7 @@ export const GUIDES: Guide[] = [
     title: 'Accounts Receivable Turnover Ratio: What It Is and How to Calculate It',
     description:
       'What the accounts receivable turnover ratio is, how to calculate it with a worked example, what counts as a good ratio, and how to improve collections.',
-    category: 'Business Finance',
+    category: 'invoicing',
     readTimeMinutes: 6,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -2640,7 +2476,7 @@ export const GUIDES: Guide[] = [
     title: 'Cash Application: How to Match Payments to Invoices',
     description:
       'Cash application is how you match customer payments to the right invoices. Learn how it works, why it matters, and best practices to keep balances accurate.',
-    category: 'Business Finance',
+    category: 'invoicing',
     readTimeMinutes: 7,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -2706,7 +2542,7 @@ export const GUIDES: Guide[] = [
     title: 'Payment Reconciliation: A Step-by-Step Guide',
     description:
       'Payment reconciliation in plain English: what it is, why it matters, and a step-by-step process to match every payment to its invoice and bank deposit.',
-    category: 'Business Finance',
+    category: 'invoicing',
     readTimeMinutes: 7,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -2774,7 +2610,7 @@ export const GUIDES: Guide[] = [
     title: 'Invoice Disputes: How to Resolve Them Without Damaging the Relationship',
     description:
       'A practical guide to resolving invoice disputes without damaging client relationships. Step-by-step responses, sample wording, and prevention tips.',
-    category: 'Business Finance',
+    category: 'invoicing',
     readTimeMinutes: 8,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -2839,14 +2675,14 @@ export const GUIDES: Guide[] = [
           'Tighten whatever documentation gap caused it — if scope changes were the issue, start getting written confirmation before doing extra work; if pricing was the issue, make sure your proposals spell out the full cost breakdown before work begins.',
       },
     ],
-    relatedSlugs: ['credit-notes', 'collect-unpaid-invoices'],
+    relatedSlugs: ['credit-notes', 'overdue-invoices'],
   },
   {
     slug: 'working-capital',
     title: 'Working Capital: What It Is and How to Calculate It',
     description:
       'Working capital is the cash your business can use right now. Learn what it is, how to calculate it with the formula, and how to improve it — with examples.',
-    category: 'Business Finance',
+    category: 'invoicing',
     readTimeMinutes: 7,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -2914,7 +2750,7 @@ export const GUIDES: Guide[] = [
     title: 'Revenue Forecasting: Simple Methods for Small Businesses',
     description:
       'Learn simple revenue forecasting methods for small businesses and freelancers — historical trend, pipeline-based, and run-rate approaches, with a worked example.',
-    category: 'Business Finance',
+    category: 'invoicing',
     readTimeMinutes: 8,
     publishedDate: '2026-08-10',
     updatedDate: '2026-08-10',
@@ -2988,7 +2824,7 @@ export const GUIDES: Guide[] = [
     title: 'How to Make a QR Code: A Step-by-Step Guide',
     description:
       'How to pick the right QR code type, keep it scannable after printing, and understand the difference between static and smart-redirect codes — with a practical checklist.',
-    category: 'QR Codes',
+    category: 'qr-code',
     readTimeMinutes: 7,
     publishedDate: '2026-08-13',
     updatedDate: '2026-08-13',
@@ -3075,7 +2911,7 @@ export const GUIDES: Guide[] = [
     title: 'How to Test an API: A Beginner’s Guide to HTTP Requests',
     description:
       'What "testing an API" actually means — HTTP methods, headers, query params, request bodies, and auth — with a practical walkthrough of building and reading a request.',
-    category: 'Developer Tools',
+    category: 'developer-tools',
     readTimeMinutes: 10,
     publishedDate: '2026-08-15',
     updatedDate: '2026-08-15',
@@ -3180,7 +3016,7 @@ export const GUIDES: Guide[] = [
     title: 'What Is a CORS Error, and How Do You Fix It?',
     description:
       'Why "blocked by CORS policy" shows up in your console, what’s actually enforcing it, and the real ways to fix it depending on whether you control the API.',
-    category: 'Developer Tools',
+    category: 'developer-tools',
     readTimeMinutes: 7,
     publishedDate: '2026-08-15',
     updatedDate: '2026-08-15',
@@ -3262,12 +3098,132 @@ export const GUIDES: Guide[] = [
     ctaToolHref: '/tools/developer/api-request-builder',
     ctaToolLabel: 'Try the free API Request Builder',
   },
+  {
+    slug: 'how-to-write-dbml',
+    title: 'How to Write DBML: A Guide to Diagramming Your Database Schema',
+    description:
+      'DBML syntax explained — tables, columns, column settings, and Ref relationships — with a practical walkthrough of writing a schema that renders as a diagram.',
+    category: 'developer-tools',
+    readTimeMinutes: 9,
+    publishedDate: '2026-08-16',
+    updatedDate: '2026-08-16',
+    intro: [
+      'DBML (Database Markup Language) is a small, plain-text language for describing a database schema — tables, columns, and the relationships between them — that’s built specifically to be turned into a diagram, rather than run against a database. You write it once and get a readable ER diagram out of it, without dragging boxes around by hand or reverse-engineering one from an existing database.',
+      'This guide walks through the syntax one piece at a time — tables, columns, column settings, and relationships — then how to work with it efficiently once a schema has more than a couple of tables.',
+    ],
+    sections: [
+      {
+        heading: 'Defining a table',
+        paragraphs: [
+          'A table is a `Table` block with a name and, inside braces, one line per column. Each column line is just a name followed by a type — no commas, no semicolons.',
+        ],
+        bullets: [
+          'Table users {',
+          '  id integer',
+          '  username varchar',
+          '  created_at timestamp',
+          '}',
+        ],
+      },
+      {
+        heading: 'Column settings',
+        paragraphs: [
+          'Square brackets after a column’s type attach settings to it — constraints and metadata that shape how the column is drawn and (if you export the DBML elsewhere) how a real database would enforce it. Multiple settings are comma-separated inside one pair of brackets.',
+        ],
+        bullets: [
+          'primary key (or the shorthand pk) — marks the column as the table’s primary key.',
+          'not null — the column is required.',
+          'unique — no two rows can share a value.',
+          'increment — an auto-incrementing value, typically paired with a primary key.',
+          'default: value — a default value, e.g. default: 0 or default: `now()` for an expression.',
+          'note: \'text\' — a short annotation shown alongside the column, useful for documenting intent without a separate wiki page.',
+        ],
+      },
+      {
+        heading: 'Relationships with Ref',
+        paragraphs: [
+          'A `Ref` line is what turns a set of separate tables into a connected diagram — it declares a foreign key relationship and draws the connecting line between the two tables. The symbol in the middle says which side is the "many": `>` means the left table has many rows per one row on the right, `<` is the reverse, and `-` is one-to-one.',
+          'Refs can be declared inline, right after the table they belong to, or gathered at the bottom of the file — both are read identically. For a schema with more than a handful of relationships, grouping them at the end tends to be easier to scan than hunting through each table for its foreign keys.',
+        ],
+        bullets: [
+          'Ref: posts.user_id > users.id',
+          'Ref: comments.post_id > posts.id',
+          'Ref: profiles.user_id - users.id',
+        ],
+      },
+      {
+        heading: 'Indexes and notes',
+        paragraphs: [
+          'An `indexes` block inside a table declares which columns are indexed, including composite indexes across multiple columns — useful for documenting query performance decisions alongside the schema they apply to, rather than in a separate migration file no one reads.',
+          'A standalone `Note` (either at the table level or as its own top-level block) documents intent that doesn’t belong on any single column — why a table exists, a constraint the diagram can’t express, a TODO for a future migration.',
+        ],
+        bullets: [
+          'indexes {',
+          '  (user_id, created_at)',
+          '  email [unique]',
+          '}',
+        ],
+      },
+      {
+        heading: 'Working efficiently: templates, import/export, and sharing',
+        paragraphs: [
+          'Starting from a blank editor for a common shape — a blog, an e-commerce schema, a basic users/posts setup — usually costs more time than it saves. Starting from a template and renaming tables to match your actual schema gets to a working diagram faster than typing every table from scratch.',
+          'Import an existing .dbml file to pick up an export from elsewhere, or export the current schema as DBML, PNG, or SVG once it’s ready to share or paste into documentation. A share link works without any account or server round-trip — it compresses the DBML itself into the URL, so opening the link reconstructs the exact schema on the other end.',
+          'Everything — the schema text and the diagram layout you’ve dragged tables into — is saved to this browser’s local storage automatically. Nothing is uploaded anywhere unless you explicitly export or share it.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'Do I need a database connection to use DBML?',
+        answer:
+          'No — DBML is just text describing a schema; it never connects to a real database. You can design a schema entirely on paper (or in the editor) before a database exists, or document one that already does, without giving the tool any credentials or access.',
+      },
+      {
+        question: 'Does DBML support enums?',
+        answer:
+          'DBML’s `enum` syntax is recognized without erroring, but it isn’t drawn on the diagram — so it’s fine to include for documentation purposes, but don’t rely on it to show up visually. Tables, columns, column settings, and Ref relationships are what actually render.',
+      },
+      {
+        question: 'What’s the difference between `>` and `<` in a Ref?',
+        answer:
+          'They describe the same relationship from opposite directions, not two different relationship types. `posts.user_id > users.id` and `users.id < posts.user_id` mean exactly the same thing: many posts reference one user. Pick whichever direction reads more naturally for the line you’re writing.',
+      },
+      {
+        question: 'Can I turn an existing database into a DBML diagram?',
+        answer:
+          'Only if you already have (or can export) its schema as DBML — this tool renders DBML you provide, it doesn’t connect to or introspect a live database. Some database clients and ORMs can export a schema as DBML directly, which you can then paste in as a starting point.',
+      },
+    ],
+    relatedSlugs: [],
+    ctaText: 'Put this into practice with a real schema.',
+    ctaToolHref: '/tools/developer/dbml-diagram-builder',
+    ctaToolLabel: 'Try the free DBML Diagram Builder',
+  },
 ];
 
 export const getGuideBySlug = (slug: string): Guide | undefined => GUIDES.find((guide) => guide.slug === slug);
+
+// Slugs retired by content consolidation, mapped to the guide their content
+// was merged into — GuidePage/GuideOrCategoryPage use this to send old
+// bookmarked/indexed URLs to the article that now covers that ground,
+// instead of the generic /guides fallback an unknown slug otherwise gets.
+const GUIDE_REDIRECTS: Record<string, string> = {
+  'how-to-reduce-late-payments': 'how-to-get-paid-faster',
+  'collect-unpaid-invoices': 'overdue-invoices',
+  'credit-memo-vs-credit-note': 'credit-notes',
+};
+
+export const getGuideRedirectTarget = (slug: string): Guide | undefined => {
+  const targetSlug = GUIDE_REDIRECTS[slug];
+  return targetSlug ? getGuideBySlug(targetSlug) : undefined;
+};
 
 export const getRelatedGuides = (guide: Guide, limit = 3): Guide[] =>
   guide.relatedSlugs
     .map((slug) => getGuideBySlug(slug))
     .filter((candidate): candidate is Guide => Boolean(candidate))
     .slice(0, limit);
+
+export const getGuidesByCategory = (categorySlug: string): Guide[] =>
+  GUIDES.filter((guide) => guide.category === categorySlug);

@@ -14,7 +14,13 @@ export interface Guide {
   title: string;
   /** Meta description + card excerpt — kept under ~160 chars. */
   description: string;
+  /** Must match a GUIDE_CATEGORIES slug (see ./categories). */
   category: string;
+  /** Keeps the page live and linkable but excludes it from the sitemap and
+   *  tells crawlers not to index it (see GuidePage's robots-meta effect) —
+   *  for guides judged too thin/overlapping to serve as an indexable
+   *  landing page without being merged or removed outright. */
+  noindex?: boolean;
   readTimeMinutes: number;
   publishedDate: string;
   updatedDate: string;

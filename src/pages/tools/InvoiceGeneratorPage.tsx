@@ -30,6 +30,7 @@ import { CURRENCIES, getCurrencySymbol } from '../../tools/invoiceGenerator/type
 import type { InvoiceData } from '../../tools/invoiceGenerator/types';
 import { TOOLS, getToolCategory, getRelatedTools, categoryTitle, toolTitle, toolDescription } from '../../tools/registry';
 import { getGuideBySlug } from '../../content/guides/data';
+import { guidePath } from '../../content/guides/categories';
 import { guideDetailContent } from '../../content/guides/pageContent';
 
 const TOOL = TOOLS.find((t) => t.id === 'invoice-generator')!;
@@ -835,7 +836,7 @@ export const InvoiceGeneratorPage = () => {
               {RELATED_GUIDES.map((guide) => (
                 <li key={guide.slug}>
                   <Link
-                    to={`/guides/${guide.slug}`}
+                    to={guidePath(guide)}
                     className="block p-4 rounded-2xl bg-bg-secondary border border-ink/5 hover:border-accent-blue/30 transition-colors"
                   >
                     <span className="font-bold text-ink">{guide.title}</span>

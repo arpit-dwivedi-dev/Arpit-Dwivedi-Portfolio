@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 import {
+  BookOpen,
   Check,
   Coffee,
   Copy,
@@ -33,10 +34,13 @@ import { downloadCanvasAsPng, downloadSvgElement, copyCanvasToClipboard } from '
 import { QR_COLOR_PRESETS, SOCIAL_PLATFORMS } from '../../tools/qrCodeGenerator/types';
 import type { QrTypeId } from '../../tools/qrCodeGenerator/types';
 import { TOOLS, getToolCategory, getRelatedTools, categoryTitle, toolTitle, toolDescription } from '../../tools/registry';
+import { getGuideBySlug } from '../../content/guides/data';
+import { guidePath } from '../../content/guides/categories';
 
 const TOOL = TOOLS.find((t) => t.id === 'qr-code-generator')!;
 const TOOL_CATEGORY = getToolCategory(TOOL.category)!;
 const RELATED_TOOLS = getRelatedTools(TOOL);
+const QR_GUIDE = getGuideBySlug('how-to-make-a-qr-code');
 
 // Fixed production origin (matches the pattern in JsonLd/Breadcrumbs/LanguageContext) —
 // this is embedded directly into generated QR codes, so it must always resolve to the
@@ -167,6 +171,15 @@ export const QRCodeGeneratorPage = () => {
             <div className="flex flex-col items-center text-center gap-1">
               <span className="text-accent-blue font-mono text-xs sm:text-sm tracking-widest uppercase block">{t.freeToolLabel}</span>
               <h1 className="text-xl md:text-3xl font-bold tracking-tight text-gradient">{toolTitle(TOOL, lang)}</h1>
+              {QR_GUIDE && (
+                <Link
+                  to={lang === 'hi' ? '/hi' : guidePath(QR_GUIDE)}
+                  className="inline-flex items-center gap-1.5 mt-1 text-xs font-medium text-secondary-text hover:text-accent-blue transition-colors"
+                >
+                  <BookOpen size={13} aria-hidden="true" />
+                  Guide
+                </Link>
+              )}
             </div>
           </motion.div>
 
@@ -679,6 +692,23 @@ export const QRCodeGeneratorPage = () => {
             ))}
           </div>
         </div>
+
+        {QR_GUIDE && (
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight mb-4">Guides</h2>
+            <ul className="grid sm:grid-cols-2 gap-3">
+              <li>
+                <Link
+                  to={lang === 'hi' ? '/hi' : guidePath(QR_GUIDE)}
+                  className="block p-4 rounded-2xl bg-bg-secondary border border-ink/5 hover:border-accent-blue/30 transition-colors"
+                >
+                  <span className="font-bold text-ink">{QR_GUIDE.title}</span>
+                  <p className="text-secondary-text text-sm mt-1">{QR_GUIDE.description}</p>
+                </Link>
+              </li>
+            </ul>
+          </div>
+        )}
 
         <div>
           <h2 className="text-2xl font-bold tracking-tight mb-4">{t.relatedToolsTitle}</h2>

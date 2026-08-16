@@ -76,6 +76,13 @@ const DbmlDiagramBuilderPage = lazy(() =>
 );
 const GuidesPage = lazy(() => import('./pages/GuidesPage').then((m) => ({ default: m.GuidesPage })));
 const GuidePage = lazy(() => import('./pages/GuidePage').then((m) => ({ default: m.GuidePage })));
+// Resolves the legacy /guides/:slug shape to either a category landing page
+// (rendered in place) or an individual article (redirected to its new
+// /guides/:category/:slug URL) — see GuideOrCategoryPage for why this can't
+// just be a route to GuidePage.
+const GuideOrCategoryPage = lazy(() =>
+  import('./pages/GuideOrCategoryPage').then((m) => ({ default: m.GuideOrCategoryPage })),
+);
 const BlogPage = lazy(() => import('./pages/BlogPage').then((m) => ({ default: m.BlogPage })));
 const BlogPostPage = lazy(() => import('./pages/BlogPostPage').then((m) => ({ default: m.BlogPostPage })));
 
@@ -156,9 +163,14 @@ export default function App() {
                (not scraped from competitors) covering how-to topics for each
                free tool (invoicing, QR codes, API testing) for SEO/GEO. No
                Hindi routes yet; low priority next to the tools themselves,
-               and 5 Hindi long-form articles is its own project. */}
+               and 5 Hindi long-form articles is its own project. Article
+               canonical URLs are /guides/:category/:slug; the legacy
+               single-segment /guides/:slug still resolves category landing
+               pages directly and redirects old flat article URLs to their
+               new canonical URL (see GuideOrCategoryPage). */}
             <Route path="/guides" element={lazyRoute(GuidesPage)} />
-            <Route path="/guides/:slug" element={lazyRoute(GuidePage)} />
+            <Route path="/guides/:category/:slug" element={lazyRoute(GuidePage)} />
+            <Route path="/guides/:slug" element={lazyRoute(GuideOrCategoryPage)} />
 
             {/* English-only, same reasoning as /guides above. Separate from
                /guides on purpose (Phase 3 decision, content-rewrite project):

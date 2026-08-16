@@ -27,6 +27,7 @@ import { useLanguage } from '../../i18n/LanguageContext';
 import { trackEvent } from '../../monitoring';
 import { TOOLS, getToolCategory, categoryTitle, toolTitle } from '../../tools/registry';
 import { getGuideBySlug } from '../../content/guides/data';
+import { guidePath } from '../../content/guides/categories';
 import { useApiRequestBuilder, type RequestTab } from '../../tools/apiRequestBuilder/useApiRequestBuilder';
 import { EXAMPLE_REQUESTS } from '../../tools/apiRequestBuilder/exampleRequests';
 import {
@@ -159,6 +160,13 @@ export const ApiRequestBuilderPage = () => {
 
   const handleSend = () => {
     void builder.send(corsProxySettings).then(refreshHistory);
+  };
+
+  // Jumps to the on-page Guides list rather than deep-linking straight into a
+  // single article — there are multiple related guides, so this lets the
+  // reader pick instead of always landing in "How to Test an API".
+  const scrollToGuides = () => {
+    document.getElementById('related-guides')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const handleUrlPaste = (e: { clipboardData: DataTransfer; preventDefault: () => void }) => {
@@ -441,10 +449,10 @@ export const ApiRequestBuilderPage = () => {
               CORS Proxy
               {customProxy ? ': On' : corsProxySettings.mode === 'auto' ? ': Auto' : ': Off'}
             </button>
-            <Link to={lang === 'hi' ? '/hi' : '/guides/how-to-test-an-api'} className={smallButtonClass}>
+            <button type="button" onClick={scrollToGuides} className={smallButtonClass}>
               <BookOpen size={13} aria-hidden="true" />
-              Guide
-            </Link>
+              Guides
+            </button>
           </div>
 
           {/* Toolbar (mobile) — only the actions people reach for on every request stay
@@ -632,13 +640,13 @@ export const ApiRequestBuilderPage = () => {
           </p>
 
           {RELATED_GUIDES.length > 0 && (
-            <div className="mt-10 pt-8 border-t border-ink/10">
+            <div id="related-guides" className="mt-10 pt-8 border-t border-ink/10 scroll-mt-24">
               <h2 className="text-lg font-bold text-ink mb-4">Guides</h2>
               <ul className="grid sm:grid-cols-2 gap-3">
                 {RELATED_GUIDES.map((guide) => (
                   <li key={guide.slug}>
                     <Link
-                      to={`/guides/${guide.slug}`}
+                      to={guidePath(guide)}
                       className="block p-4 rounded-2xl bg-bg-secondary border border-ink/5 hover:border-accent-blue/30 transition-colors"
                     >
                       <span className="font-bold text-ink">{guide.title}</span>
@@ -759,14 +767,14 @@ export const ApiRequestBuilderPage = () => {
               {customProxy ? 'On' : corsProxySettings.mode === 'auto' ? 'Auto' : 'Off'}
             </span>
           </button>
-          <Link
-            to={lang === 'hi' ? '/hi' : '/guides/how-to-test-an-api'}
-            onClick={() => setMoreMenuOpen(false)}
+          <button
+            type="button"
+            onClick={() => { setMoreMenuOpen(false); scrollToGuides(); }}
             className={moreMenuItemClass}
           >
             <BookOpen size={16} aria-hidden="true" />
-            Guide
-          </Link>
+            Guides
+          </button>
         </div>
       </Drawer>
 
