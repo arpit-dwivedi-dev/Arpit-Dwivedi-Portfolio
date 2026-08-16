@@ -5,6 +5,7 @@ import {
   ChevronRight,
   Copy,
   Download,
+  FileUp,
   Folder as FolderIcon,
   FolderPlus,
   Move,
@@ -30,6 +31,7 @@ interface CollectionsBrowserProps {
   onDeleteCollection: (id: string) => void;
   onExportCollection: (id: string) => void;
   onImportFile: (file: File) => void;
+  onOpenOpenApiImport: () => void;
   onCreateFolder: (collectionId: string, parentFolderId: string | null) => void;
   onRenameFolder: (id: string, name: string) => void;
   onDeleteFolder: (id: string) => void;
@@ -55,6 +57,7 @@ export const CollectionsBrowser = ({
   onDeleteCollection,
   onExportCollection,
   onImportFile,
+  onOpenOpenApiImport,
   onCreateFolder,
   onRenameFolder,
   onDeleteFolder,
@@ -287,6 +290,14 @@ export const CollectionsBrowser = ({
     <div>
       <div className="flex items-center justify-end gap-3 px-3 pt-3 pb-1">
         <input ref={importInputRef} type="file" accept="application/json,.json" onChange={handleImportFileChange} className="hidden" />
+        <button
+          type="button"
+          onClick={onOpenOpenApiImport}
+          className="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-secondary-text hover:text-ink transition-colors"
+        >
+          <FileUp size={14} aria-hidden="true" />
+          Import OpenAPI
+        </button>
         <button
           type="button"
           onClick={() => importInputRef.current?.click()}

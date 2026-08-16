@@ -89,6 +89,7 @@ import { buildUrlWithParams, decodeUrlComponent, encodeUrlComponent, splitUrlInt
 import { buildShareUrl, decodeShareRequest, readShareParam } from '../../tools/apiRequestBuilder/shareRequest';
 import { MAX_IMPORT_TEXT_LENGTH, buildExportPayload, parseExportPayload } from '../../tools/apiRequestBuilder/exportFormat';
 import { buildImportPlan } from '../../tools/apiRequestBuilder/importFormat';
+import type { OpenApiImportPlan } from '../../tools/apiRequestBuilder/openapi';
 import { MethodSelect } from '../../components/tools/apiRequestBuilder/MethodSelect';
 import { RequestTabs } from '../../components/tools/apiRequestBuilder/RequestTabs';
 import { KeyValueEditor } from '../../components/tools/apiRequestBuilder/KeyValueEditor';
@@ -101,6 +102,7 @@ import { CollectionsBrowser } from '../../components/tools/apiRequestBuilder/Col
 import { SaveRequestModal } from '../../components/tools/apiRequestBuilder/SaveRequestModal';
 import { MoveRequestModal } from '../../components/tools/apiRequestBuilder/MoveRequestModal';
 import { CurlImportModal } from '../../components/tools/apiRequestBuilder/CurlImportModal';
+import { OpenApiImportModal } from '../../components/tools/apiRequestBuilder/OpenApiImportModal';
 import { CodeGenModal } from '../../components/tools/apiRequestBuilder/CodeGenModal';
 import { ShareModal } from '../../components/tools/apiRequestBuilder/ShareModal';
 import { Modal } from '../../components/tools/apiRequestBuilder/Modal';
@@ -180,6 +182,7 @@ export const ApiRequestBuilderPage = () => {
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [curlModalOpen, setCurlModalOpen] = useState(false);
+  const [openApiModalOpen, setOpenApiModalOpen] = useState(false);
   const [codeGenModalOpen, setCodeGenModalOpen] = useState(false);
   const [corsProxyModalOpen, setCorsProxyModalOpen] = useState(false);
   const [corsProxySettings, setCorsProxySettings] = useState<CorsProxySettings>(getCorsProxySettings);
@@ -409,6 +412,24 @@ export const ApiRequestBuilderPage = () => {
     showNotice(
       'ok',
       `Imported "${plan.collections[0].name}" — ${plan.folders.length} folder${plan.folders.length === 1 ? '' : 's'}, ${plan.requests.length} request${plan.requests.length === 1 ? '' : 's'}${skipSuffix}.`,
+    );
+  };
+
+  // The OpenAPI modal already parsed, validated, and built the whole plan (collection/folders/
+  // requests/environment) before this fires — the user has already seen and confirmed the
+  // preview there, so this only ever persists via the existing storage APIs and refreshes.
+  const handleOpenApiImport = (plan: OpenApiImportPlan) => {
+    upsertCollection(plan.collection);
+    for (const folder of plan.folders) upsertFolder(folder);
+    for (const request of plan.requests) upsertSavedRequest(request);
+    if (plan.environment) upsertEnvironment(plan.environment);
+    refreshCollectionsAndFolders();
+    refreshSaved();
+    if (plan.environment) refreshEnvironments();
+
+    showNotice(
+      'ok',
+      `Imported "${plan.collection.name}" — ${plan.folders.length} folder${plan.folders.length === 1 ? '' : 's'}, ${plan.requests.length} request${plan.requests.length === 1 ? '' : 's'}.`,
     );
   };
 
@@ -1077,6 +1098,7 @@ export const ApiRequestBuilderPage = () => {
             onDeleteCollection={handleDeleteCollection}
             onExportCollection={handleExportCollection}
             onImportFile={(file) => void handleImportFile(file)}
+            onOpenOpenApiImport={() => setOpenApiModalOpen(true)}
             onCreateFolder={handleCreateFolder}
             onRenameFolder={handleRenameFolder}
             onDeleteFolder={handleDeleteFolder}
@@ -1249,6 +1271,14 @@ export const ApiRequestBuilderPage = () => {
       />
 
       <CurlImportModal open={curlModalOpen} onClose={() => setCurlModalOpen(false)} onImport={handleCurlImport} />
+
+      <OpenApiImportModal
+        open={openApiModalOpen}
+        onClose={() => setOpenApiModalOpen(false)}
+        existingCollectionNames={collections.map((c) => c.name)}
+        existingEnvironmentNames={environments.map((e) => e.name)}
+        onImport={handleOpenApiImport}
+      />
 
       <CodeGenModal
         open={codeGenModalOpen}
