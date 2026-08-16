@@ -100,6 +100,7 @@ type RouteKey =
   | 'toolsGenerators'
   | 'invoiceGenerator'
   | 'qrCodeGenerator'
+  | 'apiRequestBuilder'
   | 'dbmlDiagramBuilder'
   | 'guides'
   | 'blog';
@@ -166,6 +167,11 @@ const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; description: st
       title: 'QR Code Generator (Free Tool) | 101 Tech Labs',
       description:
         'Create a QR code for a URL, contact card, plain text, SMS, email, phone number, or social link. Customize the colors and download as PNG or SVG — free, no signup, no server.',
+    },
+    apiRequestBuilder: {
+      title: 'Free API Request Builder & REST API Tester | 101 Tech Labs',
+      description:
+        'Test REST APIs free, right in your browser — GET, POST, PUT, DELETE, and more. Set headers, query params, and request bodies, then inspect the JSON response. No signup, no server.',
     },
     dbmlDiagramBuilder: {
       title: 'DBML Diagram Builder — Free Database Schema Tool | 101 Tech Labs',
@@ -243,6 +249,11 @@ const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; description: st
       description:
         'URL, कॉन्टैक्ट कार्ड, प्लेन टेक्स्ट, SMS, ईमेल, फ़ोन नंबर, या सोशल लिंक के लिए QR कोड बनाएं। रंग कस्टमाइज़ करें और PNG या SVG के रूप में डाउनलोड करें — फ्री, कोई साइनअप नहीं, कोई सर्वर नहीं।',
     },
+    apiRequestBuilder: {
+      title: 'फ्री API रिक्वेस्ट बिल्डर और REST API टेस्टर | 101 Tech Labs',
+      description:
+        'REST API को फ्री में सीधे अपने ब्राउज़र में टेस्ट करें — GET, POST, PUT, DELETE, और अन्य। हेडर, क्वेरी पैरामीटर, और रिक्वेस्ट बॉडी सेट करें, फिर JSON रिस्पॉन्स देखें। कोई साइनअप नहीं, कोई सर्वर नहीं।',
+    },
     // No /hi/dbml-diagram-builder, /hi/guides, or /hi/blog route exists yet
     // (see App.tsx) — kept here only so this Record<Lang, Record<RouteKey,
     // ...>> stays exhaustive under tsc.
@@ -297,6 +308,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
       '/tools/generators': 'toolsGenerators',
       '/tools/generators/invoice-generator': 'invoiceGenerator',
       '/tools/generators/qr-code-generator': 'qrCodeGenerator',
+      '/tools/developer/api-request-builder': 'apiRequestBuilder',
       '/tools/developer/dbml-diagram-builder': 'dbmlDiagramBuilder',
       '/guides': 'guides',
       '/blog': 'blog',

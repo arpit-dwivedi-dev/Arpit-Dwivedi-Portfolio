@@ -1,9 +1,12 @@
-import type { ApiRequest, ApiResponse, RequestFailure } from './types';
+import { DEFAULT_TIMEOUT_MS, type ApiRequest, type ApiResponse, type RequestFailure, type ResponseBodyKind } from './types';
 import { resolveRequest } from './resolveRequest';
 import { validateJson } from './jsonUtils';
 import { validateUrl } from './urlUtils';
+import { classifyContentType, defaultFilename, parseContentDispositionFilename } from './contentType';
 
 export interface ExecuteOptions {
+  /** Overrides `request.timeoutMs` — used by the CORS-proxy pool fallback to probe each
+   *  candidate with its own short, fixed budget regardless of the user's configured timeout. */
   timeoutMs?: number;
   signal?: AbortSignal;
   /** Rewrites the resolved target URL (e.g. to route through an opt-in CORS proxy) right
@@ -11,9 +14,10 @@ export interface ExecuteOptions {
   rewriteUrl?: (url: string) => string;
 }
 
-const DEFAULT_TIMEOUT_MS = 30_000;
-// Guards the UI against freezing on a pathological multi-hundred-MB response —
-// not a real network cap, just a display/storage safety valve.
+// Guards the UI against freezing on a pathological multi-hundred-MB text response —
+// not a real network cap, just a display/storage safety valve. Never applied to binary/image
+// bytes: truncating those would corrupt them, so they're left whole (see PART 9 of the response
+// handling spec) and only their metadata is shown until the user asks to preview/download.
 const MAX_BODY_CHARS = 2_000_000;
 
 const looksLikeJsonBody = (text: string): boolean => {
@@ -51,7 +55,8 @@ export const executeRequest = async (request: ApiRequest, options: ExecuteOption
   const resolved = resolveRequest(request);
   const controller = new AbortController();
   let timedOut = false;
-  const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
+  // request.timeoutMs is the user-configured value; options.timeoutMs (proxy-pool probes) wins when set.
+  const timeoutMs = options.timeoutMs ?? request.timeoutMs ?? DEFAULT_TIMEOUT_MS;
   const timeoutId = window.setTimeout(() => {
     timedOut = true;
     controller.abort();
@@ -70,6 +75,7 @@ export const executeRequest = async (request: ApiRequest, options: ExecuteOption
       headers: resolved.headers,
       body: resolved.bodyInit,
       signal: controller.signal,
+      credentials: request.credentials ?? 'same-origin',
     });
     const timeMs = performance.now() - start;
 
@@ -78,28 +84,61 @@ export const executeRequest = async (request: ApiRequest, options: ExecuteOption
       headerEntries[key] = value;
     });
 
-    const bodyText = await response.text();
-    const sizeBytes = new Blob([bodyText]).size;
-    const truncated = bodyText.length > MAX_BODY_CHARS;
-    const finalBodyText = truncated ? bodyText.slice(0, MAX_BODY_CHARS) : bodyText;
+    // Always read as bytes, never response.text() — decoding a binary body (image, pdf, zip...)
+    // as text and later re-encoding it for download is lossy and corrupts the payload (PART 1/8).
+    const bytes = await response.arrayBuffer();
+    const sizeBytes = bytes.byteLength;
 
     const contentType = headerEntries['content-type'] ?? '';
-    const isJson = contentType.includes('application/json') || (!contentType && looksLikeJsonBody(finalBodyText));
+    const classification = classifyContentType(contentType);
+    let bodyKind: ResponseBodyKind = classification.kind;
+
+    let bodyText = '';
+    let bodyBytes: ArrayBuffer | undefined;
+    let truncated = false;
+
+    if (bodyKind === 'image' || bodyKind === 'binary') {
+      bodyBytes = bytes;
+    } else {
+      const decoded = new TextDecoder('utf-8', { fatal: false }).decode(bytes);
+      truncated = decoded.length > MAX_BODY_CHARS;
+      bodyText = truncated ? decoded.slice(0, MAX_BODY_CHARS) : decoded;
+
+      if (bodyKind === 'json') {
+        // Content-Type claimed JSON but the body doesn't actually parse — fall back to a plain
+        // text view instead of crashing the JSON tree (PART 4). A truncated body can legitimately
+        // fail to parse even when the untruncated original was valid, so only demote when whole.
+        if (!truncated && !looksLikeJsonBody(bodyText)) bodyKind = 'text';
+      } else if (bodyKind === 'text' && !contentType && looksLikeJsonBody(bodyText)) {
+        // No Content-Type header at all — same conservative auto-detection the tool always did.
+        bodyKind = 'json';
+      }
+    }
+
+    const dispositionFilename = parseContentDispositionFilename(headerEntries['content-disposition']);
+    const filename = dispositionFilename ?? defaultFilename(bodyKind, classification.mimeType);
 
     return {
       status: response.status,
       statusText: response.statusText,
       headers: headerEntries,
-      body: finalBodyText,
       timeMs,
       sizeBytes,
-      isJson,
       truncated,
+      contentType: classification.mimeType,
+      bodyKind,
+      isJson: bodyKind === 'json',
+      bodyText,
+      bodyBytes,
+      filename,
     };
   } catch (err) {
     if (err instanceof DOMException && err.name === 'AbortError') {
       if (timedOut) {
-        throw new RequestExecutionError({ kind: 'timeout', message: `Request timed out after ${(timeoutMs / 1000).toFixed(0)}s.` });
+        throw new RequestExecutionError({
+          kind: 'timeout',
+          message: `Request timed out after ${(timeoutMs / 1000).toFixed(0)}s — this is your configured request timeout, adjustable from the Timeout control in the toolbar.`,
+        });
       }
       throw new RequestExecutionError({ kind: 'aborted', message: 'Request cancelled.' });
     }

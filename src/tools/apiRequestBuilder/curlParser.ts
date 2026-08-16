@@ -1,7 +1,6 @@
 import {
   HTTP_METHODS,
-  createEmptyAuth,
-  createEmptyBody,
+  createBlankRequest,
   createRow,
   nextId,
   type ApiRequest,
@@ -227,13 +226,10 @@ export const parseCurlCommand = (input: string): CurlParseResult => {
   const method: HttpMethod = explicitMethod ?? (formFields.length > 0 || dataParts.length > 0 ? 'POST' : 'GET');
 
   const request: ApiRequest = {
-    id: nextId(),
+    ...createBlankRequest(),
     method,
     url,
-    params: [],
     headers: headers.map(([key, value]) => ({ ...createRow(), key, value })),
-    body: createEmptyBody(),
-    auth: createEmptyAuth(),
   };
 
   if (basicAuthRaw !== undefined) {

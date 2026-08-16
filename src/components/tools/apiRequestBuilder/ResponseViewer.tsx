@@ -1,20 +1,25 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   AlertTriangle,
   Check,
   Clock,
   Copy,
   Download,
+  ExternalLink,
+  FileWarning,
   Loader2,
   Route,
   Send,
+  ShieldAlert,
   Timer,
   WifiOff,
   XCircle,
 } from 'lucide-react';
-import type { ApiResponse, RequestFailure } from '../../../tools/apiRequestBuilder/types';
+import type { ApiResponse, RequestFailure, ResponseBodyKind } from '../../../tools/apiRequestBuilder/types';
 import { formatBytes, formatDuration } from '../../../tools/apiRequestBuilder/urlUtils';
 import { tryParseJson } from '../../../tools/apiRequestBuilder/jsonUtils';
+import { formatXml } from '../../../tools/apiRequestBuilder/xmlFormatter';
+import { isSafeToPreviewAsImage } from '../../../tools/apiRequestBuilder/contentType';
 import { JsonTreeView } from './JsonTreeView';
 import { smallButtonClass, statusColor } from './sharedClasses';
 
@@ -37,6 +42,24 @@ const ERROR_COPY: Record<RequestFailure['kind'], { title: string; icon: typeof A
   unknown: { title: 'Something went wrong', icon: AlertTriangle },
 };
 
+const BODY_KIND_LABEL: Record<ResponseBodyKind, string> = {
+  json: 'JSON',
+  xml: 'XML',
+  html: 'HTML',
+  image: 'Image',
+  text: 'Text',
+  binary: 'Binary',
+};
+
+const DEFAULT_MIME_FOR_KIND: Record<ResponseBodyKind, string> = {
+  json: 'application/json',
+  xml: 'application/xml',
+  html: 'text/html',
+  text: 'text/plain',
+  image: 'application/octet-stream',
+  binary: 'application/octet-stream',
+};
+
 type BodyView = 'pretty' | 'raw';
 type ResponseTab = 'body' | 'headers';
 
@@ -44,17 +67,63 @@ export const ResponseViewer = ({ sending, response, error, elapsedMs, viaProxy, 
   const [tab, setTab] = useState<ResponseTab>('body');
   const [bodyView, setBodyView] = useState<BodyView>('pretty');
   const [copied, setCopied] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const newTabUrlRef = useRef<string | null>(null);
+
+  const canPreviewAsImage = response?.bodyKind === 'image' && isSafeToPreviewAsImage(response.contentType);
+
+  // Object URL lifecycle: create one preview URL per response, revoke it the moment the response
+  // is replaced (new request sent) or the viewer unmounts — never left dangling across requests.
+  useEffect(() => {
+    if (!response || !canPreviewAsImage || !response.bodyBytes) {
+      setImageUrl(null);
+      return;
+    }
+    const blob = new Blob([response.bodyBytes], { type: response.contentType || 'image/*' });
+    const url = URL.createObjectURL(blob);
+    setImageUrl(url);
+    return () => URL.revokeObjectURL(url);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [response, canPreviewAsImage]);
+
+  // The ad-hoc "open in new tab" URL for binary responses is created on demand (not eagerly, so
+  // it never grows the memory footprint of a response the user never asks to open) — but still
+  // needs cleanup whenever the response changes or the component unmounts.
+  useEffect(
+    () => () => {
+      if (newTabUrlRef.current) {
+        URL.revokeObjectURL(newTabUrlRef.current);
+        newTabUrlRef.current = null;
+      }
+    },
+    [response],
+  );
 
   const parsedJson = useMemo(() => {
-    if (!response?.isJson) return null;
-    const result = tryParseJson(response.body);
+    if (response?.bodyKind !== 'json') return null;
+    const result = tryParseJson(response.bodyText);
     return result.ok ? result.value : null;
   }, [response]);
 
+  const xmlResult = useMemo(() => {
+    if (response?.bodyKind !== 'xml') return null;
+    return formatXml(response.bodyText);
+  }, [response]);
+
+  const buildBodyBlob = (): Blob | null => {
+    if (!response) return null;
+    if ((response.bodyKind === 'image' || response.bodyKind === 'binary') && response.bodyBytes) {
+      return new Blob([response.bodyBytes], { type: response.contentType || 'application/octet-stream' });
+    }
+    return new Blob([response.bodyText], { type: response.contentType || DEFAULT_MIME_FOR_KIND[response.bodyKind] });
+  };
+
+  const canCopy = response !== null && response.bodyKind !== 'image' && response.bodyKind !== 'binary' && response.bodyText !== '';
+
   const handleCopy = async () => {
-    if (!response) return;
+    if (!response || !canCopy) return;
     try {
-      await navigator.clipboard.writeText(response.body);
+      await navigator.clipboard.writeText(response.bodyText);
       setCopied(true);
       window.setTimeout(() => setCopied(false), 1500);
     } catch {
@@ -64,17 +133,25 @@ export const ResponseViewer = ({ sending, response, error, elapsedMs, viaProxy, 
   };
 
   const handleDownload = () => {
-    if (!response) return;
-    const ext = response.isJson ? 'json' : 'txt';
-    const blob = new Blob([response.body], { type: response.isJson ? 'application/json' : 'text/plain' });
+    const blob = buildBodyBlob();
+    if (!blob || !response) return;
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `response.${ext}`;
+    link.download = response.filename;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+  };
+
+  const handleOpenInNewTab = () => {
+    const blob = buildBodyBlob();
+    if (!blob) return;
+    if (newTabUrlRef.current) URL.revokeObjectURL(newTabUrlRef.current);
+    const url = URL.createObjectURL(blob);
+    newTabUrlRef.current = url;
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   if (sending) {
@@ -114,6 +191,119 @@ export const ResponseViewer = ({ sending, response, error, elapsedMs, viaProxy, 
   }
 
   const headerEntries = Object.entries(response.headers);
+  const isEmpty = response.bodyKind === 'image' || response.bodyKind === 'binary' ? response.sizeBytes === 0 : response.bodyText === '';
+  const showPrettyRawToggle =
+    (response.bodyKind === 'json' && parsedJson !== null) || (response.bodyKind === 'xml' && xmlResult?.ok === true);
+  const isSvg = response.bodyKind === 'image' && response.contentType === 'image/svg+xml';
+  const showOpenInNewTab = response.bodyKind === 'binary' || response.bodyKind === 'image';
+
+  const renderJson = () => {
+    if (parsedJson === null) {
+      return (
+        <>
+          {response.truncated && (
+            <div className="flex items-center gap-1.5 text-amber-400 text-xs mb-2">
+              <AlertTriangle size={12} aria-hidden="true" />
+              Response was truncated for display — showing raw text instead of the JSON tree.
+            </div>
+          )}
+          <pre className="text-[13px] font-mono text-ink whitespace-pre-wrap break-words leading-relaxed">{response.bodyText}</pre>
+        </>
+      );
+    }
+    return bodyView === 'pretty' ? (
+      <JsonTreeView data={parsedJson as never} />
+    ) : (
+      <pre className="text-[13px] font-mono text-ink whitespace-pre-wrap break-words leading-relaxed">{response.bodyText}</pre>
+    );
+  };
+
+  const renderXml = () => {
+    if (!xmlResult) return null;
+    if (!xmlResult.ok) {
+      return (
+        <>
+          <div className="flex items-center gap-1.5 text-amber-400 text-xs mb-2">
+            <AlertTriangle size={12} aria-hidden="true" />
+            Malformed XML{xmlResult.error ? ` — ${xmlResult.error}` : ''}. Showing raw text.
+          </div>
+          <pre className="text-[13px] font-mono text-ink whitespace-pre-wrap break-words leading-relaxed">{response.bodyText}</pre>
+        </>
+      );
+    }
+    const shown = bodyView === 'pretty' ? xmlResult.formatted : response.bodyText;
+    return <pre className="text-[13px] font-mono text-ink whitespace-pre-wrap break-words leading-relaxed">{shown}</pre>;
+  };
+
+  const renderImage = () => {
+    if (isSvg) {
+      return (
+        <div className="flex flex-col items-center gap-3 py-10 text-center">
+          <ShieldAlert size={26} aria-hidden="true" className="text-secondary-text opacity-50" />
+          <p className="text-sm text-secondary-text max-w-sm">
+            SVG responses can embed scripts, so this one isn't rendered inline. Download it or open it in a new tab to view it safely.
+          </p>
+          <div className="text-xs font-mono text-secondary-text">
+            {response.contentType || 'image/svg+xml'} · {formatBytes(response.sizeBytes)}
+          </div>
+        </div>
+      );
+    }
+    if (!imageUrl) {
+      return <p className="text-sm text-secondary-text">Preparing preview…</p>;
+    }
+    return (
+      <div className="flex flex-col items-center gap-3 py-4">
+        <img
+          src={imageUrl}
+          alt="Response preview"
+          className="max-w-full max-h-[420px] w-auto h-auto object-contain rounded-lg border border-ink/10"
+        />
+        <div className="text-xs font-mono text-secondary-text">
+          {response.contentType || 'unknown type'} · {formatBytes(response.sizeBytes)}
+        </div>
+      </div>
+    );
+  };
+
+  const renderBinary = () => (
+    <div className="flex flex-col items-center gap-3 py-10 text-center">
+      <FileWarning size={26} aria-hidden="true" className="text-secondary-text opacity-50" />
+      <p className="text-sm text-secondary-text max-w-sm">
+        Binary response body — {response.contentType || 'unknown type'} can't be previewed as text. Use Download to save the original bytes.
+      </p>
+      <div className="text-xs font-mono text-secondary-text">{formatBytes(response.sizeBytes)}</div>
+    </div>
+  );
+
+  const renderHtml = () => (
+    <>
+      <div className="flex items-center gap-1.5 text-secondary-text text-xs mb-2">
+        <ShieldAlert size={12} aria-hidden="true" />
+        Shown as plain text, not rendered — API responses are never executed as page content here.
+      </div>
+      <pre className="text-[13px] font-mono text-ink whitespace-pre-wrap break-words leading-relaxed">{response.bodyText}</pre>
+    </>
+  );
+
+  const renderBody = () => {
+    if (isEmpty) return <p className="text-sm text-secondary-text">Empty response body.</p>;
+    switch (response.bodyKind) {
+      case 'json':
+        return renderJson();
+      case 'xml':
+        return renderXml();
+      case 'html':
+        return renderHtml();
+      case 'image':
+        return renderImage();
+      case 'binary':
+        return renderBinary();
+      case 'text':
+      default:
+        return <pre className="text-[13px] font-mono text-ink whitespace-pre-wrap break-words leading-relaxed">{response.bodyText}</pre>;
+    }
+  };
 
   return (
     <div>
@@ -126,6 +316,9 @@ export const ResponseViewer = ({ sending, response, error, elapsedMs, viaProxy, 
           {formatDuration(response.timeMs)}
         </span>
         <span className="text-secondary-text">{formatBytes(response.sizeBytes)}</span>
+        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-ink/10 text-secondary-text uppercase tracking-wide">
+          {BODY_KIND_LABEL[response.bodyKind]}
+        </span>
         {response.truncated && (
           <span className="inline-flex items-center gap-1 text-amber-400 text-xs">
             <AlertTriangle size={12} aria-hidden="true" />
@@ -165,7 +358,7 @@ export const ResponseViewer = ({ sending, response, error, elapsedMs, viaProxy, 
 
         {tab === 'body' && (
           <div className="flex items-center gap-1.5 pb-1.5">
-            {response.isJson && parsedJson !== null && (
+            {showPrettyRawToggle && (
               <div className="flex rounded-lg border border-ink/10 overflow-hidden mr-1">
                 {(['pretty', 'raw'] as BodyView[]).map((v) => (
                   <button
@@ -181,27 +374,31 @@ export const ResponseViewer = ({ sending, response, error, elapsedMs, viaProxy, 
                 ))}
               </div>
             )}
-            <button type="button" onClick={handleCopy} className={smallButtonClass} aria-label="Copy response body">
-              {copied ? <Check size={13} aria-hidden="true" /> : <Copy size={13} aria-hidden="true" />}
-              {copied ? 'Copied' : 'Copy'}
-            </button>
-            <button type="button" onClick={handleDownload} className={smallButtonClass} aria-label="Download response body">
-              <Download size={13} aria-hidden="true" />
-              Download
-            </button>
+            {canCopy && (
+              <button type="button" onClick={handleCopy} className={smallButtonClass} aria-label="Copy response body">
+                {copied ? <Check size={13} aria-hidden="true" /> : <Copy size={13} aria-hidden="true" />}
+                {copied ? 'Copied' : 'Copy'}
+              </button>
+            )}
+            {showOpenInNewTab && !isEmpty && (
+              <button type="button" onClick={handleOpenInNewTab} className={smallButtonClass} aria-label="Open response in a new tab">
+                <ExternalLink size={13} aria-hidden="true" />
+                Open
+              </button>
+            )}
+            {!isEmpty && (
+              <button type="button" onClick={handleDownload} className={smallButtonClass} aria-label="Download response body">
+                <Download size={13} aria-hidden="true" />
+                Download
+              </button>
+            )}
           </div>
         )}
       </div>
 
       {tab === 'body' && (
         <div className="rounded-lg bg-ink/[0.03] border border-ink/10 p-3.5 max-h-[480px] overflow-auto scrollbar-thin">
-          {response.body === '' ? (
-            <p className="text-sm text-secondary-text">Empty response body.</p>
-          ) : response.isJson && parsedJson !== null && bodyView === 'pretty' ? (
-            <JsonTreeView data={parsedJson as never} />
-          ) : (
-            <pre className="text-[13px] font-mono text-ink whitespace-pre-wrap break-words leading-relaxed">{response.body}</pre>
-          )}
+          {renderBody()}
         </div>
       )}
 

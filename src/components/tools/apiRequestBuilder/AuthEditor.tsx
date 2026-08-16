@@ -1,6 +1,13 @@
 import { useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
-import { AUTH_TYPES, type Authentication, type ApiKeyLocation } from '../../../tools/apiRequestBuilder/types';
+import { AlertTriangle, Eye, EyeOff } from 'lucide-react';
+import {
+  AUTH_TYPES,
+  CREDENTIALS_MODES,
+  type Authentication,
+  type ApiKeyLocation,
+  type RequestHeader,
+} from '../../../tools/apiRequestBuilder/types';
+import { hasEnabledCookieHeader } from '../../../tools/apiRequestBuilder/resolveRequest';
 import { fieldClass, labelClass } from './sharedClasses';
 
 const AUTH_LABELS: Record<Authentication['type'], string> = {
@@ -10,9 +17,27 @@ const AUTH_LABELS: Record<Authentication['type'], string> = {
   'api-key': 'API Key',
 };
 
+const CREDENTIALS_LABELS: Record<RequestCredentials, string> = {
+  'same-origin': 'Same-origin',
+  include: 'Include',
+  omit: 'Omit',
+};
+
+const CREDENTIALS_COPY: Record<RequestCredentials, string> = {
+  'same-origin': 'Browser cookies are sent only when the request URL shares your origin — the default fetch() behavior.',
+  include: "Sends browser cookies even cross-origin, but only if the target server opts in with matching CORS headers (Access-Control-Allow-Credentials: true and a specific, non-wildcard Access-Control-Allow-Origin). It doesn't bypass CORS, and third-party cookie blocking in the browser can still prevent cookies from going out.",
+  omit: 'Never sends browser cookies, even same-origin.',
+};
+
 interface AuthEditorProps {
   auth: Authentication;
   onChange: (auth: Authentication) => void;
+  credentials: RequestCredentials;
+  onCredentialsChange: (credentials: RequestCredentials) => void;
+  headers: RequestHeader[];
+  /** True when this request currently routes through any CORS proxy (custom, or auto's public-pool
+   *  fallback) — surfaced only to explain why `include`'s cookie behavior may not hold through a proxy. */
+  routesThroughProxy: boolean;
 }
 
 const SecretInput = ({
@@ -53,8 +78,55 @@ const SecretInput = ({
   );
 };
 
-export const AuthEditor = ({ auth, onChange }: AuthEditorProps) => (
-  <div className="space-y-4 max-w-md">
+export const AuthEditor = ({ auth, onChange, credentials, onCredentialsChange, headers, routesThroughProxy }: AuthEditorProps) => {
+  const cookieHeaderPresent = hasEnabledCookieHeader(headers);
+
+  return (
+  <div className="space-y-5 max-w-md">
+    <div>
+      <span className={`${labelClass} block mb-1.5`}>Credentials</span>
+      <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Credentials mode">
+        {CREDENTIALS_MODES.map((mode) => (
+          <button
+            key={mode}
+            type="button"
+            role="radio"
+            aria-checked={credentials === mode}
+            onClick={() => onCredentialsChange(mode)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium border transition-colors ${
+              credentials === mode
+                ? 'border-accent-blue text-accent-blue bg-accent-blue/10'
+                : 'border-ink/10 text-secondary-text hover:border-ink/20 hover:text-ink'
+            }`}
+          >
+            {CREDENTIALS_LABELS[mode]}
+          </button>
+        ))}
+      </div>
+      <p className="text-xs text-secondary-text mt-1.5 leading-snug">{CREDENTIALS_COPY[credentials]}</p>
+
+      {credentials === 'include' && routesThroughProxy && (
+        <div className="flex items-start gap-2 rounded-lg border border-amber-400/25 bg-amber-400/5 p-2 sm:p-2.5 mt-2 text-xs text-amber-400/90 leading-snug">
+          <AlertTriangle size={13} className="shrink-0 mt-0.5" aria-hidden="true" />
+          <p>
+            This request currently routes through a CORS proxy. Cookie/credential behavior through a proxy depends on that
+            proxy's own handling, not just this setting — it may not match a direct browser request.
+          </p>
+        </div>
+      )}
+
+      {cookieHeaderPresent && (
+        <div className="flex items-start gap-2 rounded-lg border border-amber-400/25 bg-amber-400/5 p-2 sm:p-2.5 mt-2 text-xs text-amber-400/90 leading-snug">
+          <AlertTriangle size={13} className="shrink-0 mt-0.5" aria-hidden="true" />
+          <p>
+            A <code className="font-mono text-amber-300">Cookie</code> header is set on the Headers tab. Browsers block scripts
+            from setting this header directly, so it will likely be silently ignored when sent from here. For cookies to go
+            out, use <strong className="text-amber-300">Include</strong> above with a server that allows credentialed CORS.
+          </p>
+        </div>
+      )}
+    </div>
+
     <div>
       <label htmlFor="auth-type" className={`${labelClass} block mb-1.5`}>
         Type
@@ -179,4 +251,5 @@ export const AuthEditor = ({ auth, onChange }: AuthEditorProps) => (
       </div>
     )}
   </div>
-);
+  );
+};

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
@@ -6,13 +6,18 @@ import {
   BookOpen,
   Check,
   ClipboardPaste,
+  Clock,
+  Code2,
   Coffee,
   Copy,
+  Globe,
   History,
   MoreHorizontal,
   Route,
   Save,
   Send as SendIcon,
+  Settings,
+  Share2,
   ShieldCheck,
   Star,
   Terminal,
@@ -24,6 +29,7 @@ import { Footer } from '../../components/AchievementsContact';
 import { Breadcrumbs } from '../../components/seo/Breadcrumbs';
 import { JsonLd } from '../../components/seo/JsonLd';
 import { useLanguage } from '../../i18n/LanguageContext';
+import { useTheme } from '../../theme/ThemeContext';
 import { trackEvent } from '../../monitoring';
 import { TOOLS, getToolCategory, categoryTitle, toolTitle } from '../../tools/registry';
 import { getGuideBySlug } from '../../content/guides/data';
@@ -38,15 +44,51 @@ import {
   upsertSavedRequest,
   renameSavedRequest,
   deleteSavedRequest,
+  duplicateSavedRequest,
+  moveSavedRequest,
   getCorsProxySettings,
   saveCorsProxySettings,
+  hasStorableSecrets,
+  listEnvironments,
+  getActiveEnvironmentId,
+  setActiveEnvironmentId,
+  upsertEnvironment,
+  deleteEnvironment,
+  listCollections,
+  upsertCollection,
+  deleteCollection,
+  listFolders,
+  upsertFolder,
+  deleteFolder,
 } from '../../tools/apiRequestBuilder/storage';
 import { resolveCustomProxy, type CorsProxySettings } from '../../tools/apiRequestBuilder/corsProxy';
 import { CorsProxyModal } from '../../components/tools/apiRequestBuilder/CorsProxyModal';
-import { nextId, type ApiRequest, type HistoryEntry, type SavedRequest } from '../../tools/apiRequestBuilder/types';
+import { nextId, TIMEOUT_OPTIONS_MS, type ApiRequest, type HistoryEntry, type SavedRequest } from '../../tools/apiRequestBuilder/types';
+import {
+  createEnvironment,
+  extractVariableNames,
+  findUnknownVariableNames,
+  resolveVariables,
+  variablesToMap,
+  type Environment,
+} from '../../tools/apiRequestBuilder/environment';
+import {
+  buildCollectionTree,
+  canCreateSubfolder,
+  collectionContentsSummary,
+  createCollection,
+  createFolder,
+  folderContentsSummary,
+  nameCollides,
+  type Collection,
+  type Folder,
+} from '../../tools/apiRequestBuilder/collections';
 import { generateCurlCommand } from '../../tools/apiRequestBuilder/curlGenerator';
 import { parseCurlCommand } from '../../tools/apiRequestBuilder/curlParser';
 import { buildUrlWithParams, decodeUrlComponent, encodeUrlComponent, splitUrlIntoParams, validateUrl } from '../../tools/apiRequestBuilder/urlUtils';
+import { buildShareUrl, decodeShareRequest, readShareParam } from '../../tools/apiRequestBuilder/shareRequest';
+import { MAX_IMPORT_TEXT_LENGTH, buildExportPayload, parseExportPayload } from '../../tools/apiRequestBuilder/exportFormat';
+import { buildImportPlan } from '../../tools/apiRequestBuilder/importFormat';
 import { MethodSelect } from '../../components/tools/apiRequestBuilder/MethodSelect';
 import { RequestTabs } from '../../components/tools/apiRequestBuilder/RequestTabs';
 import { KeyValueEditor } from '../../components/tools/apiRequestBuilder/KeyValueEditor';
@@ -55,10 +97,15 @@ import { AuthEditor } from '../../components/tools/apiRequestBuilder/AuthEditor'
 import { ResponseViewer } from '../../components/tools/apiRequestBuilder/ResponseViewer';
 import { Drawer } from '../../components/tools/apiRequestBuilder/Drawer';
 import { HistoryList } from '../../components/tools/apiRequestBuilder/HistoryList';
-import { SavedRequestsList } from '../../components/tools/apiRequestBuilder/SavedRequestsList';
+import { CollectionsBrowser } from '../../components/tools/apiRequestBuilder/CollectionsBrowser';
 import { SaveRequestModal } from '../../components/tools/apiRequestBuilder/SaveRequestModal';
+import { MoveRequestModal } from '../../components/tools/apiRequestBuilder/MoveRequestModal';
 import { CurlImportModal } from '../../components/tools/apiRequestBuilder/CurlImportModal';
+import { CodeGenModal } from '../../components/tools/apiRequestBuilder/CodeGenModal';
+import { ShareModal } from '../../components/tools/apiRequestBuilder/ShareModal';
 import { Modal } from '../../components/tools/apiRequestBuilder/Modal';
+import { EnvironmentSelector } from '../../components/tools/apiRequestBuilder/EnvironmentSelector';
+import { EnvironmentModal } from '../../components/tools/apiRequestBuilder/EnvironmentModal';
 import { smallButtonClass, METHOD_COLORS } from '../../components/tools/apiRequestBuilder/sharedClasses';
 
 const TOOL = TOOLS.find((t) => t.id === 'api-request-builder')!;
@@ -81,8 +128,47 @@ const moreMenuItemClass =
 
 type DrawerTab = 'history' | 'saved';
 
+const formatTimeout = (ms: number): string => (ms % 1000 === 0 ? `${ms / 1000}s` : `${ms}ms`);
+
+// A sensible starting point for the Save modal's name field — "GET example.com/users" — rather
+// than a placeholder, so most saves need zero typing in the name field at all.
+const defaultSaveName = (request: ApiRequest): string => {
+  const url = request.url.trim();
+  if (!url) return 'Untitled request';
+  return `${request.method} ${url.replace(/^https?:\/\//i, '')}`;
+};
+
+// Disambiguates a new/renamed collection or folder name against its siblings by appending a
+// counter (e.g. "New Folder 2") — simpler and less disruptive than blocking the action outright.
+const uniqueSiblingName = (base: string, siblingNames: string[]): string => {
+  if (!nameCollides(siblingNames, base)) return base;
+  let n = 2;
+  while (nameCollides(siblingNames, `${base} ${n}`)) n += 1;
+  return `${base} ${n}`;
+};
+
+const exportFileName = (collectionName: string): string => {
+  const slug = collectionName.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  return `${slug || 'collection'}.101tl-api-requests.json`;
+};
+
+/** Triggers a browser "Save As" for locally-generated JSON — no server involved, the file
+ *  never leaves the browser except to the user's own disk. */
+const downloadJsonFile = (filename: string, data: unknown): void => {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
+
 export const ApiRequestBuilderPage = () => {
   const { lang, content } = useLanguage();
+  const { theme } = useTheme();
   const toolsBase = lang === 'hi' ? '/hi/tools' : '/tools';
   const categoryHref = `${toolsBase}/${TOOL.category}`;
 
@@ -94,6 +180,7 @@ export const ApiRequestBuilderPage = () => {
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [curlModalOpen, setCurlModalOpen] = useState(false);
+  const [codeGenModalOpen, setCodeGenModalOpen] = useState(false);
   const [corsProxyModalOpen, setCorsProxyModalOpen] = useState(false);
   const [corsProxySettings, setCorsProxySettings] = useState<CorsProxySettings>(getCorsProxySettings);
   const [coffeeModalOpen, setCoffeeModalOpen] = useState(false);
@@ -101,9 +188,20 @@ export const ApiRequestBuilderPage = () => {
   const [currentSavedId, setCurrentSavedId] = useState<string | null>(null);
   const [urlCopied, setUrlCopied] = useState(false);
   const [curlCopied, setCurlCopied] = useState(false);
-  const [pasteNotice, setPasteNotice] = useState<{ tone: 'ok' | 'error'; message: string } | null>(null);
+  // Shared by curl-paste feedback, share-link load results, and JSON import results — one
+  // generic inline notice rather than three separate near-identical pieces of state.
+  const [notice, setNotice] = useState<{ tone: 'ok' | 'error'; message: string } | null>(null);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [shareTarget, setShareTarget] = useState<ApiRequest | null>(null);
+  const [environments, setEnvironments] = useState<Environment[]>(listEnvironments);
+  const [activeEnvironmentId, setActiveEnvironmentIdState] = useState<string | null>(getActiveEnvironmentId);
+  const [environmentModalOpen, setEnvironmentModalOpen] = useState(false);
+  const [collections, setCollections] = useState<Collection[]>(listCollections);
+  const [folders, setFolders] = useState<Folder[]>(listFolders);
+  const [moveRequestTarget, setMoveRequestTarget] = useState<SavedRequest | null>(null);
+  const [moveModalOpen, setMoveModalOpen] = useState(false);
   const urlInputRef = useRef<HTMLInputElement>(null);
-  const pasteNoticeTimeoutRef = useRef<number | null>(null);
+  const noticeTimeoutRef = useRef<number | null>(null);
 
   const handleCopyUpi = (field: 'upi' | 'number', value: string) => {
     navigator.clipboard.writeText(value).catch(() => {});
@@ -111,13 +209,16 @@ export const ApiRequestBuilderPage = () => {
     window.setTimeout(() => setCopiedUpiField(null), 1500);
   };
 
-  const showPasteNotice = (tone: 'ok' | 'error', message: string) => {
-    setPasteNotice({ tone, message });
-    if (pasteNoticeTimeoutRef.current) window.clearTimeout(pasteNoticeTimeoutRef.current);
-    pasteNoticeTimeoutRef.current = window.setTimeout(() => setPasteNotice(null), 5000);
+  const showNotice = (tone: 'ok' | 'error', message: string) => {
+    setNotice({ tone, message });
+    if (noticeTimeoutRef.current) window.clearTimeout(noticeTimeoutRef.current);
+    noticeTimeoutRef.current = window.setTimeout(() => setNotice(null), 5000);
   };
 
   const customProxy = resolveCustomProxy(corsProxySettings);
+  // Surfaced to the Credentials setting so an `include` choice can be flagged as unreliable
+  // when the request isn't going straight from the browser to the target server.
+  const routesThroughProxy = customProxy !== null || corsProxySettings.mode === 'auto';
 
   const handleCorsProxySettingsChange = (next: CorsProxySettings) => {
     setCorsProxySettings(next);
@@ -126,15 +227,219 @@ export const ApiRequestBuilderPage = () => {
 
   const refreshHistory = () => setHistory(listHistory());
   const refreshSaved = () => setSaved(listSavedRequests());
+  const refreshEnvironments = () => setEnvironments(listEnvironments());
+
+  // The active environment's variables as a flat key→value map — {} (a no-op for resolution)
+  // when "No Environment" is selected, which is what keeps that state byte-for-byte backwards
+  // compatible with how the tool behaved before this feature existed.
+  const activeEnvironment = activeEnvironmentId ? environments.find((e) => e.id === activeEnvironmentId) ?? null : null;
+  const activeVariables = useMemo(() => variablesToMap(activeEnvironment), [activeEnvironment]);
+
+  const handleSelectEnvironment = (id: string | null) => {
+    setActiveEnvironmentId(id);
+    setActiveEnvironmentIdState(id);
+  };
+
+  const handleCreateEnvironment = (): Environment => {
+    const created = createEnvironment('New Environment');
+    upsertEnvironment(created);
+    refreshEnvironments();
+    return created;
+  };
+
+  const handleChangeEnvironment = (environment: Environment) => {
+    upsertEnvironment(environment);
+    refreshEnvironments();
+  };
+
+  const handleDeleteEnvironment = (id: string) => {
+    deleteEnvironment(id);
+    refreshEnvironments();
+    // deleteEnvironment() already clears the stored active id when it pointed at the one just
+    // removed — re-read rather than guess, so this stays correct even if it wasn't the active one.
+    setActiveEnvironmentIdState(getActiveEnvironmentId());
+  };
+
+  const refreshCollectionsAndFolders = () => {
+    setCollections(listCollections());
+    setFolders(listFolders());
+  };
+
+  const collectionTree = useMemo(() => buildCollectionTree(collections, folders, saved), [collections, folders, saved]);
+  const currentSaved = currentSavedId ? saved.find((s) => s.id === currentSavedId) : undefined;
+
+  // A cascade delete (collection/folder) can remove the currently-loaded saved request without
+  // going through the single-request delete path — this re-checks against fresh storage rather
+  // than assuming, so "Update" never keeps pointing at a record that no longer exists.
+  const clearCurrentSavedIfMissing = () => {
+    if (currentSavedId && !listSavedRequests().some((s) => s.id === currentSavedId)) setCurrentSavedId(null);
+  };
+
+  const handleCreateCollection = () => {
+    const name = uniqueSiblingName('New Collection', collections.map((c) => c.name));
+    upsertCollection(createCollection(name));
+    refreshCollectionsAndFolders();
+  };
+
+  const handleRenameCollection = (id: string, name: string) => {
+    const collection = collections.find((c) => c.id === id);
+    if (!collection) return;
+    const siblingNames = collections.filter((c) => c.id !== id).map((c) => c.name);
+    upsertCollection({ ...collection, name: uniqueSiblingName(name, siblingNames), updatedAt: Date.now() });
+    refreshCollectionsAndFolders();
+  };
+
+  const handleDeleteCollection = (id: string) => {
+    const collection = collections.find((c) => c.id === id);
+    if (!collection) return;
+    const { folderCount, requestCount } = collectionContentsSummary(folders, saved, id);
+    const scope =
+      folderCount === 0 && requestCount === 0
+        ? ''
+        : ` This deletes ${requestCount} request${requestCount === 1 ? '' : 's'} and ${folderCount} folder${folderCount === 1 ? '' : 's'} inside it.`;
+    if (!window.confirm(`Delete collection "${collection.name}"?${scope} This cannot be undone.`)) return;
+    deleteCollection(id);
+    refreshCollectionsAndFolders();
+    refreshSaved();
+    clearCurrentSavedIfMissing();
+  };
+
+  const handleCreateFolder = (collectionId: string, parentFolderId: string | null) => {
+    if (!canCreateSubfolder(folders, parentFolderId)) return;
+    const siblingNames = folders
+      .filter((f) => f.collectionId === collectionId && f.parentFolderId === parentFolderId)
+      .map((f) => f.name);
+    upsertFolder(createFolder(collectionId, parentFolderId, uniqueSiblingName('New Folder', siblingNames)));
+    refreshCollectionsAndFolders();
+  };
+
+  const handleRenameFolder = (id: string, name: string) => {
+    const folder = folders.find((f) => f.id === id);
+    if (!folder) return;
+    const siblingNames = folders
+      .filter((f) => f.id !== id && f.collectionId === folder.collectionId && f.parentFolderId === folder.parentFolderId)
+      .map((f) => f.name);
+    upsertFolder({ ...folder, name: uniqueSiblingName(name, siblingNames), updatedAt: Date.now() });
+    refreshCollectionsAndFolders();
+  };
+
+  const handleDeleteFolder = (id: string) => {
+    const folder = folders.find((f) => f.id === id);
+    if (!folder) return;
+    const { folderCount, requestCount } = folderContentsSummary(folders, saved, id);
+    const scope =
+      folderCount === 0 && requestCount === 0
+        ? ''
+        : ` This deletes ${requestCount} request${requestCount === 1 ? '' : 's'} and ${folderCount} subfolder${folderCount === 1 ? '' : 's'} inside it.`;
+    if (!window.confirm(`Delete folder "${folder.name}"?${scope} This cannot be undone.`)) return;
+    deleteFolder(id);
+    refreshCollectionsAndFolders();
+    refreshSaved();
+    clearCurrentSavedIfMissing();
+  };
+
+  const handleDuplicateSavedRequest = (id: string) => {
+    duplicateSavedRequest(id);
+    refreshSaved();
+  };
+
+  const handleOpenMoveModal = (item: SavedRequest) => {
+    setMoveRequestTarget(item);
+    setMoveModalOpen(true);
+  };
+
+  const handleMoveSavedRequest = (id: string, collectionId: string, folderId: string | null) => {
+    moveSavedRequest(id, collectionId, folderId);
+    refreshSaved();
+  };
+
+  const handleShareCurrentRequest = () => {
+    setShareTarget(builder.request);
+    setShareModalOpen(true);
+  };
+
+  // Sharing a saved/collection request shares only that one request — never the collection
+  // name, folder path, or any other request alongside it (see PART 11/12).
+  const handleShareSavedRequest = (item: SavedRequest) => {
+    setShareTarget(item.request);
+    setShareModalOpen(true);
+  };
+
+  const handleExportCollection = (collectionId: string) => {
+    const collection = collections.find((c) => c.id === collectionId);
+    if (!collection) return;
+    const payload = buildExportPayload([collectionId], collections, folders, saved);
+    downloadJsonFile(exportFileName(collection.name), payload);
+  };
+
+  const handleImportFile = async (file: File) => {
+    if (file.size > MAX_IMPORT_TEXT_LENGTH) {
+      showNotice('error', `That file is too large to import (limit ${Math.floor(MAX_IMPORT_TEXT_LENGTH / 1_000_000)}MB).`);
+      return;
+    }
+
+    let text: string;
+    try {
+      text = await file.text();
+    } catch {
+      showNotice('error', "Couldn't read that file.");
+      return;
+    }
+
+    const parsed = parseExportPayload(text);
+    if (!parsed.ok) {
+      showNotice('error', parsed.error);
+      return;
+    }
+
+    const plan = buildImportPlan(parsed.result.payload, collections.map((c) => c.name));
+    if (plan.collections.length === 0) {
+      showNotice('error', 'Nothing importable was found in that file.');
+      return;
+    }
+
+    for (const collection of plan.collections) upsertCollection(collection);
+    for (const folder of plan.folders) upsertFolder(folder);
+    for (const request of plan.requests) upsertSavedRequest(request);
+    refreshCollectionsAndFolders();
+    refreshSaved();
+
+    const totalSkipped = parsed.result.skipped.folders + parsed.result.skipped.requests + plan.skipped.folders + plan.skipped.requests;
+    const skipSuffix = totalSkipped > 0 ? ` (${totalSkipped} item${totalSkipped === 1 ? '' : 's'} skipped as invalid)` : '';
+    showNotice(
+      'ok',
+      `Imported "${plan.collections[0].name}" — ${plan.folders.length} folder${plan.folders.length === 1 ? '' : 's'}, ${plan.requests.length} request${plan.requests.length === 1 ? '' : 's'}${skipSuffix}.`,
+    );
+  };
 
   useEffect(() => () => {
-    if (pasteNoticeTimeoutRef.current) window.clearTimeout(pasteNoticeTimeoutRef.current);
+    if (noticeTimeoutRef.current) window.clearTimeout(noticeTimeoutRef.current);
   }, []);
 
   useEffect(() => {
     refreshHistory();
     refreshSaved();
     trackEvent('tool_view', { tool: 'api-request-builder' });
+
+    // Opening a share link populates the editor with the decoded request and nothing else —
+    // no auto-send, no overwriting saved requests/environments/collections (see PART 8). The
+    // query param is then stripped via replaceState so a page refresh doesn't keep reloading
+    // the same shared request over whatever the user has since typed.
+    const shareParam = readShareParam(window.location.search);
+    if (shareParam) {
+      const decoded = decodeShareRequest(shareParam);
+      if (decoded.ok) {
+        builder.loadRequest(decoded.request);
+        setCurrentSavedId(null);
+        showNotice('ok', 'Imported request from a share link — secrets were not included, and nothing has been saved or sent.');
+      } else {
+        showNotice('error', decoded.error);
+      }
+      const cleanUrl = new URL(window.location.href);
+      cleanUrl.searchParams.delete('request');
+      window.history.replaceState({}, '', cleanUrl.toString());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -143,7 +448,7 @@ export const ApiRequestBuilderPage = () => {
       if (!meta) return;
       if (e.key === 'Enter') {
         e.preventDefault();
-        void builder.send(corsProxySettings).then(refreshHistory);
+        void builder.send(corsProxySettings, activeVariables).then(refreshHistory);
       } else if (e.key.toLowerCase() === 's') {
         e.preventDefault();
         setSaveModalOpen(true);
@@ -156,10 +461,10 @@ export const ApiRequestBuilderPage = () => {
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [builder.send, corsProxySettings]);
+  }, [builder.send, corsProxySettings, activeVariables]);
 
   const handleSend = () => {
-    void builder.send(corsProxySettings).then(refreshHistory);
+    void builder.send(corsProxySettings, activeVariables).then(refreshHistory);
   };
 
   // Jumps to the on-page Guides list rather than deep-linking straight into a
@@ -180,14 +485,14 @@ export const ApiRequestBuilderPage = () => {
       const result = parseCurlCommand(trimmed);
       if (result.ok && result.request) {
         handleCurlImport(result.request);
-        showPasteNotice(
+        showNotice(
           'ok',
           result.warnings.length > 0
             ? `Imported from pasted curl command — ${result.warnings.join(' ')}`
             : 'Imported method, headers, body, and auth from the pasted curl command.',
         );
       } else {
-        showPasteNotice('error', result.error ?? "Couldn't parse that as a curl command.");
+        showNotice('error', result.error ?? "Couldn't parse that as a curl command.");
       }
       return;
     }
@@ -221,10 +526,12 @@ export const ApiRequestBuilderPage = () => {
     setCurrentSavedId(null);
   };
 
-  const handleSaveRequest = (name: string) => {
+  const handleSaveRequest = (name: string, collectionId: string, folderId: string | null) => {
     const existing = currentSavedId ? saved.find((s) => s.id === currentSavedId) : undefined;
     const record: SavedRequest = {
       id: existing?.id ?? nextId(),
+      collectionId,
+      folderId,
       name,
       createdAt: existing?.createdAt ?? Date.now(),
       updatedAt: Date.now(),
@@ -263,7 +570,7 @@ export const ApiRequestBuilderPage = () => {
 
   const handleCopyCurl = async () => {
     try {
-      await navigator.clipboard.writeText(generateCurlCommand(builder.request));
+      await navigator.clipboard.writeText(generateCurlCommand(builder.request, activeVariables));
       setCurlCopied(true);
       window.setTimeout(() => setCurlCopied(false), 1500);
     } catch {
@@ -283,9 +590,40 @@ export const ApiRequestBuilderPage = () => {
     }
   };
 
-  const urlValidation = builder.request.url.trim() ? validateUrl(builder.request.url) : { valid: true as const };
+  // Validated against the environment-resolved URL, not the raw template — so a URL like
+  // `{{baseUrl}}/users` reads as valid once an environment actually defines `baseUrl`, instead of
+  // permanently failing `new URL()` parsing the way the literal `{{baseUrl}}/users` text would.
+  const resolvedUrlPreview = resolveVariables(builder.request.url, activeVariables);
+  const urlHasUnknownVariable = extractVariableNames(resolvedUrlPreview).length > 0;
+  const urlValidation = builder.request.url.trim() ? validateUrl(resolvedUrlPreview) : { valid: true as const };
+  // Referenced anywhere in the request (url, params, headers, auth, body) but not defined in the
+  // active environment — surfaced as a single non-blocking notice rather than per-tab, per Part 9's
+  // "make unknown variables understandable" without needing a per-field indicator.
+  const unknownVariables = findUnknownVariableNames(builder.request, activeVariables);
   const showEmptyState = builder.request.url.trim() === '';
-  const currentSavedName = currentSavedId ? saved.find((s) => s.id === currentSavedId)?.name ?? '' : '';
+  const currentSavedName = currentSaved?.name ?? '';
+  const saveModalDefaultCollectionId = currentSaved?.collectionId ?? collections[0]?.id ?? '';
+  const saveModalDefaultFolderId = currentSaved?.folderId ?? null;
+
+  let requestNotice: ReactNode;
+  if (!urlValidation.valid && !urlHasUnknownVariable) {
+    requestNotice = <p className="text-xs text-red-400 mb-3">{urlValidation.error}</p>;
+  } else if (notice) {
+    // A one-time, auto-clearing notice (curl paste, share-link load, JSON import result) takes
+    // priority over the persistent "unknown variable" warning below — otherwise loading a share
+    // link that references `{{baseUrl}}` (the whole point of sharing) would always immediately
+    // bury its own "imported from share link" confirmation under that warning.
+    requestNotice = <p className={`text-xs mb-3 ${notice.tone === 'ok' ? 'text-emerald-400' : 'text-red-400'}`}>{notice.message}</p>;
+  } else if (unknownVariables.length > 0) {
+    requestNotice = (
+      <p className="text-xs text-amber-400 mb-3">
+        Unknown variable{unknownVariables.length > 1 ? 's' : ''}: {unknownVariables.map((name) => `{{${name}}}`).join(', ')}
+        {activeEnvironment ? ` — not set in "${activeEnvironment.name}".` : ' — no environment selected.'}
+      </p>
+    );
+  } else {
+    requestNotice = <div className="mb-3" />;
+  }
 
   return (
     <div className="relative bg-bg-pure selection:bg-accent-blue/30 selection:text-accent-blue overflow-x-hidden min-h-screen">
@@ -382,11 +720,7 @@ export const ApiRequestBuilderPage = () => {
               <Coffee size={16} aria-hidden="true" />
             </button>
           </div>
-          {!urlValidation.valid && <p className="text-xs text-red-400 mb-3">{urlValidation.error}</p>}
-          {urlValidation.valid && pasteNotice && (
-            <p className={`text-xs mb-3 ${pasteNotice.tone === 'ok' ? 'text-emerald-400' : 'text-red-400'}`}>{pasteNotice.message}</p>
-          )}
-          {urlValidation.valid && !pasteNotice && <div className="mb-3" />}
+          {requestNotice}
 
           <div className="hidden sm:flex items-center justify-between mb-3">
             <button type="button" onClick={() => setSaveModalOpen(true)} className={smallButtonClass}>
@@ -414,6 +748,14 @@ export const ApiRequestBuilderPage = () => {
               {curlCopied ? <Check size={13} aria-hidden="true" /> : <Terminal size={13} aria-hidden="true" />}
               {curlCopied ? 'Copied' : 'Copy as cURL'}
             </button>
+            <button type="button" onClick={() => setCodeGenModalOpen(true)} className={smallButtonClass}>
+              <Code2 size={13} aria-hidden="true" />
+              Code
+            </button>
+            <button type="button" onClick={handleShareCurrentRequest} disabled={!builder.request.url.trim()} className={smallButtonClass}>
+              <Share2 size={13} aria-hidden="true" />
+              Share
+            </button>
             <button type="button" onClick={handleCopyUrl} disabled={!builder.request.url.trim()} className={smallButtonClass}>
               {urlCopied ? <Check size={13} aria-hidden="true" /> : <Copy size={13} aria-hidden="true" />}
               {urlCopied ? 'Copied' : 'Copy URL'}
@@ -440,6 +782,13 @@ export const ApiRequestBuilderPage = () => {
               <Trash2 size={13} aria-hidden="true" />
               Clear
             </button>
+            <EnvironmentSelector
+              environments={environments}
+              activeEnvironmentId={activeEnvironmentId}
+              onSelect={handleSelectEnvironment}
+              onManage={() => setEnvironmentModalOpen(true)}
+              theme={theme}
+            />
             <button
               type="button"
               onClick={() => setCorsProxyModalOpen(true)}
@@ -449,6 +798,22 @@ export const ApiRequestBuilderPage = () => {
               CORS Proxy
               {customProxy ? ': On' : corsProxySettings.mode === 'auto' ? ': Auto' : ': Off'}
             </button>
+            <label className={`${smallButtonClass} cursor-pointer`} title="Request timeout — how long to wait before the request is automatically cancelled.">
+              <Clock size={13} aria-hidden="true" />
+              <select
+                value={builder.request.timeoutMs}
+                onChange={(e) => builder.setTimeoutMs(Number(e.target.value))}
+                aria-label="Request timeout"
+                style={{ colorScheme: theme }}
+                className="bg-transparent border-none text-xs font-mono font-medium focus:outline-none cursor-pointer appearance-none"
+              >
+                {TIMEOUT_OPTIONS_MS.map((ms) => (
+                  <option key={ms} value={ms}>
+                    Timeout: {formatTimeout(ms)}
+                  </option>
+                ))}
+              </select>
+            </label>
             <button type="button" onClick={scrollToGuides} className={smallButtonClass}>
               <BookOpen size={13} aria-hidden="true" />
               Guides
@@ -527,7 +892,7 @@ export const ApiRequestBuilderPage = () => {
                   paramsCount={builder.request.params.filter((p) => p.enabled && p.key.trim()).length}
                   headersCount={builder.request.headers.filter((h) => h.enabled && h.key.trim()).length}
                   bodyActive={builder.request.body.mode !== 'none'}
-                  authActive={builder.request.auth.type !== 'none'}
+                  authActive={builder.request.auth.type !== 'none' || builder.request.credentials !== 'same-origin'}
                 />
 
                 <div className="pt-4">
@@ -572,7 +937,14 @@ export const ApiRequestBuilderPage = () => {
                   )}
                   {builder.activeTab === 'auth' && (
                     <div role="tabpanel" id="tabpanel-auth" aria-labelledby="tab-auth">
-                      <AuthEditor auth={builder.request.auth} onChange={builder.setAuth} />
+                      <AuthEditor
+                        auth={builder.request.auth}
+                        onChange={builder.setAuth}
+                        credentials={builder.request.credentials}
+                        onCredentialsChange={builder.setCredentials}
+                        headers={builder.request.headers}
+                        routesThroughProxy={routesThroughProxy}
+                      />
                     </div>
                   )}
                 </div>
@@ -696,7 +1068,24 @@ export const ApiRequestBuilderPage = () => {
         {drawerTab === 'history' ? (
           <HistoryList entries={history} onLoad={handleLoadHistory} onDelete={handleDeleteHistoryEntry} onClear={handleClearHistory} />
         ) : (
-          <SavedRequestsList items={saved} onLoad={handleLoadSaved} onRename={handleRenameSaved} onDelete={handleDeleteSaved} />
+          <CollectionsBrowser
+            tree={collectionTree}
+            folders={folders}
+            onOpenRequest={handleLoadSaved}
+            onCreateCollection={handleCreateCollection}
+            onRenameCollection={handleRenameCollection}
+            onDeleteCollection={handleDeleteCollection}
+            onExportCollection={handleExportCollection}
+            onImportFile={(file) => void handleImportFile(file)}
+            onCreateFolder={handleCreateFolder}
+            onRenameFolder={handleRenameFolder}
+            onDeleteFolder={handleDeleteFolder}
+            onRenameRequest={handleRenameSaved}
+            onDuplicateRequest={handleDuplicateSavedRequest}
+            onMoveRequest={handleOpenMoveModal}
+            onShareRequest={handleShareSavedRequest}
+            onDeleteRequest={handleDeleteSaved}
+          />
         )}
       </Drawer>
 
@@ -731,6 +1120,23 @@ export const ApiRequestBuilderPage = () => {
           </button>
           <button
             type="button"
+            onClick={() => { setCodeGenModalOpen(true); setMoreMenuOpen(false); }}
+            className={moreMenuItemClass}
+          >
+            <Code2 size={16} aria-hidden="true" />
+            Generate code
+          </button>
+          <button
+            type="button"
+            onClick={() => { handleShareCurrentRequest(); setMoreMenuOpen(false); }}
+            disabled={!builder.request.url.trim()}
+            className={moreMenuItemClass}
+          >
+            <Share2 size={16} aria-hidden="true" />
+            Share request
+          </button>
+          <button
+            type="button"
             onClick={() => { void handleCopyUrl(); setMoreMenuOpen(false); }}
             disabled={!builder.request.url.trim()}
             className={moreMenuItemClass}
@@ -756,6 +1162,32 @@ export const ApiRequestBuilderPage = () => {
             <span className="w-4 text-center text-xs font-mono" aria-hidden="true">%</span>
             Decode URL
           </button>
+          <label className={`${moreMenuItemClass} cursor-pointer`}>
+            <Globe size={16} aria-hidden="true" />
+            Environment
+            <select
+              value={activeEnvironmentId ?? ''}
+              onChange={(e) => handleSelectEnvironment(e.target.value || null)}
+              aria-label="Active environment"
+              style={{ colorScheme: theme }}
+              className="ml-auto bg-ink/5 border border-ink/10 rounded-lg px-2 py-1 text-xs font-mono text-secondary-text focus:outline-none focus:border-accent-blue max-w-[110px]"
+            >
+              <option value="">No Environment</option>
+              {environments.map((env) => (
+                <option key={env.id} value={env.id}>
+                  {env.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <button
+            type="button"
+            onClick={() => { setEnvironmentModalOpen(true); setMoreMenuOpen(false); }}
+            className={moreMenuItemClass}
+          >
+            <Settings size={16} aria-hidden="true" />
+            Manage environments
+          </button>
           <button
             type="button"
             onClick={() => { setCorsProxyModalOpen(true); setMoreMenuOpen(false); }}
@@ -767,6 +1199,23 @@ export const ApiRequestBuilderPage = () => {
               {customProxy ? 'On' : corsProxySettings.mode === 'auto' ? 'Auto' : 'Off'}
             </span>
           </button>
+          <label className={`${moreMenuItemClass} cursor-pointer`}>
+            <Clock size={16} aria-hidden="true" />
+            Timeout
+            <select
+              value={builder.request.timeoutMs}
+              onChange={(e) => builder.setTimeoutMs(Number(e.target.value))}
+              aria-label="Request timeout"
+              style={{ colorScheme: theme }}
+              className="ml-auto bg-ink/5 border border-ink/10 rounded-lg px-2 py-1 text-xs font-mono text-secondary-text focus:outline-none focus:border-accent-blue"
+            >
+              {TIMEOUT_OPTIONS_MS.map((ms) => (
+                <option key={ms} value={ms}>
+                  {formatTimeout(ms)}
+                </option>
+              ))}
+            </select>
+          </label>
           <button
             type="button"
             onClick={() => { setMoreMenuOpen(false); scrollToGuides(); }}
@@ -781,17 +1230,54 @@ export const ApiRequestBuilderPage = () => {
       <SaveRequestModal
         open={saveModalOpen}
         onClose={() => setSaveModalOpen(false)}
-        initialName={currentSavedName || 'Untitled request'}
+        initialName={currentSavedName || defaultSaveName(builder.request)}
         onSave={handleSaveRequest}
+        hasSecrets={hasStorableSecrets(builder.request)}
+        collections={collections}
+        folders={folders}
+        defaultCollectionId={saveModalDefaultCollectionId}
+        defaultFolderId={saveModalDefaultFolderId}
+      />
+
+      <MoveRequestModal
+        open={moveModalOpen}
+        onClose={() => setMoveModalOpen(false)}
+        request={moveRequestTarget}
+        collections={collections}
+        folders={folders}
+        onMove={handleMoveSavedRequest}
       />
 
       <CurlImportModal open={curlModalOpen} onClose={() => setCurlModalOpen(false)} onImport={handleCurlImport} />
+
+      <CodeGenModal
+        open={codeGenModalOpen}
+        onClose={() => setCodeGenModalOpen(false)}
+        request={builder.request}
+        variables={activeVariables}
+      />
+
+      <ShareModal
+        open={shareModalOpen}
+        onClose={() => setShareModalOpen(false)}
+        request={shareTarget}
+        baseUrl={`${window.location.origin}${window.location.pathname}`}
+      />
 
       <CorsProxyModal
         open={corsProxyModalOpen}
         onClose={() => setCorsProxyModalOpen(false)}
         settings={corsProxySettings}
         onChange={handleCorsProxySettingsChange}
+      />
+
+      <EnvironmentModal
+        open={environmentModalOpen}
+        onClose={() => setEnvironmentModalOpen(false)}
+        environments={environments}
+        onCreate={handleCreateEnvironment}
+        onChange={handleChangeEnvironment}
+        onDelete={handleDeleteEnvironment}
       />
 
       <Modal

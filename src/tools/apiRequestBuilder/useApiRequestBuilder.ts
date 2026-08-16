@@ -3,6 +3,7 @@ import {
   createBlankRequest,
   createRow,
   nextId,
+  normalizeRequest,
   type ApiRequest,
   type ApiResponse,
   type Authentication,
@@ -16,6 +17,7 @@ import {
 import { executeRequest, RequestExecutionError } from './requestExecutor';
 import { addHistoryEntry } from './storage';
 import { buildProxiedUrl, eligiblePoolCandidates, proxyOrigin, resolveCustomProxy, type CorsProxySettings } from './corsProxy';
+import { resolveRequestVariables } from './environment';
 
 export type RequestTab = 'params' | 'headers' | 'body' | 'auth';
 
@@ -25,7 +27,7 @@ const toFailure = (err: unknown): RequestFailure =>
     : { kind: 'unknown', message: err instanceof Error ? err.message : 'Something went wrong.' };
 
 export const useApiRequestBuilder = (initial?: ApiRequest) => {
-  const [request, setRequest] = useState<ApiRequest>(initial ?? createBlankRequest());
+  const [request, setRequest] = useState<ApiRequest>(() => normalizeRequest(initial ?? createBlankRequest()));
   const [activeTab, setActiveTab] = useState<RequestTab>('params');
   const [sending, setSending] = useState(false);
   const [response, setResponse] = useState<ApiResponse | null>(null);
@@ -37,7 +39,10 @@ export const useApiRequestBuilder = (initial?: ApiRequest) => {
   const abortRef = useRef<AbortController | null>(null);
 
   const loadRequest = useCallback((next: ApiRequest) => {
-    setRequest(next);
+    // Normalizes here so every entry point — history, saved requests, curl import,
+    // examples — gets a request with timeoutMs/credentials filled in, even records
+    // written to localStorage before those fields existed.
+    setRequest(normalizeRequest(next));
     setResponse(null);
     setError(null);
     setElapsedMs(null);
@@ -103,8 +108,17 @@ export const useApiRequestBuilder = (initial?: ApiRequest) => {
   );
 
   const setAuth = useCallback((auth: Authentication) => setRequest((r) => ({ ...r, auth })), []);
+  const setTimeoutMs = useCallback((timeoutMs: number) => setRequest((r) => ({ ...r, timeoutMs })), []);
+  const setCredentials = useCallback(
+    (credentials: RequestCredentials) => setRequest((r) => ({ ...r, credentials })),
+    [],
+  );
 
-  const send = useCallback(async (proxySettings: CorsProxySettings) => {
+  // `variables` comes from the active environment (empty map when "No Environment" is selected).
+  // Resolution happens right here, immediately before execution — `request` itself (used below for
+  // history) never sees the resolved values, so a saved/history entry always keeps `{{baseUrl}}`
+  // reusable against any environment instead of freezing in whichever one sent it.
+  const send = useCallback(async (proxySettings: CorsProxySettings, variables: Record<string, string> = {}) => {
     if (sending) return;
     const controller = new AbortController();
     abortRef.current = controller;
@@ -113,6 +127,7 @@ export const useApiRequestBuilder = (initial?: ApiRequest) => {
     setResponse(null);
     setViaProxy(null);
     const startedAt = Date.now();
+    const resolvedRequest = resolveRequestVariables(request, variables);
 
     const recordSuccess = (result: ApiResponse, proxyOriginUsed: string | null) => {
       setResponse(result);
@@ -140,7 +155,7 @@ export const useApiRequestBuilder = (initial?: ApiRequest) => {
       if (customProxy) {
         // The user's own infrastructure — used up front for every request while
         // configured, unlike the pool fallback below which only kicks in on failure.
-        const result = await executeRequest(request, {
+        const result = await executeRequest(resolvedRequest, {
           signal: controller.signal,
           rewriteUrl: (url) => buildProxiedUrl(customProxy.template, url),
         });
@@ -150,14 +165,14 @@ export const useApiRequestBuilder = (initial?: ApiRequest) => {
 
       if (proxySettings.mode !== 'auto') {
         // 'off', or 'custom' selected with no URL filled in yet — direct only, no fallback.
-        const result = await executeRequest(request, { signal: controller.signal });
+        const result = await executeRequest(resolvedRequest, { signal: controller.signal });
         recordSuccess(result, null);
         return;
       }
 
       // 'auto' — try direct first so a working API never gets routed through a third party.
       try {
-        const result = await executeRequest(request, { signal: controller.signal });
+        const result = await executeRequest(resolvedRequest, { signal: controller.signal });
         recordSuccess(result, null);
         return;
       } catch (directErr) {
@@ -181,7 +196,7 @@ export const useApiRequestBuilder = (initial?: ApiRequest) => {
 
         for (const candidate of candidates) {
           try {
-            const result = await executeRequest(request, {
+            const result = await executeRequest(resolvedRequest, {
               signal: controller.signal,
               timeoutMs: 12_000,
               rewriteUrl: (url) => buildProxiedUrl(candidate.template, url),
@@ -242,6 +257,8 @@ export const useApiRequestBuilder = (initial?: ApiRequest) => {
     updateFormField,
     removeFormField,
     setAuth,
+    setTimeoutMs,
+    setCredentials,
     send,
     cancel,
   };

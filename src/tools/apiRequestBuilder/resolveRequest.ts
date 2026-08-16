@@ -1,4 +1,4 @@
-import type { ApiRequest, FormField } from './types';
+import type { ApiRequest, FormField, RequestHeader } from './types';
 import { buildUrlWithParams } from './urlUtils';
 
 export interface ResolvedRequest {
@@ -15,6 +15,12 @@ const hasHeaderNamed = (headers: Array<[string, string]>, name: string): boolean
   headers.some(([key]) => key.toLowerCase() === name.toLowerCase());
 
 const enabledFormFields = (fields: FormField[]): FormField[] => fields.filter((f) => f.enabled && f.key.trim() !== '');
+
+/** True when the request has an enabled, non-empty `Cookie` header set manually (typically via
+ *  curl import's `-b`/`--cookie`) — a signal to warn the user, since browsers silently block
+ *  scripts from setting this header directly. Pure predicate: never mutates or drops the header. */
+export const hasEnabledCookieHeader = (headers: RequestHeader[]): boolean =>
+  headers.some((h) => h.enabled && h.key.trim().toLowerCase() === 'cookie' && h.value.trim() !== '');
 
 /** Applies enabled params + auth + body to a request draft, producing what would actually be sent.
  *  Used by both the fetch executor and the cURL generator so they can never drift apart. */
