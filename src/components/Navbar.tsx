@@ -43,7 +43,7 @@ export const Navbar = () => {
           >
             <Link
               to={homeHref}
-              className="text-2xl font-bold tracking-tighter flex items-center gap-2"
+              className="text-2xl font-bold tracking-tighter flex items-center gap-2 whitespace-nowrap"
             >
               <picture>
                 <source srcSet="/logo-64.webp" type="image/webp" />
@@ -54,7 +54,7 @@ export const Navbar = () => {
           </motion.div>
 
           {/* Desktop Links */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-6 xl:gap-8">
             {navLinks.map((link, idx) => (
               <motion.div
                 key={link.name}
@@ -64,7 +64,7 @@ export const Navbar = () => {
               >
                 <Link
                    to={link.href.startsWith('#') ? `${homeHref}${link.href}` : link.href}
-                  className="text-sm font-medium text-secondary-text hover:text-ink transition-colors relative group"
+                  className="text-sm font-medium text-secondary-text hover:text-ink transition-colors relative group whitespace-nowrap"
                 >
                   {link.name}
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent-blue transition-all group-hover:w-full" />
@@ -94,7 +94,7 @@ export const Navbar = () => {
             aria-label={nav.ariaOpenMenu}
             aria-expanded={isOpen}
             aria-controls="mobile-menu"
-            className={`md:hidden text-ink relative z-50 p-2.5 -m-2.5 transition-opacity ${isOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+            className={`lg:hidden text-ink relative z-50 p-2.5 -m-2.5 transition-opacity ${isOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
             onClick={() => setIsOpen(true)}
           >
             <Menu aria-hidden="true" />
@@ -107,7 +107,7 @@ export const Navbar = () => {
         id="mobile-menu"
         initial={false}
         animate={isOpen ? { opacity: 1, x: 0 } : { opacity: 0, x: '100%' }}
-        className="md:hidden fixed inset-0 z-40 bg-bg-pure/95 backdrop-blur-xl flex flex-col justify-center items-center gap-8 p-6 overflow-y-auto"
+        className="lg:hidden fixed inset-0 z-40 bg-bg-pure/95 backdrop-blur-xl flex flex-col justify-center items-center gap-8 p-6 overflow-y-auto"
       >
         <button
           aria-label={nav.ariaCloseMenu}
