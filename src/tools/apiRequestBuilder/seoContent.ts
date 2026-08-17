@@ -70,4 +70,5 @@ export const API_REQUEST_BUILDER_GUIDE_SLUGS = [
   'curl-to-fetch-axios-python',
   'import-postman-collection-without-postman',
   'test-openapi-spec-online',
+  'common-api-testing-errors',
 ] as const;

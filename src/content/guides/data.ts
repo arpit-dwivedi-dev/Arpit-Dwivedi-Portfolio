@@ -4795,6 +4795,380 @@ export const GUIDES: Guide[] = [
     ctaToolHref: '/tools/developer/api-request-builder',
     ctaToolLabel: 'Try the free API Request Builder',
   },
+  {
+    slug: 'common-api-testing-errors',
+    title: 'Common API Testing Errors and What They Mean',
+    description:
+      'A reference for common API testing errors — what 400, 401, 403, 404, 405, 415, 422, 429 and 5xx status codes mean, plus timeouts and CORS failures, and what to check next.',
+    category: 'developer-tools',
+    readTimeMinutes: 11,
+    publishedDate: '2026-08-17',
+    updatedDate: '2026-08-17',
+    intro: [
+      'An API request can fail for reasons that have nothing to do with each other: the data you sent was invalid, your credentials were missing or expired, the URL pointed at nothing, the endpoint does not accept that method or that media type, you have been rate limited, the server itself broke, or the browser refused to hand you the response. Each of those needs a different fix, and guessing wastes time.',
+      'The HTTP status code is the first useful clue, because it tells you which class of problem you are in before you read a single line of the response body. A 4xx points at the request you sent; a 5xx points at the server handling it; no status code at all — a timeout or a blocked browser request — means nothing came back to classify.',
+      'This page is a reference, not a tutorial. Find the code or symptom you are looking at, read what it usually means, and work down the short list of things to check. Every section ends with a next action rather than a theory.',
+    ],
+    sections: [
+      {
+        heading: 'Quick reference: status code, meaning, typical cause',
+        paragraphs: [
+          'Each line below is Status — Meaning — Typical cause. Only codes this page explains further are listed; there is a section for each one.',
+        ],
+        bullets: [
+          '400 Bad Request — the server could not process the request because it was invalid or malformed — malformed JSON, a missing required field, or a badly formed parameter.',
+          '401 Unauthorized — the request was not authenticated — no credential sent, or a token/key that is invalid, expired, or in the wrong header.',
+          '403 Forbidden — the server is refusing access to this resource — insufficient permission, a missing scope or role, or a policy restriction.',
+          '404 Not Found — the server has nothing at that URL — a typo in the path, the wrong API version, or a resource ID that does not exist.',
+          '405 Method Not Allowed — the endpoint exists but not for this method — sending GET where the operation is POST, or vice versa.',
+          '409 Conflict — the request conflicts with the current state of the resource — a duplicate record, or a version/state clash.',
+          '415 Unsupported Media Type — the server does not accept the body format you sent — a Content-Type mismatch, usually JSON where form data is expected.',
+          '422 Unprocessable Content — the format was understood but the data was rejected — schema or field-level validation failure.',
+          '429 Too Many Requests — you are being rate limited — too many requests in a window, or a quota exhausted.',
+          '500 Internal Server Error — the server hit an unexpected condition — an unhandled exception, a broken dependency, or a bad deploy.',
+          '502 Bad Gateway — an intermediary got an invalid response from upstream — the application behind a proxy or gateway is failing or unreachable.',
+          '503 Service Unavailable — the service is temporarily unable to handle the request — overload, maintenance, or a dependency that is down.',
+          'No status code at all — nothing came back — a timeout, a network failure, or a browser blocking the response (CORS).',
+        ],
+      },
+      {
+        heading: 'Status codes are a class of answer, not the answer',
+        paragraphs: [
+          'Before using the sections below, one caveat worth keeping: HTTP status codes give you a standard class of information, but the exact reason a specific API rejected a specific request is API-specific. Different APIs legitimately use different codes for similar situations — a validation failure might come back as 400 on one API and 422 on another, and a permission problem as 401, 403, or even 404 depending on whether the API wants to reveal that the resource exists.',
+          'So treat the code as a starting direction and the response body as the actual explanation. Most APIs return a machine-readable error object with a message, an error code, or a list of field-level problems; that plus the provider’s documentation is where the actionable detail lives. If a section here disagrees with the API’s own docs, the docs win.',
+        ],
+      },
+      {
+        heading: '400 Bad Request',
+        paragraphs: [
+          'Meaning: the server could not process the request because the request itself was invalid or malformed. It is the most general 4xx, and a broad range of problems land on it — a 400 does not by itself mean your JSON was malformed.',
+        ],
+        bullets: [
+          'Common cause — malformed JSON in the body (a trailing comma, a missing comma, unquoted keys).',
+          'Common cause — a required field missing from the body or the query string.',
+          'Common cause — a parameter in the wrong format: a string where a number is expected, a date in the wrong format, an ID that does not match the expected shape.',
+          'Common cause — an invalid query string: an unknown parameter the API rejects rather than ignores, or a value that failed to parse.',
+          'Common cause — the right fields nested at the wrong level, so the body structure does not match the documented schema.',
+          'Check 1 — validate the JSON syntax before anything else; see the malformed-JSON section below.',
+          'Check 2 — compare the body’s fields against the documented required fields.',
+          'Check 3 — read the query parameters in the Params tab, including ones left over from an earlier attempt.',
+          'Check 4 — diff the whole request against the API documentation’s own example, method and headers included.',
+          'Check 5 — read the response body. A 400 usually carries the specific validation detail, and it is faster than guessing.',
+          'For the anatomy of a correctly formed JSON body, see /guides/developer-tools/json-post-request-example.',
+        ],
+      },
+      {
+        heading: '401 Unauthorized',
+        paragraphs: [
+          'Meaning: the request was not accepted as authenticated. Despite the name, 401 is about authentication — who you are — rather than authorization.',
+        ],
+        bullets: [
+          'Common cause — no authentication sent at all, because the Auth tab is still set to None.',
+          'Common cause — an invalid token: truncated on copy, from a different environment, or simply the wrong credential.',
+          'Common cause — an expired token. Short-lived access tokens are the single most common answer to “it worked an hour ago”.',
+          'Common cause — a malformed Authorization header, most often the `Bearer ` prefix missing, duplicated, or a stray newline pasted in with the token.',
+          'Common cause — an incorrect API key, or the right key sent under the wrong header name.',
+          'Common cause — the wrong authentication method entirely, such as a Bearer token where the API expects Basic Auth or an API key.',
+          'Check — open the Auth tab and confirm which method is selected, not just that something is filled in.',
+          'Check — for a Bearer token, confirm the token itself is current and that the tool is building the header rather than you also adding a manual Authorization header that overrides it.',
+          'Check — for an API key, confirm both the name and the location: a header named exactly as documented, or a query parameter, depending on the API.',
+          'Check — for Basic Auth, confirm the username and password, and that they are credentials for the API rather than for a dashboard login.',
+          'Check — re-read the API’s authentication documentation. Scheme details vary more than any other part of an API.',
+          'Worked examples of all three schemes: /guides/developer-tools/authentication-testing-examples.',
+        ],
+      },
+      {
+        heading: '403 Forbidden',
+        paragraphs: [
+          'Meaning: the server is refusing access to the requested resource. Whether authentication succeeded depends on the API — the common shorthand that “403 means you are authenticated but not permitted” is true of many APIs and not all of them. Some return 403 for a missing or bad credential, and some return 404 to avoid confirming that a resource exists.',
+        ],
+        bullets: [
+          'Possible cause — the authenticated identity lacks permission for this action on this resource.',
+          'Possible cause — the token is valid but missing a required scope, or the account lacks a required role.',
+          'Possible cause — an IP allowlist, region restriction, or firewall rule in front of the API.',
+          'Possible cause — an endpoint-level authorization policy: the credential works for read endpoints but not write ones, or for one tenant’s data but not another’s.',
+          'Possible cause — an account or plan restriction: a trial account, a suspended key, a feature not enabled for that subscription.',
+          'Check — read the response body. APIs that distinguish 401 from 403 carefully usually say which permission or scope was missing.',
+          'Check — confirm the credential is the one you think it is, since a wrong-but-valid token from another account produces exactly this.',
+          'Check — if the credential was just issued, confirm its scopes at issue time; scopes usually cannot be widened after the fact.',
+          'Check — work through the authentication checklist below before assuming the problem is permissions.',
+        ],
+      },
+      {
+        heading: '404 Not Found',
+        paragraphs: [
+          'Meaning: the server has nothing to serve at that URL. Because it is the default answer for anything unrouted, a 404 is as often a typo as it is a missing record.',
+        ],
+        bullets: [
+          'Common cause — the URL is wrong: a typo, a missing or extra slash, or the wrong host.',
+          'Common cause — the wrong path: `/user` instead of `/users`, or a missing prefix such as `/api`.',
+          'Common cause — the wrong API version, where `/v1` and `/v2` expose different paths.',
+          'Common cause — a resource ID that does not exist, or exists but not for your account.',
+          'Common cause — an endpoint that was removed or renamed in a version you have not read the changelog for.',
+          'Check — read the complete resolved URL, not the template. If it is built from an environment variable, confirm what that variable currently expands to.',
+          'Check — confirm every path parameter has a real value and no `{{placeholder}}` survived into the sent URL.',
+          'Check — confirm the active environment. Pointing a staging path at a production `baseUrl` (or the reverse) produces a 404 that looks like a missing record.',
+          'Check — confirm the API version segment against the documentation you are reading.',
+          'Check — test a known-good endpoint on the same host, such as a health or list endpoint. If that works, the host and auth are fine and the path is the problem.',
+        ],
+      },
+      {
+        heading: '405 Method Not Allowed',
+        paragraphs: [
+          'Meaning: the endpoint exists, but the HTTP method you used is not allowed for that resource. This is a useful failure — it confirms the URL is right.',
+          'The classic version: the documentation describes `POST /users` to create a user, and the request that was actually sent is `GET /users` because the method dropped back to the default after the URL was edited.',
+        ],
+        bullets: [
+          'Check — the method selector to the left of the URL in the API Request Builder. It offers GET, POST, PUT, PATCH, DELETE, HEAD, and OPTIONS.',
+          'Check — the documented operation for that exact path. Collection paths and item paths usually accept different methods: `POST /users` to create, `GET /users/{id}` to read, `PATCH /users/{id}` to update.',
+          'Check — the `Allow` response header when present; servers that return 405 correctly list the methods the endpoint does accept.',
+          'Check — whether an update endpoint expects PUT (replace the whole resource) or PATCH (change some fields). Many APIs implement only one.',
+        ],
+      },
+      {
+        heading: '409 Conflict',
+        paragraphs: [
+          'Meaning: the request conflicts with the current state of the server or the resource. Nothing is malformed and nothing is unauthorized — the operation just cannot apply to the state that exists right now. Not every API uses 409 this way; some return 400 or 422 for the same situations.',
+        ],
+        bullets: [
+          'Common example — a duplicate resource: creating a record with an email, username, or slug that already exists.',
+          'Common example — a version conflict: an optimistic-concurrency check where the `If-Match`/ETag or version field you sent no longer matches the stored one.',
+          'Common example — an invalid state transition: cancelling an order that already shipped, or paying an invoice already marked paid.',
+          'Check — the response body, which is where the specific conflict is named.',
+          'Check — whether the resource already exists, with a GET before retrying the create.',
+          'Check — for a version conflict, re-read the resource to get the current version and resend with that.',
+          'Beyond that, troubleshooting a 409 is endpoint-specific: it depends on that API’s domain rules, so its documentation is the only reliable source.',
+        ],
+      },
+      {
+        heading: '415 Unsupported Media Type',
+        paragraphs: [
+          'Meaning: the server does not accept the media type the request declared or sent. The body may be perfectly valid — it is the format, and the Content-Type header describing it, that was rejected.',
+          'The two media types this comes up with most are `application/json` and `multipart/form-data`. Sending one where the endpoint accepts only the other produces a 415 even when the fields are correct.',
+        ],
+        bullets: [
+          'Common cause — sending JSON to an endpoint that only accepts form data, or the reverse.',
+          'Common cause — an incorrect or missing Content-Type header, so the server cannot tell what the body is.',
+          'Common cause — a body format the endpoint does not support at all, such as XML or plain text where only JSON is accepted.',
+          'Common cause — a Content-Type with a charset or vendor suffix the server matches strictly, such as `application/vnd.api+json`.',
+          'Check — what the documentation lists as accepted request content types for that specific operation.',
+          'Check — switch the Body mode rather than hand-editing the header; the tool sets the matching Content-Type for JSON, form-url-encoded, and multipart bodies.',
+          'Important for multipart — do not set the Content-Type header yourself. A multipart body needs a boundary parameter, and the browser generates it when it constructs the `FormData`. A hand-written `multipart/form-data` header has no boundary, so the server cannot parse the body.',
+          'JSON bodies in detail: /guides/developer-tools/json-post-request-example.',
+          'Multipart and file uploads in detail: /guides/developer-tools/form-data-file-upload-example.',
+        ],
+      },
+      {
+        heading: '422 Unprocessable Content',
+        paragraphs: [
+          'Meaning: in the most common usage, the server understood the request format but rejected the submitted data. The body parsed, the content type was fine, and validation then failed. There is no single universal meaning — plenty of APIs return 400 for exactly these cases, and a few use 422 more loosely — so read it as “your data was rejected” rather than as a precise diagnosis.',
+        ],
+        bullets: [
+          'Common example — a required field missing from an otherwise valid JSON object.',
+          'Common example — an invalid field value: an out-of-range number, an unrecognised enum value, a malformed email or date.',
+          'Common example — a schema validation failure, such as the wrong type for a field or an unexpected extra property on a strict schema.',
+          'Common example — a cross-field rule, such as an end date earlier than a start date.',
+          'Check — the response body first. A 422 is the code most likely to carry a structured list of field-level errors, and it usually names the exact field.',
+          'Check — field names and types against the documented schema, including case: `firstName` and `first_name` are different fields.',
+          'Check — that valid JSON is not being mistaken for valid data. Syntax and schema are separate concerns; see the malformed-JSON section.',
+          'Body structure and Content-Type basics: /guides/developer-tools/json-post-request-example.',
+        ],
+      },
+      {
+        heading: '429 Too Many Requests',
+        paragraphs: [
+          'Meaning: you are being rate limited. The request was well formed and probably authenticated; you simply sent more than the API allows for now.',
+        ],
+        bullets: [
+          'Common cause — too many requests inside the limit window, often from a loop or a test script rather than manual testing.',
+          'Common cause — a plan or account quota exhausted for the day or month, which does not reset in seconds.',
+          'Common cause — a burst limit exceeded even though the average rate is fine.',
+          'Common cause — a limit shared across a whole key or organisation, so someone else’s traffic consumed it.',
+          'Check — the API’s rate-limit documentation for the actual window and limit; they vary enormously.',
+          'Check — the `Retry-After` response header when present. It tells you how long to wait, in seconds or as a date.',
+          'Check — any `X-RateLimit-Limit`, `X-RateLimit-Remaining`, and `X-RateLimit-Reset` headers, which many APIs send on every response, not only on a 429.',
+          'Check — whether this is a quota rather than a rate, by looking at your account or dashboard usage.',
+          'Then — slow down. Wait out the window, reduce request frequency, and space out repeated sends. Do not hammer the endpoint with automated retries: aggressive retrying keeps the limit tripped, can extend the block, and on some APIs counts against your quota.',
+        ],
+      },
+      {
+        heading: '500 Internal Server Error',
+        paragraphs: [
+          'Meaning: the server encountered an unexpected condition while handling the request. It is a generic catch-all — the server is telling you it failed, not why.',
+          'A 500 does not imply the client is wrong, and it also does not prove the client is innocent. Unhandled input is a real cause, so it is worth a few client-side checks before reporting it.',
+        ],
+        bullets: [
+          'Possible cause — an unhandled server-side exception on that code path.',
+          'Possible cause — a bad or in-progress deployment, or a misconfigured environment variable on the server.',
+          'Possible cause — a failing dependency: a database, cache, or downstream API the endpoint relies on.',
+          'Possible cause — input the server did not expect and did not validate, so it crashed instead of returning a 400.',
+          'Check — that the request is correctly formed against the documentation, so you can rule your own request in or out.',
+          'Check — a known-working request against the same API. If that succeeds, the failure is specific to this endpoint or this payload.',
+          'Check — the response body and headers; some APIs include an error ID or trace ID, which is the single most useful thing to quote in a support ticket.',
+          'Check — reproducibility. Consistent on every send, or intermittent? Consistent points at a code path; intermittent points at capacity or a flaky dependency.',
+          'Check — whether one field makes the difference. Removing or simplifying part of the payload until the 500 stops narrows it down fast, and if a simplified valid request also 500s the problem is not yours.',
+          'Then — if it is your API, the server logs hold the answer. If it is not, report it with the request, the timestamp, and any trace ID.',
+        ],
+      },
+      {
+        heading: '502 Bad Gateway and 503 Service Unavailable',
+        paragraphs: [
+          'Both usually mean the failure happened somewhere between the request arriving and the application handling it, so there is rarely anything to fix in the request. Exact semantics depend on the infrastructure in front of the API, and not every deployment uses these codes the same way.',
+          '502 Bad Gateway often indicates that an intermediary — a reverse proxy, load balancer, gateway, or CDN — received an invalid or empty response from the upstream server it forwarded to. That commonly means the application behind it crashed, is restarting, or closed the connection.',
+          '503 Service Unavailable commonly indicates that the service is temporarily unable to handle the request: overload, a deliberate maintenance window, or a dependency being down. A 503 may carry a `Retry-After` header, which is worth checking before retrying.',
+          'For either, the practical response is the same: confirm the request is well formed, retry once after a short pause, check the provider’s status page, and if it is your own infrastructure, look at the proxy and application logs together — the proxy will say what it could not reach.',
+        ],
+      },
+      {
+        heading: 'Request timeout',
+        paragraphs: [
+          'A timeout is not an HTTP status code. There is no response at all, which is exactly why it is harder to diagnose than a 4xx or 5xx — the same silence covers several different causes.',
+          'A client-side request timeout means your client stopped waiting. The server may still be working, and may even complete the operation after you gave up, which matters for anything that writes data: a timed-out POST is not proof that nothing was created.',
+          'A server response timeout means something on the server side gave up first — often a gateway timing out an upstream — and that usually arrives as a status code such as 504 rather than as silence.',
+          'A network failure means the request never completed the round trip: no connectivity, DNS failure, a wrong host, or the server refusing the connection. A browser/CORS failure looks similar from JavaScript, because the browser blocks the response without telling your code why. In the API Request Builder these two land in the same error, and the message says so rather than guessing — the browser does not expose enough detail to distinguish them.',
+          'The tool’s Timeout control in the toolbar sets the client-side limit and offers 5, 10, 30, 60, and 120 seconds, defaulting to 30. When that limit is reached the request is aborted and the error names the configured value, so a timeout at exactly your configured number is your budget expiring, not a diagnosis of the server.',
+          'What to do: raise the timeout if the endpoint is legitimately slow (reports, exports, cold starts); confirm the host is reachable at all with a simpler request; and for a timed-out write, check whether it actually took effect before resending. A timeout does not prove the server is down.',
+        ],
+      },
+      {
+        heading: 'When the request works in cURL but fails in the browser',
+        paragraphs: [
+          'If the exact same request succeeds from a terminal and fails from browser JavaScript with no status code and no detail, the browser is almost certainly the difference. CORS is enforced by browsers, not by HTTP, so cURL and desktop clients were never subject to it.',
+          'The short version of what changes inside a browser: the response is withheld from your JavaScript unless the API returns an `Access-Control-Allow-Origin` header matching your origin; non-simple requests are preceded by an automatic `OPTIONS` preflight that must succeed on its own; some headers are forbidden for JavaScript to set and are controlled by the browser; and sending cookies or credentials adds stricter rules, including that a wildcard allowed-origin is rejected outright for credentialed requests.',
+          'The API Request Builder sends requests straight from your browser, so it is subject to all of that. When a request fails this way it offers to retry through a CORS proxy, which fetches the response server-side where CORS does not apply. That is a testing convenience with a real trade-off — the proxy operator sees the whole request, credentials included — and a response that came back that way is labelled as such in the response header row.',
+          'The full explanation, including the fixes that depend on whether you control the API, is in the dedicated guide: /guides/developer-tools/what-is-a-cors-error.',
+        ],
+      },
+      {
+        heading: 'Invalid JSON body',
+        paragraphs: [
+          'Malformed JSON is common enough, and produces confusing enough errors, to be worth isolating. Depending on the API it surfaces as a 400, a 415, or an error the tool raises before the request is even sent.',
+          'This body is invalid — there is no comma after the first value:',
+        ],
+        bullets: [
+          '{',
+          '  "name": "John"',
+          '  "email": "john@example.com"',
+          '}',
+        ],
+      },
+      {
+        heading: 'The same JSON body, corrected',
+        paragraphs: [
+          'Adding the missing comma is the whole fix:',
+        ],
+        bullets: [
+          '{',
+          '  "name": "John",',
+          '  "email": "john@example.com"',
+          '}',
+        ],
+      },
+      {
+        heading: 'Syntax errors versus schema errors',
+        paragraphs: [
+          'Valid JSON syntax and valid API data are separate concerns, and conflating them is what makes these errors feel arbitrary. Syntax is whether the text parses at all: commas, quotes, brackets, no trailing comma, no comments, keys quoted. Schema is whether the parsed object is acceptable to the endpoint: the right fields, the right types, the required ones present.',
+          'A body can pass one and fail the other in both directions. Perfectly valid JSON containing the wrong field names is a schema failure, usually a 422 or a 400 with field detail. Text that is nearly JSON but has a stray comma never gets far enough to be validated at all.',
+          'The usual culprits are a trailing comma after the last property, a missing comma between properties, single quotes instead of double, unquoted keys, and a JavaScript-style comment pasted in from documentation. The Body editor in the API Request Builder flags a JSON body it cannot parse and can format it, and formatting failing is itself the signal that the problem is syntax rather than schema.',
+          'For a body known to be well formed to compare against, see /guides/developer-tools/json-post-request-example.',
+        ],
+      },
+      {
+        heading: 'Checklist: before debugging a 401 or 403',
+        paragraphs: [
+          'Most authentication failures are one of seven things. Work down the list before digging into scopes and policies.',
+        ],
+        bullets: [
+          '1. Is authentication enabled at all, or is the Auth tab still set to None?',
+          '2. Is the auth method the one the API documents — Bearer, Basic, or API key?',
+          '3. Is the token or API key actually present, and not an empty or unresolved `{{variable}}`?',
+          '4. Is the header name exactly right — `Authorization` for Bearer and Basic, or the API’s own header name for a key?',
+          '5. Is the token expired, or issued for a different environment or account?',
+          '6. Does this endpoint require a specific scope or role the credential does not carry?',
+          '7. Are browser credential or CORS rules involved — cookies not being sent cross-origin, or the response blocked before your code sees it?',
+          'Worked examples for each scheme: /guides/developer-tools/authentication-testing-examples.',
+        ],
+      },
+      {
+        heading: 'Checklist: debugging any failing request',
+        paragraphs: [
+          'When the status code alone has not told you enough, go through the request in the order the server does.',
+        ],
+        bullets: [
+          '1. Verify the method — GET, POST, PUT, PATCH, DELETE.',
+          '2. Verify the URL, including the base URL or environment the variables resolve against.',
+          '3. Check the query parameters, and remove leftovers from earlier attempts.',
+          '4. Check the headers for duplicates, typos, and stale values.',
+          '5. Check authentication with the checklist above.',
+          '6. Check the body and its content type together — they have to agree.',
+          '7. Check the response status and the response headers, not just the body.',
+          '8. Read the response body. It is the most-skipped and most-informative step.',
+          '9. Check whether a browser constraint is involved, if the same request works outside the browser.',
+          '10. Change one thing and resend. Fixing three things at once tells you nothing about which one mattered.',
+        ],
+      },
+      {
+        heading: 'What to look at in the API Request Builder',
+        paragraphs: [
+          'The reason to debug in a request builder rather than in application code is that every part of the exchange is visible at once. On the response side, the row above the response shows the status code and status text, the response time, the response size, and the detected body kind, with a warning marker when a large body was truncated for display or when the response arrived through a CORS proxy. Two tabs sit below it: Body — JSON pretty-printed as a tree or as raw text, with copy and download — and Headers, which is where `Retry-After`, rate-limit headers, `Allow`, `Content-Type`, and any trace ID actually live.',
+          'On the request side, the controls map to exactly the things the checklists above ask about: the method selector and URL field at the top; the Params, Headers, Body, and Auth tabs beneath them; the environment picker for swapping which `baseUrl` and variables a request resolves against; and the Timeout control for the client-side limit. Saved requests and local history make the useful comparison possible — load the version that worked, put it next to the one that does not, and look at what differs.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'What is the difference between a 401 and a 403?',
+        answer:
+          '401 means the request was not accepted as authenticated — the credential is missing, invalid, or expired. 403 means the server is refusing access to the resource, most often because the identity lacks permission, a scope, or a role. The line is not perfectly consistent across APIs: some return 403 for a bad credential and some return 404 rather than admit a resource exists, so read the response body rather than relying on the code alone.',
+      },
+      {
+        question: 'Why do I get a 400 when my JSON looks fine?',
+        answer:
+          'Because a 400 covers far more than malformed JSON. A missing required field, a value in the wrong format, an unexpected query parameter, or the right fields nested at the wrong level all produce one. Valid JSON syntax and valid API data are separate concerns — the response body usually names the specific field, so read it before re-checking the syntax.',
+      },
+      {
+        question: 'What is the difference between a 400 and a 422?',
+        answer:
+          'As commonly used, a 400 means the request itself was malformed or unparseable, and a 422 means the request was understood but the data failed validation. Many APIs do not draw that line and return 400 for both, so treat 422 as “my data was rejected” and look to the response body, which for a 422 usually includes field-level errors.',
+      },
+      {
+        question: 'Why am I getting a 415 when I send JSON?',
+        answer:
+          'The endpoint does not accept `application/json` for that operation, or the Content-Type does not match the body sent. The usual case is an endpoint that expects `multipart/form-data` or `application/x-www-form-urlencoded`. Switch the Body mode instead of hand-editing the header, and for multipart never set Content-Type yourself — the browser must generate the boundary as part of building the FormData.',
+      },
+      {
+        question: 'How should I handle a 429?',
+        answer:
+          'Wait, then send fewer requests. Check `Retry-After` if the response includes it, and any rate-limit headers for the remaining allowance and reset time, then confirm against the API’s documented limits whether you hit a per-second rate or an exhausted quota. Avoid aggressive automated retries — they keep the limit tripped and on some APIs extend the block.',
+      },
+      {
+        question: 'Does a 500 mean I did something wrong?',
+        answer:
+          'Not necessarily. A 500 means the server hit an unexpected condition, which is usually a server-side bug, a bad deploy, or a failing dependency. It also does not clear the client, since unvalidated input can crash a handler. Confirm the request matches the documentation, try a known-working request against the same API, check for a trace ID in the response, and see whether it reproduces consistently.',
+      },
+      {
+        question: 'My request timed out. Is the API down?',
+        answer:
+          'Not necessarily. A timeout means your client stopped waiting; the server may still be processing, and may complete the work after you gave up — so a timed-out POST is not proof that nothing was created. It can equally be a slow endpoint, a network failure, or a browser blocking the response. Raise the Timeout setting, confirm the host answers a simpler request, and for a write, check whether it took effect before resending.',
+      },
+      {
+        question: 'Why does the request work in cURL but fail in my browser?',
+        answer:
+          'CORS is enforced by browsers, not by HTTP, so cURL was never subject to it. From browser JavaScript the response is withheld unless the API returns a matching `Access-Control-Allow-Origin` header, non-simple requests must pass an automatic OPTIONS preflight first, and credentialed requests face stricter rules. The failure carries no status code because there is no readable response.',
+      },
+    ],
+    relatedSlugs: [
+      'how-to-test-an-api',
+      'authentication-testing-examples',
+      'what-is-a-cors-error',
+      'json-post-request-example',
+      'form-data-file-upload-example',
+      'curl-to-fetch-axios-python',
+    ],
+    ctaText: 'Send the failing request again with every part of it visible.',
+    ctaToolHref: '/tools/developer/api-request-builder',
+    ctaToolLabel: 'Test the failing request in API Request Builder',
+  },
 ];
 
 export const getGuideBySlug = (slug: string): Guide | undefined => GUIDES.find((guide) => guide.slug === slug);
