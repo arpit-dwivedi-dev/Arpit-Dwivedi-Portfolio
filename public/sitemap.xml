@@ -689,6 +689,15 @@
     <priority>0.7</priority>
   </url>
 
+  <url>
+    <loc>https://101techlabs.com/guides/developer-tools/test-openapi-spec-online</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/developer-tools/test-openapi-spec-online" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/developer-tools/test-openapi-spec-online" />
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
 <url>
     <loc>https://101techlabs.com/privacy-policy</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/privacy-policy" />

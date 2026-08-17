@@ -4372,6 +4372,429 @@ export const GUIDES: Guide[] = [
     ctaToolHref: '/tools/developer/api-request-builder',
     ctaToolLabel: 'Try the free API Request Builder',
   },
+  {
+    slug: 'test-openapi-spec-online',
+    title: 'How to Test an OpenAPI Spec Online',
+    description:
+      'Test an OpenAPI 3.0 or 3.1 spec online — import the JSON or YAML file in the browser and turn its endpoints into editable, sendable API requests.',
+    category: 'developer-tools',
+    readTimeMinutes: 10,
+    publishedDate: '2026-08-17',
+    updatedDate: '2026-08-17',
+    intro: [
+      'You already have an OpenAPI definition. A vendor published one, an internal team maintains one, or there is an `openapi.yaml` sitting in the repository you just cloned. What you actually want is to look at the endpoints it declares, see what parameters and request bodies they expect, check how authentication is meant to work, and send one or two of them to confirm the API behaves the way the document claims.',
+      'Doing that by hand means reading the spec and rebuilding every request in a client: copy the server URL, paste the path, retype each query parameter, hand-write a JSON body that matches the schema. For anything more than one endpoint that is tedious, and it is easy to get a field name subtly wrong.',
+      'The API Request Builder can import the specification instead. It parses an OpenAPI 3.0 or 3.1 document — JSON or YAML — shows you a preview of what it found, and creates a collection of editable saved requests grouped into folders. Nothing is sent during the import; you get a starting point you then edit and send yourself. This guide walks through that, and is equally clear about the parts of OpenAPI it deliberately does not map.',
+    ],
+    sections: [
+      {
+        heading: 'What an OpenAPI document describes',
+        paragraphs: [
+          'An OpenAPI document is a machine-readable description of an HTTP API, written as a single JSON or YAML file. It is documentation that a tool can act on rather than prose a human has to interpret.',
+          'You do not need to know the whole specification to import one. In practice the parts that matter for turning a spec into requests are:',
+        ],
+        bullets: [
+          'Paths — the URL templates the API exposes, such as `/users/{userId}`.',
+          'Operations — the HTTP methods available under each path, with an `operationId`, `summary`, and `tags`.',
+          'Parameters — values that go in the path, the query string, a header, or a cookie.',
+          'Request bodies — the content types an operation accepts and the schema of each one.',
+          'Servers — the base URLs the API is reachable at, optionally with `{variable}` placeholders.',
+          'Security schemes — how the API expects to be authenticated, declared in `components.securitySchemes`.',
+          'Components — reusable schemas, parameters, and schemes referenced elsewhere in the document via `$ref`.',
+        ],
+      },
+      {
+        heading: 'Which OpenAPI versions are supported',
+        paragraphs: [
+          'The importer accepts OpenAPI 3.0.x and OpenAPI 3.1.x. It reads the `openapi` field at the top of the document and requires a full three-part version — `3.0.3` and `3.1.0` are both fine.',
+          'Swagger 2.0 is not supported. A document whose top-level key is `swagger` rather than `openapi` is rejected with a message naming the supported versions, and so is any other version string that does not match 3.0.x or 3.1.x. That rejection is deliberate: a 2.0 document has a different shape for bodies, parameters, and security, and half-interpreting it would produce requests that look plausible and are quietly wrong. If all you have is a Swagger 2.0 file, convert it to OpenAPI 3 first with a converter of your choice, then import the result.',
+          'Within the supported range, both revisions of the schema dialect are handled — 3.0\'s `nullable` style and 3.1\'s JSON Schema 2020-12 style, including a `type` given as an array such as `["string", "null"]`.',
+        ],
+      },
+      {
+        heading: 'JSON and YAML both work',
+        paragraphs: [
+          'Either serialization imports the same way, and the file picker accepts `.json`, `.yaml`, and `.yml`.',
+          'The format is determined by parsing, not by the extension. JSON is attempted first when the text starts like JSON, and YAML is used otherwise or as a fallback — so a `.yaml` file containing JSON, or a `.json` file that is actually YAML, still imports. If neither parser can read it, you get one short error rather than a stack trace. There is a 5MB ceiling on the file, which is generous for even a large multi-hundred-operation document.',
+        ],
+      },
+      {
+        heading: 'A small OpenAPI spec to try',
+        paragraphs: [
+          'Here is a complete, deliberately short OpenAPI 3.1 document. Save it as `demo-api.yaml` and use it as the file you import while following the steps below. It points at `https://httpbin.org`, a public request-echo service, so the requests it produces are safe to send once you fill in the path variable — though nothing about the import itself needs that server to be reachable.',
+        ],
+        bullets: [
+          'openapi: 3.1.0',
+          'info:',
+          '  title: Demo API',
+          '  version: 1.0.0',
+          'servers:',
+          '  - url: https://httpbin.org',
+          'security:',
+          '  - bearerAuth: []',
+          'paths:',
+          '  /anything/users/{userId}:',
+          '    get:',
+          '      operationId: getUser',
+          '      summary: Get a user',
+          '      tags: [Users]',
+          '      parameters:',
+          '        - name: userId',
+          '          in: path',
+          '          required: true',
+          '          schema: { type: string }',
+          '        - name: include',
+          '          in: query',
+          '          schema: { type: string, default: profile }',
+          '      responses: { "200": { description: A single user } }',
+          '  /anything/orders:',
+          '    post:',
+          '      operationId: createOrder',
+          '      tags: [Orders]',
+          '      requestBody:',
+          '        content:',
+          '          application/json:',
+          '            schema:',
+          '              $ref: "#/components/schemas/NewOrder"',
+          '      responses: { "201": { description: Created } }',
+          'components:',
+          '  schemas:',
+          '    NewOrder:',
+          '      type: object',
+          '      properties:',
+          '        sku:',
+          '          type: string',
+          '        quantity:',
+          '          type: integer',
+          '  securitySchemes:',
+          '    bearerAuth:',
+          '      type: http',
+          '      scheme: bearer',
+        ],
+      },
+      {
+        heading: 'Step by step: import the spec',
+        paragraphs: [
+          'The whole flow lives in the API Request Builder\'s saved-requests drawer, and nothing is written to your browser storage until the final step.',
+        ],
+        bullets: [
+          '1. Open the API Request Builder at /tools/developer/api-request-builder.',
+          '2. Click "Saved" in the toolbar to open the drawer on its Saved tab — the collections browser.',
+          '3. Click "Import OpenAPI" in the row of actions at the top of that panel.',
+          '4. In the "Import OpenAPI" dialog, click "Choose a .json, .yaml, or .yml file" and pick your specification.',
+          '5. Read the preview that appears — the API title plus endpoint, folder, server, and security-scheme counts.',
+          '6. Check that those counts look like the spec you expected, and read any warnings listed under them.',
+          '7. If it is the wrong file, click "Choose a different file"; to back out entirely, click "Cancel".',
+          '8. Click the "Import N requests" button to commit it.',
+          '9. The drawer refreshes and the new collection appears, named after the API title with " (Imported)" appended.',
+          '10. Expand a folder and click a request to load it into the editor.',
+          '11. Fill in what the document could not supply — the auth token, any `{{pathVariable}}` the URL still contains — and select the generated environment from the environment picker.',
+          '12. Press Send when you are ready. Importing never sends anything on its own; every request goes out only when you press Send.',
+        ],
+      },
+      {
+        heading: 'The preview, and why it comes first',
+        paragraphs: [
+          'Choosing a file parses, validates, and converts the whole document in memory. It does not create a collection, does not save any requests, does not create an environment, and does not touch anything already in your browser storage. Only the Import button commits the plan, so picking the wrong file costs you a second click and nothing else.',
+          'The preview shows exactly the information you need to make that call:',
+        ],
+        bullets: [
+          'The API title, read from `info.title`.',
+          'The number of endpoints — operations that converted successfully, and so the number of saved requests you will get.',
+          'The number of folders that will be created, one per tag actually used.',
+          'The number of servers declared in the document.',
+          'The number of security schemes declared in `components.securitySchemes`.',
+          'A list of warnings, aggregated into counts rather than one line per operation.',
+          'A count of operations skipped for an unsupported method or malformed structure, when there are any.',
+        ],
+      },
+      {
+        heading: 'How paths and operations become requests',
+        paragraphs: [
+          'Each method under each path becomes one saved request. Its name comes from `operationId` when there is one, falling back to the method plus the `summary`, then to the method plus the path; names longer than 80 characters are truncated.',
+          'The URL is built as a template rather than a concrete address. OpenAPI\'s single-brace path templating is rewritten into the tool\'s own `{{name}}` variable syntax and prefixed with a `baseUrl` variable, so `/users/{userId}` becomes `{{baseUrl}}/users/{{userId}}`. No fake value is ever substituted for a path parameter — the placeholder stays visible so you know it is yours to fill in.',
+          'Parameters are mapped by their `in` value:',
+        ],
+        bullets: [
+          'Path parameters become `{{variable}}` placeholders in the URL, reusable across requests that share them.',
+          'Query parameters become request parameter rows, pre-filled from the parameter\'s `example`, first named `examples` entry, schema `default`, or a value generated from its schema — in that order.',
+          'Header parameters become header rows, filled the same way.',
+          'Headers a browser refuses to let script set — `Host`, `Content-Length`, `Cookie`, `Origin`, `Referer` and the rest of that list — are skipped rather than imported as rows that would never actually be sent, and counted in a warning.',
+          'Cookie parameters are not supported and are skipped, also with a warning.',
+        ],
+      },
+      {
+        heading: 'Where parameters can come from',
+        paragraphs: [
+          'Two details in that mapping are worth calling out because they are easy to miss when reading a spec by eye. Parameters declared once at the path-item level apply to every operation under that path, and they are merged in; an operation-level parameter with the same name and location wins over the shared one. Both can be a `$ref` to a reusable component.',
+          'The other is that this is best-effort, not a full-fidelity translation. Parameter serialization details — `style`, `explode`, `allowReserved`, deep-object query syntax — are not modelled. A parameter arrives as a plain key/value row you can edit, which covers the overwhelming majority of real APIs but is not the same as reproducing every encoding rule the specification permits.',
+        ],
+      },
+      {
+        heading: 'Tags become folders',
+        paragraphs: [
+          'Operations are grouped by tag. The first tag on an operation places it in a folder of that name, and every operation with that tag lands in the same folder. An operation with no tags goes into a folder called "General", so nothing ends up loose at the collection root.',
+          'A spec tagging its operations `Users` and `Orders` produces:',
+        ],
+        bullets: [
+          'Users',
+          '  ├── List Users',
+          '  └── Get User',
+          'Orders',
+          '  └── Create Order',
+        ],
+      },
+      {
+        heading: 'Folder depth is never a problem here',
+        paragraphs: [
+          'Tag folders are always exactly one level deep. OpenAPI tags are a flat list, not a tree, so there is nothing to nest and no depth limit to run into — unlike a Postman import, where a deeply nested source structure has to be flattened to fit. If an operation carries several tags, only the first one is used to place it; the others are not turned into additional folders or duplicate requests.',
+        ],
+      },
+      {
+        heading: 'Servers become a reusable baseUrl',
+        paragraphs: [
+          'This is the part that makes an imported collection worth keeping rather than throwing away after one send. A document declaring:',
+        ],
+        bullets: [
+          'servers:',
+          '  - url: https://api.example.com/v1',
+        ],
+      },
+      {
+        heading: 'How the environment is created',
+        paragraphs: [
+          '...produces a new environment, named after the API title with " (Imported)", holding a single `baseUrl` variable set to that URL. Every imported request points at `{{baseUrl}}/users` rather than a hard-coded host, so the same collection can be run against staging, production, or a local server by editing one value in one place instead of every request.',
+          'The first declared server is the one used. If the document declares several, the extras are counted in the preview\'s server count but not turned into separate environments — you add those yourself in the environment editor, which is exactly where you would change `baseUrl` anyway. If a server URL contains `{variable}` placeholders, each one is replaced with the default declared for it in `variables`, so `https://{region}.api.example.com` with a `region` default of `eu` becomes `https://eu.api.example.com`. There is no separate server-variable picker; the substituted URL is a normal environment value you can edit.',
+          'If the document declares no servers at all, an environment is still created with an empty `baseUrl` and a warning tells you to set it before sending. That way the request URLs stay consistent either way.',
+          'The import does not activate that environment. It is created alongside the collection and you select it from the environment picker, which also keeps an import from silently changing what a request you were already working on resolves to. Path variables such as `{{userId}}` are not added to it either — those are per-call values, not configuration, so you either add them as variables yourself or type a concrete value into the URL before sending.',
+        ],
+      },
+      {
+        heading: 'How request bodies are generated',
+        paragraphs: [
+          'For any method that can carry a body — everything except GET and HEAD — the importer looks at the operation\'s `requestBody` content map and picks one content type, preferring `application/json`, then `application/x-www-form-urlencoded`, then `multipart/form-data`, then `text/plain`, and finally any `+json` media type such as `application/merge-patch+json`. JSON becomes a raw JSON body; the form types become editable field rows, with `format: binary` properties turned into file rows you attach yourself; `text/plain` becomes a text body.',
+          'The value itself is resolved in a fixed order of preference: an explicit `example` on the media type, then the first entry of an `examples` map, then the schema\'s `default`, and only then a value generated from the schema. A schema like:',
+        ],
+        bullets: [
+          'type: object',
+          'properties:',
+          '  name:',
+          '    type: string',
+          '  age:',
+          '    type: integer',
+        ],
+      },
+      {
+        heading: 'What schema-generated bodies look like',
+        paragraphs: [
+          '...has no example to borrow, so a sample is generated from the types — an empty string for `name`, zero for `age`:',
+        ],
+        bullets: [
+          '{',
+          '  "name": "",',
+          '  "age": 0',
+          '}',
+        ],
+      },
+      {
+        heading: 'The limits of generated examples',
+        paragraphs: [
+          'That output is deterministic and meant to be edited, not to be a valid payload the API will accept. Generation is a pragmatic best effort rather than a complete JSON Schema implementation. `example`, `default`, and the first `enum` value always win over a generated value at any level. `allOf` subschemas are merged into one flat object, since composing a base schema with an extension is the common case; `oneOf` and `anyOf` expand only their first branch. Well-known string formats get a recognizable placeholder — an `email` becomes `user@example.com`, a `uuid` becomes an all-zero UUID, a `date-time` becomes `2024-01-01T00:00:00Z`.',
+          'There are guardrails against pathological documents: recursion stops after eight levels, a genuinely circular reference stops expanding rather than looping forever, and an object expands at most forty properties so a schema with hundreds of fields does not produce an unreadable wall of JSON. Constraint keywords like `pattern`, `minLength`, and `required` are not used to synthesize conforming values. If a schema is complex, expect to edit the body — that is what it is there for.',
+        ],
+      },
+      {
+        heading: 'Security schemes that map across',
+        paragraphs: [
+          'The importer reads `components.securitySchemes` together with the operation\'s `security` requirement, falling back to the document-level `security` when the operation does not declare its own. An explicit empty `security: []` on an operation is honored as "no auth", which is different from omitting the field.',
+          'Three scheme types map onto the tool\'s auth model:',
+        ],
+        bullets: [
+          'HTTP bearer (`type: http`, `scheme: bearer`) — the Auth tab is set to Bearer with the token left empty.',
+          'HTTP basic (`type: http`, `scheme: basic`) — the Auth tab is set to Basic with username and password left empty.',
+          'API key in a header or the query string (`type: apiKey`) — the key name and its location are carried across; the value is left empty.',
+        ],
+      },
+      {
+        heading: 'Why no credential is ever filled in',
+        paragraphs: [
+          'An OpenAPI document describes how to authenticate, not what your credentials are. The importer sets up the auth configuration and always leaves every secret field blank — even if the document happens to contain a literal example key, that value is not carried into the request. You paste your own token or key into the Auth tab afterwards.',
+          'Schemes with no equivalent in a browser-based client are not faked either. OAuth 2.0, OpenID Connect, mutual TLS, an API key sent via cookie, and any other HTTP auth scheme such as Digest are not imported: the request still arrives with its URL, parameters, and body intact, but its auth is left unset and a warning names the scheme so you know which requests need configuring by hand. There is no token acquisition flow here — no authorization-code redirect, no client-credentials exchange, no refresh. If the API needs an OAuth token, you obtain it however you normally do and paste it into the Bearer field.',
+        ],
+      },
+      {
+        heading: 'Local $ref references are resolved',
+        paragraphs: [
+          'Real specs rarely inline everything. A request body usually points at a reusable schema, and parameters are often shared components:',
+        ],
+        bullets: [
+          '$ref: "#/components/schemas/User"',
+        ],
+      },
+      {
+        heading: 'Which references are followed',
+        paragraphs: [
+          'References like that one — internal JSON Pointers beginning with `#/` — are followed for the structures the importer cares about: path items, parameters, request bodies, media type schemas, security schemes, and nested schemas inside them. Lookups are memoized, so a schema reused by fifty operations is walked once, and pointer escapes (`~0`, `~1`) are decoded correctly.',
+          'Remote references are intentionally never fetched. A `$ref` pointing at a URL or a relative file path is not resolved, because importing a document you were handed should not make your browser issue requests to somewhere the document chooses. The affected part of the request is left out or falls back to an empty value rather than being invented. If your spec is split across multiple files, bundle it into a single self-contained document first — most OpenAPI tooling has a bundle command — and import that.',
+        ],
+      },
+      {
+        heading: 'What actually gets created',
+        paragraphs: [
+          'A successful import produces one collection, one folder per tag used, one saved request per operation, and one environment:',
+        ],
+        bullets: [
+          'OpenAPI title (Imported)',
+          '├── Tag folder',
+          '│   ├── Request',
+          '│   └── Request',
+          '└── General',
+          '    └── Request',
+        ],
+      },
+      {
+        heading: 'Everything imported stays editable',
+        paragraphs: [
+          'Nothing about the result is read-only or linked back to the source file. An imported request is an ordinary saved request: change the method, edit the URL, add or remove parameters and headers, rewrite the body, set auth, rename it, move it to another folder, delete it. You can also generate cURL or Fetch, Axios, Node, or Python code from it, or share it as a link.',
+          'The collection and environment are named after the API title with " (Imported)" appended, and a numeric suffix is added if that name is already taken — importing the same spec twice gives you a second collection rather than overwriting the first. Because there is no live link to the document, re-importing after the spec changes creates a fresh collection; it does not merge into or update the one you already edited.',
+        ],
+      },
+      {
+        heading: 'What importing never does',
+        paragraphs: [
+          'A specification you were given is input from outside your control, and the import path treats it as data — never as instructions.',
+          'Importing an OpenAPI document does not:',
+        ],
+        bullets: [
+          'Send any request. Conversion produces saved requests; nothing goes out until you press Send.',
+          'Execute any code. There is no scripting model here, and nothing in a description, example, or extension field is evaluated.',
+          'Fetch a remote `$ref`, or any other URL found in the document — including the server URL, which is stored as a string and never contacted during import.',
+          'Log into an OAuth or OpenID provider, or start any authorization flow.',
+          'Create, request, or guess an authentication token, key, or password. Secret fields are left empty for you to fill in.',
+          'Upload your specification anywhere. Parsing happens in your browser, and the resulting collection is stored in your browser\'s local storage.',
+        ],
+      },
+      {
+        heading: 'Warnings, skipped operations, and outright rejection',
+        paragraphs: [
+          'A document is rejected in full — nothing imported, one clear error — only when it cannot be read at all or has nothing to import: it is neither valid JSON nor valid YAML, it is empty, it is over the 5MB limit, it is not an object, its `openapi` version is missing or unsupported (Swagger 2.0 lands here), it has no `paths` object, or the conversion finished without producing a single importable operation.',
+          'Short of that, an import is partial and the preview tells you what was imperfect. A single malformed operation or unparseable schema is counted as skipped rather than failing the document, and so is a method the tool does not model. Present-but-malformed metadata — a broken `info` block, a server entry with no `url`, a security scheme with no `type` — is tolerated instead of treated as fatal, on the principle that a spec with usable `paths` should still import.',
+          'Warnings are aggregated into counts rather than repeated per operation, so a 200-endpoint spec produces a short list you will actually read. You may see: N operations using an unsupported authentication scheme; N operations whose request body content type is unsupported, imported without a body; N header parameters skipped because a browser will not let script set them; N cookie parameters skipped; and a note that no server URL was found. Treat that list as a to-do list for the gap between what the document described and what came across.',
+        ],
+      },
+      {
+        heading: 'When this workflow is useful',
+        paragraphs: [
+          'This is aimed at a narrow, common situation: an OpenAPI document exists, and you need to understand or exercise the API it describes without building the requests by hand.',
+        ],
+        bullets: [
+          'A vendor ships an OpenAPI spec as their API documentation and you want to try the real endpoints rather than read about them.',
+          'An internal team maintains OpenAPI definitions and you need to call a service you have never called before.',
+          'You are reviewing an API change and want to see the requests a new or modified operation implies.',
+          'You need to hit two or three endpoints once, and setting up tooling for that is disproportionate.',
+          'You want an editable starting point — correct paths, parameter names, and body shape — that you then adapt for your own testing.',
+          'You are on a machine where you would rather not install anything, or you just want a browser tab.',
+        ],
+      },
+      {
+        heading: 'OpenAPI import versus building requests by hand',
+        paragraphs: [
+          'Building a request manually from a specification looks like this:',
+        ],
+        bullets: [
+          'read docs → create URL → add params → add headers → create body',
+        ],
+      },
+      {
+        heading: 'What the import replaces',
+        paragraphs: [
+          'Importing replaces that with:',
+        ],
+        bullets: [
+          'select spec → preview → import → edit → send',
+        ],
+      },
+      {
+        heading: 'Where the time actually goes',
+        paragraphs: [
+          'The saving is in setup, and it scales with how complete the document is. A spec with `operationId`s, tags, declared parameters, request body schemas, and a server URL gives you named requests in sensible folders with the right paths, correct parameter names, and a realistic body shape — work you would otherwise do by hand and occasionally get wrong. A thin spec with bare paths and no schemas gives you correct URLs and little else, which is still faster than typing them, but do not expect the import to invent detail the document never had.',
+          'It is worth being clear about what this is not. This is an import path into a lightweight browser HTTP client, not an API lifecycle platform: there is no mock server, no contract testing, no spec linting, no client code generation from the document, and no monitoring. If you need those, use tooling built for them. For reading a spec and actually sending its requests, this is the short path.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'Can I test an OpenAPI spec online without installing anything?',
+        answer:
+          'Yes. Open the API Request Builder, click "Saved" then "Import OpenAPI", and choose your JSON or YAML file. The document is parsed in your browser and its operations become editable saved requests you can send. No install, no account, and the file is not uploaded anywhere.',
+      },
+      {
+        question: 'Which OpenAPI versions are supported?',
+        answer:
+          'OpenAPI 3.0.x and 3.1.x, read from the `openapi` field. Anything else — including Swagger 2.0, which uses a `swagger` field instead — is rejected with a message naming the supported versions rather than being partially misinterpreted.',
+      },
+      {
+        question: 'Is Swagger 2.0 supported?',
+        answer:
+          'No. Swagger 2.0 describes bodies, parameters, and security differently from OpenAPI 3, so guessing at it would produce requests that look right and are wrong. Convert the file to OpenAPI 3 with a converter first, then import the result.',
+      },
+      {
+        question: 'Does it accept YAML as well as JSON?',
+        answer:
+          'Both. The picker takes `.json`, `.yaml`, and `.yml`, and the format is decided by parsing rather than by the extension — so a `.yaml` file containing JSON, or a misnamed `.json` file containing YAML, still imports.',
+      },
+      {
+        question: 'Does importing a spec send any requests to the API?',
+        answer:
+          'No. Import only creates saved requests. Nothing is sent until you open a request and press Send, so importing a spec full of destructive endpoints has no effect on its own. The server URL is stored as a string and never contacted during the import.',
+      },
+      {
+        question: 'What happens to path parameters like /users/{userId}?',
+        answer:
+          'They become variable placeholders: `/users/{userId}` is imported as `{{baseUrl}}/users/{{userId}}`. No value is invented, so you either define `userId` as a variable or type a concrete value into the URL before sending.',
+      },
+      {
+        question: 'How is the server URL handled?',
+        answer:
+          'The first declared server becomes a `baseUrl` variable in a new environment created alongside the collection, and `{variable}` placeholders in that URL are replaced with their declared defaults. The environment is created but not activated — select it from the environment picker, and edit `baseUrl` to point at a different server later.',
+      },
+      {
+        question: 'Are request bodies generated from schemas?',
+        answer:
+          'Yes, for JSON and form bodies. An explicit `example` wins, then the first `examples` entry, then the schema `default`, then a value generated from the schema — a string becomes `""`, an integer `0`, and known formats get placeholders. It is an editable starting point, not a payload guaranteed to validate.',
+      },
+      {
+        question: 'Is OAuth 2.0 authentication imported?',
+        answer:
+          'No. Bearer, Basic, and API key (header or query) map across with their secret fields left empty. OAuth 2.0, OpenID Connect, mutual TLS, and cookie-based API keys are not imported — the request still arrives intact with auth unset and a warning naming the scheme. No token is ever fetched on your behalf.',
+      },
+      {
+        question: 'Are $ref references resolved?',
+        answer:
+          'Local ones are. A `$ref` starting with `#/`, such as `#/components/schemas/User`, is resolved within the document. Remote references pointing at a URL or another file are deliberately never fetched — bundle a multi-file spec into one document before importing it.',
+      },
+      {
+        question: 'Can I edit the requests after importing?',
+        answer:
+          'Yes. Imported requests are ordinary saved requests, not a read-only view of the spec. Edit the URL, parameters, headers, body, and auth, rename or move them, generate cURL or code from them, or delete them. There is no live link back to the source file.',
+      },
+      {
+        question: 'What if some operations fail to import?',
+        answer:
+          'A malformed operation or unparseable schema is skipped and counted rather than failing the whole document, and the preview reports both that count and any warnings before you commit. Only an unreadable file, an unsupported version, a missing `paths` object, or zero importable operations rejects the import outright.',
+      },
+    ],
+    relatedSlugs: [
+      'import-postman-collection-without-postman',
+      'how-to-test-an-api',
+      'authentication-testing-examples',
+      'curl-to-fetch-axios-python',
+      'json-post-request-example',
+    ],
+    ctaText: 'Import your OpenAPI spec in API Request Builder.',
+    ctaToolHref: '/tools/developer/api-request-builder',
+    ctaToolLabel: 'Try the free API Request Builder',
+  },
 ];
 
 export const getGuideBySlug = (slug: string): Guide | undefined => GUIDES.find((guide) => guide.slug === slug);

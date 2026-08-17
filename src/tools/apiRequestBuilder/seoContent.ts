@@ -69,4 +69,5 @@ export const API_REQUEST_BUILDER_GUIDE_SLUGS = [
   'form-data-file-upload-example',
   'curl-to-fetch-axios-python',
   'import-postman-collection-without-postman',
+  'test-openapi-spec-online',
 ] as const;
