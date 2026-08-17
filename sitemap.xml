@@ -261,7 +261,7 @@
     <loc>https://101techlabs.com/guides/developer-tools</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/developer-tools" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/developer-tools" />
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
   </url>
@@ -636,10 +636,73 @@
   </url>
 
   <url>
+    <loc>https://101techlabs.com/guides/developer-tools/json-post-request-example</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/developer-tools/json-post-request-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/developer-tools/json-post-request-example" />
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/developer-tools/authentication-testing-examples</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/developer-tools/authentication-testing-examples" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/developer-tools/authentication-testing-examples" />
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/developer-tools/form-data-file-upload-example</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/developer-tools/form-data-file-upload-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/developer-tools/form-data-file-upload-example" />
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/developer-tools/curl-to-fetch-axios-python</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/developer-tools/curl-to-fetch-axios-python" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/developer-tools/curl-to-fetch-axios-python" />
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
     <loc>https://101techlabs.com/guides/developer-tools/how-to-write-dbml</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/developer-tools/how-to-write-dbml" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/developer-tools/how-to-write-dbml" />
     <lastmod>2026-08-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/developer-tools/import-postman-collection-without-postman</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/developer-tools/import-postman-collection-without-postman" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/developer-tools/import-postman-collection-without-postman" />
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/developer-tools/test-openapi-spec-online</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/developer-tools/test-openapi-spec-online" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/developer-tools/test-openapi-spec-online" />
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/guides/developer-tools/common-api-testing-errors</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/developer-tools/common-api-testing-errors" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/developer-tools/common-api-testing-errors" />
+    <lastmod>2026-08-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
