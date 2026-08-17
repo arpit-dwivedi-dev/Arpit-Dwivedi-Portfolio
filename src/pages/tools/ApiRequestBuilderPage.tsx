@@ -23,7 +23,8 @@ import {
   X,
 } from 'lucide-react';
 import { Navbar } from '../../components/Navbar';
-import { BuyMeACoffee } from '../../components/tools/BuyMeACoffee';
+import { BuyMeACoffee, SupportPrompt } from '../../components/tools/BuyMeACoffee';
+import { notifyToolUsed } from '../../components/tools/supportPrompt';
 import { Footer } from '../../components/AchievementsContact';
 import { Breadcrumbs } from '../../components/seo/Breadcrumbs';
 import { JsonLd } from '../../components/seo/JsonLd';
@@ -498,6 +499,12 @@ export const ApiRequestBuilderPage = () => {
   const handleSend = () => {
     void builder.send(corsProxySettings, activeVariables).then(refreshHistory);
   };
+
+  // A returned response is this tool's "success" — that's when the support
+  // prompt is allowed to ask.
+  useEffect(() => {
+    if (builder.response) notifyToolUsed();
+  }, [builder.response]);
 
   // Jumps to the on-page Guides list rather than deep-linking straight into a
   // single article — there are multiple related guides, so this lets the
@@ -1513,6 +1520,8 @@ export const ApiRequestBuilderPage = () => {
         onChange={handleChangeEnvironment}
         onDelete={handleDeleteEnvironment}
       />
+
+      <SupportPrompt titleId="api-builder-support-prompt-heading" />
 
     </div>
   );

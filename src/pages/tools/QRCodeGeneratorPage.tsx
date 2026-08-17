@@ -23,7 +23,8 @@ import {
 import { FaDiscord, FaFacebook, FaInstagram, FaLinkedin, FaSpotify, FaTelegram, FaWhatsapp, FaYoutube } from 'react-icons/fa';
 import { QRCodeCanvas, QRCodeSVG } from 'qrcode.react';
 import { Navbar } from '../../components/Navbar';
-import { BuyMeACoffee } from '../../components/tools/BuyMeACoffee';
+import { BuyMeACoffee, SupportPrompt } from '../../components/tools/BuyMeACoffee';
+import { notifyToolUsed } from '../../components/tools/supportPrompt';
 import { Footer } from '../../components/AchievementsContact';
 import { Breadcrumbs } from '../../components/seo/Breadcrumbs';
 import { JsonLd } from '../../components/seo/JsonLd';
@@ -112,6 +113,7 @@ export const QRCodeGeneratorPage = () => {
     if (!qrValue || !canvasRef.current) return;
     trackEvent('tool_used', { tool_name: TOOL.id, action: 'download_png', qr_type: activeType });
     downloadCanvasAsPng(canvasRef.current, 'qr-code.png');
+    notifyToolUsed();
   };
 
   const handleDownloadSvg = () => {
@@ -120,6 +122,7 @@ export const QRCodeGeneratorPage = () => {
     if (svgEl) {
       trackEvent('tool_used', { tool_name: TOOL.id, action: 'download_svg', qr_type: activeType });
       downloadSvgElement(svgEl, 'qr-code.svg');
+      notifyToolUsed();
     }
   };
 
@@ -130,6 +133,7 @@ export const QRCodeGeneratorPage = () => {
       trackEvent('tool_used', { tool_name: TOOL.id, action: 'copy', qr_type: activeType });
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
+      notifyToolUsed();
     }
   };
 
@@ -734,6 +738,11 @@ export const QRCodeGeneratorPage = () => {
       </section>
 
       <Footer />
+
+      <SupportPrompt
+        copy={{ closeLabel: t.closeAriaLabel }}
+        titleId="qr-support-prompt-heading"
+      />
 
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(0,209,255,0.03),transparent_70%)]" />

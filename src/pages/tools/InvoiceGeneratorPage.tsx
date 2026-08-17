@@ -14,7 +14,8 @@ import {
   X,
 } from 'lucide-react';
 import { Navbar } from '../../components/Navbar';
-import { BuyMeACoffee } from '../../components/tools/BuyMeACoffee';
+import { BuyMeACoffee, SupportPrompt } from '../../components/tools/BuyMeACoffee';
+import { notifyToolUsed } from '../../components/tools/supportPrompt';
 import { Footer } from '../../components/AchievementsContact';
 import { Select } from '../../components/ui/Select';
 import { Breadcrumbs } from '../../components/seo/Breadcrumbs';
@@ -94,6 +95,7 @@ export const InvoiceGeneratorPage = () => {
   const handleDownload = () => {
     trackEvent('tool_used', { tool_name: TOOL.id, action: 'download' });
     downloadInvoicePdf(invoice);
+    notifyToolUsed();
   };
 
   const handleShare = async () => {
@@ -101,6 +103,7 @@ export const InvoiceGeneratorPage = () => {
     trackEvent('tool_used', { tool_name: TOOL.id, action: 'share' });
     try {
       const outcome = await shareInvoicePdf(invoice);
+      notifyToolUsed();
       if (outcome === 'emailed') {
         setShareEmailed(true);
         setTimeout(() => setShareEmailed(false), 2000);
@@ -909,6 +912,8 @@ export const InvoiceGeneratorPage = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <SupportPrompt copy={{ closeLabel: t.closeAriaLabel }} titleId="invoice-support-prompt-heading" />
 
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(0,209,255,0.03),transparent_70%)]" />

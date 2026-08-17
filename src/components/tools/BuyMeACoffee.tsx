@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Coffee, X } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
+import { registerSupportModalOpen, useSupportPrompt } from './supportPrompt';
 
 // Single source of truth for the support/tip destination — every tool's
 // "buy me a coffee" button renders the same UPI QR from these.
@@ -33,6 +34,174 @@ const VARIANTS: Record<BuyMeACoffeeVariant, { className: string; iconSize: numbe
   },
 };
 
+/** Copy for the support card. Every field is overridable so localized pages can
+ *  pass translated strings; the defaults are the English source of truth. */
+export interface SupportCopy {
+  title: string;
+  subtitle: string;
+  /** Second line under the subtitle. Omitted when a page overrides `subtitle`
+   *  with a single self-contained sentence. */
+  supporting?: string;
+  cta: string;
+  qrHint: string;
+  footer: string;
+  closeLabel: string;
+}
+
+export const DEFAULT_SUPPORT_COPY: SupportCopy = {
+  title: '☕ Support this free tool',
+  subtitle: 'This tool is free, with no signup, ads, or paywall.',
+  supporting: 'If it saved you some time, you can help keep it running.',
+  cta: '☕ Support the project',
+  qrHint: 'Or scan the QR code',
+  footer: 'Thank you for supporting independent tools ❤️',
+  closeLabel: 'Close',
+};
+
+interface SupportModalProps {
+  open: boolean;
+  onClose: () => void;
+  copy?: Partial<SupportCopy>;
+  /** Unique per page — the dialog's aria-labelledby target. */
+  titleId?: string;
+}
+
+/** The compact support card. Shared by the manual button below and the
+ *  post-use auto prompt, so there is exactly one popup implementation. */
+export const SupportModal = ({ open, onClose, copy, titleId }: SupportModalProps) => {
+  const generatedId = useId();
+  const headingId = titleId ?? `support-modal-heading-${generatedId}`;
+  const bodyId = `support-modal-body-${generatedId}`;
+  const c = { ...DEFAULT_SUPPORT_COPY, ...copy };
+
+  const cardRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Held in a ref so the effect below depends only on `open` — an inline
+  // onClose would otherwise re-run it on every parent render, stealing focus
+  // back to the close button mid-interaction.
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
+  useEffect(() => {
+    if (!open) return;
+    const unregister = registerSupportModalOpen();
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onCloseRef.current();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      // Keep Tab inside the dialog — the tool behind it stays untouchable
+      // while the card is up, and focus can't escape to a hidden control.
+      const focusable = cardRef.current?.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (!focusable?.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      unregister();
+      previouslyFocused?.focus?.();
+    };
+  }, [open]);
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 backdrop-blur-[2px] p-4"
+          onClick={onClose}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.97 }}
+            transition={{ duration: 0.15 }}
+            ref={cardRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={headingId}
+            aria-describedby={bodyId}
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-[420px] max-h-[90dvh] overflow-y-auto rounded-2xl bg-bg-secondary border border-ink/10 px-5 py-5 sm:px-6 sm:py-6 shadow-2xl shadow-black/40 ring-1 ring-[#FFDD00]/10 text-center"
+          >
+            <button
+              ref={closeButtonRef}
+              type="button"
+              onClick={onClose}
+              aria-label={c.closeLabel}
+              className="absolute top-3 right-3 p-2 rounded-lg text-secondary-text hover:text-ink hover:bg-ink/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
+            >
+              <X size={18} aria-hidden="true" />
+            </button>
+
+            <h2 id={headingId} className="text-base sm:text-lg font-bold text-ink pr-10 text-left sm:text-center">
+              {c.title}
+            </h2>
+
+            <div id={bodyId} className="mt-2 space-y-1 text-sm text-secondary-text text-left sm:text-center">
+              <p>{c.subtitle}</p>
+              {c.supporting && <p>{c.supporting}</p>}
+            </div>
+
+            <a
+              href={UPI_LINK}
+              className="mt-5 w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#FFDD00]/15 text-[#FFDD00] font-bold text-sm border border-[#FFDD00]/25 hover:bg-[#FFDD00]/25 transition-colors focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-secondary"
+            >
+              {c.cta}
+            </a>
+
+            <p className="mt-4 text-xs text-secondary-text">{c.qrHint}</p>
+
+            <div className="mt-3 flex justify-center">
+              <div className="p-3 rounded-xl bg-white">
+                <QRCodeSVG
+                  value={UPI_LINK}
+                  size={160}
+                  bgColor="#ffffff"
+                  fgColor="#000000"
+                  level="M"
+                  includeMargin={false}
+                  title="UPI payment QR code"
+                />
+              </div>
+            </div>
+
+            <p className="mt-4 text-[11px] text-secondary-text/70">{c.footer}</p>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+/** Mount once per tool page. Opens the support card a moment after the tool
+ *  reports a successful use (see notifyToolUsed) — never on first load — and
+ *  stays quiet for 14 days once dismissed. */
+export const SupportPrompt = ({ copy, titleId }: { copy?: Partial<SupportCopy>; titleId?: string }): ReactNode => {
+  const { open, close } = useSupportPrompt();
+  return <SupportModal open={open} onClose={close} copy={copy} titleId={titleId} />;
+};
+
 interface BuyMeACoffeeProps {
   variant?: BuyMeACoffeeVariant;
   /** Button label. Hidden (aria-label only) for the `icon` variant. */
@@ -51,9 +220,9 @@ interface BuyMeACoffeeProps {
 export const BuyMeACoffee = ({
   variant = 'block',
   label = 'Buy me a coffee',
-  modalHeading = 'Buy me a coffee',
-  modalBody = 'This tool is free, with no signup and no ads gating it. If you like the work, you can support it — scan the QR and pay.',
-  closeLabel = 'Close',
+  modalHeading,
+  modalBody,
+  closeLabel,
   titleId = 'upi-modal-heading',
   className = '',
   hideLabelOnMobile = false,
@@ -61,14 +230,13 @@ export const BuyMeACoffee = ({
   const [open, setOpen] = useState(false);
   const { className: variantClass, iconSize } = VARIANTS[variant];
 
-  useEffect(() => {
-    if (!open) return;
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false);
-    };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [open]);
+  // A page-supplied body is a complete sentence on its own (localized copy),
+  // so it replaces both default body lines rather than stacking with them.
+  const copy: Partial<SupportCopy> = {
+    ...(modalHeading ? { title: modalHeading } : {}),
+    ...(modalBody ? { subtitle: modalBody, supporting: undefined } : {}),
+    ...(closeLabel ? { closeLabel } : {}),
+  };
 
   return (
     <>
@@ -83,51 +251,7 @@ export const BuyMeACoffee = ({
         {variant !== 'icon' && (hideLabelOnMobile ? <span className="hidden sm:inline">{label}</span> : label)}
       </button>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4"
-            onClick={() => setOpen(false)}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby={titleId}
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-sm rounded-3xl bg-bg-secondary border border-ink/10 p-6 shadow-2xl"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h3 id={titleId} className="text-lg font-bold text-ink flex items-center gap-2">
-                  <Coffee size={18} className="text-[#FFDD00]" aria-hidden="true" />
-                  {modalHeading}
-                </h3>
-                <button
-                  type="button"
-                  onClick={() => setOpen(false)}
-                  aria-label={closeLabel}
-                  className="p-1.5 rounded-lg hover:bg-ink/10 text-secondary-text transition-colors"
-                >
-                  <X size={18} aria-hidden="true" />
-                </button>
-              </div>
-
-              <p className="text-sm text-secondary-text mb-4">{modalBody}</p>
-
-              <div className="flex justify-center">
-                <div className="p-3 rounded-2xl bg-white">
-                  <QRCodeSVG value={UPI_LINK} size={180} bgColor="#ffffff" fgColor="#000000" level="M" includeMargin={false} />
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <SupportModal open={open} onClose={() => setOpen(false)} copy={copy} titleId={titleId} />
     </>
   );
 };

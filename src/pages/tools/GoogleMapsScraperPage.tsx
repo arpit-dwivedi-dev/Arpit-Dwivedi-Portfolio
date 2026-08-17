@@ -5,7 +5,8 @@ import { ChevronDown, Crown, Download, Info, Loader2, Mail, MapPin, Star, X } fr
 import { Navbar } from '../../components/Navbar';
 import { Footer } from '../../components/AchievementsContact';
 import { Select } from '../../components/ui/Select';
-import { BuyMeACoffee } from '../../components/tools/BuyMeACoffee';
+import { BuyMeACoffee, SupportPrompt } from '../../components/tools/BuyMeACoffee';
+import { notifyToolUsed } from '../../components/tools/supportPrompt';
 import { Breadcrumbs } from '../../components/seo/Breadcrumbs';
 import { JsonLd } from '../../components/seo/JsonLd';
 import { useLanguage } from '../../i18n/LanguageContext';
@@ -70,6 +71,12 @@ export const GoogleMapsScraperPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  // A finished run that actually produced rows is this tool's "success" —
+  // that's when the support prompt is allowed to ask.
+  useEffect(() => {
+    if (!running && results.length > 0) notifyToolUsed();
+  }, [running, results.length]);
 
   useEffect(() => {
     if (!exportMenuOpen) return;
@@ -583,6 +590,8 @@ export const GoogleMapsScraperPage = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <SupportPrompt copy={{ closeLabel: t.closeAriaLabel }} titleId="maps-support-prompt-heading" />
 
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(0,209,255,0.03),transparent_70%)]" />

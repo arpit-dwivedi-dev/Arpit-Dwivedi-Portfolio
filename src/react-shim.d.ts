@@ -7,6 +7,7 @@ declare module 'react' {
   export function useRef<T>(initialValue: T): { current: T };
   export function useRef<T>(initialValue: null): { current: T | null };
   export function useRef<T = undefined>(): { current: T | undefined };
+  export function useId(): string;
   export function useMemo<T>(factory: () => T, deps: readonly any[]): T;
   export function useCallback<T extends (...args: any[]) => any>(callback: T, deps: readonly any[]): T;
   export type FormEvent<T = any> = any;
