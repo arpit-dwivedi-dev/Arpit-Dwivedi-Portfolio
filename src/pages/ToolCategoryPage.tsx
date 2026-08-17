@@ -1,11 +1,15 @@
 import { useEffect } from 'react';
-import { useParams, Navigate } from 'react-router-dom';
+import { useParams, Navigate, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
+import { BookOpen } from 'lucide-react';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/AchievementsContact';
 import { ToolCard } from '../components/tools/ToolCard';
 import { Breadcrumbs } from '../components/seo/Breadcrumbs';
 import { useLanguage } from '../i18n/LanguageContext';
+// categories.ts only — importing guides/data.ts here would pull the whole
+// guide library into this route's chunk just to read a category title.
+import { getGuideCategory } from '../content/guides/categories';
 import { getToolCategory, getToolsByCategory, categoryTitle, categoryDescription, toolTitle, toolDescription } from '../tools/registry';
 
 export const ToolCategoryPage = () => {
@@ -27,6 +31,7 @@ export const ToolCategoryPage = () => {
   }
 
   const tools = getToolsByCategory(category.slug);
+  const guideCategory = category.guideCategorySlug ? getGuideCategory(category.guideCategorySlug) : undefined;
 
   return (
     <div className="relative bg-bg-pure selection:bg-accent-blue/30 selection:text-accent-blue overflow-x-hidden min-h-screen">
@@ -64,6 +69,24 @@ export const ToolCategoryPage = () => {
             </div>
           ) : (
             <p className="text-center text-secondary-text">{t.noCategoryTools.replace('{category}', categoryTitle(category, lang).toLowerCase())}</p>
+          )}
+
+          {/* One contextual link into the matching guide hub — the tools here
+              have written how-to guides, and nothing on this page said so.
+              Guides are English-only (no /hi/guides route, see App.tsx), so
+              this href deliberately skips the /hi prefix, same as the footer. */}
+          {guideCategory && (
+            <div className="mt-16 p-6 rounded-3xl glass border-ink/10 flex flex-wrap items-center justify-between gap-4">
+              <p className="text-ink font-medium">{t.categoryGuidesText}</p>
+              <Link
+                to={`/guides/${guideCategory.slug}`}
+                title={guideCategory.description}
+                className="shrink-0 inline-flex items-center gap-2 px-5 py-3 bg-accent-blue text-bg-pure font-bold rounded-xl hover:glow-blue transition-all"
+              >
+                <BookOpen size={18} aria-hidden="true" />
+                {t.categoryGuidesLink.replace('{category}', guideCategory.title)}
+              </Link>
+            </div>
           )}
         </div>
       </main>

@@ -842,7 +842,9 @@
       "searchPlaceholder": "Search tools…",
       "noToolsMatch": "No tools match \"{query}\" yet.",
       "toolCategoryEyebrow": "Tool Category",
-      "noCategoryTools": "No {category} yet — check back soon."
+      "noCategoryTools": "No {category} yet — check back soon.",
+      "categoryGuidesText": "Written guides for these tools — worked examples, step by step.",
+      "categoryGuidesLink": "{category} guides"
     }
   }
 }

@@ -159,12 +159,12 @@ describe('common-api-testing-errors guide', () => {
     }
   });
 
-  it('links only to guides that exist, and shows three related cards', () => {
+  it('links only to guides that exist, and renders every related card it declares', () => {
     for (const slug of guide().relatedSlugs) expect(getGuideBySlug(slug)).toBeDefined();
     expect(new Set(guide().relatedSlugs).size).toBe(guide().relatedSlugs.length);
     expect(guide().relatedSlugs).not.toContain(SLUG);
-    // getRelatedGuides caps the rendered list at 3.
-    expect(getRelatedGuides(guide()).length).toBe(3);
+    // Nothing truncated: all six declared slugs reach the page.
+    expect(getRelatedGuides(guide()).map((g) => g.slug)).toEqual(guide().relatedSlugs);
 
     // Every in-text guide path resolves to a real guide.
     const paths = allText().match(/\/guides\/developer-tools\/[a-z0-9-]+/g) ?? [];

@@ -839,5 +839,9 @@ export const hiContent: SiteContent = {
     noToolsMatch: '"{query}" से मेल खाने वाला कोई टूल नहीं मिला।',
     toolCategoryEyebrow: 'टूल कैटेगरी',
     noCategoryTools: '{category} अभी उपलब्ध नहीं हैं — जल्द वापस देखें।',
+    categoryGuidesText: 'इन टूल्स के लिए लिखित गाइड्स — असली उदाहरणों के साथ, कदम-कदम पर (अंग्रेज़ी में)।',
+    // {category} is the English guide-category title — the guides themselves
+    // are English-only, so it stays untranslated here on purpose.
+    categoryGuidesLink: '{category} गाइड्स',
   },
 };

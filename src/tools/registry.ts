@@ -7,6 +7,11 @@ export interface ToolCategory {
   description: string;
   titleHi: string;
   descriptionHi: string;
+  /** GUIDE_CATEGORIES slug (src/content/guides/categories.ts) holding the
+   *  how-to guides for this tool family — the category page links out to
+   *  /guides/[slug] when set. Left unset for families with no guides yet, so
+   *  the page never links to an empty hub. */
+  guideCategorySlug?: string;
 }
 
 // The full taxonomy target (per the IA audit) — categories can exist here
@@ -33,6 +38,7 @@ export const TOOL_CATEGORIES: ToolCategory[] = [
     description: 'Test REST APIs and diagram database schemas, right in your browser — no signup required.',
     titleHi: 'डेवलपर टूल्स',
     descriptionHi: 'अपने ब्राउज़र में REST API टेस्ट करें और डेटाबेस स्कीमा डायग्राम बनाएं — कोई साइनअप ज़रूरी नहीं।',
+    guideCategorySlug: 'developer-tools',
   },
   {
     slug: 'ai',

@@ -69,16 +69,18 @@ describe('test-openapi-spec-online guide', () => {
     expect(new Set(API_REQUEST_BUILDER_GUIDE_SLUGS).size).toBe(API_REQUEST_BUILDER_GUIDE_SLUGS.length);
   });
 
-  it('has related slugs that all resolve, with the visible three first', () => {
+  it('renders every related slug it declares, all resolving to real guides', () => {
     for (const slug of guide().relatedSlugs) expect(getGuideBySlug(slug)).toBeDefined();
-    // GuidePage renders getRelatedGuides()'s default limit of three.
+    expect(new Set(guide().relatedSlugs).size).toBe(guide().relatedSlugs.length);
+    // Nothing truncated: GuidePage renders exactly what's declared here.
     expect(getRelatedGuides(guide()).map((g) => g.slug)).toEqual([
       'import-postman-collection-without-postman',
       'how-to-test-an-api',
       'authentication-testing-examples',
+      'curl-to-fetch-axios-python',
+      'json-post-request-example',
     ]);
-    expect(guide().relatedSlugs).toContain('curl-to-fetch-axios-python');
-    expect(guide().relatedSlugs).toContain('json-post-request-example');
+    expect(getRelatedGuides(guide()).length).toBe(guide().relatedSlugs.length);
   });
 
   it('names the UI controls the import flow actually has', () => {

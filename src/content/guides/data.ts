@@ -3971,9 +3971,9 @@ export const GUIDES: Guide[] = [
           'The -F \'field=@file\' flags import as file fields and a warning tells you so, but the file contents cannot be read from a pasted command — there is no file, only its name. Attach the file yourself in the Body tab before sending.',
       },
     ],
-    // Capped at three deliberately: getRelatedGuides only renders three, so a longer
-    // list would just be data nothing displays. The form-data and how-to-test-an-api
-    // guides both link here indirectly via the API Request Builder page's guide list.
+    // Three deliberately: these are the closest topical neighbours. The form-data
+    // and how-to-test-an-api guides both link here indirectly via the API Request
+    // Builder page's guide list.
     relatedSlugs: ['json-post-request-example', 'authentication-testing-examples', 'what-is-a-cors-error'],
     ctaText: 'Convert a cURL command yourself.',
     ctaToolHref: '/tools/developer/api-request-builder',
@@ -5188,7 +5188,13 @@ export const getGuideRedirectTarget = (slug: string): Guide | undefined => {
   return targetSlug ? getGuideBySlug(targetSlug) : undefined;
 };
 
-export const getRelatedGuides = (guide: Guide, limit = 3): Guide[] =>
+// The default limit covers the longest relatedSlugs list any guide declares
+// (six) on purpose: a lower cap silently dropped authored links from the two
+// guides that declare more than three, and the related-guides grid is a plain
+// two-column list of cards that reflows fine at any count. It stays a cap
+// rather than "render everything" so a runaway list can't take over the page —
+// if a guide ever needs more than six, raise this alongside it.
+export const getRelatedGuides = (guide: Guide, limit = 6): Guide[] =>
   guide.relatedSlugs
     .map((slug) => getGuideBySlug(slug))
     .filter((candidate): candidate is Guide => Boolean(candidate))
