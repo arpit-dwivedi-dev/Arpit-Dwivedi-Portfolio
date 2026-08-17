@@ -680,6 +680,15 @@
     <priority>0.7</priority>
   </url>
 
+  <url>
+    <loc>https://101techlabs.com/guides/developer-tools/import-postman-collection-without-postman</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides/developer-tools/import-postman-collection-without-postman" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides/developer-tools/import-postman-collection-without-postman" />
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
 <url>
     <loc>https://101techlabs.com/privacy-policy</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/privacy-policy" />

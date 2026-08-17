@@ -4081,6 +4081,297 @@ export const GUIDES: Guide[] = [
     ctaToolHref: '/tools/developer/dbml-diagram-builder',
     ctaToolLabel: 'Try the free DBML Diagram Builder',
   },
+  {
+    slug: 'import-postman-collection-without-postman',
+    title: 'How to Open a Postman Collection Without Installing Postman',
+    description:
+      'Open a .postman_collection.json file without installing Postman — import a Collection v2.0/v2.1 in the browser and inspect, edit, and test its requests.',
+    category: 'developer-tools',
+    readTimeMinutes: 10,
+    publishedDate: '2026-08-17',
+    updatedDate: '2026-08-17',
+    intro: [
+      'Someone hands you a file called something like `orders-api.postman_collection.json`. It came from an API vendor, a teammate, a README, or a folder in an old project nobody has touched in a year. You need to see what endpoints it contains, understand how they are organized, and probably send two or three of them to check something.',
+      'None of that requires installing a desktop application, creating an account, or signing into a workspace. The file is just JSON, and the API Request Builder can read it: import the collection, review a preview of what it found, and get an editable set of requests you can inspect and send from the browser.',
+      'This guide walks through that import end to end — what the importer supports, what the preview tells you before anything is saved, how folders, variables, auth, and bodies are translated, and which Postman features deliberately do not come across. Being clear about the second list matters as much as the first: the goal is to bring request definitions into a lightweight browser client, not to reproduce the Postman runtime.',
+    ],
+    sections: [
+      {
+        heading: 'What a Postman collection file actually is',
+        paragraphs: [
+          'A Postman collection is a single JSON document describing a set of API requests and the configuration around them. Despite the `.postman_collection.json` extension, there is nothing binary or proprietary about it — you can open it in any text editor and read it.',
+          'Inside, a collection typically carries a handful of things worth knowing about before you import one:',
+        ],
+        bullets: [
+          'Requests — method, URL, query parameters, headers, body, and per-request auth.',
+          'Folders — nested groups of requests, which Postman stores as items that themselves contain items.',
+          'Variables — collection-level `{{placeholder}}` declarations with default values.',
+          'Authentication — an auth block that can be set on the collection, on a folder, or on a single request.',
+          'Request bodies — raw text or JSON, URL-encoded form fields, multipart form data, GraphQL, or a binary file reference.',
+          'Scripts — optional pre-request and test JavaScript, stored as plain text in the file.',
+        ],
+      },
+      {
+        heading: 'Which Postman formats are supported',
+        paragraphs: [
+          'The importer supports Postman Collection schema v2.0 and v2.1 — the two formats Postman has exported for years, and what you will almost certainly have. It identifies the format from the `info.schema` URL at the top of the file:',
+        ],
+        bullets: [
+          '{',
+          '  "info": {',
+          '    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"',
+          '  }',
+          '}',
+        ],
+      },
+      {
+        heading: 'What happens to a file the importer cannot read',
+        paragraphs: [
+          'Rejection and partial import are two different outcomes, and it is worth knowing which one you are looking at.',
+          'A file is rejected outright — nothing is imported, and you see a single error — when it is not valid JSON, when it is empty, when it is larger than the 5MB import limit, when `info.schema` is missing or is not a v2.0/v2.1 collection URL (the older v1 format and non-Postman JSON both land here), when it has no `item` array, or when the walk finishes without finding a single importable request.',
+          'Everything short of that is a partial import with warnings. Malformed collection-level metadata is tolerated rather than treated as fatal, an item that is neither a folder nor a recognizable request is skipped quietly, and a request whose HTTP method the tool does not model is counted as skipped rather than guessed at. The preview reports both the warnings and the skipped count so you can decide whether the result is good enough before committing it.',
+        ],
+      },
+      {
+        heading: 'Step by step: import the collection',
+        paragraphs: [
+          'The whole flow lives in the API Request Builder\'s saved-requests drawer. Nothing is written to your browser storage until the final step.',
+        ],
+        bullets: [
+          '1. Open the API Request Builder at /tools/developer/api-request-builder.',
+          '2. Click "Saved" in the toolbar to open the drawer on its Saved tab — this is the collections browser.',
+          '3. Click "Import Postman Collection" in the row of actions at the top of that panel.',
+          '4. In the "Import Postman Collection" dialog, click "Choose a Postman Collection .json file" and pick your `.postman_collection.json` file.',
+          '5. Read the preview that appears — the collection name, request count, folder count, variable count, and any warnings.',
+          '6. If it is the wrong file, click "Choose a different file"; if it is wrong entirely, click "Cancel".',
+          '7. Click the "Import N requests" button to commit it.',
+          '8. The drawer refreshes and the new collection appears in the collections browser, named after the source collection with " (Imported)" appended.',
+          '9. Expand its folders and click a request to load it into the editor.',
+          '10. Review the URL, params, headers, body, and Auth tab, fill in whatever the warnings told you was missing, and press Send when you are ready.',
+        ],
+      },
+      {
+        heading: 'The preview screen, and why it comes first',
+        paragraphs: [
+          'Selecting a file parses and converts it entirely in memory. It does not create a collection, does not save any requests, does not create an environment, and does not touch anything already in your browser storage. Only the Import button commits the result, so picking the wrong file costs you nothing but a second click.',
+          'What the preview shows you is deliberately the information you need to make that decision:',
+        ],
+        bullets: [
+          'The collection name read from `info.name`.',
+          'The number of requests that converted successfully.',
+          'The number of folders that will be created.',
+          'The number of variables that will be collected into an environment.',
+          'A list of warnings — unsupported auth types, body modes that could not be represented, flattened folders, pre-request and test scripts, dynamic variables, and blanked secret-shaped variable values.',
+          'A count of requests skipped for an unsupported method or malformed structure, when there are any.',
+        ],
+      },
+      {
+        heading: 'How folders and requests are mapped',
+        paragraphs: [
+          'The importer walks the Postman item tree and rebuilds it as a collection containing folders and saved requests. A structure like this:',
+        ],
+        bullets: [
+          'Postman Collection',
+          '├── Users',
+          '│   ├── Get Users',
+          '│   └── Create User',
+          '└── Orders',
+          '    └── List Orders',
+        ],
+      },
+      {
+        heading: 'The folder depth limit',
+        paragraphs: [
+          '...becomes one collection with a "Users" folder and an "Orders" folder holding the same three requests, with names taken from each item\'s `name` field. A request with no name gets a `METHOD url` fallback rather than an empty row, and names longer than 80 characters are truncated.',
+          'Nesting is not unlimited. The tool caps folders at three levels deep, which is the same limit the manual "New subfolder" button enforces, so an imported structure can never be deeper than one you could build by hand. When a Postman folder sits below that depth, it is not created and it is not dropped either — its contents are flattened into the deepest folder that could be created, and the walk continues from there. Every request still lands somewhere. The preview warns you when this happened and how many folders it affected, so a deeply nested source collection never silently loses its shape without telling you.',
+        ],
+      },
+      {
+        heading: 'Variables stay as variables',
+        paragraphs: [
+          'Postman\'s `{{baseUrl}}` syntax and the API Request Builder\'s environment variable syntax are the same, which makes this the easiest part of the import. A request URL written as `{{baseUrl}}/users/{{userId}}` is imported exactly as that string. It is not resolved, not flattened into a concrete URL, and not rewritten — the template survives, so switching environments later still works the way you would expect.',
+          'Postman\'s older `:id` path-variable syntax is the one thing that gets rewritten: `/users/:userId` becomes `/users/{{userId}}`, so it lines up with the same variable system as everything else. A declared value is never substituted in.',
+          'Variable *declarations* are handled separately. Collection-level `variable` entries, folder-level ones, and URL path variables are merged into a single flat list — more specific scopes override less specific ones by key — and if that list is non-empty, one new environment is created alongside the collection, named after it with " (Imported)". Values whose key looks like a secret (`token`, `password`, `api_key`, `secret`, `auth`, `credential`) are imported with an empty value and flagged in the warnings, rather than written into local storage in plaintext.',
+          'One thing this is not: importing a Postman environment file. The tool reads variables declared *inside the collection document*. If your team keeps real values in a separate `.postman_environment.json` export, those values are not imported, and the generated environment is not automatically made active — you select it from the environment picker and fill in what is blank.',
+        ],
+      },
+      {
+        heading: 'Authentication mapping',
+        paragraphs: [
+          'Postman lets auth be declared on the collection, on a folder, or on an individual request, and the importer honors that inheritance chain: an item that declares its own `auth` wins, including an explicit `noauth` used to turn inheritance off; an item with no `auth` key at all inherits from its nearest ancestor.',
+          'Three types map onto the tool\'s own auth model:',
+        ],
+        bullets: [
+          'Bearer — the token value is carried across into the Auth tab\'s Bearer field.',
+          'Basic — username and password map to the Basic auth fields.',
+          'API key — the key name and value map across, and the key is placed in the header or the query string depending on the collection\'s `in` setting.',
+          'No auth — imported as no auth, which is also what the request falls back to in every other case.',
+        ],
+      },
+      {
+        heading: 'What happens to unsupported auth types',
+        paragraphs: [
+          'Anything else — OAuth 2.0, AWS Signature, Digest, Hawk, NTLM, EdgeGrid, or a type the tool has never seen — is not faked. The request still imports, with everything else intact, but its auth is left as none and a warning names the type so you know which requests need configuring by hand. OAuth 2.0 in particular is not imported, and no token is fetched or refreshed on your behalf.',
+          'Credential values themselves follow the same rule as every other saved request in the tool. Values are carried through the conversion — whether they are `{{token}}` templates or literal secrets — and then redacted at the point of saving: bearer tokens, basic passwords, API key values, and credential-shaped headers such as `Authorization`, `Cookie`, and `X-Api-Key` are all blanked before anything reaches local storage. A literal password that lived in the collection file does not end up persisted, which also means you may need to re-enter it in the editor before sending.',
+        ],
+      },
+      {
+        heading: 'Request bodies',
+        paragraphs: [
+          'Bodies are converted for every method that can carry one; GET and HEAD requests import without a body regardless of what the file contains.',
+        ],
+        bullets: [
+          'Raw JSON — imported as a JSON body, but only when the collection marks the language as JSON *and* the text actually parses. Otherwise it comes in as plain text rather than being labeled JSON on a guess.',
+          'Raw text — imported as a text body, unchanged.',
+          'URL-encoded — each field becomes a form row, with Postman\'s disabled flag preserved as an unchecked row.',
+          'Multipart form data — text fields map straight across; file fields become placeholder rows carrying only the original file name, and a warning tells you they need re-selection.',
+          'GraphQL — best-effort imported as raw text so the query is still readable, with a warning that the tool does not execute GraphQL.',
+          'Binary file body — not imported, with a warning; attach the file yourself.',
+        ],
+      },
+      {
+        heading: 'Why file fields cannot come across',
+        paragraphs: [
+          'A Postman collection stores a file upload as a path on the machine that created it — something like a `src` pointing at a folder on your teammate\'s laptop. That is a string, not the file. A browser cannot read a path from a JSON document and turn it into a file, and it should not be able to.',
+          'So multipart file fields import as named placeholders with no content. The field name, its enabled state, and the original file name are preserved so you can see what the request expects; you pick the actual file from your own machine in the Body tab before sending. Nothing is invented to fill the gap.',
+        ],
+      },
+      {
+        heading: 'Postman features that are not imported',
+        paragraphs: [
+          'This is the part worth reading carefully, because the gap is intentional rather than accidental. The importer brings request *definitions* into a browser-based HTTP client. It does not implement the Postman runtime.',
+          'Pre-request scripts and test scripts are never executed. They are not even parsed as code — the importer only checks whether a script block is non-empty so it can count it, then reports "N pre-request scripts not imported" and "N test scripts ignored" in the warnings. Whatever those scripts did — signing a request, fetching a token, chaining a value from one response into the next request — you now do by hand or not at all.',
+          'Postman\'s dynamic variables are detected but not evaluated. Names like `{{$randomUUID}}` and `{{$timestamp}}` are left in place as literal text and listed in the warnings, so they are visible rather than silently masquerading as a normal resolvable variable. Nothing generates a value for them at send time.',
+          'Also not carried across: collection-level test runners, monitors, mock servers, workspace sync, and the auth types listed above. If your collection depends on a script to work at all, importing it gives you a readable, editable starting point rather than a working request — which is usually still the thing you wanted.',
+        ],
+      },
+      {
+        heading: 'Security: an imported file is untrusted input',
+        paragraphs: [
+          'A collection someone sends you is a document from outside your control, and the import path treats it that way.',
+          'No JavaScript from the file is executed. Scripts are counted and reported, never run. No request is sent as a side effect of importing — the importer produces saved requests, and a request only goes out when you press Send. No URL found in the file is fetched during import, and nothing in the file causes a remote resource to be loaded. Parsing is a guarded `JSON.parse` with a 5MB ceiling, so a malformed or oversized file produces a one-line error instead of a crash.',
+          'On secrets, the honest version: literal credentials in the file do exist in memory during conversion and can be visible in the request editor after import — that is unavoidable, since showing you the request is the point. What is guaranteed is the persistence boundary. Saved requests go through the same redaction as everything else in the tool, blanking bearer tokens, basic passwords, API key values, and credential-shaped headers; secret-looking collection variables are blanked as well. Local storage is not encrypted, and this guide will not pretend otherwise — treat a collection full of production credentials with the same care you would treat any other file containing them.',
+        ],
+      },
+      {
+        heading: 'A worked example',
+        paragraphs: [
+          'Here is a trimmed collection — simplified for readability, not a complete export — with one folder and one GET request:',
+        ],
+        bullets: [
+          '{',
+          '  "info": {',
+          '    "name": "Orders API",',
+          '    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"',
+          '  },',
+          '  "variable": [{ "key": "baseUrl", "value": "https://api.example.com" }],',
+          '  "item": [{',
+          '    "name": "Orders",',
+          '    "item": [{',
+          '      "name": "List Orders",',
+          '      "request": {',
+          '        "method": "GET",',
+          '        "url": "{{baseUrl}}/orders?status=open",',
+          '        "header": [{ "key": "Accept", "value": "application/json" }]',
+          '      }',
+          '    }]',
+          '  }]',
+          '}',
+        ],
+      },
+      {
+        heading: 'What the importer makes of that example',
+        paragraphs: [
+          'The preview reports one request, one folder, and one variable. Importing creates a collection named "Orders API (Imported)" containing an "Orders" folder with a single saved request called "List Orders".',
+          'That request is a GET to `{{baseUrl}}/orders` with `status=open` split out as a query parameter row and `Accept: application/json` as a header row. The URL keeps its template rather than being resolved. Alongside the collection, an environment named "Orders API (Imported)" is created with `baseUrl` set to `https://api.example.com` — created, but not activated, so you select it before sending if you want the variable to resolve.',
+        ],
+      },
+      {
+        heading: 'When this workflow is the right one',
+        paragraphs: [
+          'This import is aimed at a specific situation: you have a collection file and you need to understand or exercise what is in it, quickly, without setting up tooling around it. That covers more cases than it sounds like.',
+        ],
+        bullets: [
+          'A vendor ships a Postman collection as their API documentation and you want to see the real endpoints.',
+          'A teammate exports a collection and sends it over so you can reproduce something.',
+          'An old repository has a collection checked in and nobody remembers what it covers.',
+          'You need to hit two or three endpoints once, and standing up a full workspace for that is disproportionate.',
+          'You want to move a handful of request definitions into a lightweight browser tool you can also generate cURL or code from.',
+          'You are on a machine where you would rather not install anything.',
+        ],
+      },
+      {
+        heading: 'What to do after importing',
+        paragraphs: [
+          'Import, then read the warnings before you send anything — they are a to-do list for the gap between what the file described and what came across.',
+          'Concretely: select the generated environment and fill in any variable that was blanked, configure auth by hand for requests whose type was not supported, obtain any OAuth token yourself and paste it into the Bearer field, re-attach files for multipart or binary bodies, and replace dynamic variables like `{{$timestamp}}` with real values. Anything a pre-request script used to compute is now yours to supply. Once a request sends cleanly, you can save it, copy it as cURL, or generate Fetch, Axios, Node, or Python code from it.',
+        ],
+      },
+      {
+        heading: 'How this compares to using Postman itself',
+        paragraphs: [
+          'These are different tools for overlapping jobs, and it would be dishonest to frame this as a replacement. Postman is a full API platform with a scripting runtime, test execution, collection runners, and team workspaces. This import path gives you none of that.',
+          'What it gives you is speed for one specific task: reading and testing request definitions from a collection file, in a browser tab, with nothing installed. When that is genuinely what you need, the round trip through installing and configuring a desktop client is overhead. When you need scripts, chained tests, or a shared workspace, use the tool built for it.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'Can I open a .postman_collection.json file without installing Postman?',
+        answer:
+          'Yes. The file is plain JSON, and the API Request Builder imports Collection v2.0 and v2.1 exports directly in the browser — open the Saved drawer, click "Import Postman Collection", choose the file, and its requests and folders become an editable collection. Nothing is installed and no account is needed.',
+      },
+      {
+        question: 'Which Postman collection versions are supported?',
+        answer:
+          'Schema v2.0 and v2.1, identified from the `info.schema` URL in the file. The older v1 format is not supported and is rejected with a clear message rather than being partially misread.',
+      },
+      {
+        question: 'Does importing a collection send any of its requests?',
+        answer:
+          'No. Importing creates saved requests and nothing else. A request is only sent when you open it and press Send, so importing a collection full of destructive endpoints has no effect on its own.',
+      },
+      {
+        question: 'Are pre-request and test scripts run?',
+        answer:
+          'Never. Script blocks are counted so the preview can tell you how many exist, but their contents are not parsed as code and not executed. Whatever a script did for the request, you will need to do manually.',
+      },
+      {
+        question: 'Is OAuth 2.0 imported?',
+        answer:
+          'No. Bearer, Basic, API key, and explicit no-auth map across; OAuth 2.0, AWS Signature, Digest, Hawk, NTLM, and EdgeGrid do not. Those requests still import with everything else intact, but with auth left unset and a warning naming the type — you obtain the token yourself and set it in the Auth tab.',
+      },
+      {
+        question: 'What happens to {{baseUrl}} and other variables?',
+        answer:
+          'They are preserved as templates, so `{{baseUrl}}/users/{{userId}}` stays exactly that. Variables declared in the collection are merged into a new environment created alongside it, though that environment is not made active automatically and secret-shaped values are imported blank.',
+      },
+      {
+        question: 'Does it import my Postman environment file too?',
+        answer:
+          'No. Only variables declared inside the collection document are read. A separate `.postman_environment.json` export is not imported, so values kept there need to be entered in the environment editor.',
+      },
+      {
+        question: 'What about file uploads in multipart requests?',
+        answer:
+          'The collection only stores a filesystem path from the machine that created it, which a browser cannot read. File fields import as placeholder rows carrying the original file name, and a warning tells you to re-select the file yourself before sending.',
+      },
+      {
+        question: 'Are credentials from the collection saved to my browser?',
+        answer:
+          'Not in plaintext. Saved requests pass through the same redaction as everything else in the tool: bearer tokens, basic passwords, API key values, and credential-shaped headers are blanked before persisting, and secret-looking collection variables are imported empty. Local storage itself is not encrypted.',
+      },
+      {
+        question: 'Why were some of my folders flattened?',
+        answer:
+          'Folders are capped at three levels deep — the same limit the manual "New subfolder" button uses. Anything deeper has its contents moved into the deepest folder that could be created rather than being dropped, and the preview warns you how many folders that affected.',
+      },
+    ],
+    relatedSlugs: ['how-to-test-an-api', 'authentication-testing-examples', 'curl-to-fetch-axios-python'],
+    ctaText: 'Open the API Request Builder and import your collection.',
+    ctaToolHref: '/tools/developer/api-request-builder',
+    ctaToolLabel: 'Try the free API Request Builder',
+  },
 ];
 
 export const getGuideBySlug = (slug: string): Guide | undefined => GUIDES.find((guide) => guide.slug === slug);
