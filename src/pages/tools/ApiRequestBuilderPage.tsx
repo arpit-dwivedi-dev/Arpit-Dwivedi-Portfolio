@@ -1,14 +1,12 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { QRCodeSVG } from 'qrcode.react';
 import {
   BookOpen,
   Check,
   ClipboardPaste,
   Clock,
   Code2,
-  Coffee,
   Copy,
   Globe,
   History,
@@ -25,6 +23,7 @@ import {
   X,
 } from 'lucide-react';
 import { Navbar } from '../../components/Navbar';
+import { BuyMeACoffee } from '../../components/tools/BuyMeACoffee';
 import { Footer } from '../../components/AchievementsContact';
 import { Breadcrumbs } from '../../components/seo/Breadcrumbs';
 import { JsonLd } from '../../components/seo/JsonLd';
@@ -125,12 +124,6 @@ const HOW_TO_TEST_GUIDE = getGuideBySlug('how-to-test-an-api')!;
 const CORS_GUIDE = getGuideBySlug('what-is-a-cors-error')!;
 const RELATED_TOOLS = getRelatedTools(TOOL);
 
-// Same UPI details used on the other free-tool pages (QR Code Generator, Invoice
-// Generator) — duplicated per-page rather than shared, matching that convention.
-const UPI_ID = 'marpit697.ad@ybl';
-const UPI_PAYEE_NAME = 'Arpit Dwivedi';
-const UPI_LINK = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(UPI_PAYEE_NAME)}&cu=INR`;
-
 // 44px min height keeps every row a comfortable thumb target inside the mobile "More" sheet.
 const moreMenuItemClass =
   'w-full flex items-center gap-3 px-3 py-3 min-h-[44px] rounded-xl text-sm font-medium text-ink hover:bg-ink/5 transition-colors disabled:opacity-40 disabled:pointer-events-none';
@@ -194,7 +187,6 @@ export const ApiRequestBuilderPage = () => {
   const [codeGenModalOpen, setCodeGenModalOpen] = useState(false);
   const [corsProxyModalOpen, setCorsProxyModalOpen] = useState(false);
   const [corsProxySettings, setCorsProxySettings] = useState<CorsProxySettings>(getCorsProxySettings);
-  const [coffeeModalOpen, setCoffeeModalOpen] = useState(false);
   const [currentSavedId, setCurrentSavedId] = useState<string | null>(null);
   const [urlCopied, setUrlCopied] = useState(false);
   const [curlCopied, setCurlCopied] = useState(false);
@@ -762,15 +754,7 @@ export const ApiRequestBuilderPage = () => {
                 Send
               </button>
             )}
-            <button
-              type="button"
-              onClick={() => setCoffeeModalOpen(true)}
-              title="Buy me a coffee"
-              aria-label="Buy me a coffee"
-              className="order-4 sm:order-none shrink-0 flex items-center px-3 rounded-r-xl border-y border-r border-[#FFDD00]/30 bg-[#FFDD00]/10 text-[#FFDD00] hover:bg-[#FFDD00]/20 transition-colors"
-            >
-              <Coffee size={16} aria-hidden="true" />
-            </button>
+            <BuyMeACoffee variant="icon" className="order-4 sm:order-none shrink-0 rounded-r-xl" titleId="api-builder-upi-heading" />
           </div>
           {requestNotice}
 
@@ -1530,28 +1514,6 @@ export const ApiRequestBuilderPage = () => {
         onDelete={handleDeleteEnvironment}
       />
 
-      <Modal
-        open={coffeeModalOpen}
-        onClose={() => setCoffeeModalOpen(false)}
-        titleId="api-builder-upi-heading"
-        title={
-          <span className="flex items-center gap-2">
-            <Coffee size={18} className="text-[#FFDD00]" aria-hidden="true" />
-            Buy me a coffee
-          </span>
-        }
-        maxWidthClassName="max-w-sm"
-      >
-        <p className="text-sm text-secondary-text mb-4">
-          This tool is free, with no signup and no ads gating it. If you like the work, you can support it — scan the QR and pay.
-        </p>
-
-        <div className="flex justify-center">
-          <div className="p-3 rounded-2xl bg-white">
-            <QRCodeSVG value={UPI_LINK} size={180} bgColor="#ffffff" fgColor="#000000" level="M" includeMargin={false} />
-          </div>
-        </div>
-      </Modal>
     </div>
   );
 };

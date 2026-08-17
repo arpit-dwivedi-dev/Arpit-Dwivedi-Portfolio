@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 import {
   Check,
-  Coffee,
   Download,
   FileDown,
   History as HistoryIcon,
@@ -14,8 +13,8 @@ import {
   Trash2,
   X,
 } from 'lucide-react';
-import { QRCodeSVG } from 'qrcode.react';
 import { Navbar } from '../../components/Navbar';
+import { BuyMeACoffee } from '../../components/tools/BuyMeACoffee';
 import { Footer } from '../../components/AchievementsContact';
 import { Select } from '../../components/ui/Select';
 import { Breadcrumbs } from '../../components/seo/Breadcrumbs';
@@ -89,13 +88,8 @@ export const InvoiceGeneratorPage = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const symbol = getCurrencySymbol(invoice.currency);
 
-  const [upiModalOpen, setUpiModalOpen] = useState(false);
   const [sharing, setSharing] = useState(false);
   const [shareEmailed, setShareEmailed] = useState(false);
-
-  const UPI_ID = 'marpit697.ad@ybl';
-  const UPI_PAYEE_NAME = 'Arpit Dwivedi';
-  const UPI_LINK = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(UPI_PAYEE_NAME)}&cu=INR`;
 
   const handleDownload = () => {
     trackEvent('tool_used', { tool_name: TOOL.id, action: 'download' });
@@ -643,14 +637,12 @@ export const InvoiceGeneratorPage = () => {
                 {shareEmailed ? t.shareEmailedButton : t.shareButton}
               </button>
 
-              <button
-                type="button"
-                onClick={() => setUpiModalOpen(true)}
-                className="w-full py-3 bg-[#FFDD00]/10 text-[#FFDD00] font-bold rounded-xl hover:bg-[#FFDD00]/20 transition-all flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure"
-              >
-                <Coffee size={16} aria-hidden="true" />
-                {t.buyMeCoffee}
-              </button>
+              <BuyMeACoffee
+                label={t.buyMeCoffee}
+                modalHeading={t.upiModalHeading}
+                modalBody={t.upiModalBody}
+                closeLabel={t.closeAriaLabel}
+              />
 
               <button
                 type="button"
@@ -913,52 +905,6 @@ export const InvoiceGeneratorPage = () => {
               )}
 
               <p className="text-secondary-text text-xs mt-4 pt-4 border-t border-ink/10">{t.historyStorageNote}</p>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {upiModalOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4"
-            onClick={() => setUpiModalOpen(false)}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="upi-modal-heading"
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-sm rounded-3xl bg-bg-secondary border border-ink/10 p-6 shadow-2xl"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h3 id="upi-modal-heading" className="text-lg font-bold text-ink flex items-center gap-2">
-                  <Coffee size={18} className="text-[#FFDD00]" aria-hidden="true" />
-                  {t.upiModalHeading}
-                </h3>
-                <button
-                  type="button"
-                  onClick={() => setUpiModalOpen(false)}
-                  aria-label={t.closeAriaLabel}
-                  className="p-1.5 rounded-lg hover:bg-ink/10 text-secondary-text transition-colors"
-                >
-                  <X size={18} aria-hidden="true" />
-                </button>
-              </div>
-
-              <p className="text-sm text-secondary-text mb-4">{t.upiModalBody}</p>
-
-              <div className="flex justify-center">
-                <div className="p-3 rounded-2xl bg-white">
-                  <QRCodeSVG value={UPI_LINK} size={180} bgColor="#ffffff" fgColor="#000000" level="M" includeMargin={false} />
-                </div>
-              </div>
             </motion.div>
           </motion.div>
         )}
