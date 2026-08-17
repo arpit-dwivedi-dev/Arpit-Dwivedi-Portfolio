@@ -1,4 +1,118 @@
 import type { Guide } from './types';
+import { createApiExample } from '../../tools/apiRequestBuilder/example';
+import { generateCurlCommand } from '../../tools/apiRequestBuilder/curlGenerator';
+import { generateFetchCode } from '../../tools/apiRequestBuilder/codeGenerators/fetch';
+import { generatePythonCode } from '../../tools/apiRequestBuilder/codeGenerators/python';
+
+// The live example embedded in the JSON POST request guide (see PART 5 of the
+// content brief) — built once, from the same createApiExample() every other
+// interactive example uses, and shared by both the ApiExampleCard and the
+// generated-code sections below so the request, the "Open in API Request
+// Builder" link, and the cURL/fetch/Python snippets can never drift out of
+// sync with each other.
+const JSON_POST_EXAMPLE = createApiExample({
+  title: 'Send a JSON POST request',
+  description: 'A POST request with a JSON body, sent to httpbin.org’s test endpoint — safe to open and actually send.',
+  method: 'POST',
+  url: 'https://httpbin.org/anything',
+  headers: [{ key: 'Content-Type', value: 'application/json' }],
+  json: { name: 'John Doe', email: 'john@example.com' },
+});
+
+// GuideSection has no code-block field (see ApiExampleCard.tsx and the DBML
+// guide below) — literal code lines as `bullets` is the established fallback.
+// Blank lines are dropped only because a bulleted list can't represent
+// spacing anyway; every remaining line is the generator's real output,
+// unedited, so these snippets can never disagree with what the tool itself
+// produces from the "Copy as code" panel.
+const codeLines = (code: string): string[] => code.split('\n').filter((line) => line.trim().length > 0);
+
+const JSON_POST_CURL = codeLines(generateCurlCommand(JSON_POST_EXAMPLE.request));
+const JSON_POST_FETCH = codeLines(generateFetchCode(JSON_POST_EXAMPLE.request));
+const JSON_POST_PYTHON = codeLines(generatePythonCode(JSON_POST_EXAMPLE.request));
+
+// The three interactive examples for the authentication guide. Token/key values are
+// deliberately `{{template}}` placeholders rather than literal secrets — both because a
+// public guide can never contain a real credential, and because sanitizeForShare (see
+// shareRequest.ts) only carries a templated auth value through the "Open in API Request
+// Builder" link; a literal one gets stripped before the link is even built. The Basic Auth
+// example is the one exception: httpbin.org's sandbox endpoint requires the literal
+// username/password "demo", so its password does NOT survive that same link (see the
+// guide's own security section, which explains this rather than glossing over it).
+const AUTH_BEARER_EXAMPLE = createApiExample({
+  title: 'Send a request with a Bearer token',
+  description: 'A GET request with a templated Bearer token — safe to open and send, since {{token}} is left unresolved rather than a real credential.',
+  method: 'GET',
+  url: 'https://httpbin.org/anything',
+  auth: { type: 'bearer', bearerToken: '{{token}}' },
+});
+
+const AUTH_API_KEY_EXAMPLE = createApiExample({
+  title: 'Send a request with an API key',
+  description: 'A GET request with a templated API key sent as a header — safe to open and send.',
+  method: 'GET',
+  url: 'https://httpbin.org/anything',
+  auth: { type: 'api-key', apiKeyName: 'X-Api-Key', apiKeyValue: '{{apiKey}}', apiKeyLocation: 'header' },
+});
+
+const AUTH_BASIC_EXAMPLE = createApiExample({
+  title: 'Send a request with Basic Auth',
+  description: 'A GET request to httpbin.org’s Basic Auth sandbox endpoint, which only accepts the public demo/demo username and password.',
+  method: 'GET',
+  url: 'https://httpbin.org/basic-auth/demo/demo',
+  auth: { type: 'basic', basicUsername: 'demo', basicPassword: 'demo' },
+});
+
+// The two interactive examples for the form-data / file-upload guide. Both use the
+// tool's existing 'multipart' body mode and carry no Content-Type header on purpose —
+// resolveRequest deliberately leaves it off so the browser can generate the boundary
+// itself, which is the guide's central teaching point.
+//
+// The file field is expressed the only way a public, static example safely can: a row
+// flagged `isFile` with no filename and no path. It opens in the tool as an empty
+// "Choose file…" picker (see FormFieldsEditor) that the reader attaches their own local
+// file to — a real `File` can never be serialized into a share URL (sanitizeForShare
+// drops it), so inventing a filename here would only render a row that looks attached
+// but would silently send an empty text field instead.
+const FORM_DATA_TEXT_EXAMPLE = createApiExample({
+  title: 'Send a multipart form with text fields',
+  description: 'A POST with two text form fields sent as multipart/form-data to httpbin.org’s test endpoint — safe to open and actually send.',
+  method: 'POST',
+  url: 'https://httpbin.org/anything',
+  body: {
+    mode: 'multipart',
+    formFields: [
+      { key: 'name', value: 'John Doe' },
+      { key: 'email', value: 'john@example.com' },
+    ],
+  },
+});
+
+const FORM_DATA_FILE_EXAMPLE = createApiExample({
+  title: 'Send a multipart form with a file',
+  description: 'A POST with one text field and one file field. The file field opens empty — choose a local file yourself before sending, since a file can’t travel inside a link.',
+  method: 'POST',
+  url: 'https://httpbin.org/anything',
+  body: {
+    mode: 'multipart',
+    formFields: [
+      { key: 'name', value: 'profile' },
+      { key: 'file', value: '', isFile: true },
+    ],
+  },
+});
+
+// Generated from the text-only example rather than the file one: a File field has no
+// faithful representation in a copied snippet (curl would emit `-F 'file=@'` with
+// nothing after the @), so the file line is shown as a single hand-written line in the
+// guide instead of a misleading generated command.
+const FORM_DATA_CURL = codeLines(generateCurlCommand(FORM_DATA_TEXT_EXAMPLE.request));
+const FORM_DATA_FETCH = codeLines(generateFetchCode(FORM_DATA_TEXT_EXAMPLE.request));
+
+const AUTH_BEARER_CURL = codeLines(generateCurlCommand(AUTH_BEARER_EXAMPLE.request));
+const AUTH_BEARER_FETCH = codeLines(generateFetchCode(AUTH_BEARER_EXAMPLE.request));
+const AUTH_BEARER_PYTHON = codeLines(generatePythonCode(AUTH_BEARER_EXAMPLE.request));
+const AUTH_BASIC_CURL = codeLines(generateCurlCommand(AUTH_BASIC_EXAMPLE.request));
 
 // Original guides written in-house — not sourced or adapted from any
 // competitor's help center or blog. Topics overlap with what any invoicing
@@ -3006,7 +3120,7 @@ export const GUIDES: Guide[] = [
           'Yes — most APIs that require login issue a token (from a separate login/auth endpoint) that you then attach to subsequent requests via the Authorization header. Test the login endpoint first to get a token, then paste that token into the Auth tab for the requests that need it.',
       },
     ],
-    relatedSlugs: ['what-is-a-cors-error'],
+    relatedSlugs: ['what-is-a-cors-error', 'json-post-request-example', 'form-data-file-upload-example'],
     ctaText: 'Put this into practice with a real request.',
     ctaToolHref: '/tools/developer/api-request-builder',
     ctaToolLabel: 'Try the free API Request Builder',
@@ -3093,8 +3207,545 @@ export const GUIDES: Guide[] = [
           'This is a deliberate browser limitation, not a missing detail — for security reasons, browsers don’t expose why a cross-origin response was blocked (which header was missing, what the actual response was) to your JavaScript. To see what actually happened, check the Network tab in your browser’s DevTools, which shows the real response and headers even though your code can’t access them.',
       },
     ],
-    relatedSlugs: ['how-to-test-an-api'],
+    relatedSlugs: ['how-to-test-an-api', 'json-post-request-example', 'authentication-testing-examples'],
     ctaText: 'See this handled for you, automatically.',
+    ctaToolHref: '/tools/developer/api-request-builder',
+    ctaToolLabel: 'Try the free API Request Builder',
+  },
+  {
+    slug: 'json-post-request-example',
+    title: 'How to Send a JSON POST Request (With a Live Example)',
+    description:
+      'How to send a JSON POST request — the Content-Type header, the request body, and a live example you can open and test in the API Request Builder.',
+    category: 'developer-tools',
+    readTimeMinutes: 8,
+    publishedDate: '2026-08-17',
+    updatedDate: '2026-08-17',
+    intro: [
+      'POST is the method you reach for when you’re sending data to an API rather than just asking for it back — creating a user, submitting a form, kicking off an action. JSON is the most common shape for that data on modern APIs: readable as plain text, and native to both browsers and virtually every backend language.',
+      'Getting it right comes down to two things matching what the endpoint expects: the Content-Type header, which tells the server how to parse what follows, and the body itself, which has to be valid JSON in the shape the API actually wants. This guide walks through a real JSON POST request piece by piece, with a live example you can open and send yourself.',
+    ],
+    sections: [
+      {
+        heading: 'The request',
+        paragraphs: [
+          'Here’s the exact request this guide walks through — a POST to httpbin.org’s /anything endpoint, which accepts any method and body and echoes back exactly what it received. That makes it safe to send for real: no account, no side effects, nothing stored anywhere.',
+        ],
+        bullets: [
+          'POST https://httpbin.org/anything',
+          'Content-Type: application/json',
+          '{',
+          '  "name": "John Doe",',
+          '  "email": "john@example.com"',
+          '}',
+        ],
+        examples: [JSON_POST_EXAMPLE],
+      },
+      {
+        heading: 'What each part of the request does',
+        paragraphs: ['Four things have to line up for this request to work: the method, the URL, the header, and the body.'],
+        bullets: [
+          'POST — tells the endpoint you’re submitting data, not just retrieving it. Most APIs use POST specifically for creating a new resource.',
+          'URL (https://httpbin.org/anything) — the endpoint receiving the request. It echoes back anything sent to it, any method or body, which is what makes it useful for a guide like this one rather than a real API you’d need credentials for.',
+          'Content-Type: application/json — tells the server the body is JSON rather than a query string or form fields, so it parses it correctly instead of guessing or rejecting it outright.',
+          'Request body — the actual data being sent, as a JSON object. What keys and structure it needs to contain depends entirely on the API you’re calling; httpbin.org accepts anything.',
+        ],
+      },
+      {
+        heading: 'How to test a JSON POST request',
+        paragraphs: ['This is the same request, built step by step in the API Request Builder:'],
+        bullets: [
+          'Open the API Request Builder.',
+          'Select POST as the method.',
+          'Enter https://httpbin.org/anything as the URL.',
+          'Add a header: Content-Type set to application/json.',
+          'Open the Body section.',
+          'Select JSON as the body type.',
+          'Enter the payload.',
+          'Send the request.',
+          'Inspect the response — status code, body, headers, and response time all appear once it comes back.',
+        ],
+      },
+      {
+        heading: 'As a cURL command',
+        paragraphs: ['Once a request works, the same call can be copied straight out of the request’s code panel — no retyping it by hand:'],
+        bullets: JSON_POST_CURL,
+      },
+      {
+        heading: 'As a JavaScript (Fetch) call',
+        paragraphs: ['The same request as a fetch() call, ready to paste into frontend code:'],
+        bullets: JSON_POST_FETCH,
+      },
+      {
+        heading: 'As a Python request',
+        paragraphs: ['And the same request using the requests library:'],
+        bullets: JSON_POST_PYTHON,
+      },
+      {
+        heading: 'Common mistakes',
+        paragraphs: ['A handful of specific issues account for most "why isn’t my JSON POST working" reports.'],
+        bullets: [
+          'Missing Content-Type — send JSON without this header (or with the wrong value, like text/plain) and many servers won’t parse the body as JSON at all, even though the JSON itself is perfectly valid. The parsing fails before your data is ever looked at.',
+          'Invalid JSON — a trailing comma, an unquoted key, or a stray quote breaks the whole body. {"name": "John Doe",} — a comma after the last field — is invalid JSON and will fail to parse, even though it looks almost right.',
+          'Sending form data instead of JSON — application/x-www-form-urlencoded (key=value pairs joined with &) and application/json are different formats entirely. Setting the header to one while shaping the body like the other is a common way to get a confusing parse error.',
+          'Wrong endpoint — a perfectly valid JSON POST to the wrong URL or path still fails; a 404 or routing error can look similar to a body-parsing error until you check the status code and response body.',
+          'API expects a different schema — valid JSON only means the syntax is correct, not that the server accepts that particular shape. A missing required field or an unexpected key can still get rejected, even though nothing about the JSON itself is malformed.',
+        ],
+      },
+      {
+        heading: 'JSON vs. form data',
+        paragraphs: ['JSON and form data are both common ways to send a body with POST, but they’re shaped differently and used for different things.'],
+        bullets: [
+          'JSON (Content-Type: application/json) — a structured payload of nested objects, arrays, numbers, and booleans. The default for most modern REST APIs.',
+          'Form data (Content-Type: multipart/form-data) — flat key/value fields, and the only real option once a file is part of the payload; JSON has no native way to carry binary data.',
+        ],
+      },
+      {
+        heading: 'Reading the response',
+        paragraphs: [
+          'Once the request is sent, four things are worth checking before assuming it worked: the status code first, then the body, the headers, and how long it took.',
+          'The status code alone tells you the outcome before you even read the body. 2xx generally means the request succeeded. 4xx means the problem is on the request side — bad input, invalid JSON, missing auth, a wrong URL. 5xx means the request reached the server fine but something failed while handling it.',
+          'The response body is worth checking too — httpbin.org echoes back exactly what it received, which is a fast way to confirm the server saw the same body you thought you sent. Response headers and response time round out the picture: Content-Type on the way back tells you how to parse the response, and response time is useful for spotting a slow endpoint before it becomes a production problem.',
+        ],
+      },
+      {
+        heading: 'Browser requests and CORS',
+        paragraphs: [
+          'A request sent from a tool like this one, or from curl, isn’t subject to CORS — that restriction only applies to JavaScript running in a browser trying to read a cross-origin response. If this exact request works fine here but fails when called from your own frontend’s JavaScript, CORS is the most likely reason, not a problem with the JSON itself.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'Do I need to set Content-Type manually, or does POST send it automatically?',
+        answer:
+          'You need to set it. POST doesn’t imply any particular body format on its own — the method and the body format are independent choices, and the server has no way to know your body is JSON unless the Content-Type header says so.',
+      },
+      {
+        question: 'Why does httpbin.org accept anything I send it?',
+        answer:
+          'httpbin.org is a public testing service built specifically for this — its /anything endpoint accepts any method, headers, and body, and echoes them back in the response instead of doing anything with them. It’s useful for confirming a request is shaped the way you think it is, without needing a real backend or credentials.',
+      },
+      {
+        question: 'Can I send a JSON body with a GET request instead of POST?',
+        answer:
+          'Technically some tools will let you attach one, but GET requests conventionally don’t carry a body, and many servers, proxies, and caches will ignore or strip it. If you need to send structured data, POST (or PUT/PATCH for updates) is the reliable choice.',
+      },
+      {
+        question: 'What happens if the JSON I send doesn’t match what the API expects?',
+        answer:
+          'Valid JSON syntax doesn’t guarantee the API accepts it — the server still validates the JSON against whatever schema it expects. A missing required field or an unexpected shape typically comes back as a 400-range error with a message describing what was wrong, not a parsing failure.',
+      },
+    ],
+    relatedSlugs: ['how-to-test-an-api', 'what-is-a-cors-error', 'authentication-testing-examples'],
+    ctaText: 'Test this exact request yourself.',
+    ctaToolHref: '/tools/developer/api-request-builder',
+    ctaToolLabel: 'Try the free API Request Builder',
+  },
+  {
+    slug: 'authentication-testing-examples',
+    title: 'How to Test an API with Bearer Tokens, API Keys, and Basic Auth',
+    description:
+      'How to test API authentication — Bearer tokens, API keys, and Basic Auth — with live request examples you can open and send in the browser.',
+    category: 'developer-tools',
+    readTimeMinutes: 11,
+    publishedDate: '2026-08-17',
+    updatedDate: '2026-08-17',
+    intro: [
+      'Most APIs that do anything meaningful — read a private record, create something, charge a card — need to know who’s calling before they respond. That’s authentication: proving your identity on the request itself, since HTTP carries no memory of you between calls the way a logged-in browser session might.',
+      'Testing the authentication piece on its own, separate from whatever the endpoint actually does, makes it much faster to tell “my credentials are wrong” apart from “my request is wrong.” This guide covers the three schemes you’ll run into most often — Bearer tokens, API keys, and Basic Auth — with a live example of each you can open and send.',
+    ],
+    sections: [
+      {
+        heading: 'Authentication methods at a glance',
+        paragraphs: [
+          'The three schemes below aren’t interchangeable — which one an API expects is dictated entirely by that API’s own documentation, not by preference.',
+        ],
+        bullets: [
+          'Bearer token — a string, often issued by a login endpoint or OAuth flow, sent in the Authorization header. The most common scheme for modern REST APIs.',
+          'API key — a key the provider issues you directly, sent as a header or a query parameter depending on the API. Simpler than a full token exchange; common for third-party and public APIs.',
+          'Basic Auth — a username and password combined and base64-encoded into the Authorization header. Older, but still common for internal tools and simple services.',
+        ],
+      },
+      {
+        heading: 'Test an API with a Bearer token',
+        paragraphs: [
+          'A Bearer token is a credential proving who’s making the request — issued by a login endpoint, an OAuth flow, or generated directly in an API provider’s dashboard. Because HTTP requests carry no memory of who called last time, the token rides along in the Authorization header on every request that needs it.',
+          'There’s no one universal token format — a Bearer token might be an opaque string, a JWT, or something provider-specific — so treat it as whatever that API’s documentation says to send, not a fixed shape.',
+          'Rather than putting a real token into a public example, this one uses a {{token}} placeholder — the same syntax the API Request Builder’s environment variables use, so you can swap in your own value without editing the request itself:',
+        ],
+        bullets: [
+          'Literal: Authorization: Bearer YOUR_TOKEN',
+          'Reusable: Authorization: Bearer {{token}} — resolved from an environment variable named token',
+        ],
+        examples: [AUTH_BEARER_EXAMPLE],
+      },
+      {
+        heading: 'Test an API with an API key',
+        paragraphs: [
+          'An API key is a credential the provider issues you directly — no login flow, no token exchange — that you attach to each request. Where it goes depends entirely on the API: some expect a header, some a query parameter, and the exact header or parameter name is whatever that provider chose.',
+          'A query-string API key proves the same thing a header one does, but it’s more exposed — URLs get written into server logs, browser history, and any proxy or CDN sitting in front of the API in ways headers usually aren’t. Use whichever the API’s documentation actually asks for, and default to a header when you have the choice.',
+        ],
+        bullets: [
+          'Header: X-Api-Key: {{apiKey}}',
+          'Query parameter: https://example.com/data?api_key={{apiKey}}',
+        ],
+        examples: [AUTH_API_KEY_EXAMPLE],
+      },
+      {
+        heading: 'Test a Basic Auth API',
+        paragraphs: [
+          'Basic Auth sends a username and password, joined with a colon and base64-encoded, in the Authorization header: Authorization: Basic base64(username:password). Base64 is an encoding, not encryption — anyone who intercepts the header can decode it instantly, which is why Basic Auth only belongs on HTTPS.',
+          'The example below uses httpbin.org’s Basic Auth sandbox endpoint, which only accepts one specific username and password — both literally “demo” — and exists purely for testing. These are public example credentials for this one endpoint, not anything you’d reuse against a real API.',
+          'Opening the example carries over the method, URL, auth type, and username automatically; the password field arrives empty by design — type demo into it yourself before sending. See “What this tool does with your credentials” below for why.',
+        ],
+        examples: [AUTH_BASIC_EXAMPLE],
+      },
+      {
+        heading: 'How to test an authenticated request, step by step',
+        paragraphs: [
+          'The workflow is the same regardless of which scheme the API uses. Reaching for an environment variable instead of typing a credential directly is worth doing by default — the token or key lives in one place, and the request itself just references {{token}} or {{apiKey}}. One note on where the request actually goes: sending is browser-first, and most requests go straight from your browser to the target API, but if that API blocks cross-origin browser requests, this tool’s CORS proxy fallback (or a custom proxy you’ve configured) can route the request through a third-party server instead — it isn’t accurate to say a request always stays in the browser.',
+        ],
+        bullets: [
+          'Identify the authentication method from the API’s documentation.',
+          'Open the API Request Builder.',
+          'Set the HTTP method and URL.',
+          'Open the Auth tab.',
+          'Select the matching authentication type — Bearer, API Key, or Basic Auth.',
+          'Enter the credential directly, or reference an environment variable (e.g. {{token}}).',
+          'Send the request.',
+          'Check the status code and response body before assuming it worked.',
+        ],
+      },
+      {
+        heading: 'Using environment variables for auth',
+        paragraphs: [
+          'Instead of typing a real token or key directly into a request, define it once as an environment variable and reference it by name — the template stays in the request text, and the real value lives in whichever environment is active, swappable (e.g. staging vs. production) without touching the request itself.',
+          'Environment values are stored in this browser’s local storage, in plain text — not encrypted — the same as everything else this tool saves locally. Treat it the way you’d treat any other value sitting in your own browser: fine for a personal or team dev setup, not a place to leave a production credential you wouldn’t want exposed if the machine itself were compromised.',
+        ],
+        bullets: [
+          'Environment: token = your-real-token',
+          'Environment: apiKey = your-real-api-key',
+          'Request header: Authorization: Bearer {{token}}',
+          'Request header: X-Api-Key: {{apiKey}}',
+        ],
+      },
+      {
+        heading: 'API key placement: header vs. query parameter',
+        paragraphs: [
+          'Both forms send the same key; they just carry it in a different part of the request. The API’s own documentation decides which one is required — not personal preference — though a header is generally the safer default when an API supports both.',
+        ],
+        bullets: [
+          'Header — X-Api-Key: {{apiKey}}. Not visible in the URL; the usual recommendation when an API supports both.',
+          'Query parameter — https://example.com/data?api_key={{apiKey}}. Visible in the URL itself, so it can end up in server logs, browser history, and any intermediary sitting in front of the API.',
+        ],
+      },
+      {
+        heading: 'Authentication vs. authorization — and what 401 and 403 actually mean',
+        paragraphs: [
+          'Authentication answers “who are you?” — a Bearer token, API key, or Basic Auth credential is how you answer it. Authorization is a separate question: “what are you allowed to do, now that the server knows who you are?” A request can pass the first check and still fail the second.',
+          'The two status codes map roughly onto that distinction, though neither has one single universal cause:',
+        ],
+        bullets: [
+          '401 Unauthorized — the server doesn’t recognize you as authenticated. Common causes: no credential was sent, the token expired, the token or key is simply wrong, or the auth header isn’t formatted the way the API expects.',
+          '403 Forbidden — the server knows who you are, but won’t let this particular request through. Common causes: the token or key lacks a required scope or permission, the account behind it doesn’t have access to this resource, or a policy is blocking the request for a reason unrelated to identity.',
+        ],
+      },
+      {
+        heading: 'Bearer token as a cURL command',
+        paragraphs: ['The example above, generated straight from its own request definition, so it can never drift out of sync with it:'],
+        bullets: AUTH_BEARER_CURL,
+      },
+      {
+        heading: 'Bearer token as a JavaScript (Fetch) call',
+        paragraphs: ['The same request as a fetch() call:'],
+        bullets: AUTH_BEARER_FETCH,
+      },
+      {
+        heading: 'Bearer token as a Python request',
+        paragraphs: ['And using the requests library:'],
+        bullets: AUTH_BEARER_PYTHON,
+      },
+      {
+        heading: 'Basic Auth as a cURL command',
+        paragraphs: ['For comparison, the Basic Auth example as cURL — note requests handles the base64 encoding for you via -u:'],
+        bullets: AUTH_BASIC_CURL,
+      },
+      {
+        heading: 'Works in cURL but fails in your browser?',
+        paragraphs: [
+          'An authenticated request that works fine from cURL, or from this tool, can still fail once it’s called from your own frontend’s JavaScript — and the reason is almost always CORS, not the authentication itself. CORS is enforced by browsers specifically, so cURL, this tool, and any server-to-server call bypass it entirely, which is why “it works everywhere except my frontend” is such a common report.',
+          'See What Is a CORS Error, and How Do You Fix It? (linked below) for what’s actually happening and how to fix it depending on whether you control the API.',
+        ],
+      },
+      {
+        heading: 'What this tool does with your credentials',
+        paragraphs: [
+          'This section covers specifically what happens to a token, key, or password you type into a request’s Auth tab — worth reading before relying on any of it for something sensitive.',
+          'Request and environment state, including any credential you enter, lives in this browser’s local storage, not a cloud account — nothing needs to be created or signed into to use this tool.',
+          'Requests are sent browser-first with fetch(). If the target API doesn’t allow cross-origin browser requests, this tool’s CORS proxy fallback (or a custom proxy you’ve configured) can route the request through a third-party server instead — and that request, credentials included, does pass through that proxy, the way any proxy works. It is not accurate to say your credentials never leave your browser; whether they do depends on whether a proxy was involved.',
+          'Opening one of this guide’s examples only carries a credential value over if it’s written as a {{template}} — which is why the Bearer and API-key examples above open with {{token}} and {{apiKey}} intact, but the Basic Auth example’s username comes through while its literal “demo” password does not. That’s the link-sharing mechanism deliberately refusing to put a literal secret in a URL, not a bug in the example — type demo back into the password field yourself after opening it.',
+          'Saving a request, or letting one land in history, goes further still: the Bearer token, Basic Auth password, and API key value are always cleared before anything is written to local storage — template or not — so reopening a saved or historical request later means re-entering that value again.',
+          'localStorage itself is not encrypted. Anyone with access to this browser profile, or a script running on this page’s own origin, could in principle read what’s stored — the same caveat that applies to local storage in any web app, not something unique to this tool.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'What’s the difference between a Bearer token and an API key?',
+        answer:
+          'Both are credentials sent with the request, but a Bearer token is usually issued through a login or OAuth flow and can expire or get refreshed, while an API key is typically a long-lived value the provider hands you directly with no separate exchange step. Which one an API uses is decided by that API, not by you.',
+      },
+      {
+        question: 'Why does my authenticated request work in cURL but fail from my frontend?',
+        answer:
+          'That’s almost always CORS, not the authentication — CORS is enforced by browsers specifically, so cURL, this tool, and any server-to-server call bypass it entirely. See What Is a CORS Error, and How Do You Fix It? for the real fix, which depends on whether you control the API.',
+      },
+      {
+        question: 'Is Basic Auth secure?',
+        answer:
+          'Basic Auth only encodes the credentials (base64) — it doesn’t encrypt them, and anyone who intercepts the request can decode the header instantly. It’s fine to use, but only over HTTPS, which is what actually protects the credentials in transit, not the encoding itself.',
+      },
+      {
+        question: 'Does using a {{token}} template keep my credential secret?',
+        answer:
+          'It keeps the literal value out of a saved request, a share link, or a public example like the ones on this page — the template is just a placeholder resolved from whichever environment is active when the request is sent. The real value still lives in that environment’s storage, unencrypted, the same as anything else this tool saves locally.',
+      },
+    ],
+    relatedSlugs: ['how-to-test-an-api', 'json-post-request-example', 'what-is-a-cors-error'],
+    ctaText: 'Test an authenticated request yourself.',
+    ctaToolHref: '/tools/developer/api-request-builder',
+    ctaToolLabel: 'Try the free API Request Builder',
+  },
+  {
+    slug: 'form-data-file-upload-example',
+    title: 'How to Send Form Data and File Uploads to an API',
+    description:
+      'How to send multipart/form-data to an API — text form fields, file uploads, and the Content-Type mistake that breaks them — with live examples you can test.',
+    category: 'developer-tools',
+    readTimeMinutes: 9,
+    publishedDate: '2026-08-17',
+    updatedDate: '2026-08-17',
+    intro: [
+      'Plenty of APIs take structured data in the request body rather than the URL — a form submission, a profile update, an upload. How that body is shaped is a separate decision from the method, and the API on the other end decides which shape it accepts.',
+      'multipart/form-data is the shape you reach for when the request carries files, or a mix of files and ordinary text fields. It splits the body into separate parts, one per field, each with its own name — which is what lets binary file content sit alongside plain text in a single request. That’s the thing JSON can’t do: JSON is text, with no native way to carry a file’s bytes. URL-encoded form data (application/x-www-form-urlencoded) can carry flat key/value text pairs but has the same problem with files.',
+      'This guide walks through both cases — a text-only multipart request and one with a file attached — with live examples you can open and send, plus the Content-Type detail that quietly breaks more multipart requests than anything else.',
+    ],
+    sections: [
+      {
+        heading: 'A multipart request with text fields only',
+        paragraphs: [
+          'The simplest multipart request carries no files at all — just named text fields. Here’s the one this guide starts with, sent to httpbin.org’s /anything endpoint, which accepts any method and body and echoes back exactly what it received. That makes it safe to actually send: no account, no side effects, nothing stored anywhere.',
+          'The card below summarizes the request as multipart/form-data, but read that as what the request will be sent as — not as a header it sets. Open it and the Headers tab is empty: this request deliberately carries no Content-Type header of its own, and the section further down explains why that omission is the whole point.',
+        ],
+        bullets: [
+          'POST https://httpbin.org/anything',
+          'Body type: Multipart Form Data',
+          'name = John Doe',
+          'email = john@example.com',
+        ],
+        examples: [FORM_DATA_TEXT_EXAMPLE],
+      },
+      {
+        heading: 'Text fields: a key and a value',
+        paragraphs: [
+          'Every multipart field is a pair — a key (the field name) and a value. The key is the name the server looks the field up by, so it has to match what the API documents, exactly, including case. The value is just the text you’re sending under that name.',
+          'On the receiving end, each part is parsed back out into a named field in whatever the server’s form-parsing layer calls its parsed-body collection. The names you send are the names it looks up; nothing else about your field ordering or formatting survives, and none of this is specific to any one backend framework or language.',
+        ],
+        bullets: [
+          'name = John Doe — the field named "name" arrives carrying the text "John Doe".',
+          'email = john@example.com — the field named "email" arrives carrying that address as text.',
+          'A key the API doesn’t recognize is usually ignored, or rejected as an unexpected field.',
+          'A key the API expects but doesn’t receive is usually reported as a missing required field.',
+        ],
+      },
+      {
+        heading: 'Adding a file to the request',
+        paragraphs: [
+          'The second example is the same endpoint with a file field added alongside a text field. It’s the mixed case most upload endpoints actually use: some metadata, plus the file itself.',
+          'One thing to know before opening it: the file field arrives empty on purpose. A file lives on your own machine, and a shareable link is just text — there is no way to serialize a real local file into a URL, and this tool’s share format deliberately drops file contents rather than pretending otherwise. So the link carries the field name, the field’s file mode, and everything else about the request, but not a file.',
+          'That means you need to choose a local file yourself after opening the request. In the Body section, the file row shows "Choose file…" — click it, pick any small file (a plain .txt file is ideal for a first test), and the row switches to showing that file’s name. Then send.',
+        ],
+        bullets: [
+          'name = profile — an ordinary text field.',
+          'file = (choose a local file) — a file field, opened empty, waiting for you to attach something.',
+        ],
+        examples: [FORM_DATA_FILE_EXAMPLE],
+      },
+      {
+        heading: 'File fields: a name and a locally selected file',
+        paragraphs: [
+          'A file field has two halves: the field name the API expects, and the actual file you pick from your machine. The field name is yours to match against the docs — avatar, file, upload, attachment, whatever that endpoint asks for. The file half is chosen through the browser’s own file picker.',
+          'What actually goes over the wire for that part is the file’s bytes, along with metadata the browser attaches — the field name, the original filename, and the file’s content type. That’s all assembled by the browser’s FormData mechanism when the request is sent. Worth being precise about: a file field does not send a path or a filename string as its value. If you type "profile.png" into a text field, the server receives the literal text "profile.png", not an image — which is a genuinely common way to end up debugging an upload that never contained a file.',
+        ],
+        bullets: [
+          'avatar = profile.png — read this as "the field named avatar carries the file profile.png", not as a text value.',
+          'The field name comes from the API’s documentation; the file comes from your machine.',
+          'Filename and content type ride along as part metadata, set by the browser from the file you picked.',
+        ],
+      },
+      {
+        heading: 'Never set the Content-Type header yourself',
+        paragraphs: [
+          'This is the single most common way a multipart request breaks, and it looks like the opposite of a mistake: you know the body is multipart/form-data, so you add a Content-Type header saying exactly that. The request then fails to parse on the server, usually with an unhelpful error about a missing or malformed body.',
+          'The reason is the boundary. A multipart body is a sequence of parts separated by a delimiter string, and the receiving server has to be told what that delimiter is — it travels as a parameter on the Content-Type header itself, not inside the body. The full header looks like multipart/form-data; boundary=... with a randomly generated token after the equals sign, and the server splits the body on exactly that token.',
+          'When you send a browser FormData body, the browser generates that boundary and writes the complete header for you. Set the header manually and you overwrite it with a version that has no boundary parameter, so the server has nothing to split the body on. The fix is to not set it: leave Content-Type off entirely and let the browser fill it in.',
+          'This is why the examples above carry no Content-Type header, and why the API Request Builder doesn’t add one for you in Multipart Form Data mode the way it does for a JSON body. Open either example and check the Headers tab — it’s empty. It’s the same rule in fetch() code, which is why the generated snippet further down sends the FormData object with an empty headers object.',
+        ],
+        bullets: [
+          'Correct: send the form body with no Content-Type header at all.',
+          'Broken: Content-Type: multipart/form-data — no boundary, so the server can’t split the parts.',
+          'What the browser actually sends: multipart/form-data; boundary=(a generated token).',
+          'This applies to browser FormData specifically — a server-side HTTP client or cURL builds its own boundary the same way.',
+        ],
+      },
+      {
+        heading: 'JSON vs. multipart/form-data',
+        paragraphs: [
+          'Neither format is better in the abstract — they’re answers to different questions, and in practice the API you’re calling has already picked one. Check its documentation before choosing.',
+        ],
+        bullets: [
+          'JSON (Content-Type: application/json) — the right choice when the API expects structured JSON: nested objects, arrays, numbers, booleans. The default for most modern REST APIs, and you do set this header yourself.',
+          'multipart/form-data — the right choice for files, flat text form fields, or a mix of the two. Header set automatically, with a boundary.',
+          'Nesting is where multipart gets awkward — it’s a flat list of named parts, so representing deep structure means flattening it into field names or sending a JSON string as one field’s value.',
+          'Files are where JSON gets awkward — carrying a file means base64-encoding it into a string, which inflates the payload and requires the API to be designed for it.',
+        ],
+      },
+      {
+        heading: 'How to test a form-data request, step by step',
+        paragraphs: ['Building either example from scratch in the API Request Builder:'],
+        bullets: [
+          'Open the API Request Builder.',
+          'Select POST as the method.',
+          'Enter https://httpbin.org/anything as the URL.',
+          'Open the Body tab.',
+          'Choose Multipart Form Data as the body type.',
+          'Click "Add field" and fill in the Key and Value columns — for example, name and John Doe.',
+          'Add a second field the same way for email.',
+          'For a file field, add the field, type its key, then click the paperclip button on that row to switch it to a file value.',
+          'Click "Choose file…" on that row and pick a local file — the row then shows the filename.',
+          'Leave the Headers tab alone: do not add a Content-Type header.',
+          'Send the request.',
+          'Inspect the response — status code, body, headers, and response time all appear once it comes back.',
+        ],
+      },
+      {
+        heading: 'Text fields and a file in one request',
+        paragraphs: [
+          'Most real upload endpoints want both: the file, plus some fields describing it. A profile update might look like this — one file and two text fields, all in a single multipart body.',
+          'Configuring it is exactly the two steps above combined: three rows in Multipart Form Data mode, two of them left as text values, one switched to a file value with the paperclip button. No Content-Type header on any of them.',
+          'What a real endpoint does with those fields — which are required, what file types it allows, what it returns — is entirely that API’s business. The examples here point at httpbin.org purely as an inspection sandbox: it echoes back what it received so you can confirm the request was shaped correctly, and it implements no particular upload schema of its own.',
+        ],
+        bullets: [
+          'POST /upload',
+          'name = John Doe (text field)',
+          'email = john@example.com (text field)',
+          'file = profile.txt (file field — selected locally)',
+        ],
+      },
+      {
+        heading: 'As a cURL command',
+        paragraphs: [
+          'The text-only example, copied straight from the request’s code panel. Each -F flag is one form field, and cURL handles the boundary itself — note there’s no -H Content-Type flag here either:',
+        ],
+        bullets: FORM_DATA_CURL,
+      },
+      {
+        heading: 'Adding a file in cURL',
+        paragraphs: [
+          'A file field uses the same -F flag with an @ prefix on the value, which tells cURL to read a file rather than send the text literally:',
+        ],
+        bullets: [
+          `-F 'file=@demo.txt' — sends the file demo.txt from the current directory.`,
+          `-F 'file=demo.txt' — without the @, sends the literal text "demo.txt" instead. A frequent typo.`,
+        ],
+      },
+      {
+        heading: 'As a JavaScript (Fetch) call',
+        paragraphs: [
+          'The same request as a fetch() call. The important detail is what’s missing: headers is empty, because setting Content-Type here would strip the boundary and break the request:',
+        ],
+        bullets: FORM_DATA_FETCH,
+      },
+      {
+        heading: 'Adding a file in fetch()',
+        paragraphs: ['A file field is appended the same way, using a File object — usually straight from a file input element:'],
+        bullets: [
+          'formData.append("file", fileInput.files[0]);',
+          'formData.append("file", fileInput.files[0], "custom-name.txt"); — optional third argument overrides the filename sent.',
+        ],
+      },
+      {
+        heading: 'Common mistakes',
+        paragraphs: ['Most "why is my upload failing" reports come down to one of these.'],
+        bullets: [
+          'Setting the multipart Content-Type by hand — the boundary goes missing and the server can’t split the body into parts. Covered above; it’s worth repeating because the header looks correct.',
+          'Sending JSON when the API expects multipart — a JSON body with a JSON Content-Type reaching an endpoint that only parses form data typically comes back as a parse error or an unsupported-media-type response, not a helpful message about the format mismatch.',
+          'The wrong field name — an endpoint expecting avatar won’t find a field you named file, and vice versa. Field names are matched exactly, so this usually surfaces as "no file was uploaded" even though a file clearly was.',
+          'Forgetting the file field entirely — if the endpoint requires a file, sending only text fields fails validation, often with a message about the missing field rather than anything mentioning uploads.',
+          'The wrong file type — many endpoints restrict uploads by MIME type or extension (images only, PDFs only), and reject anything else regardless of how well-formed the request is.',
+          'A file that’s too large — browsers, the API itself, and any reverse proxy or CDN in between can each impose their own upload size ceiling. Which one you hit, and at what size, depends entirely on that stack’s configuration.',
+          'Typing a filename into a text field — sends the string, not the file. Switch the row to a file value with the paperclip button instead.',
+        ],
+      },
+      {
+        heading: 'Reading the response',
+        paragraphs: [
+          'Once the request comes back, four things are worth checking: the status code first, then the response body, the response headers, and how long it took. httpbin.org echoes the request back, so its body is a fast way to confirm the server saw the fields you thought you sent — a file part shows up under "files" rather than "form", which is a useful sanity check that the field really was sent as a file.',
+          'When a multipart request fails, the status code narrows it down quickly:',
+        ],
+        bullets: [
+          '400 or 422 — the body was malformed or a required field was missing. The usual suspect is the Content-Type boundary problem, or a field name that doesn’t match.',
+          '401 or 403 — an authentication or permission problem, not a format one. The upload never got as far as being parsed.',
+          '413 — the payload was too large; the server or a proxy in front of it rejected it on size.',
+          '415 — unsupported media type: the server won’t accept this format, either for the body as a whole or for the uploaded file specifically.',
+        ],
+      },
+      {
+        heading: 'Browser requests and CORS',
+        paragraphs: [
+          'Multipart requests sent from a browser are subject to CORS like any other cross-origin request — and a multipart POST is never a "simple" request, so it triggers a preflight OPTIONS call the API has to answer correctly before the real upload is allowed through.',
+          'That’s worth knowing because it explains a specific symptom: an upload that works fine from cURL but fails from your own frontend’s JavaScript. cURL isn’t a browser and ignores CORS entirely, so the difference points at CORS rather than at anything wrong with the multipart body. See What Is a CORS Error, and How Do You Fix It? (linked below) for what to actually do about it.',
+        ],
+      },
+      {
+        heading: 'Where your file actually goes',
+        paragraphs: [
+          'The API Request Builder assembles and sends the request in your browser, using the same fetch() and FormData a web page would — the file you pick is read by the browser and sent to whatever URL you entered, and nothing about it is stored by this site.',
+          'The one qualification: sending is browser-first, but if the target API blocks cross-origin browser requests, this tool’s CORS proxy fallback (or a custom proxy you’ve configured) can route the request through a third-party server instead. In that case the request — file included — does pass through that server, the way any proxy works. It would not be accurate to say a request never leaves your browser; whether it does depends on whether a proxy was involved.',
+          'The examples on this page carry no credentials, no environment values, and no reference to any file on your machine. A file field can only ever be filled by you, locally, after the request is open.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'Why shouldn’t I set the Content-Type header for a multipart request?',
+        answer:
+          'Because the header has to include a boundary parameter — multipart/form-data; boundary=... — that identifies the delimiter separating the parts of the body. The browser generates that boundary when it builds the FormData body and writes the complete header itself. Setting the header manually replaces it with one that has no boundary, leaving the server nothing to split the body on.',
+      },
+      {
+        question: 'Can I share a request that already has my file attached?',
+        answer:
+          'No. A share link is text, and a file is binary data on your own machine — it can’t be encoded into a URL, and this tool deliberately drops file contents rather than trying. A shared multipart request carries the field names and everything else about the request, but the file field arrives empty for whoever opens it to fill in themselves.',
+      },
+      {
+        question: 'When should I use multipart/form-data instead of JSON?',
+        answer:
+          'When files are involved, or when the API explicitly documents a form-data endpoint. For structured data with no files, JSON is usually the better fit and is what most REST APIs expect. The deciding factor is what the API accepts, not a general preference.',
+      },
+      {
+        question: 'Why does my upload return 413?',
+        answer:
+          '413 Payload Too Large means something in the chain rejected the request on size before or during processing — the API itself, or a reverse proxy, load balancer, or CDN in front of it, each of which can enforce its own limit. The specific ceiling depends on that stack’s configuration, so check the API’s documented upload limit first.',
+      },
+      {
+        question: 'Can I send a file with a GET request?',
+        answer:
+          'No. GET requests conventionally carry no body, and browsers won’t send one — the API Request Builder shows a warning if you configure a body on a GET or HEAD request, and the body is left out when the request is sent. Uploads use POST, or sometimes PUT/PATCH for replacing an existing file.',
+      },
+    ],
+    relatedSlugs: ['json-post-request-example', 'how-to-test-an-api', 'what-is-a-cors-error'],
+    ctaText: 'Test a multipart upload yourself.',
     ctaToolHref: '/tools/developer/api-request-builder',
     ctaToolLabel: 'Try the free API Request Builder',
   },

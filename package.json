@@ -10,7 +10,7 @@
     "deploy": "gh-pages -d dist",
     "prebuild": "tsx scripts/generate-sitemap.mjs",
     "build": "vite build",
-    "postbuild": "node scripts/prerender.mjs && tsx scripts/generate-rss.mjs",
+    "postbuild": "tsx scripts/prerender.mjs && tsx scripts/generate-rss.mjs",
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "node --stack-size=8000 ./node_modules/typescript/bin/tsc --noEmit",

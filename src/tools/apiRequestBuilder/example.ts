@@ -32,13 +32,22 @@ export interface ApiExampleKeyValueInput {
   enabled?: boolean;
 }
 
+// A multipart form row. `isFile` marks the row as a file field, which is the only
+// safe way a static example can express one: it opens in the tool as an empty file
+// picker ("Choose file…" — see FormFieldsEditor) that the reader attaches their own
+// local file to. Deliberately no filename and no path — a public, static content
+// example can never reference a real file on disk, and a `File` object can't survive
+// JSON/URL serialization into a share link anyway (sanitizeForShare drops it).
+export interface ApiExampleFormFieldInput extends ApiExampleKeyValueInput {
+  /** multipart only — `form-urlencoded` has no file rows (see BodyEditor's `allowFiles`). */
+  isFile?: boolean;
+}
+
 // Either a convenience `json` value (stringified for the author) or the raw
-// RequestBody shape for text/form-urlencoded/multipart examples. Deliberately
-// not a File-carrying multipart input — a public, static content example can
-// never reference a real file on disk.
+// RequestBody shape for text/form-urlencoded/multipart examples.
 export type ApiExampleBodyInput =
   | { mode: Exclude<BodyMode, 'none'>; raw: string; formFields?: never }
-  | { mode: Extract<BodyMode, 'form-urlencoded' | 'multipart'>; formFields: ApiExampleKeyValueInput[]; raw?: never };
+  | { mode: Extract<BodyMode, 'form-urlencoded' | 'multipart'>; formFields: ApiExampleFormFieldInput[]; raw?: never };
 
 export interface ApiExampleAuthInput extends Partial<Authentication> {
   type: Authentication['type'];
@@ -73,6 +82,10 @@ const buildBody = (input: ApiExampleInput): RequestBody => {
         key: field.key,
         value: field.value,
         enabled: field.enabled ?? true,
+        // Only ever set when true — an absent `isFile` keeps the row byte-identical to
+        // what it was before file fields were expressible here, and `fileName`/`file`
+        // are never set at all, so the row arrives as an empty "Choose file…" picker.
+        ...(field.isFile ? { isFile: true } : {}),
       })),
     };
   }

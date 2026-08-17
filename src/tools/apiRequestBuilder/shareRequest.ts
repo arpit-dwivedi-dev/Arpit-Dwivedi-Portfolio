@@ -1,8 +1,16 @@
-import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from 'lz-string';
+import LZString from 'lz-string';
 import { isSensitiveHeader } from './storage';
 import { extractVariableNames } from './environment';
 import { normalizeUnknownRequest } from './requestValidation';
 import type { ApiRequest } from './types';
+
+// Imported as the CJS default rather than named bindings (`import { compressToEncodedURIComponent }
+// from 'lz-string'`) — lz-string assigns `module.exports = LZString` as a single external
+// identifier, which Node's CJS/ESM interop (cjs-module-lexer) can't statically resolve into named
+// exports. That only ever surfaced once a build script (scripts/generate-sitemap.mjs, via tsx's
+// native Node ESM loader) imported this module for the first time; Vite and Jest already tolerate
+// either form. Destructuring the default export works identically in every environment.
+const { compressToEncodedURIComponent, decompressFromEncodedURIComponent } = LZString;
 
 export const SHARE_QUERY_PARAM = 'request';
 

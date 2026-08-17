@@ -61,4 +61,10 @@ export const API_REQUEST_BUILDER_FAQ: FaqItem[] = [
 
 /** Guide slugs referenced from the page — kept here (not duplicated) so a
  *  test can verify each one still resolves via getGuideBySlug(). */
-export const API_REQUEST_BUILDER_GUIDE_SLUGS = ['how-to-test-an-api', 'what-is-a-cors-error'] as const;
+export const API_REQUEST_BUILDER_GUIDE_SLUGS = [
+  'how-to-test-an-api',
+  'what-is-a-cors-error',
+  'json-post-request-example',
+  'authentication-testing-examples',
+  'form-data-file-upload-example',
+] as const;

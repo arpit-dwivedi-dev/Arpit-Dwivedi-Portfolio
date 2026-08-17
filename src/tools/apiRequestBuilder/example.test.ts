@@ -57,6 +57,22 @@ describe('createApiExample', () => {
     expect(example.request.body.formFields).toEqual([expect.objectContaining({ key: 'a', value: '1', enabled: true })]);
   });
 
+  it('marks a multipart row as a file field without inventing a file or filename', () => {
+    const example = createApiExample({
+      title: 'Upload',
+      method: 'POST',
+      url: 'https://httpbin.org/anything',
+      body: { mode: 'multipart', formFields: [{ key: 'name', value: 'profile' }, { key: 'file', value: '', isFile: true }] },
+    });
+    const [text, file] = example.request.body.formFields;
+    // A text row stays byte-identical to what it was before file fields were expressible.
+    expect(text.isFile).toBeUndefined();
+    expect(file.isFile).toBe(true);
+    expect(file.value).toBe('');
+    expect(file.file).toBeUndefined();
+    expect(file.fileName).toBeUndefined();
+  });
+
   it('builds auth from a partial input', () => {
     const example = createApiExample({
       title: 'Bearer example',
