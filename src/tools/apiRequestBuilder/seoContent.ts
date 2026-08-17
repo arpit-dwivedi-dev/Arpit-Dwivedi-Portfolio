@@ -67,4 +67,5 @@ export const API_REQUEST_BUILDER_GUIDE_SLUGS = [
   'json-post-request-example',
   'authentication-testing-examples',
   'form-data-file-upload-example',
+  'curl-to-fetch-axios-python',
 ] as const;

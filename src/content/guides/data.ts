@@ -3,6 +3,8 @@ import { createApiExample } from '../../tools/apiRequestBuilder/example';
 import { generateCurlCommand } from '../../tools/apiRequestBuilder/curlGenerator';
 import { generateFetchCode } from '../../tools/apiRequestBuilder/codeGenerators/fetch';
 import { generatePythonCode } from '../../tools/apiRequestBuilder/codeGenerators/python';
+import { generateAxiosCode } from '../../tools/apiRequestBuilder/codeGenerators/axios';
+import { generateNodeCode } from '../../tools/apiRequestBuilder/codeGenerators/node';
 
 // The live example embedded in the JSON POST request guide (see PART 5 of the
 // content brief) — built once, from the same createApiExample() every other
@@ -108,6 +110,29 @@ const FORM_DATA_FILE_EXAMPLE = createApiExample({
 // guide instead of a misleading generated command.
 const FORM_DATA_CURL = codeLines(generateCurlCommand(FORM_DATA_TEXT_EXAMPLE.request));
 const FORM_DATA_FETCH = codeLines(generateFetchCode(FORM_DATA_TEXT_EXAMPLE.request));
+
+// The single example the cURL-conversion guide is built around. Every code block in
+// that guide — the original cURL command included — is generated from this one request
+// by the tool's own generators, so the article can never document a conversion the
+// tool wouldn't actually produce.
+const CURL_CONVERT_EXAMPLE = createApiExample({
+  title: 'The cURL command, as a request',
+  description:
+    'A POST with a JSON body and two headers, sent to httpbin.org’s test endpoint — the same request every cURL, Fetch, Axios, Node, and Python snippet on this page was generated from.',
+  method: 'POST',
+  url: 'https://httpbin.org/anything',
+  headers: [
+    { key: 'Content-Type', value: 'application/json' },
+    { key: 'X-Client-Version', value: 'demo' },
+  ],
+  json: { name: 'John Doe', email: 'john@example.com' },
+});
+
+const CURL_CONVERT_CURL = codeLines(generateCurlCommand(CURL_CONVERT_EXAMPLE.request));
+const CURL_CONVERT_FETCH = codeLines(generateFetchCode(CURL_CONVERT_EXAMPLE.request));
+const CURL_CONVERT_AXIOS = codeLines(generateAxiosCode(CURL_CONVERT_EXAMPLE.request));
+const CURL_CONVERT_NODE = codeLines(generateNodeCode(CURL_CONVERT_EXAMPLE.request));
+const CURL_CONVERT_PYTHON = codeLines(generatePythonCode(CURL_CONVERT_EXAMPLE.request));
 
 const AUTH_BEARER_CURL = codeLines(generateCurlCommand(AUTH_BEARER_EXAMPLE.request));
 const AUTH_BEARER_FETCH = codeLines(generateFetchCode(AUTH_BEARER_EXAMPLE.request));
@@ -3746,6 +3771,211 @@ export const GUIDES: Guide[] = [
     ],
     relatedSlugs: ['json-post-request-example', 'how-to-test-an-api', 'what-is-a-cors-error'],
     ctaText: 'Test a multipart upload yourself.',
+    ctaToolHref: '/tools/developer/api-request-builder',
+    ctaToolLabel: 'Try the free API Request Builder',
+  },
+  {
+    slug: 'curl-to-fetch-axios-python',
+    title: 'Convert a cURL Command to JavaScript, Axios, or Python',
+    description:
+      'Import a cURL command, inspect and test the request, then generate the equivalent JavaScript Fetch, Axios, Node.js, or Python Requests code.',
+    category: 'developer-tools',
+    readTimeMinutes: 9,
+    publishedDate: '2026-08-17',
+    updatedDate: '2026-08-17',
+    intro: [
+      'A cURL command is how HTTP requests get passed around. API documentation shows one. A support ticket includes one. A README pastes one in. A teammate copies one out of their terminal, or out of the browser devtools "Copy as cURL" menu, and drops it in a chat message.',
+      'What you usually need next is three separate things: to understand what the command actually does, to confirm it works before building anything on top of it, and to turn it into code in whatever language you are writing. Reading flags out of a one-line shell command is a slow way to do the first, and hand-translating them is an error-prone way to do the third.',
+      'The API Request Builder can do all three in one place. Paste the command and it parses into an editable request — method, URL, headers, query parameters, body, and auth all shown as fields you can read and change. Send it to see the real response. Then open the code panel and take the same request out as JavaScript Fetch, Axios, Node.js, or Python Requests. This guide walks that path with one worked example, and is honest about where the conversion has real limits.',
+    ],
+    sections: [
+      {
+        heading: 'The example request used throughout this guide',
+        paragraphs: [
+          'Everything below — the cURL command, the Fetch code, the Axios code, the Node code, the Python code — is generated from this one request by the tool’s own generators. Nothing on this page was written by hand, so what you read here is what the tool actually produces.',
+          'It points at httpbin.org/anything, which accepts any method and body and echoes back what it received. That makes it safe to open and actually send: no account, no side effects, nothing stored. Opening the card below pre-fills the request in the API Request Builder — it does not send it. You press Send when you want to.',
+        ],
+        bullets: [
+          'POST https://httpbin.org/anything',
+          'Content-Type: application/json',
+          'X-Client-Version: demo',
+          'Body (JSON): { "name": "John Doe", "email": "john@example.com" }',
+        ],
+        examples: [CURL_CONVERT_EXAMPLE],
+      },
+      {
+        heading: 'The original cURL command',
+        paragraphs: [
+          'This is that request as cURL, copied straight from the tool’s "Copy as cURL" button. Reading it flag by flag: -X sets the method, each -H adds one header, -d carries the request body, and --max-time caps how long the whole operation may take (30 seconds, which is the builder’s default request timeout — a command you received from somewhere else usually won’t have this flag at all).',
+        ],
+        bullets: CURL_CONVERT_CURL,
+      },
+      {
+        heading: 'How to import a cURL command',
+        paragraphs: [
+          'There are two entry points, and they run the same parser, so it makes no difference which you use.',
+          'The quicker one is the URL bar. Paste a whole command — anything starting with "curl" — into the request URL field and it is detected as a command rather than a URL, parsed, and applied to the entire request: method, headers, query string, body, and auth. A short notice confirms what was imported, along with any warnings. This is triggered by the paste itself, so typing a command out character by character won’t do it. The other entry point is the "Import cURL" button above the request, which opens a textarea sized for a multi-line command and shows parse errors and warnings in place before you dismiss it.',
+          'Multi-line commands with backslash line continuations work, as do single quotes, double quotes, and backslash escapes inside them. Worth being clear about the boundary, though: this is a shell-like tokenizer, not a shell. It reads quoting and escaping, and it understands cURL’s common flags — but it does not run anything, expand variables, or interpret pipes, subshells, or command substitution.',
+        ],
+        bullets: [
+          'Copy the cURL command from wherever you got it.',
+          'Open the API Request Builder.',
+          'Paste it into the URL field, or click "Import cURL" and paste it there.',
+          'The command is parsed and the whole request is populated.',
+          'Read any warnings — unrecognized flags are reported rather than silently dropped.',
+          'Inspect and edit the request in the Params, Headers, Auth, and Body tabs.',
+          'Send it, if you want to see the real response first.',
+          'Open the code panel and pick the language you need.',
+        ],
+      },
+      {
+        heading: 'What the parser recognizes',
+        paragraphs: [
+          'The flags below are the ones that map onto something the request model can hold. Flags that only affect cURL’s own behavior on the command line — output files, retries, certificates, proxy settings — are consumed and discarded rather than guessed at, and anything genuinely unrecognized is reported as a warning so you know to check it by hand.',
+        ],
+        bullets: [
+          '-X / --request — the HTTP method. An unsupported method is reported as an error rather than silently ignored.',
+          '-H / --header — headers, one per flag.',
+          '-d / --data / --data-raw / --data-binary / --data-ascii / --data-urlencode — the request body. The body type is inferred from the Content-Type header, or from the body’s own shape when there is no such header.',
+          '-F / --form — multipart form fields. A value starting with @ marks it as a file field.',
+          '-u / --user — becomes Basic Auth, filled into the Auth tab.',
+          '-G / --get — folds the -d data into the query string instead of the body.',
+          '-b / --cookie, -A / --user-agent, -e / --referer — added as the corresponding headers.',
+          '--url — an explicitly flagged URL, instead of a bare one.',
+          'Method inference: with no -X, a command carrying data or form fields is treated as POST, and one carrying neither as GET.',
+        ],
+      },
+      {
+        heading: 'Convert cURL to JavaScript Fetch',
+        paragraphs: [
+          'With the request imported, the code panel produces this. The mapping is close to one-for-one with the flags above: the URL is the first fetch() argument, -X becomes method, each -H becomes an entry in the headers object, and -d becomes body — here as JSON.stringify() over the parsed object, because the body is valid JSON.',
+          'Two things have no cURL counterpart. credentials is a browser-only setting controlling whether cookies ride along on a cross-origin request; cURL has no equivalent concept, which is why the generated command omits it. And the timeout becomes an AbortController with a setTimeout that aborts it, wrapped in try/finally to clear the timer — the browser Fetch API has no timeout option, so this is the standard way to express one.',
+        ],
+        bullets: CURL_CONVERT_FETCH,
+      },
+      {
+        heading: 'Convert cURL to Axios',
+        paragraphs: [
+          'The same request as an Axios call. Axios takes a single config object, so method, url, and headers all become properties of it. The body goes in data — and note it is a plain object, not a string: Axios serializes JSON itself, so there is no JSON.stringify() here.',
+          'The timeout is a native timeout option in milliseconds, which is why there is no AbortController in this version. The comment at the top is generated too, not editorial: Axios has no direct equivalent of Fetch’s credentials mode, so rather than emit a setting that would misrepresent the behavior, the generator says so.',
+        ],
+        bullets: CURL_CONVERT_AXIOS,
+      },
+      {
+        heading: 'Convert cURL to Python Requests',
+        paragraphs: [
+          'The Python version uses the requests library. The method becomes the function called — requests.post() here — with the URL as the first argument.',
+          'The body is passed as json=, which is the idiomatic form: requests serializes the dict and would set the JSON Content-Type itself, though the explicit header from the original command is carried through as well. Headers go in headers= as a dict. Enabled query parameters would appear as params=; this example has none, so the URL is passed whole. timeout= takes seconds rather than milliseconds, so the builder’s 30000 ms becomes 30.',
+        ],
+        bullets: CURL_CONVERT_PYTHON,
+      },
+      {
+        heading: 'Convert cURL to Node.js',
+        paragraphs: [
+          'Node.js has had a global fetch() since v18, so this version is the Fetch code minus the browser-specific parts: no credentials, since there is no browser cookie jar, and the timeout uses AbortSignal.timeout() instead of hand-wiring an AbortController. There is also no forbidden-header restriction here — headers a browser would refuse to let script set, such as User-Agent or Cookie, are kept in the Node version because Node will happily send them.',
+        ],
+        bullets: CURL_CONVERT_NODE,
+      },
+      {
+        heading: 'Why the generated code doesn’t look like the cURL command',
+        paragraphs: [
+          'Equivalent HTTP requests look quite different across languages, because each client models the same concepts its own way. A generated snippet that reads nothing like the original command is usually correct, not wrong. The differences worth knowing:',
+        ],
+        bullets: [
+          'Timeouts: cURL has --max-time in seconds, browser Fetch has no timeout at all and needs an AbortController, Node has AbortSignal.timeout(), Axios has a native timeout in milliseconds, and Python Requests has timeout= in seconds.',
+          'JSON bodies: cURL and Fetch send a string, so the body is stringified. Axios (data=) and Python (json=) take a real object or dict and serialize it themselves.',
+          'Credentials and cookies: Fetch’s credentials mode is a browser cookie-jar concept with no cURL, Node, or Axios equivalent, so it appears only in the browser Fetch output.',
+          'Forbidden headers: browser Fetch silently refuses to let scripts set headers such as Cookie, Host, and User-Agent, so the browser output omits them and says which it dropped. cURL, Node, and Python all send them.',
+          'CORS: the browser enforces it on the Fetch and Axios-in-a-browser versions. cURL, Node, and Python are not browsers and are not subject to it.',
+        ],
+      },
+      {
+        heading: 'Converting an authenticated cURL command',
+        paragraphs: [
+          'Most real commands carry a credential. A typical one looks like this:',
+          'On import, an Authorization header with a Bearer prefix is recognized specifically: the header is removed and the Auth tab is switched to Bearer with the token filled in, so you can see and edit it as a credential rather than as a raw string. A -u user:password flag becomes Basic Auth the same way. Any other authentication header — an X-Api-Key, say — stays in the Headers tab as an ordinary header, which is still perfectly usable.',
+          'Two cautions. First, $TOKEN in a shell command is shell syntax: your shell substitutes the real value before cURL ever sees it. Paste the command here and the literal text "$TOKEN" is imported, because nothing is expanding it — replace it with the real token, or better, with a {{token}} environment variable. Second, once a real credential is in the request, be careful what you copy out of it: generated code and generated cURL both contain the resolved value in plain text.',
+        ],
+        bullets: [
+          'curl https://api.example.com/users \\',
+          '  -H "Authorization: Bearer $TOKEN"',
+        ],
+      },
+      {
+        heading: 'Making an imported request reusable',
+        paragraphs: [
+          'An imported command is hardcoded by definition — one host, one token, whatever the person who wrote it was pointing at. Replacing the parts that change with {{variable}} placeholders turns it into a request you can point at staging or production by switching environments, and keeps the credential out of the request itself.',
+          'An environment is a named set of key/value pairs; the active one resolves any {{name}} in the URL, headers, params, or body at send time. Create one per target — Local, Staging, Production — with the same variable names and different values. Note that the code and cURL generators resolve variables into their real values, since the point of copying a command is to be able to run it. The authentication guide below covers environments and credential handling in more detail.',
+        ],
+        bullets: [
+          'https://api.example.com/users — hardcoded to one host.',
+          '{{baseUrl}}/users — resolved from whichever environment is active.',
+          'Bearer $TOKEN — shell syntax, not resolved by this tool.',
+          '{{token}} — resolved from the active environment.',
+        ],
+      },
+      {
+        heading: 'Common cURL conversion problems',
+        paragraphs: [
+          'These are the real limits, and most of them come from the gap between a terminal and a browser rather than from the parsing itself.',
+        ],
+        bullets: [
+          'Shell constructs — pipes, subshells, $(...) command substitution, and environment variables like $TOKEN are shell features. The parser reads quoting and escaping but does not execute anything, so these arrive as literal text. Substitute real values before importing, or swap them for {{variables}} after.',
+          'Unusual quoting — commands copied out of PowerShell, a YAML file, a JSON string, or a chat client that has "helpfully" replaced straight quotes with curly ones may not tokenize as intended. If the body or a header looks wrong after import, that is usually why; fix it in the relevant tab.',
+          'Browser-forbidden headers — Cookie, Host, User-Agent, Referer and similar are imported and visible, but a browser will not let script code set them. The Fetch generator drops them and tells you which; the Node and Python versions keep them.',
+          'Cookies — a -b/--cookie flag imports as a Cookie header, which is exactly that forbidden case. Cookies in a browser come from the cookie jar and the credentials setting, not from a header you set by hand.',
+          'File uploads — -F \'file=@photo.png\' imports as a file field, and a warning says so, but the file itself cannot be read from a pasted command. Attach the local file yourself in the Body tab before sending.',
+          'Unrecognized flags — reported as warnings rather than silently ignored. Flags that only shape cURL’s own behavior (--output, --retry, --cert, --proxy) have no request-model equivalent and are dropped by design.',
+        ],
+      },
+      {
+        heading: 'Works in cURL, fails in the browser',
+        paragraphs: [
+          'This is the single most common surprise after a conversion, and it is not a conversion bug. cURL runs in a terminal and is not a browser: it has no origin, so the same-origin policy and CORS simply do not apply to it. A request that succeeds from your terminal can still be blocked when the identical request is made from browser JavaScript.',
+          'If the generated Fetch or Axios code fails from a web page while the original command works, the cause is almost always one of: a CORS policy the API has not opened up for your origin, a credentials/cookie policy mismatch, a header the browser refuses to send, or cookies that exist in your terminal session but not in the browser. The CORS guide linked below covers what to actually do about it, which depends on whether you control the API.',
+        ],
+      },
+      {
+        heading: 'Test the request before you ship the code',
+        paragraphs: [
+          'Generating code from a command you have not run just moves the uncertainty into your codebase. The useful order is to import, send, read the response, fix whatever is wrong, and only then generate — that way the snippet you paste is one you have already seen work.',
+          'Open the example below to see the whole loop on a request that is safe to actually send. It arrives pre-filled and idle; nothing is sent until you press Send.',
+        ],
+        examples: [CURL_CONVERT_EXAMPLE],
+      },
+    ],
+    faq: [
+      {
+        question: 'How do I convert a cURL command to fetch()?',
+        answer:
+          'Paste the command into the API Request Builder — either into the URL field or through the "Import cURL" button — and it is parsed into an editable request. Open the code panel and choose JavaScript (Fetch) to get the equivalent code, with the URL, method, headers, and body already mapped across.',
+      },
+      {
+        question: 'Why does the generated fetch() code have an AbortController when my cURL command didn’t?',
+        answer:
+          'Because the request has a timeout and the browser Fetch API has no timeout option. An AbortController aborted by a setTimeout is the standard way to express one. cURL uses --max-time, Axios uses a native timeout option, and Python Requests uses timeout= — same intent, four different mechanisms.',
+      },
+      {
+        question: 'Does the importer handle $TOKEN and other shell variables?',
+        answer:
+          'No, and that is the correct behavior. Your shell expands $TOKEN before cURL ever runs, so a pasted command still containing the literal text has nothing to expand it. Replace it with the real value, or with a {{token}} environment variable resolved from whichever environment is active.',
+      },
+      {
+        question: 'Why does my converted request fail in the browser but work in cURL?',
+        answer:
+          'Almost always CORS or another browser-only restriction. cURL has no origin, so the same-origin policy does not apply to it; browser JavaScript is subject to the API’s CORS policy, its credentials rules, and a list of headers scripts are not allowed to set. See the CORS guide for the fix.',
+      },
+      {
+        question: 'Can I convert a cURL command with a file upload?',
+        answer:
+          'The -F \'field=@file\' flags import as file fields and a warning tells you so, but the file contents cannot be read from a pasted command — there is no file, only its name. Attach the file yourself in the Body tab before sending.',
+      },
+    ],
+    // Capped at three deliberately: getRelatedGuides only renders three, so a longer
+    // list would just be data nothing displays. The form-data and how-to-test-an-api
+    // guides both link here indirectly via the API Request Builder page's guide list.
+    relatedSlugs: ['json-post-request-example', 'authentication-testing-examples', 'what-is-a-cors-error'],
+    ctaText: 'Convert a cURL command yourself.',
     ctaToolHref: '/tools/developer/api-request-builder',
     ctaToolLabel: 'Try the free API Request Builder',
   },
