@@ -11,9 +11,9 @@ interface RecordsModalProps {
 
 /** Renders `null` distinctly from the literal string "null". */
 function Cell({ value }: { value: string | null }) {
-  if (value === null) return <span className="text-slate-500 italic">(null)</span>;
-  if (value === '') return <span className="text-slate-500 italic">(empty)</span>;
-  return <span className="text-slate-100">{value}</span>;
+  if (value === null) return <span className="text-slate-500 dbml-light:text-slate-400 italic">(null)</span>;
+  if (value === '') return <span className="text-slate-500 dbml-light:text-slate-400 italic">(empty)</span>;
+  return <span className="text-slate-100 dbml-light:text-slate-900">{value}</span>;
 }
 
 export function RecordsModal({ tableName, columns, records, onClose }: RecordsModalProps) {
@@ -26,17 +26,17 @@ export function RecordsModal({ tableName, columns, records, onClose }: RecordsMo
       onClose={onClose}
       widthClass="max-w-3xl"
       footer={
-        <span className="text-xs text-slate-400 mr-auto">
+        <span className="text-xs text-slate-400 dbml-light:text-slate-500 mr-auto">
           {totalRows === 0 ? 'No rows' : `${totalRows} row${totalRows === 1 ? '' : 's'}`}
         </span>
       }
     >
       {records.length === 0 ? (
         <div className="text-center py-8">
-          <Table2 size={28} className="mx-auto text-slate-600 mb-3" />
-          <p className="text-sm text-slate-300 mb-1">No records defined for “{tableName}”.</p>
-          <p className="text-xs text-slate-500 mb-4">Add a Records block in the editor to seed sample rows.</p>
-          <pre className="text-left text-[11px] font-mono bg-slate-950 border border-slate-800 rounded p-3 overflow-x-auto text-slate-400">
+          <Table2 size={28} className="mx-auto text-slate-600 dbml-light:text-slate-400 mb-3" />
+          <p className="text-sm text-slate-300 dbml-light:text-slate-700 mb-1">No records defined for “{tableName}”.</p>
+          <p className="text-xs text-slate-500 dbml-light:text-slate-400 mb-4">Add a Records block in the editor to seed sample rows.</p>
+          <pre className="text-left text-[11px] font-mono bg-slate-950 dbml-light:bg-slate-50 border border-slate-800 dbml-light:border-slate-200 rounded p-3 overflow-x-auto text-slate-400 dbml-light:text-slate-500">
             {`Records ${tableName}(${columns.slice(0, 3).map((c) => c.name).join(', ') || 'id'}) {\n  ${
               columns.slice(0, 3).map(() => '…').join(', ') || '…'
             }\n}`}
@@ -47,24 +47,24 @@ export function RecordsModal({ tableName, columns, records, onClose }: RecordsMo
           {records.map((block, blockIndex) => (
             <div key={`${block.line}-${blockIndex}`}>
               {records.length > 1 && (
-                <p className="text-[11px] uppercase tracking-wide text-slate-500 mb-2">
+                <p className="text-[11px] uppercase tracking-wide text-slate-500 dbml-light:text-slate-400 mb-2">
                   Block {blockIndex + 1} · line {block.line}
                 </p>
               )}
-              <div className="overflow-x-auto rounded border border-slate-800">
+              <div className="overflow-x-auto rounded border border-slate-800 dbml-light:border-slate-200">
                 <table className="w-full text-xs font-mono border-collapse">
                   <thead>
-                    <tr className="bg-slate-950/70">
-                      <th className="px-2 py-2 text-right font-normal text-slate-600 w-10 border-b border-slate-800">
+                    <tr className="bg-slate-950/70 dbml-light:bg-slate-50">
+                      <th className="px-2 py-2 text-right font-normal text-slate-600 dbml-light:text-slate-400 w-10 border-b border-slate-800 dbml-light:border-slate-200">
                         #
                       </th>
                       {block.columns.map((col) => (
                         <th
                           key={col}
-                          className="px-3 py-2 text-left border-b border-slate-800 whitespace-nowrap"
+                          className="px-3 py-2 text-left border-b border-slate-800 dbml-light:border-slate-200 whitespace-nowrap"
                         >
-                          <span className="text-slate-200 font-semibold">{col}</span>
-                          <span className="block text-[10px] text-slate-500 font-normal">
+                          <span className="text-slate-200 dbml-light:text-slate-800 font-semibold">{col}</span>
+                          <span className="block text-[10px] text-slate-500 dbml-light:text-slate-400 font-normal">
                             {typeByColumn.get(col.toLowerCase()) ?? 'unknown column'}
                           </span>
                         </th>
@@ -73,14 +73,14 @@ export function RecordsModal({ tableName, columns, records, onClose }: RecordsMo
                   </thead>
                   <tbody>
                     {block.rows.map((row, rowIndex) => (
-                      <tr key={rowIndex} className="odd:bg-slate-900/40 hover:bg-slate-800/50">
-                        <td className="px-2 py-1.5 text-right text-slate-600 border-b border-slate-800/60">
+                      <tr key={rowIndex} className="odd:bg-slate-900/40 dbml-light:odd:bg-slate-50 hover:bg-slate-800/50 dbml-light:hover:bg-slate-100">
+                        <td className="px-2 py-1.5 text-right text-slate-600 dbml-light:text-slate-400 border-b border-slate-800/60 dbml-light:border-slate-200/60">
                           {rowIndex + 1}
                         </td>
                         {block.columns.map((col, colIndex) => (
                           <td
                             key={col}
-                            className="px-3 py-1.5 border-b border-slate-800/60 whitespace-nowrap"
+                            className="px-3 py-1.5 border-b border-slate-800/60 dbml-light:border-slate-200/60 whitespace-nowrap"
                           >
                             {colIndex < row.length ? (
                               <Cell value={row[colIndex]} />
@@ -95,7 +95,7 @@ export function RecordsModal({ tableName, columns, records, onClose }: RecordsMo
                 </table>
               </div>
               {block.rows.length === 0 && (
-                <p className="text-xs text-slate-500 mt-2">This block has no rows.</p>
+                <p className="text-xs text-slate-500 dbml-light:text-slate-400 mt-2">This block has no rows.</p>
               )}
             </div>
           ))}

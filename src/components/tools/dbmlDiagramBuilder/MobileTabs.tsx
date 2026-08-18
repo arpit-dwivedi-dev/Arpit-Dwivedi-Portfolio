@@ -8,7 +8,7 @@ interface MobileTabsProps {
 
 export function MobileTabs({ active, onChange, warningCount }: MobileTabsProps) {
   return (
-    <div className="flex border-b border-slate-800 bg-slate-950 shrink-0" role="tablist" aria-label="Editor or diagram view">
+    <div className="flex border-b border-slate-800 dbml-light:border-slate-200 bg-slate-950 dbml-light:bg-white shrink-0" role="tablist" aria-label="Editor or diagram view">
       {(['editor', 'diagram'] as const).map((tab) => (
         <button
           key={tab}
@@ -17,7 +17,9 @@ export function MobileTabs({ active, onChange, warningCount }: MobileTabsProps) 
           aria-selected={active === tab}
           onClick={() => onChange(tab)}
           className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium capitalize ${
-            active === tab ? 'text-blue-400 border-b-2 border-blue-500' : 'text-slate-500 border-b-2 border-transparent'
+            active === tab
+              ? 'text-blue-400 dbml-light:text-blue-600 border-b-2 border-blue-500'
+              : 'text-slate-500 dbml-light:text-slate-400 border-b-2 border-transparent'
           }`}
         >
           {tab}

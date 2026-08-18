@@ -1,24 +1,31 @@
 import { tokenize, type Token } from './tokenizer';
 import { slugify, uniqueId } from './parserUtils';
+import { qualifiedDisplayName, tableKey, TableIndex, type TableRef } from '../schema/tableIdentity';
 import type {
   ColumnSchema,
   DatabaseSchema,
+  EnumSchema,
+  EnumValueSchema,
+  IndexSchema,
   ParserWarning,
   RecordValue,
   RelationKind,
+  TableGroupSchema,
   TableRecords,
   TableSchema,
 } from '../types';
 
 const MAX_WARNINGS = 60;
 
+interface RefEndpoint extends TableRef {
+  column: string;
+}
+
 interface PendingRef {
   name?: string;
-  aTable: string;
-  aColumn: string;
+  a: RefEndpoint;
   operator: string;
-  bTable: string;
-  bColumn: string;
+  b: RefEndpoint;
   line: number;
 }
 
@@ -60,13 +67,40 @@ export function parseDbml(source: string): DatabaseSchema {
   const warnings: ParserWarning[] = [];
   const pendingRefs: PendingRef[] = [];
   const records: TableRecords[] = [];
+  const enums: EnumSchema[] = [];
+  const tableGroups: TableGroupSchema[] = [];
   const usedTableIds = new Set<string>();
-  const tableNameSeen = new Set<string>();
+  const usedEnumIds = new Set<string>();
+  const usedGroupIds = new Set<string>();
+  const tableKeySeen = new Set<string>();
+  const enumNameSeen = new Set<string>();
 
+  let truncationNoted = false;
   const warn = (message: string, line: number, severity: ParserWarning['severity'] = 'warning') => {
-    if (warnings.length >= MAX_WARNINGS) return;
-    warnings.push({ message, line, severity });
+    if (warnings.length >= MAX_WARNINGS) {
+      // Silently dropping past the cap would let the status bar report e.g.
+      // "60 warnings" on a file that actually has hundreds — misleading the
+      // user into thinking they've seen everything once they've worked
+      // through the visible list. Note it once instead of just cutting off.
+      if (!truncationNoted) {
+        truncationNoted = true;
+        warnings.push({
+          message: `${MAX_WARNINGS}+ issues found — only the first ${MAX_WARNINGS} are shown. Fix these, then re-check for more.`,
+          line: 1,
+          severity: 'warning',
+        });
+      }
+      return;
+    }
+    // Guards against NaN/0/negative line numbers reaching the UI — every
+    // caller passes a token line, but this is the single choke point that
+    // keeps a bad one from ever slipping through as "no location".
+    const safeLine = Number.isFinite(line) && line >= 1 ? Math.floor(line) : 1;
+    warnings.push({ message, line: safeLine, severity });
   };
+
+  /** Structural failures the user must fix before the diagram can be trusted — as opposed to warn()'s recoverable notices. */
+  const fail = (message: string, line: number) => warn(message, line, 'error');
 
   const readNameToken = (): { value: string; line: number } | null => {
     const t = cursor.peek();
@@ -75,6 +109,40 @@ export function parseDbml(source: string): DatabaseSchema {
       return { value: t.value, line: t.line };
     }
     return null;
+  };
+
+  /**
+   * A declaration-position qualified name: `table` or `schema.table` — used
+   * for `Table`/`Records` declarations and `TableGroup` members, none of
+   * which are ever followed by a `.column` part. Recovers from a dangling
+   * dot (`schema.`) or an over-long chain (`a.b.c`) by keeping the first two
+   * parts and reporting the rest as malformed, rather than dropping the
+   * whole statement.
+   */
+  const readQualifiedNameToken = (contextLabel: string): { ref: TableRef; line: number } | null => {
+    const part1 = readNameToken();
+    if (!part1) return null;
+    if (!cursor.isSymbol('.')) return { ref: { name: part1.value }, line: part1.line };
+    cursor.next();
+    const part2 = readNameToken();
+    if (!part2) {
+      fail(
+        `Malformed qualified ${contextLabel} name at line ${part1.line}: expected a table name after "${part1.value}.".`,
+        part1.line,
+      );
+      return { ref: { name: part1.value }, line: part1.line };
+    }
+    if (cursor.isSymbol('.')) {
+      fail(
+        `Malformed qualified ${contextLabel} name "${part1.value}.${part2.value}." at line ${part1.line}: too many parts — expected "schema.table".`,
+        part1.line,
+      );
+      while (cursor.isSymbol('.')) {
+        cursor.next();
+        readNameToken();
+      }
+    }
+    return { ref: { schema: part1.value, name: part2.value }, line: part1.line };
   };
 
   /** Assumes the opening `{` has already been consumed; eats tokens until the matching `}`. */
@@ -113,44 +181,85 @@ export function parseDbml(source: string): DatabaseSchema {
     return t.value;
   };
 
-  const parseEndpoint = (): { table: string; column: string } | null => {
-    const tableTok = readNameToken();
-    if (!tableTok) return null;
+  const readColumnList = (): string => {
+    cursor.next(); // '('
+    const cols: string[] = [];
+    while (!cursor.isSymbol(')') && !cursor.atEnd()) {
+      const c = readNameToken();
+      if (c) cols.push(c.value);
+      if (cursor.isSymbol(',')) cursor.next();
+    }
+    if (cursor.isSymbol(')')) cursor.next();
+    return cols.join('+');
+  };
+
+  /**
+   * `table.column`, `table.(col1, col2)`, `schema.table.column` or
+   * `schema.table.(col1, col2)`. Returns `'malformed'` once a diagnostic has
+   * already been recorded for a partially-typed endpoint, so the caller
+   * doesn't also emit its own generic "malformed reference" on top of it.
+   */
+  const parseEndpoint = (line: number): RefEndpoint | null | 'malformed' => {
+    const part1 = readNameToken();
+    if (!part1) return null;
     if (!cursor.isSymbol('.')) return null;
     cursor.next();
     if (cursor.isSymbol('(')) {
-      cursor.next();
-      const cols: string[] = [];
-      while (!cursor.isSymbol(')') && !cursor.atEnd()) {
-        const c = readNameToken();
-        if (c) cols.push(c.value);
-        if (cursor.isSymbol(',')) cursor.next();
-      }
-      if (cursor.isSymbol(')')) cursor.next();
-      return { table: tableTok.value, column: cols.join('+') };
+      return { name: part1.value, column: readColumnList() };
     }
-    const colTok = readNameToken();
-    if (!colTok) return null;
-    return { table: tableTok.value, column: colTok.value };
+    const part2 = readNameToken();
+    if (!part2) {
+      fail(`Malformed reference at line ${line}: expected a column name after "${part1.value}.".`, line);
+      return 'malformed';
+    }
+    if (!cursor.isSymbol('.')) {
+      return { name: part1.value, column: part2.value };
+    }
+    cursor.next();
+    if (cursor.isSymbol('(')) {
+      return { schema: part1.value, name: part2.value, column: readColumnList() };
+    }
+    const part3 = readNameToken();
+    if (!part3) {
+      fail(`Malformed reference at line ${line}: expected a column name after "${part1.value}.${part2.value}.".`, line);
+      return 'malformed';
+    }
+    if (cursor.isSymbol('.')) {
+      fail(
+        `Malformed reference at line ${line}: "${part1.value}.${part2.value}.${part3.value}." has too many parts — expected "schema.table.column".`,
+        line,
+      );
+      while (cursor.isSymbol('.')) {
+        cursor.next();
+        readNameToken();
+      }
+      return 'malformed';
+    }
+    return { schema: part1.value, name: part2.value, column: part3.value };
   };
 
   const relationOperators = ['>', '<', '-', '<>'];
 
   const parseRefBody = (name: string | undefined, line: number) => {
-    const a = parseEndpoint();
+    const a = parseEndpoint(line);
+    if (a === 'malformed') return;
     if (!a) {
-      warn(`Malformed reference near line ${line}: expected "table.column".`, line);
+      fail(`Malformed reference near line ${line}: expected "table.column".`, line);
       return;
     }
     const opTok = cursor.peek();
     if (!(opTok.type === 'symbol' && relationOperators.includes(opTok.value))) {
-      warn(`Malformed reference near line ${line}: expected one of > < - <> after "${a.table}.${a.column}".`, line);
+      fail(
+        `Malformed reference near line ${line}: expected one of > < - <> after "${qualifiedDisplayName(a)}.${a.column}".`,
+        line,
+      );
       return;
     }
     cursor.next();
-    const b = parseEndpoint();
+    const b = parseEndpoint(line);
+    if (b === 'malformed') return;
     if (!b) {
-      warn(`Malformed reference near line ${line}: expected "table.column" after "${opTok.value}".`, line);
+      fail(`Malformed reference near line ${line}: expected "table.column" after "${opTok.value}".`, line);
       return;
     }
     // Optional trailing settings, e.g. [delete: cascade, update: restrict]
@@ -163,7 +272,7 @@ export function parseDbml(source: string): DatabaseSchema {
         else if (t.type === 'symbol' && t.value === ']') depth--;
       }
     }
-    pendingRefs.push({ name, aTable: a.table, aColumn: a.column, operator: opTok.value, bTable: b.table, bColumn: b.column, line });
+    pendingRefs.push({ name, a, operator: opTok.value, b, line });
   };
 
   const parseRefStatement = () => {
@@ -181,15 +290,19 @@ export function parseDbml(source: string): DatabaseSchema {
       while (!cursor.isSymbol('}') && !cursor.atEnd()) {
         parseRefBody(name, cursor.peek().line);
       }
-      if (cursor.isSymbol('}')) cursor.next();
+      if (cursor.isSymbol('}')) {
+        cursor.next();
+      } else {
+        fail(`"Ref" block starting at line ${startLine} is missing a closing "}".`, cursor.peek().line);
+      }
     } else {
-      warn(`Malformed "Ref" statement at line ${startLine}.`, startLine);
+      fail(`Malformed "Ref" statement at line ${startLine}.`, startLine);
     }
   };
 
-  interface InlineRef { operator: string; bTable: string; bColumn: string; line: number }
+  interface InlineRef { operator: string; b: RefEndpoint; line: number }
 
-  const parseColumnAttrs = (tableName: string, columnName: string): { attrs: Partial<ColumnSchema>; inlineRefs: InlineRef[] } => {
+  const parseColumnAttrs = (): { attrs: Partial<ColumnSchema>; inlineRefs: InlineRef[] } => {
     const attrs: Partial<ColumnSchema> = {};
     const inlineRefs: InlineRef[] = [];
     while (!cursor.isSymbol(']') && !cursor.atEnd()) {
@@ -235,8 +348,8 @@ export function parseDbml(source: string): DatabaseSchema {
           const opTok = cursor.peek();
           if (opTok.type === 'symbol' && relationOperators.includes(opTok.value)) {
             cursor.next();
-            const b = parseEndpoint();
-            if (b) inlineRefs.push({ operator: opTok.value, bTable: b.table, bColumn: b.column, line: t.line });
+            const b = parseEndpoint(t.line);
+            if (b && b !== 'malformed') inlineRefs.push({ operator: opTok.value, b, line: t.line });
           }
         }
       } else {
@@ -250,8 +363,6 @@ export function parseDbml(source: string): DatabaseSchema {
       if (cursor.isSymbol(',')) cursor.next();
     }
     if (cursor.isSymbol(']')) cursor.next();
-    void tableName;
-    void columnName;
     return { attrs, inlineRefs };
   };
 
@@ -306,12 +417,15 @@ export function parseDbml(source: string): DatabaseSchema {
   const parseTable = () => {
     const startLine = cursor.peek().line;
     cursor.next(); // 'Table'
-    const nameTok = readNameToken();
-    if (!nameTok) {
-      warn(`Malformed "Table" declaration at line ${startLine}: missing table name.`, startLine);
+    const qualifiedTok = readQualifiedNameToken('table');
+    if (!qualifiedTok) {
+      fail(`Malformed "Table" declaration at line ${startLine}: missing table name.`, startLine);
       if (cursor.isSymbol('{')) { cursor.next(); skipBlock(); }
       return;
     }
+    const tableRef = qualifiedTok.ref;
+    const displayName = qualifiedDisplayName(tableRef);
+
     // Optional alias: `Table users as U`
     if (cursor.isIdent('as')) {
       cursor.next();
@@ -325,19 +439,116 @@ export function parseDbml(source: string): DatabaseSchema {
       color = settings.color;
     }
     if (!cursor.isSymbol('{')) {
-      warn(`Malformed "Table ${nameTok.value}" at line ${startLine}: expected "{".`, startLine);
+      fail(`Malformed "Table ${displayName}" at line ${startLine}: expected "{".`, startLine);
       return;
     }
     cursor.next();
 
-    const tableId = uniqueId(slugify(nameTok.value), usedTableIds);
-    const table: TableSchema = { id: tableId, name: nameTok.value, columns: [], note, color };
+    const tableId = uniqueId(slugify(displayName), usedTableIds);
+    const table: TableSchema = {
+      id: tableId,
+      name: tableRef.name,
+      schema: tableRef.schema,
+      qualifiedName: displayName,
+      columns: [],
+      note,
+      color,
+    };
     const columnNamesSeen = new Set<string>();
-    const lowerName = nameTok.value.toLowerCase();
-    if (tableNameSeen.has(lowerName)) {
-      warn(`Duplicate table name "${nameTok.value}" — both copies were kept, but references to this table may be ambiguous.`, startLine);
+
+    /**
+     * One entry per line inside `indexes { ... }`: either a bare column name
+     * or a parenthesized composite list, optionally followed by `[unique,
+     * name: '...']`. Column-reference validity is checked once the table's
+     * full column list is known, after this loop.
+     */
+    const parseIndexEntry = (): void => {
+      const lineStart = cursor.peek().line;
+      const columns: string[] = [];
+      if (cursor.isSymbol('(')) {
+        cursor.next();
+        while (!cursor.isSymbol(')') && !cursor.atEnd()) {
+          const c = readNameToken();
+          if (c) columns.push(c.value);
+          else cursor.next();
+          if (cursor.isSymbol(',')) cursor.next();
+        }
+        if (cursor.isSymbol(')')) cursor.next();
+      } else {
+        const c = readNameToken();
+        if (c) columns.push(c.value);
+      }
+
+      if (columns.length === 0) {
+        fail(`Malformed index entry in table "${displayName}" at line ${lineStart}.`, lineStart);
+        if (!cursor.isSymbol('}') && !cursor.atEnd() && !cursor.isSymbol('[')) cursor.next();
+      }
+
+      let unique = false;
+      let pk = false;
+      let indexName: string | undefined;
+      if (cursor.isSymbol('[')) {
+        cursor.next();
+        while (!cursor.isSymbol(']') && !cursor.atEnd()) {
+          const t = cursor.peek();
+          if (t.type === 'ident') {
+            const lower = t.value.toLowerCase();
+            cursor.next();
+            if (lower === 'unique') {
+              unique = true;
+            } else if (lower === 'pk') {
+              pk = true;
+            } else if (lower === 'primary' && cursor.isIdent('key')) {
+              cursor.next();
+              pk = true;
+            } else if (lower === 'name' && cursor.isSymbol(':')) {
+              cursor.next();
+              const v = cursor.peek();
+              if (v.type === 'string') {
+                cursor.next();
+                indexName = v.value;
+              }
+            } else if (cursor.isSymbol(':')) {
+              cursor.next();
+              parseBracketedValue();
+            }
+          } else {
+            cursor.next();
+          }
+          if (cursor.isSymbol(',')) cursor.next();
+        }
+        if (cursor.isSymbol(']')) cursor.next();
+      }
+
+      if (columns.length === 0) return;
+      table.indexes = table.indexes ?? [];
+      const index: IndexSchema = {
+        id: `${tableId}__idx${table.indexes.length}`,
+        columns,
+        unique,
+        pk: pk || undefined,
+        name: indexName,
+        line: lineStart,
+      };
+      table.indexes.push(index);
+    };
+
+    const parseIndexesBlock = (): void => {
+      const blockStart = cursor.peek().line;
+      while (!cursor.isSymbol('}') && !cursor.atEnd()) {
+        parseIndexEntry();
+      }
+      if (cursor.isSymbol('}')) {
+        cursor.next();
+      } else {
+        fail(`"indexes" block in table "${displayName}" starting at line ${blockStart} is missing a closing "}".`, cursor.peek().line);
+      }
+    };
+    const canonicalKey = tableKey(tableRef);
+    if (tableKeySeen.has(canonicalKey)) {
+      warn(`Duplicate table "${displayName}" — both copies were kept, but references to this table may be ambiguous.`, startLine);
     }
-    tableNameSeen.add(lowerName);
+    tableKeySeen.add(canonicalKey);
 
     while (!cursor.isSymbol('}') && !cursor.atEnd()) {
       const lineStart = cursor.peek().line;
@@ -358,12 +569,12 @@ export function parseDbml(source: string): DatabaseSchema {
       if (cursor.isIdent('indexes') && cursor.peek(1).type === 'symbol' && cursor.peek(1).value === '{') {
         cursor.next();
         cursor.next();
-        skipBlock();
+        parseIndexesBlock();
         continue;
       }
       const colNameTok = readNameToken();
       if (!colNameTok) {
-        warn(`Unexpected token in table "${nameTok.value}" at line ${lineStart}.`, lineStart);
+        fail(`Unexpected token in table "${displayName}" at line ${lineStart}.`, lineStart);
         cursor.next();
         continue;
       }
@@ -372,12 +583,12 @@ export function parseDbml(source: string): DatabaseSchema {
       let inlineRefs: InlineRef[] = [];
       if (cursor.isSymbol('[')) {
         cursor.next();
-        const parsed = parseColumnAttrs(nameTok.value, colNameTok.value);
+        const parsed = parseColumnAttrs();
         attrs = parsed.attrs;
         inlineRefs = parsed.inlineRefs;
       }
       if (columnNamesSeen.has(colNameTok.value.toLowerCase())) {
-        warn(`Duplicate column "${colNameTok.value}" in table "${nameTok.value}" at line ${lineStart}.`, lineStart);
+        warn(`Duplicate column "${colNameTok.value}" in table "${displayName}" at line ${lineStart}.`, lineStart);
       }
       columnNamesSeen.add(colNameTok.value.toLowerCase());
       const column: ColumnSchema = {
@@ -389,16 +600,33 @@ export function parseDbml(source: string): DatabaseSchema {
       table.columns.push(column);
       for (const ref of inlineRefs) {
         pendingRefs.push({
-          aTable: nameTok.value,
-          aColumn: colNameTok.value,
+          a: { schema: tableRef.schema, name: tableRef.name, column: colNameTok.value },
           operator: ref.operator,
-          bTable: ref.bTable,
-          bColumn: ref.bColumn,
+          b: ref.b,
           line: ref.line,
         });
       }
     }
-    if (cursor.isSymbol('}')) cursor.next();
+    if (cursor.isSymbol('}')) {
+      cursor.next();
+    } else {
+      fail(`Table "${displayName}" starting at line ${startLine} is missing a closing "}".`, cursor.peek().line);
+    }
+
+    if (table.indexes) {
+      const colNames = new Set(table.columns.map((c) => c.name.toLowerCase()));
+      table.indexes.forEach((idx) => {
+        idx.columns.forEach((colName) => {
+          if (!colNames.has(colName.toLowerCase())) {
+            warn(
+              `Index in table "${displayName}" references unknown column "${colName}".`,
+              idx.line,
+            );
+          }
+        });
+      });
+    }
+
     tables.push(table);
   };
 
@@ -412,12 +640,13 @@ export function parseDbml(source: string): DatabaseSchema {
   const parseRecords = () => {
     const startLine = cursor.peek().line;
     cursor.next(); // 'Records'
-    const nameTok = readNameToken();
-    if (!nameTok) {
+    const qualifiedTok = readQualifiedNameToken('records');
+    if (!qualifiedTok) {
       warn(`Malformed "Records" block at line ${startLine}: missing table name.`, startLine);
       if (cursor.isSymbol('{')) { cursor.next(); skipBlock(); }
       return;
     }
+    const displayName = qualifiedDisplayName(qualifiedTok.ref);
 
     const columns: string[] = [];
     if (cursor.isSymbol('(')) {
@@ -431,13 +660,13 @@ export function parseDbml(source: string): DatabaseSchema {
       if (cursor.isSymbol(')')) cursor.next();
     } else {
       warn(
-        `"Records ${nameTok.value}" at line ${startLine} is missing its column list, e.g. Records ${nameTok.value}(id, name) { … }.`,
+        `"Records ${displayName}" at line ${startLine} is missing its column list, e.g. Records ${displayName}(id, name) { … }.`,
         startLine,
       );
     }
 
     if (!cursor.isSymbol('{')) {
-      warn(`Malformed "Records ${nameTok.value}" block at line ${startLine}: expected "{".`, startLine);
+      warn(`Malformed "Records ${displayName}" block at line ${startLine}: expected "{".`, startLine);
       return;
     }
     cursor.next();
@@ -462,7 +691,171 @@ export function parseDbml(source: string): DatabaseSchema {
     if (current.length > 0) rows.push(current);
     if (cursor.isSymbol('}')) cursor.next();
 
-    records.push({ table: nameTok.value, columns, rows, line: startLine });
+    records.push({ table: qualifiedTok.ref.name, schema: qualifiedTok.ref.schema, columns, rows, line: startLine });
+  };
+
+  /**
+   * `Enum user_status { active inactive [note: '...'] suspended }`
+   *
+   * Values are newline-delimited like `Records` rows, and each may carry a
+   * trailing `[note: '...']`. Malformed entries are skipped with a warning
+   * rather than aborting the whole block, matching parser resilience
+   * elsewhere (indexes, refs).
+   */
+  const parseEnum = () => {
+    const startLine = cursor.peek().line;
+    cursor.next(); // 'Enum'
+    const nameTok = readNameToken();
+    if (!nameTok) {
+      fail(`Malformed "Enum" declaration at line ${startLine}: missing enum name.`, startLine);
+      if (cursor.isSymbol('{')) { cursor.next(); skipBlock(); }
+      return;
+    }
+    if (!cursor.isSymbol('{')) {
+      fail(`Malformed "Enum ${nameTok.value}" at line ${startLine}: expected "{".`, startLine);
+      return;
+    }
+    cursor.next();
+
+    const enumId = uniqueId(slugify(nameTok.value), usedEnumIds);
+    const values: EnumValueSchema[] = [];
+    const valueNamesSeen = new Set<string>();
+
+    while (!cursor.isSymbol('}') && !cursor.atEnd()) {
+      const lineStart = cursor.peek().line;
+      const valueTok = readNameToken();
+      if (!valueTok) {
+        warn(`Malformed enum value in "${nameTok.value}" at line ${lineStart}.`, lineStart);
+        cursor.next();
+        continue;
+      }
+      let note: string | undefined;
+      if (cursor.isSymbol('[')) {
+        cursor.next();
+        while (!cursor.isSymbol(']') && !cursor.atEnd()) {
+          const t = cursor.peek();
+          if (t.type === 'ident' && t.value.toLowerCase() === 'note') {
+            cursor.next();
+            if (cursor.isSymbol(':')) {
+              cursor.next();
+              const v = cursor.peek();
+              if (v.type === 'string') { cursor.next(); note = v.value; }
+            }
+          } else {
+            cursor.next();
+            if (cursor.isSymbol(':')) { cursor.next(); parseBracketedValue(); }
+          }
+          if (cursor.isSymbol(',')) cursor.next();
+        }
+        if (cursor.isSymbol(']')) cursor.next();
+      }
+      if (valueNamesSeen.has(valueTok.value.toLowerCase())) {
+        warn(`Duplicate enum value "${valueTok.value}" in enum "${nameTok.value}" at line ${lineStart}.`, lineStart);
+      }
+      valueNamesSeen.add(valueTok.value.toLowerCase());
+      values.push({ name: valueTok.value, note });
+    }
+    if (cursor.isSymbol('}')) {
+      cursor.next();
+    } else {
+      fail(`Enum "${nameTok.value}" starting at line ${startLine} is missing a closing "}".`, cursor.peek().line);
+    }
+
+    const lowerName = nameTok.value.toLowerCase();
+    if (enumNameSeen.has(lowerName)) {
+      warn(`Duplicate enum name "${nameTok.value}" — both copies were kept, but column types referencing it may be ambiguous.`, startLine);
+    }
+    enumNameSeen.add(lowerName);
+
+    enums.push({ id: enumId, name: nameTok.value, values, line: startLine });
+  };
+
+  /**
+   * `TableGroup <name> [color: #...] { table1 table2 ... Note: '...' }`
+   *
+   * The group name is usually a single identifier, but real-world DBML (and
+   * this app's own spec) also allows an unquoted multi-word name — the
+   * tokenizer has no notion of spaces inside an identifier, so consecutive
+   * ident/string tokens before the settings `[` or body `{` are joined back
+   * together, the same way a quoted `"User Management"` collapses to one
+   * string token.
+   */
+  const readGroupName = (): { value: string; line: number } | null => {
+    const first = cursor.peek();
+    if (first.type !== 'ident' && first.type !== 'string') return null;
+    const line = first.line;
+    const parts: string[] = [];
+    // Bounded to the first token's own line: a name is always typed on one
+    // line before its `[` settings or `{` body, and staying on-line is what
+    // stops this from swallowing the next top-level statement whenever a
+    // "TableGroup <name>" is malformed and missing its brace altogether.
+    while (!cursor.atEnd()) {
+      const t = cursor.peek();
+      if ((t.type !== 'ident' && t.type !== 'string') || t.line !== line) break;
+      parts.push(cursor.next().value);
+    }
+    return { value: parts.join(' '), line };
+  };
+
+  const parseTableGroup = () => {
+    const startLine = cursor.peek().line;
+    cursor.next(); // 'TableGroup'
+    const nameTok = readGroupName();
+    if (!nameTok) {
+      fail(`Malformed "TableGroup" declaration at line ${startLine}: missing group name.`, startLine);
+      if (cursor.isSymbol('{')) { cursor.next(); skipBlock(); }
+      return;
+    }
+    let color: string | undefined;
+    if (cursor.isSymbol('[')) {
+      color = parseTableSettings().color;
+    }
+    if (!cursor.isSymbol('{')) {
+      fail(`Malformed "TableGroup ${nameTok.value}" at line ${startLine}: expected "{".`, startLine);
+      return;
+    }
+    cursor.next();
+
+    const groupId = uniqueId(slugify(nameTok.value), usedGroupIds);
+    const members: string[] = [];
+    const memberRefs: TableRef[] = [];
+    let note: string | undefined;
+
+    while (!cursor.isSymbol('}') && !cursor.atEnd()) {
+      const lineStart = cursor.peek().line;
+      if (cursor.isIdent('note') && (cursor.peek(1).value === ':' || cursor.peek(1).value === '{')) {
+        cursor.next();
+        if (cursor.isSymbol(':')) {
+          cursor.next();
+          const v = cursor.peek();
+          if (v.type === 'string') { cursor.next(); note = v.value; }
+        } else if (cursor.isSymbol('{')) {
+          cursor.next();
+          const v = cursor.peek();
+          if (v.type === 'string') { cursor.next(); note = v.value; }
+          if (cursor.isSymbol('}')) cursor.next();
+        }
+        continue;
+      }
+      const memberTok = readQualifiedNameToken('table group member');
+      if (!memberTok) {
+        fail(`Unexpected token in "TableGroup ${nameTok.value}" at line ${lineStart}.`, lineStart);
+        cursor.next();
+        continue;
+      }
+      // Optional per-member settings, e.g. `users [color: #cabbca]` — not
+      // represented in the schema, just consumed so it doesn't derail parsing.
+      if (cursor.isSymbol('[')) parseTableSettings();
+      members.push(qualifiedDisplayName(memberTok.ref));
+      memberRefs.push(memberTok.ref);
+    }
+    if (cursor.isSymbol('}')) {
+      cursor.next();
+    } else {
+      fail(`"TableGroup ${nameTok.value}" starting at line ${startLine} is missing a closing "}".`, cursor.peek().line);
+    }
+
+    tableGroups.push({ id: groupId, name: nameTok.value, tables: members, tableRefs: memberRefs, note, color, line: startLine });
   };
 
   while (!cursor.atEnd()) {
@@ -471,19 +864,9 @@ export function parseDbml(source: string): DatabaseSchema {
     } else if (cursor.isIdent('ref')) {
       parseRefStatement();
     } else if (cursor.isIdent('enum')) {
-      const line = cursor.peek().line;
-      cursor.next();
-      const nameTok = readNameToken();
-      if (cursor.isSymbol('{')) {
-        cursor.next();
-        skipBlock();
-        warn(`Enum "${nameTok?.value ?? ''}" was parsed but isn't rendered in the diagram yet.`, line);
-      }
+      parseEnum();
     } else if (cursor.isIdent('tablegroup') || cursor.isIdent('table_group')) {
-      cursor.next();
-      readNameToken();
-      if (cursor.isSymbol('[')) parseTableSettings();
-      if (cursor.isSymbol('{')) { cursor.next(); skipBlock(); }
+      parseTableGroup();
     } else if (cursor.isIdent('project')) {
       cursor.next();
       readNameToken();
@@ -506,15 +889,58 @@ export function parseDbml(source: string): DatabaseSchema {
     } else {
       const t = cursor.next();
       if (t.type !== 'eof') {
-        warn(`Unexpected token "${t.value}" at line ${t.line} was skipped.`, t.line);
+        fail(`Unexpected token "${t.value}" at line ${t.line} was skipped.`, t.line);
       }
     }
   }
 
-  const relationships = resolvePendingRefs(pendingRefs, tables, warn);
-  validateRecords(records, tables, warn);
+  const tableIndex = new TableIndex(tables);
+  const relationships = resolvePendingRefs(pendingRefs, tableIndex, warn);
+  validateRecords(records, tableIndex, warn);
+  validateTableGroups(tableGroups, tableIndex, warn);
 
-  return { tables, relationships, records, warnings };
+  return { tables, relationships, records, enums, tableGroups, warnings };
+}
+
+/**
+ * Resolves a table reference the same way for Records blocks, TableGroup
+ * members and Ref endpoints: qualified refs must match exactly, unqualified
+ * refs must match exactly one table across every schema. Returns `undefined`
+ * (after emitting the appropriate diagnostic) rather than ever guessing.
+ */
+function resolveTableRef(
+  ref: TableRef,
+  index: TableIndex,
+  line: number,
+  describe: (display: string) => string,
+  warn: (message: string, line: number) => void,
+): TableSchema | undefined {
+  const resolution = index.resolve(ref);
+  const display = qualifiedDisplayName(ref);
+  if (resolution.kind === 'found') return resolution.table;
+  if (resolution.kind === 'not-found') {
+    warn(describe(`unknown table "${display}"`), line);
+    return undefined;
+  }
+  const candidates = resolution.matches.map((t) => `"${t.qualifiedName}"`).join(', ');
+  warn(
+    describe(`ambiguous table "${display}" — matches ${candidates}. Qualify it with a schema, e.g. ${resolution.matches[0].qualifiedName}`),
+    line,
+  );
+  return undefined;
+}
+
+/** Group members are reported on but kept — an unknown table name shouldn't drop the rest of the group. */
+function validateTableGroups(
+  tableGroups: TableGroupSchema[],
+  tableIndex: TableIndex,
+  warn: (message: string, line: number) => void,
+): void {
+  tableGroups.forEach((group) => {
+    group.tableRefs.forEach((ref) => {
+      resolveTableRef(ref, tableIndex, group.line, (reason) => `TableGroup "${group.name}" references ${reason}.`, warn);
+    });
+  });
 }
 
 /**
@@ -523,21 +949,22 @@ export function parseDbml(source: string): DatabaseSchema {
  */
 function validateRecords(
   records: TableRecords[],
-  tables: TableSchema[],
+  tableIndex: TableIndex,
   warn: (message: string, line: number) => void,
 ): void {
-  const byName = new Map(tables.map((t) => [t.name.toLowerCase(), t]));
-
   records.forEach((block) => {
-    const table = byName.get(block.table.toLowerCase());
-    if (!table) {
-      warn(`Records block at line ${block.line} refers to unknown table "${block.table}".`, block.line);
-      return;
-    }
+    const table = resolveTableRef(
+      { schema: block.schema, name: block.table },
+      tableIndex,
+      block.line,
+      (reason) => `Records block at line ${block.line} refers to ${reason}.`,
+      warn,
+    );
+    if (!table) return;
     const columnNames = new Set(table.columns.map((c) => c.name.toLowerCase()));
     block.columns.forEach((col) => {
       if (!columnNames.has(col.toLowerCase())) {
-        warn(`Records block at line ${block.line}: "${block.table}" has no column "${col}".`, block.line);
+        warn(`Records block at line ${block.line}: "${table.qualifiedName}" has no column "${col}".`, block.line);
       }
     });
     if (block.columns.length === 0) return;
@@ -554,32 +981,25 @@ function validateRecords(
 
 function resolvePendingRefs(
   pendingRefs: PendingRef[],
-  tables: TableSchema[],
+  tableIndex: TableIndex,
   warn: (message: string, line: number) => void,
 ): DatabaseSchema['relationships'] {
-  const byName = new Map(tables.map((t) => [t.name.toLowerCase(), t]));
   const relationships: DatabaseSchema['relationships'] = [];
 
   pendingRefs.forEach((ref, index) => {
-    const tableA = byName.get(ref.aTable.toLowerCase());
-    const tableB = byName.get(ref.bTable.toLowerCase());
-    if (!tableA) {
-      warn(`Reference at line ${ref.line} points to unknown table "${ref.aTable}".`, ref.line);
-      return;
-    }
-    if (!tableB) {
-      warn(`Reference at line ${ref.line} points to unknown table "${ref.bTable}".`, ref.line);
-      return;
-    }
-    const colA = tableA.columns.find((c) => c.name.toLowerCase() === ref.aColumn.toLowerCase());
-    const colB = tableB.columns.find((c) => c.name.toLowerCase() === ref.bColumn.toLowerCase());
-    if (!colA) warn(`Reference at line ${ref.line}: "${ref.aTable}" has no column "${ref.aColumn}".`, ref.line);
-    if (!colB) warn(`Reference at line ${ref.line}: "${ref.bTable}" has no column "${ref.bColumn}".`, ref.line);
+    const tableA = resolveTableRef(ref.a, tableIndex, ref.line, (reason) => `Reference at line ${ref.line} points to ${reason}.`, warn);
+    const tableB = resolveTableRef(ref.b, tableIndex, ref.line, (reason) => `Reference at line ${ref.line} points to ${reason}.`, warn);
+    if (!tableA || !tableB) return;
 
-    let sourceTable = tableA.name;
-    let sourceColumn = ref.aColumn;
-    let targetTable = tableB.name;
-    let targetColumn = ref.bColumn;
+    const colA = tableA.columns.find((c) => c.name.toLowerCase() === ref.a.column.toLowerCase());
+    const colB = tableB.columns.find((c) => c.name.toLowerCase() === ref.b.column.toLowerCase());
+    if (!colA) warn(`Reference at line ${ref.line}: "${tableA.qualifiedName}" has no column "${ref.a.column}".`, ref.line);
+    if (!colB) warn(`Reference at line ${ref.line}: "${tableB.qualifiedName}" has no column "${ref.b.column}".`, ref.line);
+
+    let sourceTable = tableA;
+    let sourceColumn = ref.a.column;
+    let targetTable = tableB;
+    let targetColumn = ref.b.column;
     let relation: RelationKind = 'unknown';
 
     switch (ref.operator) {
@@ -587,10 +1007,10 @@ function resolvePendingRefs(
         relation = 'many-to-one';
         break;
       case '<':
-        sourceTable = tableB.name;
-        sourceColumn = ref.bColumn;
-        targetTable = tableA.name;
-        targetColumn = ref.aColumn;
+        sourceTable = tableB;
+        sourceColumn = ref.b.column;
+        targetTable = tableA;
+        targetColumn = ref.a.column;
         relation = 'many-to-one';
         break;
       case '-':
@@ -601,12 +1021,14 @@ function resolvePendingRefs(
         break;
     }
 
+    const sourceKey = tableKey(sourceTable);
+    const targetKey = tableKey(targetTable);
     relationships.push({
-      id: `ref_${index}_${slugify(sourceTable)}_${slugify(sourceColumn)}_${slugify(targetTable)}_${slugify(targetColumn)}`,
+      id: `ref_${index}_${slugify(sourceKey)}_${slugify(sourceColumn)}_${slugify(targetKey)}_${slugify(targetColumn)}`,
       name: ref.name,
-      sourceTable,
+      sourceTable: sourceKey,
       sourceColumn,
-      targetTable,
+      targetTable: targetKey,
       targetColumn,
       relation,
     });

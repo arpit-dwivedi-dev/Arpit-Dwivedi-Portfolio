@@ -66,7 +66,7 @@ export function SplitPane({
               if (e.key === 'ArrowRight') onLeftWidthChange(Math.min(maxPct, leftWidthPct + 2));
             }}
             className={`w-1.5 shrink-0 cursor-col-resize relative group focus-visible:outline-none ${
-              dragging ? 'bg-blue-500' : 'bg-slate-800 hover:bg-blue-500'
+              dragging ? 'bg-blue-500' : 'bg-slate-800 dbml-light:bg-slate-200 hover:bg-blue-500'
             } transition-colors`}
           >
             <span className="absolute inset-y-0 -left-1 -right-1" />
@@ -81,7 +81,7 @@ export function SplitPane({
             onClick={onExpand}
             aria-label="Show editor panel"
             title="Show editor"
-            className="absolute top-3 left-3 z-10 flex items-center gap-1.5 rounded-md border border-slate-200 bg-white/95 px-2 py-1.5 text-xs font-medium text-slate-600 shadow-sm hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
+            className="absolute top-3 left-3 z-10 flex items-center gap-1.5 rounded-md border border-slate-700 dbml-light:border-slate-200 bg-slate-900/95 dbml-light:bg-white/95 px-2 py-1.5 text-xs font-medium text-slate-300 dbml-light:text-slate-600 shadow-sm hover:bg-slate-800 dbml-light:hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
           >
             <PanelLeftOpen size={14} />
             Editor

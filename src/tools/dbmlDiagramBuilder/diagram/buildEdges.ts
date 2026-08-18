@@ -1,4 +1,5 @@
 import { MarkerType, type Edge } from '@xyflow/react';
+import { tableKey } from '../schema/tableIdentity';
 import type { DatabaseSchema, NodePosition, RelationKind } from '../types';
 import { columnHandleId } from './handles';
 import { HEADER_HEIGHT, ROW_HEIGHT, computeNodeSize } from './layout';
@@ -40,13 +41,13 @@ function columnCenterY(pos: NodePosition, columnIndex: number): number {
 }
 
 export function buildEdges(schema: DatabaseSchema, positions: Record<string, NodePosition>): Edge[] {
-  const tableByName = new Map(schema.tables.map((t) => [t.name, t]));
+  const tableByKey = new Map(schema.tables.map((t) => [tableKey(t), t]));
 
   const specs: EdgeSpec[] = schema.relationships
-    .filter((rel) => tableByName.has(rel.sourceTable) && tableByName.has(rel.targetTable))
+    .filter((rel) => tableByKey.has(rel.sourceTable) && tableByKey.has(rel.targetTable))
     .map((rel) => {
-      const sourceTable = tableByName.get(rel.sourceTable)!;
-      const targetTable = tableByName.get(rel.targetTable)!;
+      const sourceTable = tableByKey.get(rel.sourceTable)!;
+      const targetTable = tableByKey.get(rel.targetTable)!;
       const sourceColIndex = sourceTable.columns.findIndex((c) => c.name === rel.sourceColumn);
       const targetColIndex = targetTable.columns.findIndex((c) => c.name === rel.targetColumn);
       const sourceCol = sourceColIndex >= 0 ? sourceTable.columns[sourceColIndex] : undefined;

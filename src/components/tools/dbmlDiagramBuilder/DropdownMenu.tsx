@@ -18,7 +18,7 @@ export function DropdownMenu({ trigger, children, align = 'left' }: DropdownMenu
       {open && (
         <div
           role="menu"
-          className={`absolute z-40 mt-1.5 min-w-[200px] rounded-md border border-slate-700 bg-slate-900 py-1 shadow-lg shadow-black/30 ${
+          className={`absolute z-40 mt-1.5 min-w-[200px] rounded-md border border-slate-700 dbml-light:border-slate-200 bg-slate-900 dbml-light:bg-white py-1 shadow-lg shadow-black/30 dbml-light:shadow-black/10 ${
             align === 'right' ? 'right-0' : 'left-0'
           }`}
         >
@@ -45,8 +45,8 @@ export function DropdownItem({
       type="button"
       role="menuitem"
       onClick={onClick}
-      className={`w-full flex items-center gap-2 px-3 py-1.5 text-left text-[13px] hover:bg-slate-800 focus-visible:bg-slate-800 focus-visible:outline-none ${
-        danger ? 'text-red-400' : 'text-slate-200'
+      className={`w-full flex items-center gap-2 px-3 py-1.5 text-left text-[13px] hover:bg-slate-800 dbml-light:hover:bg-slate-100 focus-visible:bg-slate-800 dbml-light:focus-visible:bg-slate-100 focus-visible:outline-none ${
+        danger ? 'text-red-400' : 'text-slate-200 dbml-light:text-slate-700'
       }`}
     >
       {icon}

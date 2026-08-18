@@ -38,9 +38,11 @@ Records users(id, username, role) {
 }
 `;
 
+const bare = (name: string) => ({ name });
+
 describe('renameTableInDbml', () => {
   it('renames the declaration, every ref endpoint and the Records block', () => {
-    const out = renameTableInDbml(SAMPLE, 'users', 'accounts');
+    const out = renameTableInDbml(SAMPLE, bare('users'), bare('accounts'));
 
     expect(out).toContain('Table accounts {');
     expect(out).toContain('Ref user_posts: posts.user_id > accounts.id');
@@ -51,7 +53,7 @@ describe('renameTableInDbml', () => {
   });
 
   it('preserves comments, blank lines and inline notes verbatim', () => {
-    const out = renameTableInDbml(SAMPLE, 'users', 'accounts');
+    const out = renameTableInDbml(SAMPLE, bare('users'), bare('accounts'));
 
     expect(out).toContain('// Use DBML to define your database structure');
     expect(out).toContain('// Docs: https://dbml.dbdiagram.io/docs');
@@ -63,7 +65,7 @@ describe('renameTableInDbml', () => {
 
   it('keeps the schema equivalent after renaming', () => {
     const before = parseDbml(SAMPLE);
-    const after = parseDbml(renameTableInDbml(SAMPLE, 'users', 'accounts'));
+    const after = parseDbml(renameTableInDbml(SAMPLE, bare('users'), bare('accounts')));
 
     expect(after.warnings).toEqual(before.warnings);
     expect(after.tables.map((t) => t.name)).toEqual(['follows', 'accounts', 'posts']);
@@ -82,7 +84,7 @@ Table orders {
   status_id integer [ref: > status.id]
 }
 `;
-    const out = renameTableInDbml(dbml, 'status', 'order_status');
+    const out = renameTableInDbml(dbml, bare('status'), bare('order_status'));
     expect(out).toContain('Table order_status {');
     expect(out).toContain('  status varchar');
     expect(out).toContain('[ref: > order_status.id]');
@@ -95,39 +97,79 @@ TableGroup core {
   users
 }
 `;
-    expect(renameTableInDbml(dbml, 'users', 'accounts')).toContain('  accounts\n');
+    expect(renameTableInDbml(dbml, bare('users'), bare('accounts'))).toContain('  accounts\n');
   });
 
   it('quotes a name that is not a bare identifier', () => {
     const dbml = 'Table users { id integer }\nRef: users.id - users.id';
-    const out = renameTableInDbml(dbml, 'users', 'user accounts');
+    const out = renameTableInDbml(dbml, bare('users'), bare('user accounts'));
     expect(out).toContain('Table "user accounts" {');
     expect(out).toContain('Ref: "user accounts".id - "user accounts".id');
   });
 
   it('is a no-op for an unknown or unchanged name', () => {
-    expect(renameTableInDbml(SAMPLE, 'ghost', 'x')).toBe(SAMPLE);
-    expect(renameTableInDbml(SAMPLE, 'users', 'users')).toBe(SAMPLE);
-    expect(renameTableInDbml(SAMPLE, 'users', '   ')).toBe(SAMPLE);
+    expect(renameTableInDbml(SAMPLE, bare('ghost'), bare('x'))).toBe(SAMPLE);
+    expect(renameTableInDbml(SAMPLE, bare('users'), bare('users'))).toBe(SAMPLE);
+    expect(renameTableInDbml(SAMPLE, bare('users'), bare('   '))).toBe(SAMPLE);
+  });
+
+  it('renames only the schema-matching table, leaving a same-named table in another schema untouched', () => {
+    const dbml = `
+Table public.users {
+  id integer [pk]
+}
+Table auth.users {
+  id integer [pk]
+}
+Ref: public.users.id < auth.users.id
+`;
+    const out = renameTableInDbml(dbml, { schema: 'public', name: 'users' }, { schema: 'public', name: 'accounts' });
+    expect(out).toContain('Table public.accounts {');
+    expect(out).toContain('Table auth.users {');
+    expect(out).toContain('Ref: public.accounts.id < auth.users.id');
+  });
+
+  it('does not rename an unqualified table when the target is schema-qualified, or vice versa', () => {
+    const dbml = `
+Table users { id integer [pk] }
+Table public.users { id integer [pk] }
+`;
+    const qualifiedOnly = renameTableInDbml(dbml, { schema: 'public', name: 'users' }, { schema: 'public', name: 'accounts' });
+    expect(qualifiedOnly).toContain('Table users {');
+    expect(qualifiedOnly).toContain('Table public.accounts {');
+
+    const bareOnly = renameTableInDbml(dbml, bare('users'), bare('accounts'));
+    expect(bareOnly).toContain('Table accounts {');
+    expect(bareOnly).toContain('Table public.users {');
   });
 });
 
 describe('validateTableName', () => {
-  const names = ['users', 'posts'];
+  const refs = [bare('users'), bare('posts')];
 
   it('rejects empty names', () => {
-    expect(validateTableName('  ', names, 'users').ok).toBe(false);
+    expect(validateTableName('  ', refs, bare('users')).ok).toBe(false);
   });
 
   it('rejects a collision with another table', () => {
-    expect(validateTableName('posts', names, 'users')).toEqual({
+    expect(validateTableName('posts', refs, bare('users'))).toEqual({
       ok: false,
       error: 'A table named "posts" already exists.',
     });
   });
 
   it('allows keeping the current name, including case changes', () => {
-    expect(validateTableName('users', names, 'users').ok).toBe(true);
-    expect(validateTableName('Users', names, 'users').ok).toBe(true);
+    expect(validateTableName('users', refs, bare('users')).ok).toBe(true);
+    expect(validateTableName('Users', refs, bare('users')).ok).toBe(true);
+  });
+
+  it('does not flag a collision with a same-named table in a different schema', () => {
+    const withSchemas = [{ schema: 'public', name: 'users' }, { schema: 'auth', name: 'users' }];
+    expect(validateTableName('users', withSchemas, { schema: 'public', name: 'users' }).ok).toBe(true);
+  });
+
+  it('rejects a collision within the same schema', () => {
+    const withSchemas = [{ schema: 'public', name: 'users' }, { schema: 'public', name: 'accounts' }];
+    expect(validateTableName('accounts', withSchemas, { schema: 'public', name: 'users' }).ok).toBe(false);
   });
 });

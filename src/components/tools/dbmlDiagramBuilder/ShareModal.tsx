@@ -25,7 +25,7 @@ export function ShareModal({ dbml, onClose }: ShareModalProps) {
 
   return (
     <Modal title="Share diagram" onClose={onClose} widthClass="max-w-lg">
-      <p className="text-sm text-slate-400 mb-3">
+      <p className="text-sm text-slate-400 dbml-light:text-slate-500 mb-3">
         Anyone with this link can open a read-only copy of this schema — the DBML is compressed directly into the
         URL, nothing is uploaded anywhere.
       </p>
@@ -34,7 +34,7 @@ export function ShareModal({ dbml, onClose }: ShareModalProps) {
           readOnly
           value={url}
           onFocus={(e) => e.currentTarget.select()}
-          className="flex-1 min-w-0 bg-slate-800 rounded px-2 py-1.5 text-xs font-mono text-slate-200"
+          className="flex-1 min-w-0 bg-slate-800 dbml-light:bg-slate-100 rounded px-2 py-1.5 text-xs font-mono text-slate-200 dbml-light:text-slate-800"
           aria-label="Share URL"
         />
         <button

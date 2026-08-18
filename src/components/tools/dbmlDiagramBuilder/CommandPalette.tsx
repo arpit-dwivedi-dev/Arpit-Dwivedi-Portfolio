@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type ComponentType } from 'react';
 import { Search } from 'lucide-react';
+import { useFocusTrap } from '../../../tools/dbmlDiagramBuilder/hooks/useFocusTrap';
 
 export interface Command {
   id: string;
@@ -18,8 +19,11 @@ export function CommandPalette({ commands, onClose }: CommandPaletteProps) {
   const [query, setQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => inputRef.current?.focus(), []);
+  // The input is the first focusable element in the dialog, so the shared
+  // focus trap already lands initial focus here — no separate effect needed.
+  useFocusTrap(containerRef);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -45,20 +49,22 @@ export function CommandPalette({ commands, onClose }: CommandPaletteProps) {
       }}
     >
       <div
+        ref={containerRef}
+        tabIndex={-1}
         role="dialog"
         aria-modal="true"
         aria-label="Command palette"
-        className="w-full max-w-md max-h-full flex flex-col rounded-lg border border-slate-700 bg-slate-900 shadow-2xl text-slate-100 overflow-hidden"
+        className="w-full max-w-md max-h-full flex flex-col rounded-lg border border-slate-700 dbml-light:border-slate-200 bg-slate-900 dbml-light:bg-white shadow-2xl text-slate-100 dbml-light:text-slate-900 overflow-hidden outline-none"
       >
-        <div className="flex items-center gap-2 px-3 border-b border-slate-800 shrink-0">
-          <Search size={15} className="text-slate-500 shrink-0" />
+        <div className="flex items-center gap-2 px-3 border-b border-slate-800 dbml-light:border-slate-200 shrink-0">
+          <Search size={15} className="text-slate-500 dbml-light:text-slate-400 shrink-0" />
           <input
             ref={inputRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Type a command…"
             aria-label="Search commands"
-            className="flex-1 bg-transparent py-3 text-sm outline-none placeholder:text-slate-500"
+            className="flex-1 bg-transparent py-3 text-sm outline-none placeholder:text-slate-500 dbml-light:placeholder:text-slate-400"
             onKeyDown={(e) => {
               if (e.key === 'ArrowDown') {
                 e.preventDefault();
@@ -73,10 +79,10 @@ export function CommandPalette({ commands, onClose }: CommandPaletteProps) {
               }
             }}
           />
-          <kbd className="text-[10px] text-slate-500 border border-slate-700 rounded px-1 py-0.5">Esc</kbd>
+          <kbd className="text-[10px] text-slate-500 dbml-light:text-slate-400 border border-slate-700 dbml-light:border-slate-300 rounded px-1 py-0.5">Esc</kbd>
         </div>
         <ul className="max-h-72 flex-1 min-h-0 overflow-y-auto scrollbar-thin py-1" role="listbox">
-          {filtered.length === 0 && <li className="px-4 py-6 text-sm text-slate-500 text-center">No matching commands</li>}
+          {filtered.length === 0 && <li className="px-4 py-6 text-sm text-slate-500 dbml-light:text-slate-400 text-center">No matching commands</li>}
           {filtered.map((command, index) => {
             const Icon = command.icon;
             return (
@@ -88,7 +94,7 @@ export function CommandPalette({ commands, onClose }: CommandPaletteProps) {
                   onMouseEnter={() => setActiveIndex(index)}
                   onClick={() => run(command)}
                   className={`w-full flex items-center gap-2.5 px-3 py-2 text-left text-sm ${
-                    index === activeIndex ? 'bg-blue-600/20 text-white' : 'text-slate-300'
+                    index === activeIndex ? 'bg-blue-600/20 text-white dbml-light:text-blue-900' : 'text-slate-300 dbml-light:text-slate-700'
                   }`}
                 >
                   <Icon size={14} />

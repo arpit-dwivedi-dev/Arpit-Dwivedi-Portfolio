@@ -11,12 +11,13 @@ import {
   Maximize2,
   Moon,
   Plus,
+  Search,
   Upload,
 } from 'lucide-react';
 import { Header } from './Header';
 import { SplitPane } from './SplitPane';
 import { EditorPanel } from './EditorPanel';
-import { DiagramCanvas } from './DiagramCanvas';
+import { DiagramCanvas, type DiagramFocusRequest } from './DiagramCanvas';
 import { StatusBar } from './StatusBar';
 import { MobileTabs } from './MobileTabs';
 import { DocumentsModal } from './DocumentsModal';
@@ -27,11 +28,16 @@ import { RecordsModal } from './RecordsModal';
 import { TableSettingsModal } from './TableSettingsModal';
 import { ConfirmDialog } from './ConfirmDialog';
 import { CommandPalette, type Command } from './CommandPalette';
+import { TableSearchPalette } from './TableSearchPalette';
 import type { TableActions } from './TableActionsContext';
+import type { FocusTarget } from '../../../tools/dbmlDiagramBuilder/search/schemaSearch';
+import { DbmlThemeProvider } from './DbmlThemeContext';
+import { cycleDbmlTheme } from '../../../tools/dbmlDiagramBuilder/theme/resolveTheme';
 import { findTableNameRanges } from '../../../tools/dbmlDiagramBuilder/edit/renameTable';
 import { useDbmlWorkspace } from '../../../tools/dbmlDiagramBuilder/state/useDbmlWorkspace';
 import { useMediaQuery } from '../../../tools/dbmlDiagramBuilder/hooks/useMediaQuery';
 import { downloadTextFile } from '../../../tools/dbmlDiagramBuilder/export/download';
+import { copyDbmlToClipboard } from '../../../tools/dbmlDiagramBuilder/export/copyToClipboard';
 import { exportDiagramAsPng, exportDiagramAsSvg } from '../../../tools/dbmlDiagramBuilder/export/exportDiagram';
 import type { DbmlTemplate } from '../../../tools/dbmlDiagramBuilder/sampleTemplates';
 
@@ -51,11 +57,18 @@ export function DbmlDiagramBuilderApp() {
   const [mobileTab, setMobileTab] = useState<'editor' | 'diagram'>('editor');
   const [modal, setModal] = useState<ModalKind>(null);
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [focusRequest, setFocusRequest] = useState<DiagramFocusRequest | null>(null);
+  const focusRequestSeq = useRef(0);
   const [pendingConfirm, setPendingConfirm] = useState<PendingConfirm | null>(null);
   const [revealLine, setRevealLine] = useState<number | null>(null);
-  // Which table's header button was clicked, and which dialog it opened.
-  const [recordsTable, setRecordsTable] = useState<string | null>(null);
-  const [settingsTable, setSettingsTable] = useState<string | null>(null);
+  const [copyDbmlStatus, setCopyDbmlStatus] = useState<'idle' | 'copied' | 'error'>('idle');
+  const copyDbmlTimeoutRef = useRef<number | null>(null);
+  // Which table's header button was clicked (by its parser-assigned id, not
+  // its display name — two tables in different schemas can share a name),
+  // and which dialog it opened.
+  const [recordsTableId, setRecordsTableId] = useState<string | null>(null);
+  const [settingsTableId, setSettingsTableId] = useState<string | null>(null);
 
   const canvasWrapperRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -101,6 +114,17 @@ export function DbmlDiagramBuilderApp() {
     downloadTextFile(`${fileSafeName}.dbml`, workspace.dbmlText, 'text/plain');
   }, [fileSafeName, workspace.dbmlText]);
 
+  const handleCopyDbml = useCallback(async () => {
+    const ok = await copyDbmlToClipboard(workspace.dbmlText);
+    setCopyDbmlStatus(ok ? 'copied' : 'error');
+    if (copyDbmlTimeoutRef.current) window.clearTimeout(copyDbmlTimeoutRef.current);
+    copyDbmlTimeoutRef.current = window.setTimeout(() => setCopyDbmlStatus('idle'), 2000);
+  }, [workspace.dbmlText]);
+
+  useEffect(() => () => {
+    if (copyDbmlTimeoutRef.current) window.clearTimeout(copyDbmlTimeoutRef.current);
+  }, []);
+
   // PNG/SVG export screenshots the live canvas DOM, and on mobile that canvas
   // is `display: none` behind the Editor tab — with no box to capture, the
   // export comes out blank. Switch to the Diagram tab and wait for it to be
@@ -140,34 +164,48 @@ export function DbmlDiagramBuilderApp() {
     workspace.newDocument();
   }, [workspace]);
 
+  // A table result on mobile needs the Diagram tab actually on screen before
+  // DiagramCanvas's fitView has anything visible to pan/zoom.
+  const handleSearchSelect = useCallback(
+    (target: FocusTarget) => {
+      focusRequestSeq.current += 1;
+      setFocusRequest({ ...target, requestId: focusRequestSeq.current });
+      if (isMobile) setMobileTab('diagram');
+    },
+    [isMobile],
+  );
+
   const tableActions: TableActions = useMemo(
-    () => ({ viewRecords: setRecordsTable, editTable: setSettingsTable }),
+    () => ({ viewRecords: setRecordsTableId, editTable: setSettingsTableId }),
     [],
   );
 
   // Everything the open dialogs need, re-derived from the current schema so a
   // parse triggered by an edit in the left panel keeps the dialog in sync.
   const recordsTarget = useMemo(() => {
-    if (!recordsTable) return null;
-    const table = workspace.schema.tables.find((t) => t.name === recordsTable);
+    if (!recordsTableId) return null;
+    const table = workspace.schema.tables.find((t) => t.id === recordsTableId);
     if (!table) return null;
     return {
       table,
       records: workspace.schema.records.filter(
-        (block) => block.table.toLowerCase() === recordsTable.toLowerCase(),
+        (block) =>
+          block.table.toLowerCase() === table.name.toLowerCase() &&
+          (block.schema ?? '').toLowerCase() === (table.schema ?? '').toLowerCase(),
       ),
     };
-  }, [recordsTable, workspace.schema]);
+  }, [recordsTableId, workspace.schema]);
 
   const settingsTarget = useMemo(() => {
-    if (!settingsTable) return null;
-    if (!workspace.schema.tables.some((t) => t.name === settingsTable)) return null;
+    if (!settingsTableId) return null;
+    const table = workspace.schema.tables.find((t) => t.id === settingsTableId);
+    if (!table) return null;
     return {
-      name: settingsTable,
-      existingNames: workspace.schema.tables.map((t) => t.name),
-      referenceCount: findTableNameRanges(workspace.dbmlText, settingsTable).length,
+      table,
+      existingRefs: workspace.schema.tables.map((t) => ({ schema: t.schema, name: t.name })),
+      referenceCount: findTableNameRanges(workspace.dbmlText, { schema: table.schema, name: table.name }).length,
     };
-  }, [settingsTable, workspace.schema, workspace.dbmlText]);
+  }, [settingsTableId, workspace.schema, workspace.dbmlText]);
 
   // Global shortcuts: Ctrl/Cmd+S is handled inside the Monaco editor itself
   // (see EditorPanel's onSave) so it still fires while the editor has focus.
@@ -181,6 +219,9 @@ export function DbmlDiagramBuilderApp() {
       } else if (e.key.toLowerCase() === 'o') {
         e.preventDefault();
         fileInputRef.current?.click();
+      } else if (e.key.toLowerCase() === 'f' && e.shiftKey) {
+        e.preventDefault();
+        setSearchOpen(true);
       }
     };
     window.addEventListener('keydown', handler);
@@ -189,6 +230,13 @@ export function DbmlDiagramBuilderApp() {
 
   const commands: Command[] = useMemo(
     () => [
+      {
+        id: 'search',
+        label: 'Search Tables & Columns',
+        icon: Search,
+        action: () => setSearchOpen(true),
+        keywords: 'find table column jump go to',
+      },
       { id: 'new', label: 'New Diagram', icon: Plus, action: handleNewDocument },
       { id: 'import', label: 'Import DBML', icon: Upload, action: () => fileInputRef.current?.click() },
       { id: 'export-dbml', label: 'Export DBML', icon: FileCode2, action: handleExportDbml },
@@ -216,49 +264,81 @@ export function DbmlDiagramBuilderApp() {
           ? () => setMobileTab((t) => (t === 'editor' ? 'diagram' : 'editor'))
           : workspace.toggleEditorCollapsed,
       },
-      { id: 'toggle-theme', label: 'Toggle Theme', icon: Moon, action: () => workspace.setTheme(workspace.uiPrefs.theme === 'dark' ? 'light' : 'dark') },
+      {
+        id: 'toggle-theme',
+        label: 'Toggle Theme',
+        icon: Moon,
+        action: () => workspace.setTheme(cycleDbmlTheme(workspace.uiPrefs.theme)),
+        keywords: 'dark light system appearance',
+      },
       { id: 'rename', label: 'Rename Diagram', icon: FolderOpen, action: () => setModal('documents'), keywords: 'documents' },
       { id: 'templates', label: 'Browse Templates', icon: LayoutTemplate, action: () => setModal('templates') },
       { id: 'share', label: 'Share Diagram', icon: Link2, action: () => setModal('share') },
+      { id: 'copy-dbml', label: 'Copy DBML', icon: Copy, action: () => void handleCopyDbml(), keywords: 'clipboard code' },
       { id: 'download', label: 'Documents…', icon: Download, action: () => setModal('documents') },
     ],
-    [ensureCanvasRendered, handleExportDbml, handleExportPng, handleExportSvg, handleNewDocument, isMobile, workspace],
+    [ensureCanvasRendered, handleCopyDbml, handleExportDbml, handleExportPng, handleExportSvg, handleNewDocument, isMobile, workspace],
   );
 
   if (!workspace.ready || !workspace.activeDocument) {
-    return <div className="h-full w-full flex items-center justify-center bg-slate-950 text-slate-500 text-sm">Loading…</div>;
+    return (
+      <div
+        className={`h-full w-full flex items-center justify-center bg-slate-950 dbml-light:bg-white text-slate-500 text-sm ${
+          workspace.effectiveTheme === 'light' ? 'dbml-light' : ''
+        }`}
+      >
+        <h1 className="sr-only">DBML Diagram Builder — Free DBML Editor &amp; ER Diagram Tool</h1>
+        Loading…
+      </div>
+    );
   }
 
   const editorNode = (
-    <EditorPanel
-      value={workspace.dbmlText}
-      onChange={workspace.setDbmlText}
-      theme={workspace.effectiveTheme}
-      errorLine={revealLine}
-      onSave={workspace.flushSave}
-      compact={isMobile}
-    />
+    <>
+      <h2 className="sr-only">DBML Editor</h2>
+      <EditorPanel
+        value={workspace.dbmlText}
+        onChange={workspace.setDbmlText}
+        theme={workspace.effectiveTheme}
+        errorLine={revealLine}
+        onSave={workspace.flushSave}
+        schema={workspace.schema}
+        compact={isMobile}
+      />
+    </>
   );
 
   const diagramNode = (
-    <ReactFlowProvider>
-      <DiagramCanvas
-        nodes={workspace.nodes}
-        edges={workspace.edges}
-        onNodeDragStop={workspace.onNodeDragStop}
-        // The minimap is a 200×150 overlay — on a phone that buries the canvas
-        // it is meant to summarise, so it is desktop-only.
-        minimapVisible={workspace.uiPrefs.minimapVisible && !isMobile}
-        wrapperRef={canvasWrapperRef}
-        isEmpty={workspace.schema.tables.length === 0}
-        tableActions={tableActions}
-        visible={!isMobile || mobileTab === 'diagram'}
-      />
-    </ReactFlowProvider>
+    <>
+      <h2 className="sr-only">ER Diagram</h2>
+      <ReactFlowProvider>
+        <DbmlThemeProvider value={workspace.effectiveTheme}>
+        <DiagramCanvas
+          nodes={workspace.nodes}
+          edges={workspace.edges}
+          onNodeDragStop={workspace.onNodeDragStop}
+          // The minimap is a 200×150 overlay — on a phone that buries the canvas
+          // it is meant to summarise, so it is desktop-only.
+          minimapVisible={workspace.uiPrefs.minimapVisible && !isMobile}
+          wrapperRef={canvasWrapperRef}
+          isEmpty={workspace.schema.tables.length === 0}
+          tableActions={tableActions}
+          visible={!isMobile || mobileTab === 'diagram'}
+          focusRequest={focusRequest}
+        />
+        </DbmlThemeProvider>
+      </ReactFlowProvider>
+    </>
   );
 
   return (
-    <div className="h-full w-full flex flex-col bg-slate-950 overflow-hidden">
+    <div
+      className={`dbml-app h-full w-full flex flex-col bg-slate-950 dbml-light:bg-white overflow-hidden ${
+        workspace.effectiveTheme === 'light' ? 'dbml-light' : ''
+      }`}
+    >
+      <h1 className="sr-only">DBML Diagram Builder — Free DBML Editor &amp; ER Diagram Tool</h1>
+
       <input
         ref={fileInputRef}
         type="file"
@@ -279,8 +359,11 @@ export function DbmlDiagramBuilderApp() {
         onOpenDocuments={() => setModal('documents')}
         onOpenTemplates={() => setModal('templates')}
         onOpenShare={() => setModal('share')}
+        onCopyDbml={() => void handleCopyDbml()}
+        copyDbmlStatus={copyDbmlStatus}
         onOpenHelp={() => setModal('help')}
         onOpenCommandPalette={() => setPaletteOpen(true)}
+        onOpenSearch={() => setSearchOpen(true)}
         onImportClick={() => fileInputRef.current?.click()}
         onExportDbml={handleExportDbml}
         onExportPng={() => void handleExportPng()}
@@ -315,12 +398,13 @@ export function DbmlDiagramBuilderApp() {
         />
       )}
 
-      <div className="border-t border-slate-800 bg-slate-950 shrink-0">
+      <div className="border-t border-slate-800 dbml-light:border-slate-200 bg-slate-950 dbml-light:bg-white shrink-0">
         <StatusBar
           warnings={workspace.schema.warnings}
           fatalError={workspace.fatalError}
           tableCount={workspace.schema.tables.length}
           relationshipCount={workspace.schema.relationships.length}
+          storageWarning={workspace.storageWarning}
           onSelectWarning={(line) => {
             if (!line) return;
             setRevealLine(line);
@@ -346,25 +430,34 @@ export function DbmlDiagramBuilderApp() {
       {modal === 'help' && <HelpModal onClose={() => setModal(null)} />}
       {recordsTarget && (
         <RecordsModal
-          tableName={recordsTarget.table.name}
+          tableName={recordsTarget.table.qualifiedName}
           columns={recordsTarget.table.columns}
           records={recordsTarget.records}
-          onClose={() => setRecordsTable(null)}
+          onClose={() => setRecordsTableId(null)}
         />
       )}
       {settingsTarget && (
         <TableSettingsModal
-          tableName={settingsTarget.name}
-          existingNames={settingsTarget.existingNames}
+          tableName={settingsTarget.table.name}
+          tableSchema={settingsTarget.table.schema}
+          qualifiedName={settingsTarget.table.qualifiedName}
+          existingRefs={settingsTarget.existingRefs}
           referenceCount={settingsTarget.referenceCount}
           onRename={(newName) => {
-            workspace.renameTable(settingsTarget.name, newName);
-            setSettingsTable(null);
+            workspace.renameTable({ schema: settingsTarget.table.schema, name: settingsTarget.table.name }, newName);
+            setSettingsTableId(null);
           }}
-          onClose={() => setSettingsTable(null)}
+          onClose={() => setSettingsTableId(null)}
         />
       )}
       {paletteOpen && <CommandPalette commands={commands} onClose={() => setPaletteOpen(false)} />}
+      {searchOpen && (
+        <TableSearchPalette
+          schema={workspace.schema}
+          onClose={() => setSearchOpen(false)}
+          onSelect={handleSearchSelect}
+        />
+      )}
       {pendingConfirm && (
         <ConfirmDialog
           title={pendingConfirm.title}

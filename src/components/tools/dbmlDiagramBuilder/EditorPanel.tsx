@@ -1,8 +1,11 @@
 import { useEffect, useRef } from 'react';
 import Editor, { type Monaco, type OnMount } from '@monaco-editor/react';
-import type { editor as MonacoEditorNs } from 'monaco-editor';
+import type { editor as MonacoEditorNs, IDisposable } from 'monaco-editor';
 import { ensureMonacoConfigured } from '../../../tools/dbmlDiagramBuilder/monaco/monacoSetup';
 import { DBML_LANGUAGE_ID, registerDbmlLanguage } from '../../../tools/dbmlDiagramBuilder/monaco/dbmlLanguage';
+import { registerDbmlCompletionProvider } from '../../../tools/dbmlDiagramBuilder/monaco/completionProvider';
+import { monacoThemeFor } from '../../../tools/dbmlDiagramBuilder/theme/resolveTheme';
+import type { DatabaseSchema } from '../../../tools/dbmlDiagramBuilder/types';
 
 ensureMonacoConfigured();
 
@@ -12,22 +15,35 @@ interface EditorPanelProps {
   theme: 'dark' | 'light';
   errorLine: number | null;
   onSave: () => void;
+  /** Latest parsed schema, used to drive table/column autocomplete. */
+  schema: DatabaseSchema;
   /** Phone layout: wrap long lines, slim the gutter, keep taps zoom-free. */
   compact?: boolean;
 }
 
-export function EditorPanel({ value, onChange, theme, errorLine, onSave, compact = false }: EditorPanelProps) {
+export function EditorPanel({ value, onChange, theme, errorLine, onSave, schema, compact = false }: EditorPanelProps) {
   const editorRef = useRef<MonacoEditorNs.IStandaloneCodeEditor | null>(null);
   const monacoRef = useRef<Monaco | null>(null);
   const decorationsRef = useRef<MonacoEditorNs.IEditorDecorationsCollection | null>(null);
   const onSaveRef = useRef(onSave);
   onSaveRef.current = onSave;
+  const schemaRef = useRef(schema);
+  schemaRef.current = schema;
+  const completionDisposableRef = useRef<IDisposable | null>(null);
 
   const handleMount: OnMount = (editor, monaco) => {
     editorRef.current = editor;
     monacoRef.current = monaco;
     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => onSaveRef.current());
+    completionDisposableRef.current = registerDbmlCompletionProvider(monaco, () => schemaRef.current);
   };
+
+  useEffect(() => {
+    return () => {
+      completionDisposableRef.current?.dispose();
+      completionDisposableRef.current = null;
+    };
+  }, []);
 
   useEffect(() => {
     const editor = editorRef.current;
@@ -69,11 +85,15 @@ export function EditorPanel({ value, onChange, theme, errorLine, onSave, compact
         height="100%"
         defaultLanguage={DBML_LANGUAGE_ID}
         value={value}
-        theme={theme === 'dark' ? 'dbml-dark' : 'dbml-light'}
+        theme={monacoThemeFor(theme)}
         beforeMount={(monaco: Monaco) => registerDbmlLanguage(monaco)}
         onMount={handleMount}
         onChange={(v) => onChange(v ?? '')}
-        loading={<div className="w-full h-full flex items-center justify-center text-sm text-slate-400">Loading editor…</div>}
+        loading={
+          <div className="w-full h-full flex items-center justify-center text-sm text-slate-400 dbml-light:text-slate-500 bg-slate-950 dbml-light:bg-white">
+            Loading editor…
+          </div>
+        }
         options={{
           fontSize: compact ? 14 : 13,
           fontFamily: '"JetBrains Mono", ui-monospace, monospace',
@@ -99,13 +119,21 @@ export function EditorPanel({ value, onChange, theme, errorLine, onSave, compact
           scrollbar: compact
             ? { horizontal: 'hidden', verticalScrollbarSize: 8, useShadows: false }
             : undefined,
-          // No completion provider is registered for the DBML language, so
-          // Monaco's default word-based suggestion widget has nothing useful
-          // to offer — worse, it can swallow a Space keystroke as a suggestion
-          // "commit" while typing. Disabling it keeps typing predictable.
-          quickSuggestions: false,
-          suggestOnTriggerCharacters: false,
+          // A dedicated DBML completion provider is registered in handleMount
+          // (see registerDbmlCompletionProvider) — the built-in word-based
+          // suggestion widget stays off since it has nothing schema-aware to
+          // offer and used to swallow a Space keystroke as a suggestion
+          // "commit" while typing. acceptSuggestionOnCommitCharacter is what
+          // actually caused that: with it on, a non-alphanumeric keystroke
+          // like Space could silently accept the highlighted suggestion
+          // instead of just being typed. Turning it off keeps Space/Enter/Tab
+          // behaving normally; only an explicit Tab/Enter on a selected item
+          // accepts a suggestion.
+          quickSuggestions: { other: true, comment: false, strings: false },
+          suggestOnTriggerCharacters: true,
           wordBasedSuggestions: 'off',
+          acceptSuggestionOnCommitCharacter: false,
+          acceptSuggestionOnEnter: 'smart',
         }}
       />
     </div>

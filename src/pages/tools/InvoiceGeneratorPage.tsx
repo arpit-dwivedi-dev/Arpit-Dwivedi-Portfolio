@@ -77,7 +77,7 @@ const labelClass = 'text-[11px] font-mono text-secondary-text uppercase tracking
 // tight inline layout, so a fixed width truncates larger values. Size them to
 // the value's own length instead, within sane min/max bounds for mobile.
 const summaryFieldWidth = (value: number, minChars = 3) =>
-  `${Math.min(Math.max(minChars, String(value).length + 2), 12)}ch`;
+  `calc(${Math.min(Math.max(minChars, String(value).length + 2), 12)}ch + 1.75rem)`;
 
 export const InvoiceGeneratorPage = () => {
   const { lang, content } = useLanguage();

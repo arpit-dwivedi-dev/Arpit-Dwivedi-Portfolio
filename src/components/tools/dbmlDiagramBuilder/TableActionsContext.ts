@@ -1,10 +1,10 @@
 import { createContext, useContext } from 'react';
 
 export interface TableActions {
-  /** Open the read-only data viewer for a table's `Records` rows. */
-  viewRecords: (tableName: string) => void;
-  /** Open the settings dialog (currently: rename the table). */
-  editTable: (tableName: string) => void;
+  /** Open the read-only data viewer for a table's `Records` rows. Takes the table's parser-assigned `id`, not its (possibly duplicated) display name. */
+  viewRecords: (tableId: string) => void;
+  /** Open the settings dialog (currently: rename the table). Takes the table's parser-assigned `id`. */
+  editTable: (tableId: string) => void;
 }
 
 /**

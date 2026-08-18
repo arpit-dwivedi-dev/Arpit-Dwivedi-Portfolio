@@ -1,4 +1,6 @@
+import { memo } from 'react';
 import { BaseEdge, EdgeLabelRenderer, getSmoothStepPath, type EdgeProps } from '@xyflow/react';
+import { useDbmlTheme } from './DbmlThemeContext';
 
 interface RelationshipEdgeData extends Record<string, unknown> {
   highlighted?: boolean;
@@ -14,7 +16,7 @@ const DOT_OFFSETS = [0, -0.55, -1.1] as const;
 // the direction of a reference is legible at a glance instead of just an
 // arrowhead. Staggered `begin` offsets keep the stream looking continuous
 // rather than one dot chasing an empty line.
-export function RelationshipEdge({
+function RelationshipEdgeImpl({
   id,
   sourceX,
   sourceY,
@@ -32,6 +34,10 @@ export function RelationshipEdge({
 }: EdgeProps) {
   const edgeData = data as RelationshipEdgeData | undefined;
   const laneOffset = edgeData?.laneOffset ?? 0;
+  const theme = useDbmlTheme();
+  const dotColor = theme === 'dark' ? '#64748b' : '#94a3b8';
+  const labelColor = theme === 'dark' ? '#cbd5e1' : '#64748b';
+  const labelBg = theme === 'dark' ? '#1e293b' : '#ffffff';
 
   const [edgePath, labelX, labelY] = getSmoothStepPath({
     sourceX,
@@ -61,7 +67,7 @@ export function RelationshipEdge({
         }}
       />
       {DOT_OFFSETS.map((offset) => (
-        <circle key={offset} r={highlighted ? 3 : 2.25} fill={highlighted ? '#2563eb' : '#94a3b8'}>
+        <circle key={offset} r={highlighted ? 3 : 2.25} fill={highlighted ? '#2563eb' : dotColor}>
           <animateMotion
             dur={highlighted ? '1.1s' : '1.8s'}
             begin={`${offset}s`}
@@ -85,8 +91,8 @@ export function RelationshipEdge({
               // honors. Left as `fill`, it's silently ignored and the label
               // inherits the page's text color instead (invisible: white on
               // white here, since the app defaults to a dark text color).
-              color: (labelStyle?.fill as string | undefined) ?? '#64748b',
-              background: (labelBgStyle?.fill as string | undefined) ?? '#ffffff',
+              color: (labelStyle?.fill as string | undefined) ?? labelColor,
+              background: (labelBgStyle?.fill as string | undefined) ?? labelBg,
               padding: labelBgPadding ? `${labelBgPadding[1]}px ${labelBgPadding[0]}px` : '2px 4px',
               borderRadius: 4,
               whiteSpace: 'nowrap',
@@ -99,3 +105,5 @@ export function RelationshipEdge({
     </>
   );
 }
+
+export const RelationshipEdge = memo(RelationshipEdgeImpl);

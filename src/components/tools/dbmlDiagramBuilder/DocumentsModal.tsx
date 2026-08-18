@@ -43,7 +43,7 @@ function DocumentRow({
 
   return (
     <li
-      className={`flex items-center gap-2 rounded-md px-2 py-1.5 ${active ? 'bg-blue-600/15 border border-blue-600/40' : 'border border-transparent hover:bg-slate-800'}`}
+      className={`flex items-center gap-2 rounded-md px-2 py-1.5 ${active ? 'bg-blue-600/15 border border-blue-600/40' : 'border border-transparent hover:bg-slate-800 dbml-light:hover:bg-slate-100'}`}
     >
       {editing ? (
         <input
@@ -55,7 +55,7 @@ function DocumentRow({
             if (e.key === 'Enter') commit();
             if (e.key === 'Escape') setEditing(false);
           }}
-          className="flex-1 min-w-0 bg-slate-800 rounded px-2 py-1 text-sm outline outline-1 outline-blue-500"
+          className="flex-1 min-w-0 bg-slate-800 dbml-light:bg-slate-100 rounded px-2 py-1 text-sm outline outline-1 outline-blue-500"
         />
       ) : (
         <button type="button" onClick={onSwitch} className="flex-1 min-w-0 text-left text-sm truncate py-0.5">
@@ -79,7 +79,7 @@ function DocumentRow({
               type="button"
               onClick={() => setConfirmingDelete(false)}
               aria-label="Cancel delete"
-              className="w-6 h-6 flex items-center justify-center rounded hover:bg-slate-700"
+              className="w-6 h-6 flex items-center justify-center rounded hover:bg-slate-700 dbml-light:hover:bg-slate-200"
             >
               <X size={13} />
             </button>
@@ -91,7 +91,7 @@ function DocumentRow({
               onClick={() => setEditing(true)}
               aria-label={`Rename ${doc.name}`}
               title="Rename"
-              className="w-6 h-6 flex items-center justify-center rounded text-slate-400 hover:bg-slate-700 hover:text-slate-200"
+              className="w-6 h-6 flex items-center justify-center rounded text-slate-400 dbml-light:text-slate-500 hover:bg-slate-700 dbml-light:hover:bg-slate-200 hover:text-slate-200 dbml-light:hover:text-slate-700"
             >
               <Pencil size={13} />
             </button>
@@ -100,7 +100,7 @@ function DocumentRow({
               onClick={onDuplicate}
               aria-label={`Duplicate ${doc.name}`}
               title="Duplicate"
-              className="w-6 h-6 flex items-center justify-center rounded text-slate-400 hover:bg-slate-700 hover:text-slate-200"
+              className="w-6 h-6 flex items-center justify-center rounded text-slate-400 dbml-light:text-slate-500 hover:bg-slate-700 dbml-light:hover:bg-slate-200 hover:text-slate-200 dbml-light:hover:text-slate-700"
             >
               <Copy size={13} />
             </button>

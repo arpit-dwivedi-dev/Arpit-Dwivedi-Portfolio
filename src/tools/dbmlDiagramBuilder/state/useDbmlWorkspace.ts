@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { parseDbml } from '../parser/dbmlParser';
 import { renameTableInDbml } from '../edit/renameTable';
+import { tableKey, type TableRef } from '../schema/tableIdentity';
 import { buildNodes } from '../diagram/buildNodes';
+import { buildGroupNodes } from '../diagram/buildGroupNodes';
 import { buildEdges } from '../diagram/buildEdges';
 import { layoutSchema, resolvePositions } from '../diagram/layout';
 import {
@@ -16,15 +18,24 @@ import {
   type UiPrefs,
 } from '../persistence/localStorage';
 import { clearShareParamFromUrl, readSharedSchemaFromUrl } from '../persistence/urlShare';
+import { createStorageWarningTracker } from '../persistence/storageWarningTracker';
 import { DEFAULT_SAMPLE_DBML } from '../sampleTemplates';
 import { useMediaQuery } from '../hooks/useMediaQuery';
+import { resolveEffectiveTheme } from '../theme/resolveTheme';
 import type { DatabaseSchema, DbmlDocument, NodePosition } from '../types';
 
 const PARSE_DEBOUNCE_MS = 220;
 const TEXT_PERSIST_DEBOUNCE_MS = 500;
 const UI_PERSIST_DEBOUNCE_MS = 300;
 
-const EMPTY_SCHEMA: DatabaseSchema = { tables: [], relationships: [], records: [], warnings: [] };
+const EMPTY_SCHEMA: DatabaseSchema = {
+  tables: [],
+  relationships: [],
+  records: [],
+  enums: [],
+  tableGroups: [],
+  warnings: [],
+};
 
 // crypto.randomUUID() only exists in secure contexts (HTTPS or localhost) —
 // it throws on a plain-HTTP LAN address, which would otherwise crash the app
@@ -61,12 +72,18 @@ export function useDbmlWorkspace() {
   const [positions, setPositions] = useState<Record<string, NodePosition>>({});
   const [uiPrefs, setUiPrefsState] = useState<UiPrefs>(DEFAULT_UI_PREFS);
   const [savedText, setSavedText] = useState('');
+  const [storageWarning, setStorageWarning] = useState(false);
 
   const documentsRef = useRef<DbmlDocument[]>(documents);
   documentsRef.current = documents;
 
+  // Reports every localStorage write attempt; only flips `storageWarning`
+  // on an actual success/failure transition, so a run of repeated failures
+  // (e.g. a full quota rejecting every autosave) doesn't re-render on each one.
+  const reportSaveResult = useRef(createStorageWarningTracker(setStorageWarning)).current;
+
   const systemPrefersDark = useMediaQuery('(prefers-color-scheme: dark)');
-  const effectiveTheme: 'dark' | 'light' = uiPrefs.theme === 'system' ? (systemPrefersDark ? 'dark' : 'light') : uiPrefs.theme;
+  const effectiveTheme = resolveEffectiveTheme(uiPrefs.theme, systemPrefersDark);
 
   // Boot: hydrate from localStorage, or a shared URL, or the default sample.
   useEffect(() => {
@@ -95,8 +112,8 @@ export function useDbmlWorkspace() {
     setSavedText(active.dbml);
     setPositions(active.nodePositions);
     setUiPrefsState(loadUiPrefs());
-    saveDocuments(docs);
-    saveActiveDocumentId(active.id);
+    reportSaveResult(saveDocuments(docs));
+    reportSaveResult(saveActiveDocumentId(active.id));
     setReady(true);
   }, []);
 
@@ -121,7 +138,7 @@ export function useDbmlWorkspace() {
       const updated = documentsRef.current.map((d) =>
         d.id === activeId ? { ...d, dbml: dbmlText, updatedAt: Date.now() } : d,
       );
-      saveDocuments(updated);
+      reportSaveResult(saveDocuments(updated));
       setDocuments(updated);
       setSavedText(dbmlText);
     }, TEXT_PERSIST_DEBOUNCE_MS);
@@ -141,22 +158,26 @@ export function useDbmlWorkspace() {
     const current = documentsRef.current.find((d) => d.id === activeId);
     if (current && positionsEqual(current.nodePositions, positions)) return;
     const updated = updateDocumentPositions(documentsRef.current, activeId, positions);
-    saveDocuments(updated);
+    reportSaveResult(saveDocuments(updated));
     setDocuments(updated);
   }, [positions, activeId, ready]);
 
   // Debounced persistence of UI prefs (theme, panel width, etc).
   useEffect(() => {
     if (!ready) return;
-    const handle = setTimeout(() => saveUiPrefs(uiPrefs), UI_PERSIST_DEBOUNCE_MS);
+    const handle = setTimeout(() => reportSaveResult(saveUiPrefs(uiPrefs)), UI_PERSIST_DEBOUNCE_MS);
     return () => clearTimeout(handle);
   }, [uiPrefs, ready]);
 
-  const nodes = useMemo(() => buildNodes(schema, positions), [schema, positions]);
+  const tableNodes = useMemo(() => buildNodes(schema, positions), [schema, positions]);
+  const groupNodes = useMemo(() => buildGroupNodes(schema, positions), [schema, positions]);
+  // Group backgrounds are listed first so tables always stack visually above
+  // them, matching their fixed zIndex: -1.
+  const nodes = useMemo(() => [...groupNodes, ...tableNodes], [groupNodes, tableNodes]);
   const edges = useMemo(() => buildEdges(schema, positions), [schema, positions]);
 
-  const onNodeDragStop = useCallback((tableName: string, pos: NodePosition) => {
-    setPositions((prev) => ({ ...prev, [tableName]: pos }));
+  const onNodeDragStop = useCallback((nodeId: string, pos: NodePosition) => {
+    setPositions((prev) => ({ ...prev, [nodeId]: pos }));
   }, []);
 
   const relayout = useCallback(() => {
@@ -165,7 +186,7 @@ export function useDbmlWorkspace() {
 
   const flushSave = useCallback(() => {
     const updated = documentsRef.current.map((d) => (d.id === activeId ? { ...d, dbml: dbmlText, updatedAt: Date.now() } : d));
-    saveDocuments(updated);
+    reportSaveResult(saveDocuments(updated));
     setDocuments(updated);
     setSavedText(dbmlText);
   }, [activeId, dbmlText]);
@@ -173,19 +194,22 @@ export function useDbmlWorkspace() {
   /**
    * Diagram → editor half of the two-way binding. The DBML text stays the one
    * source of truth: renaming rewrites it, the debounced parse re-derives the
-   * schema, and the diagram follows. Positions are keyed by table name, so the
-   * old key is moved across or the renamed table would jump to a fresh
-   * auto-layout slot.
+   * schema, and the diagram follows. Positions are keyed by canonical table
+   * identity, so the old key is moved across or the renamed table would jump
+   * to a fresh auto-layout slot. The schema segment is preserved as-is —
+   * this only renames the table's own name within its current schema.
    */
-  const renameTable = useCallback((oldName: string, newName: string) => {
+  const renameTable = useCallback((oldRef: TableRef, newName: string) => {
     const trimmed = newName.trim();
-    if (!trimmed || trimmed === oldName) return;
+    const newRef: TableRef = { schema: oldRef.schema, name: trimmed };
+    if (!trimmed || tableKey(newRef) === tableKey(oldRef)) return;
 
-    setDbmlText((text) => renameTableInDbml(text, oldName, trimmed));
+    setDbmlText((text) => renameTableInDbml(text, oldRef, newRef));
     setPositions((prev) => {
-      if (!(oldName in prev)) return prev;
-      const { [oldName]: moved, ...rest } = prev;
-      return { ...rest, [trimmed]: moved };
+      const oldKey = tableKey(oldRef);
+      if (!(oldKey in prev)) return prev;
+      const { [oldKey]: moved, ...rest } = prev;
+      return { ...rest, [tableKey(newRef)]: moved };
     });
   }, []);
 
@@ -201,24 +225,24 @@ export function useDbmlWorkspace() {
     setDbmlText(doc.dbml);
     setSavedText(doc.dbml);
     setPositions(doc.nodePositions);
-    saveActiveDocumentId(id);
+    reportSaveResult(saveActiveDocumentId(id));
   }, []);
 
   const newDocument = useCallback((seedDbml: string = DEFAULT_SAMPLE_DBML, name = 'Untitled Diagram') => {
     const doc = createDocument(name, seedDbml);
     const updated = [...documentsRef.current, doc];
-    saveDocuments(updated);
+    reportSaveResult(saveDocuments(updated));
     setDocuments(updated);
     setActiveId(doc.id);
     setDbmlText(doc.dbml);
     setSavedText(doc.dbml);
     setPositions(doc.nodePositions);
-    saveActiveDocumentId(doc.id);
+    reportSaveResult(saveActiveDocumentId(doc.id));
   }, []);
 
   const renameDocument = useCallback((id: string, name: string) => {
     const updated = documentsRef.current.map((d) => (d.id === id ? { ...d, name, updatedAt: Date.now() } : d));
-    saveDocuments(updated);
+    reportSaveResult(saveDocuments(updated));
     setDocuments(updated);
   }, []);
 
@@ -227,13 +251,13 @@ export function useDbmlWorkspace() {
     if (!orig) return;
     const copy: DbmlDocument = { ...orig, id: generateId(), name: `${orig.name} copy`, createdAt: Date.now(), updatedAt: Date.now() };
     const updated = [...documentsRef.current, copy];
-    saveDocuments(updated);
+    reportSaveResult(saveDocuments(updated));
     setDocuments(updated);
     setActiveId(copy.id);
     setDbmlText(copy.dbml);
     setSavedText(copy.dbml);
     setPositions(copy.nodePositions);
-    saveActiveDocumentId(copy.id);
+    reportSaveResult(saveActiveDocumentId(copy.id));
   }, []);
 
   const deleteDocument = useCallback(
@@ -241,7 +265,7 @@ export function useDbmlWorkspace() {
       const current = documentsRef.current;
       if (current.length <= 1) return;
       const updated = current.filter((d) => d.id !== id);
-      saveDocuments(updated);
+      reportSaveResult(saveDocuments(updated));
       setDocuments(updated);
       if (id === activeId) {
         const next = updated[0];
@@ -249,7 +273,7 @@ export function useDbmlWorkspace() {
         setDbmlText(next.dbml);
         setSavedText(next.dbml);
         setPositions(next.nodePositions);
-        saveActiveDocumentId(next.id);
+        reportSaveResult(saveActiveDocumentId(next.id));
       }
     },
     [activeId],
@@ -261,7 +285,10 @@ export function useDbmlWorkspace() {
   const setMinimapVisible = useCallback((visible: boolean) => setUiPrefsState((p) => ({ ...p, minimapVisible: visible })), []);
 
   const activeDocument = documents.find((d) => d.id === activeId) ?? null;
-  const errorLine = schema.warnings[0]?.line ?? null;
+  // A fatal parse error takes priority for the "current diagnostic" line —
+  // it points at what's actually blocking a correct parse, whereas a warning
+  // is just a heads-up on an otherwise-parsed schema.
+  const errorLine = schema.warnings.find((w) => w.severity === 'error')?.line ?? schema.warnings[0]?.line ?? null;
 
   return {
     ready,
@@ -276,6 +303,7 @@ export function useDbmlWorkspace() {
     uiPrefs,
     effectiveTheme,
     saved: dbmlText === savedText,
+    storageWarning,
     errorLine,
     setDbmlText,
     renameTable,

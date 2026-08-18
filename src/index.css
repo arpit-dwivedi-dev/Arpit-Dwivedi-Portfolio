@@ -6,6 +6,16 @@
    that aren't driven by a token. */
 @custom-variant light (&:where(.light, .light *));
 
+/* The DBML Diagram Builder tool (src/components/tools/dbmlDiagramBuilder/)
+   has its own Dark/Light/System theme, independent of and toggled separately
+   from the site-wide theme above. It needs its own variant — reusing `.light`
+   would make the tool's colors flip whenever the *site* theme changes (since
+   `:where(.light, .light *)` matches anywhere under an ancestor `.light`,
+   including `<html class="light">`), even if the tool's own theme is "dark".
+   `.dbml-light` is toggled on the tool's root element by useDbmlWorkspace's
+   effectiveTheme instead. */
+@custom-variant dbml-light (&:where(.dbml-light, .dbml-light *));
+
 /* Self-hosted (see public/fonts/): avoids the fonts.googleapis.com -> fonts.gstatic.com
    request chain, which was the longest link in the critical network path (~1.4s).
    Both files are variable fonts — one file per family covers every weight used. */
