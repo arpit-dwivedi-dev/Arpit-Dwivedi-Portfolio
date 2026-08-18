@@ -8,7 +8,7 @@ import { getBlogPostBySlug } from '../content/blog/data';
 import type { SiteContent, Lang } from './types';
 // Route metadata lives in ./routeMeta (pure data, no React) so it's
 // unit-testable without pulling in JSX or this provider's effects.
-import { ROUTE_META, ROUTE_KEY_BY_PATH, type RouteKey } from './routeMeta';
+import { ROUTE_META, ROUTE_KEY_BY_PATH, isEnglishOnlyPath, resolveLanguagePath, type RouteKey } from './routeMeta';
 
 export type { SiteContent, Lang };
 
@@ -19,6 +19,10 @@ interface LanguageContextValue {
   // preserving the current page and hash — used by real <Link>s, never
   // an in-place content swap, so the browser announces a page change.
   toPath: (target: Lang) => string;
+  // True on routes with no /hi/... counterpart (see isEnglishOnlyPath) —
+  // LanguageSwitcher uses this to hide the Hindi option rather than link to
+  // a route that doesn't exist.
+  isEnglishOnly: boolean;
 }
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
@@ -103,7 +107,14 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const basePathname = stripHiPrefix(location.pathname);
     upsertAlternateLink('en', absoluteUrl('en', basePathname));
-    upsertAlternateLink('hi', absoluteUrl('hi', basePathname));
+    const hiLink = document.head.querySelector<HTMLLinkElement>('link[rel="alternate"][hreflang="hi"]');
+    if (isEnglishOnlyPath(basePathname)) {
+      // No /hi/... route exists for this page — emitting a Hindi alternate
+      // would point search engines at a URL that doesn't resolve.
+      hiLink?.remove();
+    } else {
+      upsertAlternateLink('hi', absoluteUrl('hi', basePathname));
+    }
     upsertAlternateLink('x-default', absoluteUrl('en', basePathname));
 
     const routeKey: RouteKey = ROUTE_KEY_BY_PATH[basePathname] ?? 'home';
@@ -153,21 +164,13 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     upsertMetaByName('twitter:description', meta.description);
   }, [location.pathname, lang]);
 
-  const toPath: LanguageContextValue['toPath'] = (target) => {
-    const basePathname = stripHiPrefix(location.pathname);
-    // Guides and blog posts are English-only (see App.tsx) — no /hi/guides
-    // or /hi/blog route exists, so switching to Hindi from one would land on
-    // a blank, unmatched URL. Send those to the Hindi home page instead of a
-    // dead link.
-    if (target === 'hi' && (basePathname.startsWith('/guides') || basePathname.startsWith('/blog'))) {
-      return '/hi';
-    }
-    const path = target === 'hi' ? (basePathname === '/' ? '/hi' : `/hi${basePathname}`) : basePathname;
-    return `${path}${location.hash}`;
-  };
+  const toPath: LanguageContextValue['toPath'] = (target) =>
+    resolveLanguagePath(stripHiPrefix(location.pathname), target, location.hash);
+
+  const isEnglishOnly = isEnglishOnlyPath(stripHiPrefix(location.pathname));
 
   return (
-    <LanguageContext.Provider value={{ lang, content, toPath }}>
+    <LanguageContext.Provider value={{ lang, content, toPath, isEnglishOnly }}>
       {children}
     </LanguageContext.Provider>
   );

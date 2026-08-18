@@ -68,6 +68,15 @@ const QRCodeGeneratorPage = lazy(() =>
 const QRRedirectPage = lazy(() =>
   import('./pages/tools/QRRedirectPage').then((m) => ({ default: m.QRRedirectPage })),
 );
+const VCardQrCodePage = lazy(() =>
+  import('./pages/tools/VCardQrCodePage').then((m) => ({ default: m.VCardQrCodePage })),
+);
+const MenuQrCodePage = lazy(() =>
+  import('./pages/tools/MenuQrCodePage').then((m) => ({ default: m.MenuQrCodePage })),
+);
+const WifiQrCodePage = lazy(() =>
+  import('./pages/tools/WifiQrCodePage').then((m) => ({ default: m.WifiQrCodePage })),
+);
 const ApiRequestBuilderPage = lazy(() =>
   import('./pages/tools/ApiRequestBuilderPage').then((m) => ({ default: m.ApiRequestBuilderPage })),
 );
@@ -151,6 +160,21 @@ export default function App() {
             <Route path="/hi/tools/generators/invoice-generator" element={lazyRoute(InvoiceGeneratorPage)} />
             <Route path="/tools/generators/qr-code-generator" element={lazyRoute(QRCodeGeneratorPage)} />
             <Route path="/hi/tools/generators/qr-code-generator" element={lazyRoute(QRCodeGeneratorPage)} />
+            {/* Dedicated SEO landing page for the "vCard/contact QR code"
+               intent cluster — reuses the same generator engine as the hub
+               above, preselected to the `contact` QR type. English-only by
+               design (see routeMeta.ts); no /hi/vcard-qr-code route. */}
+            <Route path="/vcard-qr-code" element={lazyRoute(VCardQrCodePage)} />
+            {/* Same pattern for the "menu QR code" intent cluster (restaurant
+               and café menus) — the shared generator engine again, this time
+               preselected and locked to the `menu` QR type. English-only, no
+               /hi/menu-qr-code route. */}
+            <Route path="/menu-qr-code" element={lazyRoute(MenuQrCodePage)} />
+            {/* Same pattern for the "WiFi QR code" intent cluster (guest and
+               team network sharing) — the shared generator engine again,
+               this time preselected and locked to the `wifi` QR type.
+               English-only, no /hi/wifi-qr-code route. */}
+            <Route path="/wifi-qr-code" element={lazyRoute(WifiQrCodePage)} />
             <Route path="/tools/developer/api-request-builder" element={lazyRoute(ApiRequestBuilderPage)} />
             <Route path="/hi/tools/developer/api-request-builder" element={lazyRoute(ApiRequestBuilderPage)} />
             <Route path="/tools/developer/dbml-diagram-builder" element={lazyRoute(DbmlDiagramBuilderPage)} />

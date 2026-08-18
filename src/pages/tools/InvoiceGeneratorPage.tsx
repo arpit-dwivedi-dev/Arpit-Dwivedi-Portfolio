@@ -69,9 +69,15 @@ const fillPlaceholders = (text: string, vars: Record<string, string>) =>
   Object.entries(vars).reduce((acc, [key, value]) => acc.replaceAll(`{${key}}`, value), text);
 
 const fieldClass =
-  'bg-ink/[0.03] border border-ink/10 hover:border-ink/20 focus:border-accent-blue focus:bg-ink/5 rounded-lg px-3 py-2 text-[15px] text-ink placeholder:text-secondary-text/60 focus:outline-none transition-colors';
+  'bg-ink/[0.03] border border-ink/10 hover:border-ink/20 focus:border-accent-blue focus:bg-ink/5 rounded-lg px-3 py-2 text-[15px] text-ink placeholder:text-secondary-text/60 focus:outline-none transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0';
 
 const labelClass = 'text-[11px] font-mono text-secondary-text uppercase tracking-widest';
+
+// Summary-row number fields (discount %, tax %, shipping, amount paid) sit in a
+// tight inline layout, so a fixed width truncates larger values. Size them to
+// the value's own length instead, within sane min/max bounds for mobile.
+const summaryFieldWidth = (value: number, minChars = 3) =>
+  `${Math.min(Math.max(minChars, String(value).length + 2), 12)}ch`;
 
 export const InvoiceGeneratorPage = () => {
   const { lang, content } = useLanguage();
@@ -521,7 +527,8 @@ export const InvoiceGeneratorPage = () => {
                           max={100}
                           value={invoice.discountPercent}
                           onChange={(e) => update('discountPercent', Number(e.target.value) || 0)}
-                          className={`${fieldClass} w-14 text-right shrink-0`}
+                          style={{ width: summaryFieldWidth(invoice.discountPercent) }}
+                          className={`${fieldClass} text-right shrink-0 min-w-0`}
                         />
                         <span className="w-4 shrink-0 text-secondary-text text-center">%</span>
                         <button
@@ -550,7 +557,8 @@ export const InvoiceGeneratorPage = () => {
                         max={100}
                         value={invoice.taxPercent}
                         onChange={(e) => update('taxPercent', Number(e.target.value) || 0)}
-                        className={`${fieldClass} w-14 text-right shrink-0`}
+                        style={{ width: summaryFieldWidth(invoice.taxPercent) }}
+                        className={`${fieldClass} text-right shrink-0 min-w-0`}
                       />
                       <span className="w-4 shrink-0 text-secondary-text text-center">%</span>
                       <span className="w-5 shrink-0" aria-hidden="true" />
@@ -567,7 +575,8 @@ export const InvoiceGeneratorPage = () => {
                           min={0}
                           value={invoice.shippingAmount}
                           onChange={(e) => update('shippingAmount', Number(e.target.value) || 0)}
-                          className={`${fieldClass} w-14 text-right shrink-0`}
+                          style={{ width: summaryFieldWidth(invoice.shippingAmount, 4) }}
+                          className={`${fieldClass} text-right shrink-0 min-w-0`}
                         />
                         <span className="w-4 shrink-0" aria-hidden="true" />
                         <button
@@ -600,7 +609,8 @@ export const InvoiceGeneratorPage = () => {
                         min={0}
                         value={invoice.amountPaid}
                         onChange={(e) => update('amountPaid', Number(e.target.value) || 0)}
-                        className={`${fieldClass} w-14 text-right shrink-0`}
+                        style={{ width: summaryFieldWidth(invoice.amountPaid, 4) }}
+                        className={`${fieldClass} text-right shrink-0 min-w-0`}
                       />
                       <span className="w-4 shrink-0" aria-hidden="true" />
                       <span className="w-5 shrink-0" aria-hidden="true" />

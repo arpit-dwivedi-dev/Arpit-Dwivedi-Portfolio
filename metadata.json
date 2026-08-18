@@ -655,6 +655,7 @@
       "privacyNote": "this tool has no server. The QR code is built entirely in your browser — nothing you type is ever uploaded anywhere.",
       "typeTabsAriaLabel": "QR code content type",
       "previewEmptyHint": "Sample QR — fill in the form to make your own",
+      "previewEmptyHintTyped": "Enter your {type} details to generate a QR code",
       "downloadPngButton": "Download PNG",
       "downloadSvgButton": "SVG",
       "copyImageButton": "Copy",
@@ -666,6 +667,10 @@
       "customizeHeading": "Customize",
       "foregroundLabel": "Foreground",
       "backgroundLabel": "Background",
+      "resetButton": "Reset",
+      "resetAriaLabel": "Reset this form back to blank",
+      "requiredIndicator": "(required)",
+      "previewAriaLabel": "Generated QR code preview",
       "types": {
         "url": {
           "label": "URL",
@@ -717,6 +722,44 @@
           "description": "Encode any text — scanning shows the message, with no link or app involved.",
           "fieldLabel": "Message",
           "placeholder": "Enter text here"
+        },
+        "wifi": {
+          "label": "WiFi",
+          "heading": "Share a WiFi connection",
+          "description": "Add the network name, security mode, and password — phones can join it instantly after scanning.",
+          "ssidLabel": "Network name (SSID)",
+          "ssidPlaceholder": "Office WiFi",
+          "passwordLabel": "Password",
+          "passwordPlaceholder": "Enter the WiFi password",
+          "securityLabel": "Security",
+          "securityWpa": "WPA/WPA2/WPA3",
+          "securityWep": "WEP",
+          "securityNone": "None / Open",
+          "hiddenLabel": "Hidden network"
+        },
+        "googleForm": {
+          "label": "Google Form",
+          "heading": "Link to a Google Form",
+          "description": "Paste your Google Form link to create a QR code that opens the form when scanned.",
+          "fieldLabel": "Google Form URL",
+          "placeholder": "https://docs.google.com/forms/d/...",
+          "helpNote": "Paste your Google Form link to create a QR code that opens the form when scanned."
+        },
+        "googleReview": {
+          "label": "Google Review",
+          "heading": "Link to a Google Review page",
+          "description": "Paste your Google review link to create a QR code customers can scan to leave a review.",
+          "fieldLabel": "Google Review URL",
+          "placeholder": "https://g.page/r/example/review",
+          "helpNote": "Paste your Google review link to create a QR code customers can scan to leave a review."
+        },
+        "menu": {
+          "label": "Menu",
+          "heading": "Link to your menu",
+          "description": "Paste your menu link to create a QR code customers can scan to open your menu.",
+          "fieldLabel": "Menu URL",
+          "placeholder": "https://example.com/menu",
+          "helpNote": "The QR code points at this link — it doesn't store the menu itself, so keep the page or file online at the same address."
         },
         "app": {
           "label": "App",
@@ -773,7 +816,7 @@
       ],
       "featuresTitle": "Features",
       "features": [
-        "Nine content types in one tool — URL, PDF link, multi-URL, contact card, plain text, app link, SMS, email, and phone",
+        "14 QR types in one tool — URL, PDF link, multi-URL, contact card, plain text, WiFi, Google Form, Google Review, menu link, app link, SMS, email, phone, and social link",
         "Live preview that updates as you type, with adjustable error correction",
         "Foreground and background color customization with quick presets",
         "Download as a high-resolution PNG or a scalable SVG, or copy the image directly",
@@ -781,8 +824,7 @@
       ],
       "useCasesTitle": "Use Cases",
       "useCases": [
-        "Printed menus, posters, or packaging that link to a web page or PDF",
-        "Business cards or name badges that save your contact details in one scan",
+        "Printed posters, flyers, or packaging that link to a web page or PDF",
         "Store signage that opens WhatsApp, dials your phone, or pre-fills an email",
         "App download cards that send iPhone and Android users to the right store automatically"
       ],

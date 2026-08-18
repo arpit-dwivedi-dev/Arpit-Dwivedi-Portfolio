@@ -1,4 +1,11 @@
-export type QrTypeId = 'url' | 'pdf' | 'multiUrl' | 'contact' | 'text' | 'app' | 'sms' | 'email' | 'phone' | 'social';
+export const QR_TYPE_IDS = ['url', 'pdf', 'multiUrl', 'contact', 'text', 'wifi', 'googleForm', 'googleReview', 'menu', 'app', 'sms', 'email', 'phone', 'social'] as const;
+
+export type QrTypeId = (typeof QR_TYPE_IDS)[number];
+
+export type ValidationResult = {
+  valid: boolean;
+  errors: Record<string, string>;
+};
 
 export interface QrStyle {
   fgColor: string;
@@ -37,6 +44,15 @@ export interface TextFormData {
   value: string;
 }
 
+export type WifiSecurity = 'WPA' | 'WEP' | 'None';
+
+export interface WifiFormData {
+  ssid: string;
+  password: string;
+  security: WifiSecurity;
+  hidden: boolean;
+}
+
 export interface SmsFormData {
   phone: string;
   message: string;
@@ -67,6 +83,10 @@ export interface QrForms {
   multiUrl: MultiUrlFormData;
   contact: ContactFormData;
   text: TextFormData;
+  wifi: WifiFormData;
+  googleForm: SimpleLinkFormData;
+  googleReview: SimpleLinkFormData;
+  menu: SimpleLinkFormData;
   app: AppFormData;
   sms: SmsFormData;
   email: EmailFormData;
@@ -96,6 +116,10 @@ export const createBlankForms = (): QrForms => ({
     website: '',
   },
   text: { value: '' },
+  wifi: { ssid: '', password: '', security: 'WPA', hidden: false },
+  googleForm: { value: '' },
+  googleReview: { value: '' },
+  menu: { value: '' },
   app: { ios: '', android: '' },
   sms: { phone: '', message: '' },
   email: { to: '', subject: '', body: '' },

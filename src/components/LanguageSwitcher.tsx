@@ -15,7 +15,7 @@ interface LanguageSwitcherProps {
 }
 
 export const LanguageSwitcher = ({ className = '', onNavigate, tabIndex, size = 'sm' }: LanguageSwitcherProps) => {
-  const { lang, content, toPath } = useLanguage();
+  const { lang, content, toPath, isEnglishOnly } = useLanguage();
   const { nav } = content;
 
   const activeClass = 'bg-ink/10 text-ink';
@@ -33,16 +33,21 @@ export const LanguageSwitcher = ({ className = '', onNavigate, tabIndex, size = 
       >
         <span lang="en">{nav.langEnglishNative}</span>
       </Link>
-      <Link
-        to={toPath('hi')}
-        onClick={onNavigate}
-        tabIndex={tabIndex}
-        aria-current={lang === 'hi' ? 'true' : undefined}
-        className={`${linkSizeClass} rounded-md transition-colors ${lang === 'hi' ? activeClass : inactiveClass}`}
-      >
-        <span lang="hi">{nav.langHindiNative}</span>
-        <span className="sr-only" lang="en"> ({nav.langHindiGloss})</span>
-      </Link>
+      {/* No /hi/... route exists for this page (see isEnglishOnlyPath) — the
+         Hindi option is hidden entirely rather than linking to a dead route
+         or bouncing the visitor elsewhere. */}
+      {!isEnglishOnly && (
+        <Link
+          to={toPath('hi')}
+          onClick={onNavigate}
+          tabIndex={tabIndex}
+          aria-current={lang === 'hi' ? 'true' : undefined}
+          className={`${linkSizeClass} rounded-md transition-colors ${lang === 'hi' ? activeClass : inactiveClass}`}
+        >
+          <span lang="hi">{nav.langHindiNative}</span>
+          <span className="sr-only" lang="en"> ({nav.langHindiGloss})</span>
+        </Link>
+      )}
     </div>
   );
 };

@@ -20,6 +20,9 @@ export type RouteKey =
   | 'toolsGenerators'
   | 'invoiceGenerator'
   | 'qrCodeGenerator'
+  | 'vcardQrCode'
+  | 'menuQrCode'
+  | 'wifiQrCode'
   | 'toolsDeveloper'
   | 'apiRequestBuilder'
   | 'dbmlDiagramBuilder'
@@ -87,7 +90,22 @@ export const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; descript
     qrCodeGenerator: {
       title: 'QR Code Generator (Free Tool) | 101 Tech Labs',
       description:
-        'Create a QR code for a URL, contact card, plain text, SMS, email, phone number, or social link. Customize the colors and download as PNG or SVG — free, no signup, no server.',
+        'Free QR code generator for links, contact cards, WiFi, and more. Customize the colors and download as PNG or SVG — no signup, no server, everything runs in your browser.',
+    },
+    vcardQrCode: {
+      title: 'vCard QR Code Generator – Digital Business Card | 101 Tech Labs',
+      description:
+        "Create a QR code that saves your contact details to someone's phone. Add your name, phone, email, company, and address — free and no signup.",
+    },
+    menuQrCode: {
+      title: 'Menu QR Code Generator – For Restaurants & Cafés | 101 Tech Labs',
+      description:
+        'Turn your PDF or webpage menu into a scannable QR code for tables, signs, or receipts. Free, no signup, and most phone cameras scan it without an app.',
+    },
+    wifiQrCode: {
+      title: 'WiFi QR Code Generator – Free, No Signup | 101 Tech Labs',
+      description:
+        'Generate a QR code for your WiFi network so guests can connect without typing the password. Free, works in your browser, and downloads as PNG or SVG.',
     },
     toolsDeveloper: {
       title: 'Developer Tools | 101 Tech Labs',
@@ -173,7 +191,7 @@ export const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; descript
     qrCodeGenerator: {
       title: 'QR कोड जनरेटर (फ्री टूल) | 101 Tech Labs',
       description:
-        'URL, कॉन्टैक्ट कार्ड, प्लेन टेक्स्ट, SMS, ईमेल, फ़ोन नंबर, या सोशल लिंक के लिए QR कोड बनाएं। रंग कस्टमाइज़ करें और PNG या SVG के रूप में डाउनलोड करें — फ्री, कोई साइनअप नहीं, कोई सर्वर नहीं।',
+        'लिंक, कॉन्टैक्ट कार्ड, WiFi और अन्य के लिए फ्री QR कोड जनरेटर। रंग कस्टमाइज़ करें और PNG या SVG के रूप में डाउनलोड करें — कोई साइनअप नहीं, कोई सर्वर नहीं, सब कुछ आपके ब्राउज़र में ही होता है।',
     },
     toolsDeveloper: {
       title: 'डेवलपर टूल्स | 101 Tech Labs',
@@ -185,9 +203,25 @@ export const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; descript
       description:
         'REST API को फ्री में सीधे अपने ब्राउज़र में टेस्ट करें — GET, POST, PUT, DELETE, और अन्य। हेडर, क्वेरी पैरामीटर, ऑथ, और रिक्वेस्ट बॉडी सेट करें, फिर रिस्पॉन्स देखें। कोई साइनअप ज़रूरी नहीं।',
     },
-    // No /hi/dbml-diagram-builder, /hi/guides, or /hi/blog route exists yet
-    // (see App.tsx) — kept here only so this Record<Lang, Record<RouteKey,
-    // ...>> stays exhaustive under tsc.
+    // No /hi/dbml-diagram-builder, /hi/vcard-qr-code, /hi/menu-qr-code,
+    // /hi/wifi-qr-code, /hi/guides, or /hi/blog route exists yet (see
+    // App.tsx) — kept here only so this Record<Lang, Record<RouteKey, ...>>
+    // stays exhaustive under tsc.
+    vcardQrCode: {
+      title: 'vCard QR Code Generator – Digital Business Card | 101 Tech Labs',
+      description:
+        "Create a QR code that saves your contact details to someone's phone. Add your name, phone, email, company, and address — free and no signup.",
+    },
+    menuQrCode: {
+      title: 'Menu QR Code Generator – For Restaurants & Cafés | 101 Tech Labs',
+      description:
+        'Turn your PDF or webpage menu into a scannable QR code for tables, signs, or receipts. Free, no signup, and most phone cameras scan it without an app.',
+    },
+    wifiQrCode: {
+      title: 'WiFi QR Code Generator – Free, No Signup | 101 Tech Labs',
+      description:
+        'Generate a QR code for your WiFi network so guests can connect without typing the password. Free, works in your browser, and downloads as PNG or SVG.',
+    },
     dbmlDiagramBuilder: {
       title: 'DBML Diagram Builder — Free Database Schema Tool | 101 Tech Labs',
       description:
@@ -202,6 +236,44 @@ export const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; descript
       description: 'Real technical writing on the decisions behind full-stack applications — backend, identity, and judgment calls.',
     },
   },
+};
+
+// Routes with no /hi/... counterpart in App.tsx's route table — single
+// source of truth for both hreflang generation and language-switcher path
+// resolution in LanguageContext.tsx, so neither can drift and point at a
+// nonexistent Hindi URL. Split into exact single routes and prefix-matched
+// route families (dynamic children like /guides/:category/:slug included).
+const ENGLISH_ONLY_EXACT_PATHS: ReadonlySet<string> = new Set([
+  '/vcard-qr-code',
+  '/menu-qr-code',
+  '/wifi-qr-code',
+  '/tools/developer/dbml-diagram-builder',
+]);
+
+const ENGLISH_ONLY_PATH_PREFIXES = ['/guides', '/blog'];
+
+// `basePathname` must already have any /hi prefix stripped (see
+// stripHiPrefix in LanguageContext.tsx) — this checks the language-neutral
+// path against the English-only route set above.
+export const isEnglishOnlyPath = (basePathname: string): boolean =>
+  ENGLISH_ONLY_EXACT_PATHS.has(basePathname) ||
+  ENGLISH_ONLY_PATH_PREFIXES.some(
+    (prefix) => basePathname === prefix || basePathname.startsWith(`${prefix}/`),
+  );
+
+// Pure Hindi-path resolution shared by LanguageContext's toPath — kept here
+// (rather than inline in the component) so it's unit-testable without a
+// DOM/React environment (see jest.config.cjs: testEnvironment 'node',
+// .test.ts only). `basePathname` must already have any /hi prefix stripped.
+export const resolveLanguagePath = (basePathname: string, target: Lang, hash: string): string => {
+  if (target === 'hi' && isEnglishOnlyPath(basePathname)) {
+    // No /hi/... route exists — stay on the current English page instead of
+    // navigating to a dead route (the switcher hides this option entirely;
+    // this is a defensive fallback for any other caller of toPath).
+    return `${basePathname}${hash}`;
+  }
+  const path = target === 'hi' ? (basePathname === '/' ? '/hi' : `/hi${basePathname}`) : basePathname;
+  return `${path}${hash}`;
 };
 
 // Static path→RouteKey resolution used by LanguageContext's per-route head
@@ -221,6 +293,9 @@ export const ROUTE_KEY_BY_PATH: Record<string, RouteKey> = {
   '/tools/generators': 'toolsGenerators',
   '/tools/generators/invoice-generator': 'invoiceGenerator',
   '/tools/generators/qr-code-generator': 'qrCodeGenerator',
+  '/vcard-qr-code': 'vcardQrCode',
+  '/menu-qr-code': 'menuQrCode',
+  '/wifi-qr-code': 'wifiQrCode',
   '/tools/developer': 'toolsDeveloper',
   '/tools/developer/api-request-builder': 'apiRequestBuilder',
   '/tools/developer/dbml-diagram-builder': 'dbmlDiagramBuilder',
