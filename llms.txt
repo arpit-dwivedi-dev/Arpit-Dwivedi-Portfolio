@@ -16,6 +16,7 @@ Key facts:
 - [Tools](https://101techlabs.com/tools): free tools built by 101 Tech Labs.
 - [Invoice Generator](https://101techlabs.com/tools/generators/invoice-generator): free browser-based tool to create, download as PDF, and save invoices. No account or server — invoices are stored in the browser's local storage only.
 - [QR Code Generator](https://101techlabs.com/tools/generators/qr-code-generator): free browser-based tool to create QR codes for URLs, contact cards, text, SMS, email, phone numbers, or social links. No account or server.
+- [DBML Diagram Builder](https://101techlabs.com/tools/developer/dbml-diagram-builder): free browser-based tool to write DBML and see a live, interactive ER diagram. Import/export DBML, PNG, and SVG, with local save and shareable links. No account or server.
 - [Invoicing Guides](https://101techlabs.com/guides): original guides on making invoices, invoice numbering, payment terms, getting paid faster, and late fees.
 - [Engineering Notes](https://101techlabs.com/blog): technical writing on backend and identity engineering decisions. RSS feed at /rss.xml.
 - [Contact](https://101techlabs.com/contact): get in touch / request a quote.
