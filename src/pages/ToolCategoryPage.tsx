@@ -33,6 +33,40 @@ export const ToolCategoryPage = () => {
   const tools = getToolsByCategory(category.slug);
   const guideCategory = category.guideCategorySlug ? getGuideCategory(category.guideCategorySlug) : undefined;
 
+  return <ToolCategoryPageContent category={category} tools={tools} guideCategory={guideCategory} basePath={basePath} lang={lang} content={content} t={t} />;
+};
+
+type ToolCategoryPageContentProps = {
+  category: NonNullable<ReturnType<typeof getToolCategory>>;
+  tools: ReturnType<typeof getToolsByCategory>;
+  guideCategory: ReturnType<typeof getGuideCategory>;
+  basePath: string;
+  lang: ReturnType<typeof useLanguage>['lang'];
+  content: ReturnType<typeof useLanguage>['content'];
+  t: ReturnType<typeof useLanguage>['content']['toolsPage'];
+};
+
+// Split out so the noindex effect below only ever runs for the case it's
+// meant for: a category slug that resolves (the !category branch above
+// already redirects unknown ones) but currently has zero visible tools —
+// same thin/empty-page call ToolsPage's populatedCategories filter and
+// src/content/siteRoutes.ts#getIndexableToolCategoryRoutes already make for
+// the sitemap. Those exclusions only stop this page from being *advertised*
+// (no nav link, no sitemap entry) — the route itself stays live, so a
+// crawler that already found it another way still needs to be told not to
+// index it, same reasoning as GoogleMapsScraperPage's tag.
+const ToolCategoryPageContent = ({ category, tools, guideCategory, basePath, lang, content, t }: ToolCategoryPageContentProps) => {
+  useEffect(() => {
+    if (tools.length > 0) return;
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, follow';
+    document.head.appendChild(meta);
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, [tools.length]);
+
   return (
     <div className="relative bg-bg-pure selection:bg-accent-blue/30 selection:text-accent-blue overflow-x-hidden min-h-screen">
       <Navbar />

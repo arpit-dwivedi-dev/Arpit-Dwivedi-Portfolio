@@ -1,11 +1,18 @@
-// Prerenders every route in public/sitemap.xml into a real, HTTP-200,
-// content-complete static file so search/AI crawlers (most of which don't
-// execute JavaScript) see actual per-page content instead of a 404 or an
-// empty <div id="root"></div>. See ../101techlabs.com-audit/ for why this
-// exists — it was the highest-priority finding of the SEO audit.
+// Prerenders every route from src/content/siteRoutes.ts — the same shared
+// route registry scripts/generate-sitemap.mjs consumes — into a real,
+// HTTP-200, content-complete static file so search/AI crawlers (most of
+// which don't execute JavaScript) see actual per-page content instead of a
+// 404 or an empty <div id="root"></div>. See ../101techlabs.com-audit/ for
+// why this exists — it was the highest-priority finding of the SEO audit.
+//
+// This used to read public/sitemap.xml to decide what to snapshot, which
+// meant a route present in App.tsx but missing from that hand-maintained
+// file silently never got prerendered and 404'd on GitHub Pages. Reading
+// the same registry the sitemap is generated from (instead of the sitemap
+// itself) closes that gap — see src/content/siteRoutes.ts's header.
 //
 // How it works: serve the freshly built dist/ over HTTP, visit every
-// sitemap route in a real headless browser (letting React Router, the
+// registry route in a real headless browser (letting React Router, the
 // LanguageProvider's title/meta/canonical/hreflang injection, and the
 // per-route JsonLd components all run), then snapshot the resulting DOM
 // to disk as dist/<route>/index.html. Each snapshot still ships the app's
@@ -29,20 +36,11 @@ const MIME = {
 };
 
 async function getRoutes() {
-  const sitemap = await readFile(path.join(ROOT, 'public/sitemap.xml'), 'utf8');
-  const routes = [...sitemap.matchAll(/<loc>https:\/\/101techlabs\.com([^<]*)<\/loc>/g)].map((m) => m[1] || '/');
-
-  // Guides flagged noindex are deliberately left out of sitemap.xml (see
-  // generate-sitemap.mjs) but must still resolve to a real HTTP-200 static
-  // file on GitHub Pages if someone has the link — the alternative is the
-  // raw 404-status SPA shell for any client that doesn't execute JS. Adding
-  // them here (not to the sitemap) still gets them prerendered with their
-  // noindex meta tag baked in, without advertising the URL to crawlers.
-  const { GUIDES } = await import(path.join(ROOT, 'src/content/guides/data.ts'));
-  const { guidePath } = await import(path.join(ROOT, 'src/content/guides/categories.ts'));
-  const noindexRoutes = GUIDES.filter((guide) => guide.noindex).map((guide) => guidePath(guide));
-
-  return [...new Set([...routes, ...noindexRoutes])];
+  // Indexable routes plus noindex-but-linkable guide articles (see
+  // getAllPrerenderPaths's doc comment) — everything that needs a real
+  // HTTP-200 static file, whether or not it's advertised to crawlers.
+  const { getAllPrerenderPaths } = await import(path.join(ROOT, 'src/content/siteRoutes.ts'));
+  return getAllPrerenderPaths();
 }
 
 // The pristine, un-prerendered SPA shell — captured once, before any route

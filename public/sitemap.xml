@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
-<url>
+  <url>
     <loc>https://101techlabs.com/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/" />
     <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi" />
@@ -11,7 +11,7 @@
     <priority>1.0</priority>
   </url>
 
-<url>
+  <url>
     <loc>https://101techlabs.com/hi</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/" />
     <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi" />
@@ -21,7 +21,7 @@
     <priority>0.9</priority>
   </url>
 
-<url>
+  <url>
     <loc>https://101techlabs.com/about</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/about" />
     <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/about" />
@@ -31,7 +31,7 @@
     <priority>0.7</priority>
   </url>
 
-<url>
+  <url>
     <loc>https://101techlabs.com/hi/about</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/about" />
     <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/about" />
@@ -41,7 +41,7 @@
     <priority>0.6</priority>
   </url>
 
-<url>
+  <url>
     <loc>https://101techlabs.com/services</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/services" />
     <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/services" />
@@ -51,7 +51,7 @@
     <priority>0.8</priority>
   </url>
 
-<url>
+  <url>
     <loc>https://101techlabs.com/hi/services</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/services" />
     <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/services" />
@@ -61,7 +61,7 @@
     <priority>0.7</priority>
   </url>
 
-<url>
+  <url>
     <loc>https://101techlabs.com/projects</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/projects" />
     <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/projects" />
@@ -71,7 +71,7 @@
     <priority>0.8</priority>
   </url>
 
-<url>
+  <url>
     <loc>https://101techlabs.com/hi/projects</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/projects" />
     <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/projects" />
@@ -81,7 +81,7 @@
     <priority>0.7</priority>
   </url>
 
-<url>
+  <url>
     <loc>https://101techlabs.com/contact</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/contact" />
     <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/contact" />
@@ -91,7 +91,7 @@
     <priority>0.6</priority>
   </url>
 
-<url>
+  <url>
     <loc>https://101techlabs.com/hi/contact</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/contact" />
     <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/contact" />
@@ -101,7 +101,67 @@
     <priority>0.5</priority>
   </url>
 
-<url>
+  <url>
+    <loc>https://101techlabs.com/privacy-policy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/privacy-policy" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/hi/privacy-policy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/privacy-policy" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/terms</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/terms" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/terms" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/terms" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/hi/terms</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/terms" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/terms" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/terms" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/editorial-policy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/editorial-policy" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/editorial-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/editorial-policy" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/hi/editorial-policy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/editorial-policy" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/editorial-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/editorial-policy" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
+
+  <url>
     <loc>https://101techlabs.com/tools</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/tools" />
     <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/tools" />
@@ -111,7 +171,7 @@
     <priority>0.9</priority>
   </url>
 
-<url>
+  <url>
     <loc>https://101techlabs.com/hi/tools</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/tools" />
     <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/tools" />
@@ -121,67 +181,7 @@
     <priority>0.8</priority>
   </url>
 
-<url>
-    <loc>https://101techlabs.com/tools/generators</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/tools/generators" />
-    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/tools/generators" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/tools/generators" />
-    <lastmod>2026-08-05</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-<url>
-    <loc>https://101techlabs.com/hi/tools/generators</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/tools/generators" />
-    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/tools/generators" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/tools/generators" />
-    <lastmod>2026-08-05</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-<url>
-    <loc>https://101techlabs.com/tools/generators/invoice-generator</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/tools/generators/invoice-generator" />
-    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/tools/generators/invoice-generator" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/tools/generators/invoice-generator" />
-    <lastmod>2026-08-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-<url>
-    <loc>https://101techlabs.com/hi/tools/generators/invoice-generator</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/tools/generators/invoice-generator" />
-    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/tools/generators/invoice-generator" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/tools/generators/invoice-generator" />
-    <lastmod>2026-08-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-<url>
-    <loc>https://101techlabs.com/tools/generators/qr-code-generator</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/tools/generators/qr-code-generator" />
-    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/tools/generators/qr-code-generator" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/tools/generators/qr-code-generator" />
-    <lastmod>2026-08-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-<url>
-    <loc>https://101techlabs.com/hi/tools/generators/qr-code-generator</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/tools/generators/qr-code-generator" />
-    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/tools/generators/qr-code-generator" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/tools/generators/qr-code-generator" />
-    <lastmod>2026-08-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-<url>
+  <url>
     <loc>https://101techlabs.com/vcard-qr-code</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/vcard-qr-code" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/vcard-qr-code" />
@@ -190,7 +190,7 @@
     <priority>0.8</priority>
   </url>
 
-<url>
+  <url>
     <loc>https://101techlabs.com/menu-qr-code</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/menu-qr-code" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/menu-qr-code" />
@@ -199,7 +199,7 @@
     <priority>0.8</priority>
   </url>
 
-<url>
+  <url>
     <loc>https://101techlabs.com/wifi-qr-code</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/wifi-qr-code" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/wifi-qr-code" />
@@ -208,7 +208,25 @@
     <priority>0.8</priority>
   </url>
 
-<url>
+  <url>
+    <loc>https://101techlabs.com/guides</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/blog</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/blog" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/blog" />
+    <lastmod>2026-08-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
     <loc>https://101techlabs.com/tools/developer</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/tools/developer" />
     <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/tools/developer" />
@@ -218,7 +236,7 @@
     <priority>0.8</priority>
   </url>
 
-<url>
+  <url>
     <loc>https://101techlabs.com/hi/tools/developer</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/tools/developer" />
     <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/tools/developer" />
@@ -228,7 +246,67 @@
     <priority>0.7</priority>
   </url>
 
-<url>
+  <url>
+    <loc>https://101techlabs.com/tools/generators</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/tools/generators" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/tools/generators" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/tools/generators" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/hi/tools/generators</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/tools/generators" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/tools/generators" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/tools/generators" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/tools/generators/invoice-generator</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/tools/generators/invoice-generator" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/tools/generators/invoice-generator" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/tools/generators/invoice-generator" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/hi/tools/generators/invoice-generator</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/tools/generators/invoice-generator" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/tools/generators/invoice-generator" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/tools/generators/invoice-generator" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/tools/generators/qr-code-generator</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/tools/generators/qr-code-generator" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/tools/generators/qr-code-generator" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/tools/generators/qr-code-generator" />
+    <lastmod>2026-08-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://101techlabs.com/hi/tools/generators/qr-code-generator</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/tools/generators/qr-code-generator" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/tools/generators/qr-code-generator" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/tools/generators/qr-code-generator" />
+    <lastmod>2026-08-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
     <loc>https://101techlabs.com/tools/developer/api-request-builder</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/tools/developer/api-request-builder" />
     <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/tools/developer/api-request-builder" />
@@ -238,7 +316,7 @@
     <priority>0.9</priority>
   </url>
 
-<url>
+  <url>
     <loc>https://101techlabs.com/hi/tools/developer/api-request-builder</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/tools/developer/api-request-builder" />
     <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/tools/developer/api-request-builder" />
@@ -248,22 +326,13 @@
     <priority>0.8</priority>
   </url>
 
-<url>
+  <url>
     <loc>https://101techlabs.com/tools/developer/dbml-diagram-builder</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/tools/developer/dbml-diagram-builder" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/tools/developer/dbml-diagram-builder" />
     <lastmod>2026-08-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-  </url>
-
-<url>
-    <loc>https://101techlabs.com/guides</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/guides" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/guides" />
-    <lastmod>2026-08-05</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
   </url>
 
   <url>
@@ -734,76 +803,7 @@
     <priority>0.7</priority>
   </url>
 
-<url>
-    <loc>https://101techlabs.com/privacy-policy</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/privacy-policy" />
-    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/privacy-policy" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/privacy-policy" />
-    <lastmod>2026-08-05</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
-<url>
-    <loc>https://101techlabs.com/hi/privacy-policy</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/privacy-policy" />
-    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/privacy-policy" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/privacy-policy" />
-    <lastmod>2026-08-05</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.2</priority>
-  </url>
-
-<url>
-    <loc>https://101techlabs.com/terms</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/terms" />
-    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/terms" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/terms" />
-    <lastmod>2026-08-05</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
-<url>
-    <loc>https://101techlabs.com/hi/terms</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/terms" />
-    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/terms" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/terms" />
-    <lastmod>2026-08-05</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.2</priority>
-  </url>
-
-<url>
-    <loc>https://101techlabs.com/editorial-policy</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/editorial-policy" />
-    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/editorial-policy" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/editorial-policy" />
-    <lastmod>2026-08-05</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
-<url>
-    <loc>https://101techlabs.com/hi/editorial-policy</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/editorial-policy" />
-    <xhtml:link rel="alternate" hreflang="hi" href="https://101techlabs.com/hi/editorial-policy" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/editorial-policy" />
-    <lastmod>2026-08-05</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.2</priority>
-  </url>
-
-<url>
-    <loc>https://101techlabs.com/blog</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/blog" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/blog" />
-    <lastmod>2026-08-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-<url>
+  <url>
     <loc>https://101techlabs.com/blog/rs256-vs-hs256-jwt-multi-tenant</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/blog/rs256-vs-hs256-jwt-multi-tenant" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/blog/rs256-vs-hs256-jwt-multi-tenant" />
@@ -812,7 +812,7 @@
     <priority>0.7</priority>
   </url>
 
-<url>
+  <url>
     <loc>https://101techlabs.com/blog/backend-identity-glossary</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/blog/backend-identity-glossary" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/blog/backend-identity-glossary" />
@@ -821,7 +821,7 @@
     <priority>0.7</priority>
   </url>
 
-<url>
+  <url>
     <loc>https://101techlabs.com/blog/argon2id-vs-bcrypt-vs-scrypt</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/blog/argon2id-vs-bcrypt-vs-scrypt" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/blog/argon2id-vs-bcrypt-vs-scrypt" />
@@ -830,7 +830,7 @@
     <priority>0.7</priority>
   </url>
 
-<url>
+  <url>
     <loc>https://101techlabs.com/blog/in-house-vs-outsourced-backend-engineering</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://101techlabs.com/blog/in-house-vs-outsourced-backend-engineering" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://101techlabs.com/blog/in-house-vs-outsourced-backend-engineering" />

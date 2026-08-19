@@ -72,6 +72,25 @@ export const GoogleMapsScraperPage = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  // TOOL.hidden means this route is deliberately excluded from
+  // src/content/siteRoutes.ts (no sitemap entry, no prerendered snapshot —
+  // see that file's hiddenToolExclusions) because the live scraping backend
+  // is currently disconnected (demo-mode data only, see dataSource.ts). The
+  // route itself still has to stay live for direct/bookmarked links, so it
+  // needs its own noindex tag — being absent from the sitemap doesn't stop
+  // a crawler from indexing a URL it already found before, same pattern as
+  // QRRedirectPage's own tag below.
+  useEffect(() => {
+    if (!TOOL.hidden) return;
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, follow';
+    document.head.appendChild(meta);
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
+
   // A finished run that actually produced rows is this tool's "success" —
   // that's when the support prompt is allowed to ask.
   useEffect(() => {
