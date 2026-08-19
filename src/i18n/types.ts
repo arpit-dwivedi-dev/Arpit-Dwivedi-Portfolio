@@ -16,4 +16,3 @@ export interface Project {
 }
 
 export type SiteContent = Omit<typeof metadata.content, 'projects'> & { projects: Project[] };
-export type Lang = 'en' | 'hi';

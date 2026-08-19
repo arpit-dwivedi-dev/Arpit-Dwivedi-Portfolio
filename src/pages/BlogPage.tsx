@@ -96,7 +96,7 @@ const PostCard = ({ post, index }: { post: EngineeringPost; index: number }) => 
 // src/lib/engineeringPosts.ts) — no local post data, and no per-post detail
 // route. Every card links straight out to its original source.
 export const BlogPage = () => {
-  const { lang, content } = useLanguage();
+  const { content } = useLanguage();
   const { posts, isLoading, isLoadingMore, error, hasMore, loadMore, retry } = useEngineeringPosts();
 
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -129,7 +129,7 @@ export const BlogPage = () => {
         <div className="max-w-6xl mx-auto px-6">
           <Breadcrumbs
             className="mb-3 sm:mb-6"
-            items={[{ name: content.nav.breadcrumbHome, href: lang === 'hi' ? '/hi' : '/' }, { name: t.breadcrumbLabel }]}
+            items={[{ name: content.nav.breadcrumbHome, href: '/' }, { name: t.breadcrumbLabel }]}
           />
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8 sm:mb-12">

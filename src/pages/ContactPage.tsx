@@ -10,7 +10,7 @@ import { useLanguage } from '../i18n/LanguageContext';
 // A dedicated, indexable /contact route — AdSense review and general trust
 // both expect a locatable contact page independent of the homepage anchor.
 export const ContactPage = () => {
-  const { lang, content } = useLanguage();
+  const { content } = useLanguage();
   const { contactPage } = content;
   // Tool-page CTAs link here with ?source=<tool-id> so submissions can be
   // attributed back to the tool that drove the lead — see Contact's `source` prop.
@@ -29,7 +29,7 @@ export const ContactPage = () => {
         <div className="max-w-7xl mx-auto px-6">
           <Breadcrumbs
             className="mb-2"
-            items={[{ name: content.nav.breadcrumbHome, href: lang === 'hi' ? '/hi' : '/' }, { name: content.footer.navContact }]}
+            items={[{ name: content.nav.breadcrumbHome, href: '/' }, { name: content.footer.navContact }]}
           />
         </div>
         <h1 className="sr-only">{contactPage.srTitle}</h1>
@@ -41,7 +41,7 @@ export const ContactPage = () => {
               data={{
                 '@context': 'https://schema.org',
                 '@type': 'FAQPage',
-                inLanguage: lang,
+                inLanguage: 'en',
                 mainEntity: contactPage.items.map((item) => ({
                   '@type': 'Question',
                   name: item.question,

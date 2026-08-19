@@ -10,9 +10,9 @@ import { TOOLS, toolTitle, toolDescription } from '../tools/registry';
 // a feature blurb. judgment is English-only (see registry.ts), so it's
 // simply omitted on the Hindi homepage rather than left half-translated.
 export const FreeTools = () => {
-  const { lang, content } = useLanguage();
+  const { content } = useLanguage();
   const t = content.freeToolsSection;
-  const basePath = lang === 'hi' ? '/hi/tools' : '/tools';
+  const basePath = '/tools';
   const visibleTools = TOOLS.filter((tool) => !tool.hidden);
 
   return (
@@ -48,9 +48,9 @@ export const FreeTools = () => {
                 </div>
                 <ArrowUpRight className="w-5 h-5 text-secondary-text group-hover:text-accent-blue group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" aria-hidden="true" />
               </div>
-              <h3 className="text-xl font-bold text-ink group-hover:text-accent-blue transition-colors">{toolTitle(tool, lang)}</h3>
-              <p className="text-secondary-text text-sm leading-relaxed">{toolDescription(tool, lang)}</p>
-              {tool.judgment && lang === 'en' && (
+              <h3 className="text-xl font-bold text-ink group-hover:text-accent-blue transition-colors">{toolTitle(tool)}</h3>
+              <p className="text-secondary-text text-sm leading-relaxed">{toolDescription(tool)}</p>
+              {tool.judgment && (
                 <p className="text-xs text-secondary-text/80 leading-relaxed pt-4 mt-auto border-t border-ink/5">
                   <span className="text-accent-blue font-mono uppercase tracking-widest text-[10px] block mb-1.5">Why it's built this way</span>
                   {tool.judgment}

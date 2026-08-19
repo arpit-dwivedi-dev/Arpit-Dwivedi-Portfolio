@@ -38,7 +38,7 @@ const literalAppRoutes = [...appTsxSource.matchAll(/<Route\s+path="([^"]+)"/g)]
   .filter((p) => !p.includes(':') && p !== '*');
 
 const indexablePaths = new Set(getIndexablePaths());
-const excludedPaths = new Set(getExcludedRoutes().flatMap((r) => (r.hiPath ? [r.path, r.hiPath] : [r.path])));
+const excludedPaths = new Set(getExcludedRoutes().map((r) => r.path));
 
 const unclassified = literalAppRoutes.filter((p) => !indexablePaths.has(p) && !excludedPaths.has(p));
 report(

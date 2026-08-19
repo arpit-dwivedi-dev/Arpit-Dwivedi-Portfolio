@@ -41,12 +41,12 @@ export const MenuQrCodePage = () => {
             <Breadcrumbs
               className="mb-2"
               backHref={HUB_HREF}
-              backLabel={`Back to ${toolTitle(TOOL, 'en')}`}
+              backLabel={`Back to ${toolTitle(TOOL)}`}
               items={[
                 { name: 'Home', href: '/', className: 'hidden sm:flex' },
                 { name: 'Tools', href: '/tools', className: 'hidden sm:flex' },
-                { name: categoryTitle(TOOL_CATEGORY, 'en'), href: `/tools/${TOOL.category}`, className: 'hidden sm:flex' },
-                { name: toolTitle(TOOL, 'en'), href: HUB_HREF },
+                { name: categoryTitle(TOOL_CATEGORY), href: `/tools/${TOOL.category}`, className: 'hidden sm:flex' },
+                { name: toolTitle(TOOL), href: HUB_HREF },
                 { name: 'Menu QR Code' },
               ]}
             />

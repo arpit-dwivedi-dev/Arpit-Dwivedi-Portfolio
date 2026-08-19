@@ -11,7 +11,7 @@ import { useLanguage } from '../i18n/LanguageContext';
 // A dedicated, indexable /services route — the five services previously
 // only existed as a same-page anchor (#experience) on the homepage.
 export const ServicesPage = () => {
-  const { lang, content } = useLanguage();
+  const { content } = useLanguage();
   const { servicesPage } = content;
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export const ServicesPage = () => {
         <div className="max-w-7xl mx-auto px-6">
           <Breadcrumbs
             className="mb-8"
-            items={[{ name: content.nav.breadcrumbHome, href: lang === 'hi' ? '/hi' : '/' }, { name: content.footer.navServices }]}
+            items={[{ name: content.nav.breadcrumbHome, href: '/' }, { name: content.footer.navServices }]}
           />
         </div>
         <h1 className="sr-only">{servicesPage.srTitle}</h1>
@@ -53,7 +53,7 @@ export const ServicesPage = () => {
                 proof → services → contact priority path. */}
             <div className="flex justify-center mt-16">
               <Link
-                to={lang === 'hi' ? '/hi/contact' : '/contact'}
+                to={'/contact'}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-accent-blue text-bg-pure font-bold hover:glow-blue transition-all group"
               >
                 {content.process.cta} <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
@@ -71,7 +71,7 @@ export const ServicesPage = () => {
               data={{
                 '@context': 'https://schema.org',
                 '@type': 'FAQPage',
-                inLanguage: lang,
+                inLanguage: 'en',
                 mainEntity: servicesPage.faq.map((item) => ({
                   '@type': 'Question',
                   name: item.question,

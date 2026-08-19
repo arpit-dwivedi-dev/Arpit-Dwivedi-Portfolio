@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import metadata from '../../metadata.json';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useTheme } from '../theme/ThemeContext';
-import { LanguageSwitcher } from './LanguageSwitcher';
 
 /**
  * "Soon" marker beside the Products nav item.
@@ -30,9 +29,9 @@ export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { theme, toggleTheme } = useTheme();
-  const { lang, content } = useLanguage();
+  const { content } = useLanguage();
   const { navLinks, contact, nav } = content;
-  const homeHref = lang === 'hi' ? '/hi' : '/';
+  const homeHref = '/';
   const firstMobileLinkRef = useRef<HTMLAnchorElement>(null);
 
   const hrefFor = (href: string) => (href.startsWith('#') ? `${homeHref}${href}` : href);
@@ -131,7 +130,6 @@ export const Navbar = () => {
               >
                 {theme === 'dark' ? <Sun size={17} aria-hidden="true" /> : <Moon size={17} aria-hidden="true" />}
               </button>
-              <LanguageSwitcher />
             </div>
             {/* Contact left the link row and became the bar's one action. The
                 page's single job is getting a stranger into this form, and it
@@ -215,7 +213,6 @@ export const Navbar = () => {
           >
             {theme === 'dark' ? <Sun size={22} aria-hidden="true" /> : <Moon size={22} aria-hidden="true" />}
           </button>
-          <LanguageSwitcher size="lg" tabIndex={isOpen ? undefined : -1} onNavigate={() => setIsOpen(false)} />
         </div>
       </motion.div>
     </nav>

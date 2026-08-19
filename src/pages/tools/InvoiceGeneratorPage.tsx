@@ -39,8 +39,7 @@ const RELATED_TOOLS = getRelatedTools(TOOL);
 // Curated rather than pulled from every guide's relatedSlugs — this is the
 // tool page, so the picks lean toward guides someone filling out an invoice
 // right now would actually want (terms, numbering, getting paid), not a
-// generic "everything" list. Guides are English-only (see App.tsx route
-// comment), so this section only renders for lang === 'en'.
+// generic "everything" list.
 const RELATED_GUIDE_SLUGS = [
   'how-to-make-an-invoice',
   'invoice-payment-terms',
@@ -80,9 +79,9 @@ const summaryFieldWidth = (value: number, minChars = 3) =>
   `calc(${Math.min(Math.max(minChars, String(value).length + 2), 12)}ch + 1.75rem)`;
 
 export const InvoiceGeneratorPage = () => {
-  const { lang, content } = useLanguage();
+  const { content } = useLanguage();
   const t = content.invoiceGeneratorTool;
-  const toolsBase = lang === 'hi' ? '/hi/tools' : '/tools';
+  const toolsBase = '/tools';
   const categoryHref = `${toolsBase}/${TOOL.category}`;
 
   const { invoice, totals, savedAt, update, updateItem, addItem, removeItem, loadInvoice, newInvoice, save, saveAsDefault } =
@@ -176,12 +175,12 @@ export const InvoiceGeneratorPage = () => {
             <Breadcrumbs
               className="mb-3"
               backHref={categoryHref}
-              backLabel={fillPlaceholders(t.backTo, { category: categoryTitle(TOOL_CATEGORY, lang) })}
+              backLabel={fillPlaceholders(t.backTo, { category: categoryTitle(TOOL_CATEGORY) })}
               items={[
-                { name: content.nav.breadcrumbHome, href: lang === 'hi' ? '/hi' : '/', className: 'hidden sm:flex' },
+                { name: content.nav.breadcrumbHome, href: '/', className: 'hidden sm:flex' },
                 { name: content.toolsPage.breadcrumb, href: toolsBase, className: 'hidden sm:flex' },
-                { name: categoryTitle(TOOL_CATEGORY, lang), href: categoryHref },
-                { name: toolTitle(TOOL, lang) },
+                { name: categoryTitle(TOOL_CATEGORY), href: categoryHref },
+                { name: toolTitle(TOOL) },
               ]}
             />
 
@@ -189,9 +188,9 @@ export const InvoiceGeneratorPage = () => {
               <span className="text-accent-blue font-mono text-xs sm:text-sm tracking-widest uppercase block">{t.freeToolLabel}</span>
               <div className="w-full flex flex-col sm:grid sm:grid-cols-[1fr_auto_1fr] items-center gap-3 sm:gap-4">
                 <span aria-hidden="true" className="hidden sm:block" />
-                <h1 className="text-2xl md:text-4xl font-bold tracking-tight text-gradient">{toolTitle(TOOL, lang)}</h1>
+                <h1 className="text-2xl md:text-4xl font-bold tracking-tight text-gradient">{toolTitle(TOOL)}</h1>
                 <Link
-                  to={lang === 'hi' ? '/hi' : '/guides'}
+                  to={'/guides'}
                   className="sm:justify-self-end shrink-0 inline-flex items-center gap-2 px-4 py-2 bg-ink/5 text-ink font-bold rounded-xl hover:bg-ink/10 border border-ink/10 transition-all text-sm whitespace-nowrap"
                 >
                   <FileDown size={15} aria-hidden="true" />
@@ -707,10 +706,10 @@ export const InvoiceGeneratorPage = () => {
         data={{
           '@context': 'https://schema.org',
           '@type': 'WebApplication',
-          name: toolTitle(TOOL, lang),
+          name: toolTitle(TOOL),
           url: `https://101techlabs.com${categoryHref}/${TOOL.path}`,
-          description: toolDescription(TOOL, lang),
-          inLanguage: lang,
+          description: toolDescription(TOOL),
+          inLanguage: 'en',
           applicationCategory: 'BusinessApplication',
           operatingSystem: 'Any',
           offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
@@ -737,12 +736,10 @@ export const InvoiceGeneratorPage = () => {
           </ol>
         </div>
 
-        {lang !== 'hi' && (
-          <div className="p-6 rounded-2xl bg-bg-secondary border border-ink/5">
-            <span className="text-accent-blue font-mono uppercase tracking-widest text-[10px] block mb-2">{t.judgmentHeading}</span>
-            <p className="text-secondary-text text-sm leading-relaxed">{t.judgmentText}</p>
-          </div>
-        )}
+        <div className="p-6 rounded-2xl bg-bg-secondary border border-ink/5">
+          <span className="text-accent-blue font-mono uppercase tracking-widest text-[10px] block mb-2">{t.judgmentHeading}</span>
+          <p className="text-secondary-text text-sm leading-relaxed">{t.judgmentText}</p>
+        </div>
 
         <div>
           <h2 className="text-2xl font-bold tracking-tight mb-4">{t.featuresTitle}</h2>
@@ -793,7 +790,7 @@ export const InvoiceGeneratorPage = () => {
             <p className="text-secondary-text text-sm">{t.guidesCtaBody}</p>
           </div>
           <Link
-            to={lang === 'hi' ? '/hi' : '/guides'}
+            to={'/guides'}
             className="shrink-0 inline-flex items-center gap-2 px-5 py-3 bg-ink/5 text-ink font-bold rounded-xl hover:bg-ink/10 transition-all"
           >
             <FileDown size={16} aria-hidden="true" />
@@ -811,43 +808,41 @@ export const InvoiceGeneratorPage = () => {
                     to={`${toolsBase}/${related.category}/${related.path}`}
                     className="block p-4 rounded-2xl bg-bg-secondary border border-ink/5 hover:border-accent-blue/30 transition-colors"
                   >
-                    <span className="font-bold text-ink">{toolTitle(related, lang)}</span>
-                    <p className="text-secondary-text text-sm mt-1">{toolDescription(related, lang)}</p>
+                    <span className="font-bold text-ink">{toolTitle(related)}</span>
+                    <p className="text-secondary-text text-sm mt-1">{toolDescription(related)}</p>
                   </Link>
                 </li>
               ))}
             </ul>
           ) : (
             <p className="text-secondary-text text-sm">
-              {fillPlaceholders(t.moreComingSoon, { category: categoryTitle(TOOL_CATEGORY, lang).toLowerCase() })}{' '}
+              {fillPlaceholders(t.moreComingSoon, { category: categoryTitle(TOOL_CATEGORY).toLowerCase() })}{' '}
               <Link to={toolsBase} className="text-accent-blue hover:underline">{t.browseAllTools}</Link>.
             </p>
           )}
         </div>
 
-        {lang !== 'hi' && (
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight mb-4">{guideDetailContent.relatedHeading}</h2>
-            <ul className="grid sm:grid-cols-2 gap-3">
-              {RELATED_GUIDES.map((guide) => (
-                <li key={guide.slug}>
-                  <Link
-                    to={guidePath(guide)}
-                    className="block p-4 rounded-2xl bg-bg-secondary border border-ink/5 hover:border-accent-blue/30 transition-colors"
-                  >
-                    <span className="font-bold text-ink">{guide.title}</span>
-                    <p className="text-secondary-text text-sm mt-1">{guide.description}</p>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight mb-4">{guideDetailContent.relatedHeading}</h2>
+          <ul className="grid sm:grid-cols-2 gap-3">
+            {RELATED_GUIDES.map((guide) => (
+              <li key={guide.slug}>
+                <Link
+                  to={guidePath(guide)}
+                  className="block p-4 rounded-2xl bg-bg-secondary border border-ink/5 hover:border-accent-blue/30 transition-colors"
+                >
+                  <span className="font-bold text-ink">{guide.title}</span>
+                  <p className="text-secondary-text text-sm mt-1">{guide.description}</p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
 
         <div className="p-6 rounded-3xl glass border-ink/10 flex flex-wrap items-center justify-between gap-4">
           <p className="text-ink font-medium">{t.crmCta}</p>
           <Link
-            to={`${lang === 'hi' ? '/hi/contact' : '/contact'}?source=${TOOL.id}`}
+            to={`${'/contact'}?source=${TOOL.id}`}
             onClick={() => trackEvent('tool_to_contact_click', { tool_name: TOOL.id })}
             className="shrink-0 inline-flex items-center gap-2 px-5 py-3 bg-accent-blue text-bg-pure font-bold rounded-xl hover:glow-blue transition-all"
           >
