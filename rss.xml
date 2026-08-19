@@ -3,35 +3,217 @@
 <channel>
   <title>101 Tech Labs — Engineering Notes</title>
   <link>https://101techlabs.com/blog</link>
-  <description>Real technical writing on the decisions behind full-stack applications.</description>
+  <description>A curated feed of open-source engineering writing.</description>
   <language>en</language>
   <item>
-    <title>RS256 vs HS256: Choosing a JWT Signing Algorithm for Multi-Tenant Systems</title>
-    <link>https://101techlabs.com/blog/rs256-vs-hs256-jwt-multi-tenant</link>
-    <guid isPermaLink="true">https://101techlabs.com/blog/rs256-vs-hs256-jwt-multi-tenant</guid>
-    <description>HS256 and RS256 solve the same problem differently — one shares a secret, one doesn’t. Here’s why that distinction matters more once more than one service needs to verify a token.</description>
-    <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+    <title>How I Built a Kiro Crew App in 5 Minutes - Full Tutorial With Code</title>
+    <link>https://dev.to/aws-builders/how-i-built-a-kiro-crew-app-in-5-minutes-full-tutorial-with-code-3el0</link>
+    <guid isPermaLink="true">https://dev.to/aws-builders/how-i-built-a-kiro-crew-app-in-5-minutes-full-tutorial-with-code-3el0</guid>
+    <description>5-min demo: custom agent + skill + cron job + dashboard page, installed live with one curl command. Kiro Crew isn&apos;t just a tool. It&apos;s a platform.</description>
+    <pubDate>Tue, 18 Aug 2026 12:05:57 GMT</pubDate>
   </item>
   <item>
-    <title>A Backend &amp; Identity Glossary: JWT, JWKS, Multi-Tenancy, and More</title>
-    <link>https://101techlabs.com/blog/backend-identity-glossary</link>
-    <guid isPermaLink="true">https://101techlabs.com/blog/backend-identity-glossary</guid>
-    <description>Plain definitions for the terms that come up most when talking about authentication and multi-tenant backend architecture — not a complete course, a working reference.</description>
-    <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+    <title>Ask Workday&apos;s public API for 100 jobs and you get zero — with no error</title>
+    <link>https://dev.to/juancarlosguti/ask-workdays-public-api-for-100-jobs-and-you-get-zero-with-no-error-54b2</link>
+    <guid isPermaLink="true">https://dev.to/juancarlosguti/ask-workdays-public-api-for-100-jobs-and-you-get-zero-with-no-error-54b2</guid>
+    <description>Every major applicant tracking system publishes its job board as a public JSON endpoint. That part is...</description>
+    <pubDate>Wed, 19 Aug 2026 02:12:04 GMT</pubDate>
   </item>
   <item>
-    <title>argon2id vs bcrypt vs scrypt: Choosing a Password Hashing Algorithm</title>
-    <link>https://101techlabs.com/blog/argon2id-vs-bcrypt-vs-scrypt</link>
-    <guid isPermaLink="true">https://101techlabs.com/blog/argon2id-vs-bcrypt-vs-scrypt</guid>
-    <description>Three real options for hashing passwords, what actually separates them, and why argon2id is the current default recommendation — not a trend, a specific set of tradeoffs.</description>
-    <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+    <title># Public Robot Dataset Health Check — as measured by RDA v0.5.2</title>
+    <link>https://dev.to/liesliy/-public-robot-dataset-health-check-as-measured-by-rda-v052-1ge8</link>
+    <guid isPermaLink="true">https://dev.to/liesliy/-public-robot-dataset-health-check-as-measured-by-rda-v052-1ge8</guid>
+    <description>We ran RDA across 11 public LeRobot-format datasets — 4,909 episodes in total, spanning sim and real,...</description>
+    <pubDate>Wed, 19 Aug 2026 03:30:56 GMT</pubDate>
   </item>
   <item>
-    <title>In-House vs. Outsourced Backend Engineering: What Actually Changes</title>
-    <link>https://101techlabs.com/blog/in-house-vs-outsourced-backend-engineering</link>
-    <guid isPermaLink="true">https://101techlabs.com/blog/in-house-vs-outsourced-backend-engineering</guid>
-    <description>The tradeoff isn’t cost vs. quality — it’s who owns the decisions that are expensive to unwind later. What actually changes when backend work is subcontracted instead of owned.</description>
-    <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+    <title>I Wrote 238 Tests Against My Own Auth Package and Found 4 Real Bugs</title>
+    <link>https://dev.to/obie/i-wrote-238-tests-against-my-own-auth-package-and-found-4-real-bugs-4n85</link>
+    <guid isPermaLink="true">https://dev.to/obie/i-wrote-238-tests-against-my-own-auth-package-and-found-4-real-bugs-4n85</guid>
+    <description>I&apos;d already done a lot right by the time I started writing tests for Beaver-Auth. Every module had...</description>
+    <pubDate>Wed, 19 Aug 2026 00:20:36 GMT</pubDate>
+  </item>
+  <item>
+    <title>I built a static + runtime security scanner for MCP servers (Rust)</title>
+    <link>https://dev.to/zaydmulani09/i-built-a-static-runtime-security-scanner-for-mcp-servers-rust-4498</link>
+    <guid isPermaLink="true">https://dev.to/zaydmulani09/i-built-a-static-runtime-security-scanner-for-mcp-servers-rust-4498</guid>
+    <description>I built a static + runtime security scanner for MCP servers (Rust)  TL;DR: MCP (Model Context...</description>
+    <pubDate>Wed, 19 Aug 2026 04:05:33 GMT</pubDate>
+  </item>
+  <item>
+    <title>Relicensing yantrikdb took 57 minutes and I got two things wrong</title>
+    <link>https://dev.to/spranab/relicensing-yantrikdb-took-57-minutes-and-i-got-two-things-wrong-12ad</link>
+    <guid isPermaLink="true">https://dev.to/spranab/relicensing-yantrikdb-took-57-minutes-and-i-got-two-things-wrong-12ad</guid>
+    <description>I moved yantrikdb from AGPL-3.0 to Apache-2.0 in one evening, and this is every place the old licence was still declared.</description>
+    <pubDate>Tue, 18 Aug 2026 23:56:18 GMT</pubDate>
+  </item>
+  <item>
+    <title>Build One Bot, Reach Every Chat: A Universal WebSocket Bridge for IM Channels</title>
+    <link>https://dev.to/sloth-os/build-one-bot-reach-every-chat-a-universal-websocket-bridge-for-im-channels-4jpm</link>
+    <guid isPermaLink="true">https://dev.to/sloth-os/build-one-bot-reach-every-chat-a-universal-websocket-bridge-for-im-channels-4jpm</guid>
+    <description>Every chat platform reinvents the wheel. WeChat has its own API, Lark has another, Telegram another...</description>
+    <pubDate>Wed, 19 Aug 2026 03:47:57 GMT</pubDate>
+  </item>
+  <item>
+    <title>Apache Data Lakehouse Weekly: August 10 to 18, 2026</title>
+    <link>https://dev.to/alexmercedcoder/apache-data-lakehouse-weekly-august-10-to-18-2026-1nf5</link>
+    <guid isPermaLink="true">https://dev.to/alexmercedcoder/apache-data-lakehouse-weekly-august-10-to-18-2026-1nf5</guid>
+    <description>The lakehouse community spent this week deciding what gets carried forward and what gets left behind....</description>
+    <pubDate>Tue, 18 Aug 2026 18:33:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Ornith-1.0 is a clever open coding model. Ollama&apos;s tool-calling isn&apos;t ready for it.</title>
+    <link>https://dev.to/mediblacksand_f0ea36c53fb/ornith-10-is-a-clever-open-coding-model-ollamas-tool-calling-isnt-ready-for-it-5402</link>
+    <guid isPermaLink="true">https://dev.to/mediblacksand_f0ea36c53fb/ornith-10-is-a-clever-open-coding-model-ollamas-tool-calling-isnt-ready-for-it-5402</guid>
+    <description>A real architectural idea, solid benchmarks for the size class, and a tool-calling gap that stopped it working as a local Claude Code backend.</description>
+    <pubDate>Wed, 19 Aug 2026 01:41:54 GMT</pubDate>
+  </item>
+  <item>
+    <title>How to Build a CAD-Style Layout Editor on Top of Extracted HTML</title>
+    <link>https://dev.to/bonzai2carn/how-to-build-a-cad-style-layout-editor-on-top-of-extracted-html-4ihd</link>
+    <guid isPermaLink="true">https://dev.to/bonzai2carn/how-to-build-a-cad-style-layout-editor-on-top-of-extracted-html-4ihd</guid>
+    <description>TLDR   If you have extracted a PDF to HTML and want users to rearrange and edit the layout...</description>
+    <pubDate>Wed, 19 Aug 2026 01:45:47 GMT</pubDate>
+  </item>
+  <item>
+    <title>Build a Tiny Native Coding Agent in Under 100 Lines</title>
+    <link>https://dev.to/adilaidev/build-a-tiny-native-coding-agent-in-under-100-lines-1o0k</link>
+    <guid isPermaLink="true">https://dev.to/adilaidev/build-a-tiny-native-coding-agent-in-under-100-lines-1o0k</guid>
+    <description>A no-nonsense guide to creating a lightweight, open-source coding assistant that runs locally without bloated dependencies or cloud APIs.</description>
+    <pubDate>Wed, 19 Aug 2026 00:36:47 GMT</pubDate>
+  </item>
+  <item>
+    <title>A safer starting point for exploring DeepSeek Harness plugins</title>
+    <link>https://dev.to/nicedayup/a-safer-starting-point-for-exploring-deepseek-harness-plugins-2a0b</link>
+    <guid isPermaLink="true">https://dev.to/nicedayup/a-safer-starting-point-for-exploring-deepseek-harness-plugins-2a0b</guid>
+    <description>The hard part of a fast-moving plugin ecosystem is rarely finding another project. It is deciding...</description>
+    <pubDate>Wed, 19 Aug 2026 00:07:05 GMT</pubDate>
+  </item>
+  <item>
+    <title>FullTrailer as a real GUI + monad app, live over HTTP and WS through netget</title>
+    <link>https://dev.to/suign/fulltrailer-as-a-real-gui-monad-app-live-over-http-and-ws-through-netget-4d8c</link>
+    <guid isPermaLink="true">https://dev.to/suign/fulltrailer-as-a-real-gui-monad-app-live-over-http-and-ws-through-netget-4d8c</guid>
+    <description>Context   FullTrailer (/Users/suign/Desktop/Neuroverse/apps/FullTrailer, outside the...</description>
+    <pubDate>Wed, 19 Aug 2026 04:10:53 GMT</pubDate>
+  </item>
+  <item>
+    <title>Why I finally opened a stranger&apos;s issue on DesignFoundation, two and a half weeks late</title>
+    <link>https://dev.to/nerd_snipe_dev/why-i-finally-opened-a-strangers-issue-on-designfoundation-two-and-a-half-weeks-late-j8j</link>
+    <guid isPermaLink="true">https://dev.to/nerd_snipe_dev/why-i-finally-opened-a-strangers-issue-on-designfoundation-two-and-a-half-weeks-late-j8j</guid>
+    <description>I owe fraserscottmorrison an apology before I owe him a thank you. He filed two issues on...</description>
+    <pubDate>Tue, 18 Aug 2026 19:30:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>The Ugly Truth About Linux Packaging: I Spent a Month Building a Screen Time Tracker</title>
+    <link>https://dev.to/aditya2009_023c568e7edf52/the-ugly-truth-about-linux-packaging-i-spent-a-month-building-a-screen-time-tracker-4ehe</link>
+    <guid isPermaLink="true">https://dev.to/aditya2009_023c568e7edf52/the-ugly-truth-about-linux-packaging-i-spent-a-month-building-a-screen-time-tracker-4ehe</guid>
+    <description>I built a screen time tracker for Linux. The code took a month. Shipping it took three more...</description>
+    <pubDate>Tue, 18 Aug 2026 18:29:28 GMT</pubDate>
+  </item>
+  <item>
+    <title>We let an autonomous agent spend real money for a week. The first thing I added wasn&apos;t a feature — it was a spending firewall.</title>
+    <link>https://dev.to/mhad2021/we-let-an-autonomous-agent-spend-real-money-for-a-week-the-first-thing-i-added-wasnt-a-feature--3a5</link>
+    <guid isPermaLink="true">https://dev.to/mhad2021/we-let-an-autonomous-agent-spend-real-money-for-a-week-the-first-thing-i-added-wasnt-a-feature--3a5</guid>
+    <description>I kept giving agents real API keys and budgets, and the scary part was never a bad answer — it was a...</description>
+    <pubDate>Tue, 18 Aug 2026 18:17:16 GMT</pubDate>
+  </item>
+  <item>
+    <title>Build your first theme and course in the Theme Workshop</title>
+    <link>https://dev.to/pathprotocol/build-your-first-theme-and-course-in-the-theme-workshop-51b0</link>
+    <guid isPermaLink="true">https://dev.to/pathprotocol/build-your-first-theme-and-course-in-the-theme-workshop-51b0</guid>
+    <description>Build your first theme and course in the Theme Workshop   Path Protocol is an open-source...</description>
+    <pubDate>Tue, 18 Aug 2026 22:01:30 GMT</pubDate>
+  </item>
+  <item>
+    <title>Build a deterministic browser game engine</title>
+    <link>https://dev.to/pathprotocol/build-a-deterministic-browser-game-engine-50j0</link>
+    <guid isPermaLink="true">https://dev.to/pathprotocol/build-a-deterministic-browser-game-engine-50j0</guid>
+    <description>I built an open-source browser precision game called Path Protocol — 100 levels, a Theme Workshop for...</description>
+    <pubDate>Tue, 18 Aug 2026 21:58:59 GMT</pubDate>
+  </item>
+  <item>
+    <title>Why Does Every AI Agent Still Look Like `while (true) { ... }`?</title>
+    <link>https://dev.to/tomsun28/why-does-every-ai-agent-still-look-like-while-true--258a</link>
+    <guid isPermaLink="true">https://dev.to/tomsun28/why-does-every-ai-agent-still-look-like-while-true--258a</guid>
+    <description>Most agent runtimes share the same brittle skeleton. Here&apos;s what happens when you replace it with an event log.</description>
+    <pubDate>Tue, 18 Aug 2026 16:08:34 GMT</pubDate>
+  </item>
+  <item>
+    <title>Your coding agent shouldn&apos;t die when your laptop sleeps</title>
+    <link>https://dev.to/podbaycloudpodbaycloud/your-coding-agent-shouldnt-die-when-your-laptop-sleeps-512c</link>
+    <guid isPermaLink="true">https://dev.to/podbaycloudpodbaycloud/your-coding-agent-shouldnt-die-when-your-laptop-sleeps-512c</guid>
+    <description>For about a month, I did the dumbest thing in my dev career: I carried an open laptop around my...</description>
+    <pubDate>Tue, 18 Aug 2026 19:14:28 GMT</pubDate>
+  </item>
+  <item>
+    <title>Your AI Coding Agent Can Read .env — Here’s How to Stop Secrets Before They Reach the Cloud</title>
+    <link>https://dev.to/3mre0s/your-ai-coding-agent-can-read-env-heres-how-to-stop-secrets-before-they-reach-the-cloud-4dg0</link>
+    <guid isPermaLink="true">https://dev.to/3mre0s/your-ai-coding-agent-can-read-env-heres-how-to-stop-secrets-before-they-reach-the-cloud-4dg0</guid>
+    <description>AI coding agents do much more than autocomplete.  Tools such as Claude Code, Codex, Cursor, Aider,...</description>
+    <pubDate>Tue, 18 Aug 2026 14:50:30 GMT</pubDate>
+  </item>
+  <item>
+    <title>I audited six token usage trackers. They disagree with each other by 2x to 8x.</title>
+    <link>https://dev.to/lizhuojunx86/i-audited-six-token-usage-trackers-they-disagree-with-each-other-by-2x-to-8x-2b1h</link>
+    <guid isPermaLink="true">https://dev.to/lizhuojunx86/i-audited-six-token-usage-trackers-they-disagree-with-each-other-by-2x-to-8x-2b1h</guid>
+    <description>Over the past five months I took apart the folding logic in six token usage trackers and recomputed...</description>
+    <pubDate>Tue, 18 Aug 2026 13:39:25 GMT</pubDate>
+  </item>
+  <item>
+    <title>The Green Test That Lied</title>
+    <link>https://dev.to/fibuladev/the-green-test-that-lied-29n7</link>
+    <guid isPermaLink="true">https://dev.to/fibuladev/the-green-test-that-lied-29n7</guid>
+    <description>Episode 09&apos;s visual-prompt file passed every automated check I had. Green across the board. And I was...</description>
+    <pubDate>Tue, 18 Aug 2026 20:09:39 GMT</pubDate>
+  </item>
+  <item>
+    <title>error-san: typed errors without giving up `throw`</title>
+    <link>https://dev.to/jjeem/error-san-typed-errors-without-giving-up-throw-1glg</link>
+    <guid isPermaLink="true">https://dev.to/jjeem/error-san-typed-errors-without-giving-up-throw-1glg</guid>
+    <description>TypeScript describes what a function returns, but not what it throws. A familiar function:    type...</description>
+    <pubDate>Tue, 18 Aug 2026 17:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>The De-identification Datasets Problem: i2b2/n2c2 Access Is Broken, and What to Do Instead</title>
+    <link>https://dev.to/vadim_albarov/the-de-identification-datasets-problem-i2b2n2c2-access-is-broken-and-what-to-do-instead-2mo7</link>
+    <guid isPermaLink="true">https://dev.to/vadim_albarov/the-de-identification-datasets-problem-i2b2n2c2-access-is-broken-and-what-to-do-instead-2mo7</guid>
+    <description>TL;DR: I&apos;m building a PHI de-identification tool, and step one of doing that honestly is...</description>
+    <pubDate>Wed, 19 Aug 2026 03:27:41 GMT</pubDate>
+  </item>
+  <item>
+    <title>A verifier should add evidence, not rewrite history</title>
+    <link>https://dev.to/q00/a-verifier-should-add-evidence-not-rewrite-history-2822</link>
+    <guid isPermaLink="true">https://dev.to/q00/a-verifier-should-add-evidence-not-rewrite-history-2822</guid>
+    <description>A verifier should add evidence, not rewrite history   I spent the last few weeks closing a...</description>
+    <pubDate>Tue, 18 Aug 2026 19:34:39 GMT</pubDate>
+  </item>
+  <item>
+    <title>NgNova UI: An Open-Source Component Library for Angular 22</title>
+    <link>https://dev.to/chiragpatel273/ngnova-ui-an-open-source-component-library-for-angular-22-5054</link>
+    <guid isPermaLink="true">https://dev.to/chiragpatel273/ngnova-ui-an-open-source-component-library-for-angular-22-5054</guid>
+    <description>I&apos;m excited to introduce NgNova UI v1.0.0 — a production-ready, open-source component library built...</description>
+    <pubDate>Tue, 18 Aug 2026 16:46:22 GMT</pubDate>
+  </item>
+  <item>
+    <title>Building your own Git remote in under an hour</title>
+    <link>https://dev.to/calganaygun/building-your-own-git-remote-in-under-an-hour-1gjp</link>
+    <guid isPermaLink="true">https://dev.to/calganaygun/building-your-own-git-remote-in-under-an-hour-1gjp</guid>
+    <description>git·vodka&apos;s idea had been sitting in the back of my mind for a while.  not as some big product idea....</description>
+    <pubDate>Tue, 18 Aug 2026 19:59:27 GMT</pubDate>
+  </item>
+  <item>
+    <title>Modernizing legacy CSS without breaking the cascade — introducing CSSForge</title>
+    <link>https://dev.to/jayeshmepani/modernizing-legacy-css-without-breaking-the-cascade-introducing-cssforge-435c</link>
+    <guid isPermaLink="true">https://dev.to/jayeshmepani/modernizing-legacy-css-without-breaking-the-cascade-introducing-cssforge-435c</guid>
+    <description>CSS has changed a lot.  We now have native nesting, :is(), :where(), :has(), range media queries,...</description>
+    <pubDate>Tue, 18 Aug 2026 11:24:45 GMT</pubDate>
+  </item>
+  <item>
+    <title>How much do you need to earn $1,000 a month in dividends?</title>
+    <link>https://dev.to/a353551071/how-much-do-you-need-to-earn-1000-a-month-in-dividends-25d3</link>
+    <guid isPermaLink="true">https://dev.to/a353551071/how-much-do-you-need-to-earn-1000-a-month-in-dividends-25d3</guid>
+    <description>The inverse dividend math — start from the monthly income you want, solve for the capital. With code, and the trap baked into it.</description>
+    <pubDate>Wed, 19 Aug 2026 03:59:31 GMT</pubDate>
   </item>
 </channel>
 </rss>
