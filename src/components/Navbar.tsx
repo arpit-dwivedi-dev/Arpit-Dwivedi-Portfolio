@@ -6,15 +6,14 @@ import { Link } from 'react-router-dom';
 import metadata from '../../metadata.json';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useTheme } from '../theme/ThemeContext';
-import { LanguageSwitcher } from './LanguageSwitcher';
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { theme, toggleTheme } = useTheme();
-  const { lang, content } = useLanguage();
+  const { content } = useLanguage();
   const { navLinks, contact, nav } = content;
-  const homeHref = lang === 'hi' ? '/hi' : '/';
+  const homeHref = '/';
   const firstMobileLinkRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
@@ -85,7 +84,6 @@ export const Navbar = () => {
               >
                 {theme === 'dark' ? <Sun size={18} aria-hidden="true" /> : <Moon size={18} aria-hidden="true" />}
               </button>
-              <LanguageSwitcher />
             </motion.div>
           </div>
 
@@ -154,7 +152,6 @@ export const Navbar = () => {
               {theme === 'dark' ? <Sun size={24} aria-hidden="true" /> : <Moon size={24} aria-hidden="true" />}
             </button>
           </div>
-          <LanguageSwitcher size="lg" tabIndex={isOpen ? undefined : -1} onNavigate={() => setIsOpen(false)} />
         </motion.div>
       </motion.div>
     </nav>

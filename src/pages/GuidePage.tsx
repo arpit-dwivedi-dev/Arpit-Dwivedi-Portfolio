@@ -20,7 +20,7 @@ const SITE_ORIGIN = 'https://101techlabs.com';
 // never renders under a category it doesn't belong to (e.g.
 // /guides/qr-code/how-to-make-an-invoice must not show the invoice guide).
 export const GuidePage = () => {
-  const { lang, content } = useLanguage();
+  const { content } = useLanguage();
   const { category, slug } = useParams<{ category: string; slug: string }>();
   const guide = slug ? getGuideBySlug(slug) : undefined;
 
@@ -99,7 +99,7 @@ export const GuidePage = () => {
           <Breadcrumbs
             className="mb-8"
             items={[
-              { name: content.nav.breadcrumbHome, href: lang === 'hi' ? '/hi' : '/' },
+              { name: content.nav.breadcrumbHome, href: '/' },
               { name: t.breadcrumbLabel, href: '/guides' },
               { name: guide.title },
             ]}

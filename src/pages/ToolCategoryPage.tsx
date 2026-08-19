@@ -13,10 +13,10 @@ import { getGuideCategory } from '../content/guides/categories';
 import { getToolCategory, getToolsByCategory, categoryTitle, categoryDescription, toolTitle, toolDescription } from '../tools/registry';
 
 export const ToolCategoryPage = () => {
-  const { lang, content } = useLanguage();
+  const { content } = useLanguage();
   const t = content.toolsPage;
   const { category: categorySlug } = useParams<{ category: string }>();
-  const basePath = lang === 'hi' ? '/hi/tools' : '/tools';
+  const basePath = '/tools';
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -33,7 +33,7 @@ export const ToolCategoryPage = () => {
   const tools = getToolsByCategory(category.slug);
   const guideCategory = category.guideCategorySlug ? getGuideCategory(category.guideCategorySlug) : undefined;
 
-  return <ToolCategoryPageContent category={category} tools={tools} guideCategory={guideCategory} basePath={basePath} lang={lang} content={content} t={t} />;
+  return <ToolCategoryPageContent category={category} tools={tools} guideCategory={guideCategory} basePath={basePath} content={content} t={t} />;
 };
 
 type ToolCategoryPageContentProps = {
@@ -41,7 +41,6 @@ type ToolCategoryPageContentProps = {
   tools: ReturnType<typeof getToolsByCategory>;
   guideCategory: ReturnType<typeof getGuideCategory>;
   basePath: string;
-  lang: ReturnType<typeof useLanguage>['lang'];
   content: ReturnType<typeof useLanguage>['content'];
   t: ReturnType<typeof useLanguage>['content']['toolsPage'];
 };
@@ -56,7 +55,7 @@ type ToolCategoryPageContentProps = {
 // crawler that already found it another way still needs to be told not to
 // index it, same reasoning that applies to a hidden/unlisted tool page's
 // own noindex meta tag.
-const ToolCategoryPageContent = ({ category, tools, guideCategory, basePath, lang, content, t }: ToolCategoryPageContentProps) => {
+const ToolCategoryPageContent = ({ category, tools, guideCategory, basePath, content, t }: ToolCategoryPageContentProps) => {
   useEffect(() => {
     if (tools.length > 0) return;
     const meta = document.createElement('meta');
@@ -77,16 +76,16 @@ const ToolCategoryPageContent = ({ category, tools, guideCategory, basePath, lan
           <Breadcrumbs
             className="mb-8"
             items={[
-              { name: content.nav.breadcrumbHome, href: lang === 'hi' ? '/hi' : '/' },
+              { name: content.nav.breadcrumbHome, href: '/' },
               { name: t.breadcrumb, href: basePath },
-              { name: categoryTitle(category, lang) },
+              { name: categoryTitle(category) },
             ]}
           />
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16">
             <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-2 block">{t.toolCategoryEyebrow}</span>
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">{categoryTitle(category, lang)}</h1>
-            <p className="text-secondary-text max-w-2xl mx-auto text-lg">{categoryDescription(category, lang)}</p>
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">{categoryTitle(category)}</h1>
+            <p className="text-secondary-text max-w-2xl mx-auto text-lg">{categoryDescription(category)}</p>
           </motion.div>
 
           {tools.length > 0 ? (
@@ -94,8 +93,8 @@ const ToolCategoryPageContent = ({ category, tools, guideCategory, basePath, lan
               {tools.map((tool, idx) => (
                 <ToolCard
                   key={tool.id}
-                  title={toolTitle(tool, lang)}
-                  description={toolDescription(tool, lang)}
+                  title={toolTitle(tool)}
+                  description={toolDescription(tool)}
                   icon={tool.icon}
                   href={`${basePath}/${tool.category}/${tool.path}`}
                   index={idx}
@@ -103,7 +102,7 @@ const ToolCategoryPageContent = ({ category, tools, guideCategory, basePath, lan
               ))}
             </div>
           ) : (
-            <p className="text-center text-secondary-text">{t.noCategoryTools.replace('{category}', categoryTitle(category, lang).toLowerCase())}</p>
+            <p className="text-center text-secondary-text">{t.noCategoryTools.replace('{category}', categoryTitle(category).toLowerCase())}</p>
           )}
 
           {/* One contextual link into the matching guide hub — the tools here

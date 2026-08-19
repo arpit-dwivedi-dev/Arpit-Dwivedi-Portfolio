@@ -313,29 +313,28 @@ export const Contact = ({ compact = false, source }: ContactProps = {}) => {
 };
 
 export const Footer = () => {
-  const { lang, content } = useLanguage();
+  const { content } = useLanguage();
   const { navLinks, footer } = content;
-  const homeHref = lang === 'hi' ? '/hi' : '/';
-  const withLang = (path: string) => (lang === 'hi' ? `/hi${path}` : path);
+  const homeHref = '/';
 
   // Real, individually-crawlable pages — distinct from the homepage-anchor
   // nav above, which only makes sense on "/". Every one of these needs its
   // own URL for Google (and AdSense review) to find independent of the
   // one-page scroll experience.
   const siteLinks = [
-    { name: footer.navTools, href: withLang('/tools') },
+    { name: footer.navTools, href: '/tools' },
     // Guides/Blog are English-only (no /hi route — see App.tsx), so these
     // two deliberately skip withLang() rather than link to a dead /hi/blog.
     { name: footer.navGuides, href: '/guides' },
     { name: footer.navBlog, href: '/blog' },
-    { name: footer.navAbout, href: withLang('/about') },
-    { name: footer.navServices, href: withLang('/services') },
-    { name: footer.navContact, href: withLang('/contact') },
+    { name: footer.navAbout, href: '/about' },
+    { name: footer.navServices, href: '/services' },
+    { name: footer.navContact, href: '/contact' },
   ];
   const legalLinks = [
-    { name: footer.navPrivacyPolicy, href: withLang('/privacy-policy') },
-    { name: footer.navTerms, href: withLang('/terms') },
-    { name: footer.navEditorialPolicy, href: withLang('/editorial-policy') },
+    { name: footer.navPrivacyPolicy, href: '/privacy-policy' },
+    { name: footer.navTerms, href: '/terms' },
+    { name: footer.navEditorialPolicy, href: '/editorial-policy' },
   ];
 
   return (

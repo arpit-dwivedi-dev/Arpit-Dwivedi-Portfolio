@@ -35,7 +35,6 @@
 //                                   src/tools/registry.ts), guide
 //                                   categories/articles (from
 //                                   src/content/guides/*)
-import { isEnglishOnlyPath } from '../i18n/routeMeta';
 import { TOOL_CATEGORIES, TOOLS, getToolsByCategory } from '../tools/registry';
 import { guidePath, getGuideCategoriesWithCounts } from './guides/categories';
 import { GUIDES } from './guides/data';
@@ -47,40 +46,15 @@ export type ChangeFreq = 'yearly' | 'monthly' | 'weekly' | 'daily';
 export interface PublicRoute {
   /** Path with no origin, e.g. "/about". "/" for the homepage. */
   path: string;
-  /** Hindi counterpart, when App.tsx defines one — see isEnglishOnlyPath. */
-  hiPath?: string;
   lastmod: string;
   changefreq: ChangeFreq;
   priority: number;
-  /** Priority of hiPath's own <url> entry. Every bilingual pair in the
-   *  hand-maintained sitemap this replaced used exactly priority - 0.1 for
-   *  the Hindi entry — kept as a computed default so it can't drift out of
-   *  that pattern; override only if a page genuinely needs a different one. */
-  hiPriority?: number;
 }
 
 export interface ExcludedRoute {
   path: string;
-  hiPath?: string;
   reason: string;
 }
-
-const hiPathFor = (path: string): string | undefined => {
-  if (isEnglishOnlyPath(path)) return undefined;
-  return path === '/' ? '/hi' : `/hi${path}`;
-};
-
-const withHi = (
-  path: string,
-  meta: { lastmod: string; changefreq: ChangeFreq; priority: number },
-): PublicRoute => ({
-  path,
-  hiPath: hiPathFor(path),
-  lastmod: meta.lastmod,
-  changefreq: meta.changefreq,
-  priority: meta.priority,
-  hiPriority: hiPathFor(path) ? Math.round((meta.priority - 0.1) * 100) / 100 : undefined,
-});
 
 // ---- static pages ------------------------------------------------------
 // Hand-maintained on purpose — these don't multiply. Add a new static page
@@ -89,20 +63,20 @@ const withHi = (
 // prerendered (see Task 6's validation script for the guardrail that
 // catches a page shipped in App.tsx but forgotten here).
 const STATIC_ROUTES: PublicRoute[] = [
-  withHi('/', { lastmod: '2026-08-05', changefreq: 'weekly', priority: 1.0 }),
-  withHi('/about', { lastmod: '2026-08-05', changefreq: 'monthly', priority: 0.7 }),
-  withHi('/services', { lastmod: '2026-08-05', changefreq: 'monthly', priority: 0.8 }),
-  withHi('/projects', { lastmod: '2026-08-05', changefreq: 'monthly', priority: 0.8 }),
-  withHi('/contact', { lastmod: '2026-08-05', changefreq: 'yearly', priority: 0.6 }),
-  withHi('/privacy-policy', { lastmod: '2026-08-05', changefreq: 'yearly', priority: 0.3 }),
-  withHi('/terms', { lastmod: '2026-08-05', changefreq: 'yearly', priority: 0.3 }),
-  withHi('/editorial-policy', { lastmod: '2026-08-05', changefreq: 'yearly', priority: 0.3 }),
-  withHi('/tools', { lastmod: '2026-08-05', changefreq: 'weekly', priority: 0.9 }),
-  withHi('/vcard-qr-code', { lastmod: '2026-08-17', changefreq: 'monthly', priority: 0.8 }),
-  withHi('/menu-qr-code', { lastmod: '2026-08-17', changefreq: 'monthly', priority: 0.8 }),
-  withHi('/wifi-qr-code', { lastmod: '2026-08-17', changefreq: 'monthly', priority: 0.8 }),
-  withHi('/guides', { lastmod: '2026-08-05', changefreq: 'weekly', priority: 0.8 }),
-  withHi('/blog', { lastmod: '2026-08-12', changefreq: 'weekly', priority: 0.8 }),
+  { path: '/', lastmod: '2026-08-05', changefreq: 'weekly', priority: 1.0 },
+  { path: '/about', lastmod: '2026-08-05', changefreq: 'monthly', priority: 0.7 },
+  { path: '/services', lastmod: '2026-08-05', changefreq: 'monthly', priority: 0.8 },
+  { path: '/projects', lastmod: '2026-08-05', changefreq: 'monthly', priority: 0.8 },
+  { path: '/contact', lastmod: '2026-08-05', changefreq: 'yearly', priority: 0.6 },
+  { path: '/privacy-policy', lastmod: '2026-08-05', changefreq: 'yearly', priority: 0.3 },
+  { path: '/terms', lastmod: '2026-08-05', changefreq: 'yearly', priority: 0.3 },
+  { path: '/editorial-policy', lastmod: '2026-08-05', changefreq: 'yearly', priority: 0.3 },
+  { path: '/tools', lastmod: '2026-08-05', changefreq: 'weekly', priority: 0.9 },
+  { path: '/vcard-qr-code', lastmod: '2026-08-17', changefreq: 'monthly', priority: 0.8 },
+  { path: '/menu-qr-code', lastmod: '2026-08-17', changefreq: 'monthly', priority: 0.8 },
+  { path: '/wifi-qr-code', lastmod: '2026-08-17', changefreq: 'monthly', priority: 0.8 },
+  { path: '/guides', lastmod: '2026-08-05', changefreq: 'weekly', priority: 0.8 },
+  { path: '/blog', lastmod: '2026-08-12', changefreq: 'weekly', priority: 0.8 },
 ];
 
 export const getStaticRoutes = (): PublicRoute[] => STATIC_ROUTES;
@@ -128,7 +102,7 @@ export const getIndexableToolCategoryRoutes = (): PublicRoute[] =>
         `[siteRoutes] Tool category "${category.slug}" has visible tools but no CATEGORY_LASTMOD entry in src/content/siteRoutes.ts.`,
       );
     }
-    return withHi(`/tools/${category.slug}`, { lastmod, changefreq: 'weekly', priority: 0.8 });
+    return { path: `/tools/${category.slug}`, lastmod, changefreq: 'weekly', priority: 0.8 };
   });
 
 // ---- individual tool pages (dynamic content route) -----------------------
@@ -148,7 +122,7 @@ export const getIndexableToolRoutes = (): PublicRoute[] =>
     if (!lastmod) {
       throw new Error(`[siteRoutes] Tool "${tool.id}" has no TOOL_LASTMOD entry in src/content/siteRoutes.ts.`);
     }
-    return withHi(`/tools/${tool.category}/${tool.path}`, { lastmod, changefreq: 'monthly', priority: 0.9 });
+    return { path: `/tools/${tool.category}/${tool.path}`, lastmod, changefreq: 'monthly', priority: 0.9 };
   });
 
 // ---- guide categories + articles (dynamic content route) -----------------
@@ -193,25 +167,30 @@ export const getNoindexPrerenderOnlyPaths = (): string[] =>
 const HAND_MAINTAINED_EXCLUSIONS: ExcludedRoute[] = [
   {
     path: '/tools/generators/qr-code-generator/go',
-    hiPath: '/hi/tools/generators/qr-code-generator/go',
     reason: 'Client-only smart-redirect target embedded in Multi-URL/App QR codes — not a content page (see QRRedirectPage, which sets its own noindex tag).',
   },
   {
     path: '/free-tools',
-    hiPath: '/hi/free-tools',
     reason: 'Legacy redirect (Navigate) to /tools — see App.tsx.',
+  },
+  // Both shapes are declared in App.tsx ("/hi/*" does not match a bare
+  // "/hi" in React Router), so both need classifying here or
+  // validate-route-registry.mjs flags them as forgotten routes.
+  {
+    path: '/hi',
+    reason: 'Retired Hindi mirror — client-side redirect to the English equivalent (see HindiRedirect in App.tsx), not a content page.',
+  },
+  {
+    path: '/hi/*',
+    reason: 'Retired Hindi mirror — client-side redirect to the English equivalent (see HindiRedirect in App.tsx), not a content page.',
   },
 ];
 
 const hiddenToolExclusions = (): ExcludedRoute[] =>
-  TOOLS.filter((tool) => tool.hidden).map((tool) => {
-    const path = `/tools/${tool.category}/${tool.path}`;
-    return {
-      path,
-      hiPath: hiPathFor(path),
-      reason: `Hidden tool (TOOLS['${tool.id}'].hidden in src/tools/registry.ts) — route stays live for direct links but is excluded from discovery and indexing.`,
-    };
-  });
+  TOOLS.filter((tool) => tool.hidden).map((tool) => ({
+    path: `/tools/${tool.category}/${tool.path}`,
+    reason: `Hidden tool (TOOLS['${tool.id}'].hidden in src/tools/registry.ts) — route stays live for direct links but is excluded from discovery and indexing.`,
+  }));
 
 export const getExcludedRoutes = (): ExcludedRoute[] => [...HAND_MAINTAINED_EXCLUSIONS, ...hiddenToolExclusions()];
 
@@ -224,9 +203,8 @@ export const getIndexableRoutes = (): PublicRoute[] => [
   ...getIndexableGuideArticleRoutes(),
 ];
 
-/** Flat list of every indexable path, English and Hindi. */
-export const getIndexablePaths = (): string[] =>
-  getIndexableRoutes().flatMap((route) => (route.hiPath ? [route.path, route.hiPath] : [route.path]));
+/** Flat list of every indexable path. */
+export const getIndexablePaths = (): string[] => getIndexableRoutes().map((route) => route.path);
 
 /** Every path that must receive a prerendered static HTML snapshot —
  *  indexable routes plus noindex-but-linkable guide articles. Redirect-only

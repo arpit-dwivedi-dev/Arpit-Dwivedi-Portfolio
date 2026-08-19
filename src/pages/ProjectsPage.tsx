@@ -9,9 +9,9 @@ import { Breadcrumbs } from '../components/seo/Breadcrumbs';
 import { useLanguage } from '../i18n/LanguageContext';
 
 export const ProjectsPage = () => {
-  const { lang, content } = useLanguage();
+  const { content } = useLanguage();
   const { projects, projectsSection } = content;
-  const homeHref = lang === 'hi' ? '/hi' : '/';
+  const homeHref = '/';
   // Delivered and demo/concept work are never blended into one grid — see
   // positioning.md and the founder's explicit instruction that unpaid,
   // never-adopted demo work gets its own clearly-labeled bucket.
@@ -80,7 +80,7 @@ export const ProjectsPage = () => {
           <div className="flex flex-wrap items-center justify-center gap-4 mt-16 p-6 rounded-3xl glass border-ink/10 text-center">
             <p className="text-ink font-medium">{projectsSection.ctaText}</p>
             <Link
-              to={lang === 'hi' ? '/hi/services' : '/services'}
+              to={'/services'}
               className="shrink-0 inline-flex items-center gap-2 px-5 py-3 bg-accent-blue text-bg-pure font-bold rounded-xl hover:glow-blue transition-all group"
             >
               {projectsSection.ctaButton} <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" aria-hidden="true" />

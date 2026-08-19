@@ -11,7 +11,7 @@ import { useLanguage } from '../i18n/LanguageContext';
 // existed as a same-page anchor (#about) on the homepage, so it had no URL
 // of its own for Google to rank or for other pages to link to directly.
 export const AboutPage = () => {
-  const { lang, content } = useLanguage();
+  const { content } = useLanguage();
   const { aboutPage } = content;
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export const AboutPage = () => {
         <div className="max-w-7xl mx-auto px-6">
           <Breadcrumbs
             className="mb-8"
-            items={[{ name: content.nav.breadcrumbHome, href: lang === 'hi' ? '/hi' : '/' }, { name: content.footer.navAbout }]}
+            items={[{ name: content.nav.breadcrumbHome, href: '/' }, { name: content.footer.navAbout }]}
           />
         </div>
         <h1 className="sr-only">{aboutPage.srTitle}</h1>
@@ -51,7 +51,7 @@ export const AboutPage = () => {
             </ul>
             <p className="text-sm text-secondary-text mt-4">
               {aboutPage.workMoreText}{' '}
-              <Link to={lang === 'hi' ? '/hi/projects' : '/projects'} className="text-accent-blue hover:text-ink transition-colors font-medium">
+              <Link to={'/projects'} className="text-accent-blue hover:text-ink transition-colors font-medium">
                 {aboutPage.workMoreLinkLabel}
               </Link>
             </p>

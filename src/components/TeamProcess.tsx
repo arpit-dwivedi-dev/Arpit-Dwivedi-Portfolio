@@ -6,11 +6,11 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 
 export const Team = () => {
-  const { lang, content } = useLanguage();
+  const { content } = useLanguage();
   const { team, contact } = content;
   const { founder } = team;
   const [photoFailed, setPhotoFailed] = useState(false);
-  const projectsHref = lang === 'hi' ? '/hi/projects' : '/projects';
+  const projectsHref = '/projects';
 
   return (
     <section className="py-24 relative overflow-hidden">
