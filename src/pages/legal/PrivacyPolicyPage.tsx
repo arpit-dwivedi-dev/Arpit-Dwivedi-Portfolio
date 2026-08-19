@@ -23,11 +23,12 @@ const COPY = {
           { label: 'Contact form submissions', text: 'the name, email address, and message you submit, used only to respond to your inquiry.' },
           { label: 'Free tool inputs', text: 'what you enter into a tool (e.g. invoice details in the Invoice Generator, or content in the QR Code Generator) stays in your browser — none of it is sent to or stored on our servers.' },
           { label: 'Analytics', text: 'we use Google Analytics and Google Tag Manager to understand aggregate site usage (pages viewed, approximate location, device type). This does not identify you personally.' },
+          { label: 'Usage recordings', text: 'we use Microsoft Clarity to record anonymised sessions and heatmaps — clicks, scrolling and navigation — so we can see where the tools are confusing. Text you type into the API Request Builder and DBML Diagram Builder is masked before it leaves your browser and is never recorded.' },
         ],
       },
       {
         title: 'Third parties we use',
-        body: 'Google Analytics and Google Tag Manager (analytics); Web3Forms (contact form delivery); WhatsApp Business (if you message us via the WhatsApp button). Each operates under its own privacy policy.',
+        body: 'Google Analytics and Google Tag Manager (analytics); Microsoft Clarity (anonymised session recordings and heatmaps); Web3Forms (contact form delivery); WhatsApp Business (if you message us via the WhatsApp button). Each operates under its own privacy policy.',
       },
       {
         title: "What we don't do",
@@ -70,11 +71,12 @@ const COPY = {
           { label: 'कॉन्टैक्ट फ़ॉर्म सबमिशन', text: 'आपका नाम, ईमेल एड्रेस, और मैसेज — जिसका उपयोग सिर्फ़ आपकी पूछताछ का जवाब देने के लिए किया जाता है।' },
           { label: 'फ्री टूल इनपुट', text: 'आप किसी टूल में जो भी डालते हैं (जैसे इनवॉइस जनरेटर में इनवॉइस डिटेल्स, या QR कोड जनरेटर में कॉन्टेंट) वह आपके ब्राउज़र में ही रहता है — इसमें से कुछ भी हमारे सर्वर पर भेजा या स्टोर नहीं होता।' },
           { label: 'एनालिटिक्स', text: 'हम Google Analytics और Google Tag Manager का उपयोग साइट के कुल इस्तेमाल (देखे गए पेज, अनुमानित लोकेशन, डिवाइस टाइप) को समझने के लिए करते हैं। इससे आपकी व्यक्तिगत पहचान नहीं होती।' },
+          { label: 'उपयोग रिकॉर्डिंग', text: 'हम Microsoft Clarity से गुमनाम सेशन रिकॉर्डिंग और हीटमैप (क्लिक, स्क्रॉल, नेविगेशन) लेते हैं, ताकि पता चले कि टूल कहाँ उलझाऊ हैं। API Request Builder और DBML Diagram Builder में आप जो टेक्स्ट टाइप करते हैं वह आपके ब्राउज़र से निकलने से पहले ही छिपा दिया जाता है और कभी रिकॉर्ड नहीं होता।' },
         ],
       },
       {
         title: 'हम जिन थर्ड पार्टीज़ का उपयोग करते हैं',
-        body: 'Google Analytics और Google Tag Manager (एनालिटिक्स); Web3Forms (कॉन्टैक्ट फ़ॉर्म डिलीवरी); WhatsApp Business (यदि आप WhatsApp बटन से मैसेज करते हैं)। हर एक अपनी खुद की प्राइवेसी पॉलिसी के तहत काम करता है।',
+        body: 'Google Analytics और Google Tag Manager (एनालिटिक्स); Microsoft Clarity (गुमनाम सेशन रिकॉर्डिंग और हीटमैप); Web3Forms (कॉन्टैक्ट फ़ॉर्म डिलीवरी); WhatsApp Business (यदि आप WhatsApp बटन से मैसेज करते हैं)। हर एक अपनी खुद की प्राइवेसी पॉलिसी के तहत काम करता है।',
       },
       {
         title: 'हम क्या नहीं करते',

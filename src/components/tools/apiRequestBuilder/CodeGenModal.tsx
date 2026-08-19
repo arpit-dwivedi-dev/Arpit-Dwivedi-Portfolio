@@ -8,6 +8,7 @@ import {
   generateCode,
   type CodeLanguage,
 } from '../../../tools/apiRequestBuilder/codeGenerators';
+import { useCopyToClipboard } from '../../../hooks/useCopyToClipboard';
 
 interface CodeGenModalProps {
   open: boolean;
@@ -24,7 +25,8 @@ interface CodeGenModalProps {
  *  costs nothing while the user is just editing params/headers/body elsewhere in the tool. */
 export const CodeGenModal = ({ open, onClose, request, variables }: CodeGenModalProps) => {
   const [language, setLanguage] = useState<CodeLanguage>('curl');
-  const [copied, setCopied] = useState(false);
+  const { status: copyStatus, copy: copyText } = useCopyToClipboard();
+  const copied = copyStatus === 'copied';
 
   const code = useMemo(
     () => (open ? generateCode(language, request, variables) : ''),
@@ -32,13 +34,7 @@ export const CodeGenModal = ({ open, onClose, request, variables }: CodeGenModal
   );
 
   const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(code);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1500);
-    } catch {
-      // Clipboard permission denied — nothing else to do.
-    }
+    await copyText(code);
   };
 
   return (
@@ -73,6 +69,12 @@ export const CodeGenModal = ({ open, onClose, request, variables }: CodeGenModal
           {copied ? 'Copied' : 'Copy'}
         </button>
       </div>
+
+      {copyStatus === 'error' && (
+        <p className="text-xs text-red-400 mt-3" role="status">
+          Couldn't copy automatically — select the code above and copy it manually.
+        </p>
+      )}
 
       <p className="text-[11px] text-secondary-text mt-3 leading-snug">
         Generated in your browser from the current request and active environment — never saved, logged, or sent anywhere.

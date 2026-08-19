@@ -54,7 +54,8 @@ type ToolCategoryPageContentProps = {
 // the sitemap. Those exclusions only stop this page from being *advertised*
 // (no nav link, no sitemap entry) — the route itself stays live, so a
 // crawler that already found it another way still needs to be told not to
-// index it, same reasoning as GoogleMapsScraperPage's tag.
+// index it, same reasoning that applies to a hidden/unlisted tool page's
+// own noindex meta tag.
 const ToolCategoryPageContent = ({ category, tools, guideCategory, basePath, lang, content, t }: ToolCategoryPageContentProps) => {
   useEffect(() => {
     if (tools.length > 0) return;

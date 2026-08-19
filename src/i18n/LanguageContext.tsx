@@ -4,7 +4,6 @@ import metadata from '../../metadata.json';
 import { hiContent } from '../content/hi';
 import { getGuideBySlug } from '../content/guides/data';
 import { getGuideCategory } from '../content/guides/categories';
-import { getBlogPostBySlug } from '../content/blog/data';
 import type { SiteContent, Lang } from './types';
 // Route metadata lives in ./routeMeta (pure data, no React) so it's
 // unit-testable without pulling in JSX or this provider's effects.
@@ -118,10 +117,10 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     upsertAlternateLink('x-default', absoluteUrl('en', basePathname));
 
     const routeKey: RouteKey = ROUTE_KEY_BY_PATH[basePathname] ?? 'home';
-    // Guide/post slugs are dynamic (/guides/:slug, /guides/:category/:slug,
-    // /blog/:slug) so they can't live in the static map above — look the
-    // specific item up and override the generic "guides"/"blog" meta with
-    // its title/description when one matches. The legacy single-segment
+    // Guide slugs are dynamic (/guides/:slug, /guides/:category/:slug) so
+    // they can't live in the static map above — look the specific item up
+    // and override the generic "guides" meta with its title/description
+    // when one matches. The legacy single-segment
     // /guides/:slug shape is shared by category pages (/guides/invoicing)
     // and old flat article URLs (/guides/how-to-make-an-invoice) — see
     // GuideOrCategoryPage for the render-time resolution; category wins the
@@ -146,11 +145,10 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
           })()
         : undefined;
     const guideMatch = legacyGuideMatch ?? canonicalGuideMatch;
-    const blogMatch = basePathname.startsWith('/blog/') ? getBlogPostBySlug(basePathname.slice('/blog/'.length)) : undefined;
     const meta = categoryMatch
       ? { title: `${categoryMatch.title} Guides | 101 Tech Labs`, description: categoryMatch.description }
-      : (guideMatch ?? blogMatch)
-        ? { title: `${(guideMatch ?? blogMatch)!.title} | 101 Tech Labs`, description: (guideMatch ?? blogMatch)!.description }
+      : guideMatch
+        ? { title: `${guideMatch.title} | 101 Tech Labs`, description: guideMatch.description }
         : ROUTE_META[lang][routeKey];
     const canonicalHref = absoluteUrl(lang, basePathname);
 

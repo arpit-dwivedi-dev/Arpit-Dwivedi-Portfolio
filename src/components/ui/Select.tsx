@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Check, ChevronDown } from 'lucide-react';
 
@@ -15,6 +15,16 @@ interface SelectProps {
   disabled?: boolean;
   className?: string;
   ariaDescribedBy?: string;
+  ariaLabel?: string;
+  title?: string;
+  /** Leading icon inside the trigger (e.g. the toolbar chips' Clock/Globe). */
+  icon?: ReactNode;
+  /** Replaces the default form-field trigger styling outright — pass this for
+   *  the compact toolbar "chip" variant rather than fighting the defaults. */
+  triggerClassName?: string;
+  /** Replaces the popup's default `w-full` sizing. A narrow chip trigger needs
+   *  a menu wider than itself (`w-max min-w-full`), a form field does not. */
+  menuClassName?: string;
 }
 
 // Native <select> popups can't be themed cross-browser (Chrome/Firefox render
@@ -23,7 +33,23 @@ interface SelectProps {
 // focus stays on the trigger button the whole time, arrow keys move a
 // virtual "active" option via aria-activedescendant, and options are plain
 // (non-focusable) list items so Tab never stops on them individually.
-export const Select = ({ id, value, onChange, options, disabled, className = '', ariaDescribedBy }: SelectProps) => {
+const defaultTriggerClass =
+  'w-full flex items-center justify-between gap-2 bg-ink/5 border border-ink/10 rounded-xl px-4 py-3 text-ink hover:border-ink/20 focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure transition-colors disabled:opacity-60 disabled:cursor-not-allowed';
+
+export const Select = ({
+  id,
+  value,
+  onChange,
+  options,
+  disabled,
+  className = '',
+  ariaDescribedBy,
+  ariaLabel,
+  title,
+  icon,
+  triggerClassName,
+  menuClassName,
+}: SelectProps) => {
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -107,9 +133,12 @@ export const Select = ({ id, value, onChange, options, disabled, className = '',
         aria-controls={listboxId}
         aria-activedescendant={open ? optionId(activeIndex) : undefined}
         aria-describedby={ariaDescribedBy}
-        className="w-full flex items-center justify-between gap-2 bg-ink/5 border border-ink/10 rounded-xl px-4 py-3 text-ink hover:border-ink/20 focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+        aria-label={ariaLabel}
+        title={title}
+        className={triggerClassName ?? defaultTriggerClass}
       >
-        <span>{selected?.label ?? '—'}</span>
+        {icon}
+        <span className="truncate">{selected?.label ?? '—'}</span>
         <ChevronDown size={16} className={`text-secondary-text transition-transform shrink-0 ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
       </button>
 
@@ -127,7 +156,7 @@ export const Select = ({ id, value, onChange, options, disabled, className = '',
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className="absolute z-20 mt-2 w-full py-1.5 rounded-xl bg-bg-secondary border border-ink/10 shadow-[0_12px_30px_-12px_rgba(0,0,0,0.5)] overflow-hidden"
+            className={`absolute z-20 mt-2 py-1.5 rounded-xl bg-bg-secondary border border-ink/10 shadow-[0_12px_30px_-12px_rgba(0,0,0,0.5)] overflow-hidden ${menuClassName ?? 'w-full'}`}
           >
             {options.map((option, index) => (
               <li

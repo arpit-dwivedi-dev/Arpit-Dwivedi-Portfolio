@@ -57,7 +57,29 @@
   --color-ink: #FFFFFF;
 }
 
+/* Native form controls (checkbox/radio glyphs, scrollbars, date pickers) use
+   the OS/browser palette; `color-scheme` points them at the active theme. */
+:root {
+  color-scheme: dark;
+}
+
+/* Safety net for any native <select> (the UI ones all use components/ui/Select
+   instead). Our field styles use a *translucent* background (`bg-ink/[0.03]`)
+   with `text-ink` white text. On a closed control that reads as dark because
+   the black page composites through it — but Chromium's dropdown popup
+   inherits the select's background-color and composites it against the popup's
+   own white base, giving a white list with white text, invisible until the
+   hover highlight paints its own background. `color-scheme` can't fix that: an
+   author-set background-color beats the color-scheme default. Options need an
+   explicitly OPAQUE background, so paint them from the theme tokens. */
+select option,
+select optgroup {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-ink);
+}
+
 :root.light {
+  color-scheme: light;
   /* #0077B6 measures 5.4:1 on white (vs. 1.9:1 for the dark theme's
      #00D1FF) — kept saturated enough to still read as the brand blue. */
   --color-accent-blue: #0077B6;

@@ -67,7 +67,13 @@ export function EditorPanel({ value, onChange, theme, errorLine, onSave, schema,
   }, [errorLine]);
 
   return (
-    <div className={`w-full h-full min-w-0 ${compact ? 'dbml-editor-compact' : ''}`}>
+    // data-clarity-mask keeps the DBML source out of Clarity session recordings —
+    // people paste real production schemas in here. The rendered diagram stays
+    // visible, so recordings still show how the tool is actually being used.
+    <div
+      data-clarity-mask="true"
+      className={`w-full h-full min-w-0 ${compact ? 'dbml-editor-compact' : ''}`}
+    >
       <style>{`
         .dbml-error-line { background: rgba(248, 113, 113, 0.16); }
         .dbml-error-glyph { background: #ef4444; border-radius: 9999px; width: 6px !important; height: 6px !important; margin-left: 6px; margin-top: 7px; }

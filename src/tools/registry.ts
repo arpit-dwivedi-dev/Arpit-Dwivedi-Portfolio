@@ -1,4 +1,4 @@
-import { Database, MapPin, QrCode, Receipt, Send, type LucideIcon } from 'lucide-react';
+import { Database, QrCode, Receipt, Send, type LucideIcon } from 'lucide-react';
 import type { Lang } from '../i18n/types';
 
 export interface ToolCategory {
@@ -108,18 +108,6 @@ export interface ToolDefinition {
 
 // Adding tool #2 is a new entry here — ToolCard, ToolsPage, and CategoryPage don't change.
 export const TOOLS: ToolDefinition[] = [
-  {
-    id: 'google-maps-business-finder',
-    title: 'Google Maps Business Finder',
-    description: 'Find businesses on Google Maps and pull their name, address, phone, website, rating, and hours into a table you can export as CSV.',
-    titleHi: 'गूगल मैप्स बिज़नेस फ़ाइंडर',
-    descriptionHi: 'गूगल मैप्स पर बिज़नेस खोजें और उनका नाम, पता, फ़ोन, वेबसाइट, रेटिंग, और समय एक ऐसी टेबल में निकालें जिसे आप CSV के रूप में एक्सपोर्ट कर सकते हैं।',
-    icon: MapPin,
-    category: 'lead-generation',
-    path: 'google-maps-business-finder',
-    featured: true,
-    hidden: true,
-  },
   {
     id: 'invoice-generator',
     title: 'Invoice Generator',

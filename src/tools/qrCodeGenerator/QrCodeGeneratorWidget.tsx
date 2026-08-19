@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { FaDiscord, FaFacebook, FaInstagram, FaLinkedin, FaSpotify, FaTelegram, FaWhatsapp, FaYoutube } from 'react-icons/fa';
 import { QRCodeCanvas, QRCodeSVG } from 'qrcode.react';
+import { Select } from '../../components/ui/Select';
 import { BuyMeACoffee } from '../../components/tools/BuyMeACoffee';
 import { notifyToolUsed } from '../../components/tools/supportPrompt';
 import { useLanguage } from '../../i18n/LanguageContext';
@@ -136,7 +137,8 @@ export const QrCodeGeneratorWidget = ({ initialType = 'url', lockToType, toolId 
 
   const svgRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [copied, setCopied] = useState(false);
+  const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'error'>('idle');
+  const copied = copyStatus === 'copied';
   const [clipboardSupported, setClipboardSupported] = useState(false);
 
   useEffect(() => {
@@ -163,10 +165,12 @@ export const QrCodeGeneratorWidget = ({ initialType = 'url', lockToType, toolId 
   const handleCopyImage = async () => {
     if (!qrValue || !canvasRef.current) return;
     const ok = await copyCanvasToClipboard(canvasRef.current);
+    // A failed image copy has to say so — the button silently staying put is
+    // indistinguishable from the click not registering at all.
+    setCopyStatus(ok ? 'copied' : 'error');
+    setTimeout(() => setCopyStatus('idle'), ok ? 1500 : 3000);
     if (ok) {
       trackEvent('tool_used', { tool_name: toolId, action: 'copy', qr_type: activeType });
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
       notifyToolUsed();
     }
   };
@@ -341,16 +345,17 @@ export const QrCodeGeneratorWidget = ({ initialType = 'url', lockToType, toolId 
 
                 <div className="space-y-1">
                   <label htmlFor="qr-wifi-security" className={labelClass}>{t.types.wifi.securityLabel}</label>
-                  <select
+                  <Select
                     id="qr-wifi-security"
                     value={forms.wifi.security}
-                    onChange={(e) => updateForm('wifi', { security: e.target.value as typeof forms.wifi.security })}
-                    className={`${fieldClass} w-full`}
-                  >
-                    <option value="WPA">{t.types.wifi.securityWpa}</option>
-                    <option value="WEP">{t.types.wifi.securityWep}</option>
-                    <option value="None">{t.types.wifi.securityNone}</option>
-                  </select>
+                    onChange={(security) => updateForm('wifi', { security: security as typeof forms.wifi.security })}
+                    options={[
+                      { value: 'WPA', label: t.types.wifi.securityWpa },
+                      { value: 'WEP', label: t.types.wifi.securityWep },
+                      { value: 'None', label: t.types.wifi.securityNone },
+                    ]}
+                    triggerClassName={`${fieldClass} w-full flex items-center justify-between gap-2 text-left`}
+                  />
                 </div>
 
                 <label htmlFor="qr-wifi-hidden" className="flex items-center justify-between gap-3 rounded-xl border border-ink/10 bg-ink/[0.02] px-3 py-2 text-sm text-ink cursor-pointer">
@@ -835,7 +840,7 @@ export const QrCodeGeneratorWidget = ({ initialType = 'url', lockToType, toolId 
                   className="w-full py-2 bg-ink/5 text-ink font-bold rounded-xl hover:bg-ink/10 transition-all flex items-center justify-center gap-1.5 disabled:opacity-40 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-pure text-xs"
                 >
                   {copied ? <Check size={13} aria-hidden="true" className="text-green-400" /> : <Copy size={13} aria-hidden="true" />}
-                  {copied ? t.copiedButton : t.copyImageButton}
+                  {copied ? t.copiedButton : copyStatus === 'error' ? t.copyFailedButton : t.copyImageButton}
                 </button>
               )}
             </div>

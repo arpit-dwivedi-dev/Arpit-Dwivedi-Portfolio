@@ -28,8 +28,8 @@ import { notifyToolUsed } from '../../components/tools/supportPrompt';
 import { Footer } from '../../components/AchievementsContact';
 import { Breadcrumbs } from '../../components/seo/Breadcrumbs';
 import { JsonLd } from '../../components/seo/JsonLd';
+import { useCopyToClipboard } from '../../hooks/useCopyToClipboard';
 import { useLanguage } from '../../i18n/LanguageContext';
-import { useTheme } from '../../theme/ThemeContext';
 import { trackEvent } from '../../monitoring';
 import { TOOLS, getToolCategory, getRelatedTools, categoryTitle, toolTitle, toolDescription } from '../../tools/registry';
 import { getGuideBySlug } from '../../content/guides/data';
@@ -110,6 +110,7 @@ import { PostmanImportModal } from '../../components/tools/apiRequestBuilder/Pos
 import { CodeGenModal } from '../../components/tools/apiRequestBuilder/CodeGenModal';
 import { ShareModal } from '../../components/tools/apiRequestBuilder/ShareModal';
 import { Modal } from '../../components/tools/apiRequestBuilder/Modal';
+import { Select } from '../../components/ui/Select';
 import { EnvironmentSelector } from '../../components/tools/apiRequestBuilder/EnvironmentSelector';
 import { EnvironmentModal } from '../../components/tools/apiRequestBuilder/EnvironmentModal';
 import { smallButtonClass, METHOD_COLORS } from '../../components/tools/apiRequestBuilder/sharedClasses';
@@ -128,6 +129,11 @@ const RELATED_TOOLS = getRelatedTools(TOOL);
 // 44px min height keeps every row a comfortable thumb target inside the mobile "More" sheet.
 const moreMenuItemClass =
   'w-full flex items-center gap-3 px-3 py-3 min-h-[44px] rounded-xl text-sm font-medium text-ink hover:bg-ink/5 transition-colors disabled:opacity-40 disabled:pointer-events-none';
+
+// Compact trigger for the dropdowns that sit inline on a "More actions" drawer
+// row, where the row itself already carries the icon and label.
+const menuFieldTriggerClass =
+  'flex items-center gap-1.5 bg-ink/5 border border-ink/10 rounded-lg px-2 py-1 text-xs font-mono text-secondary-text hover:border-ink/20 hover:text-ink focus:outline-none focus:border-accent-blue transition-colors';
 
 type DrawerTab = 'history' | 'saved';
 
@@ -171,7 +177,6 @@ const downloadJsonFile = (filename: string, data: unknown): void => {
 
 export const ApiRequestBuilderPage = () => {
   const { lang, content } = useLanguage();
-  const { theme } = useTheme();
   const toolsBase = lang === 'hi' ? '/hi/tools' : '/tools';
   const categoryHref = `${toolsBase}/${TOOL.category}`;
 
@@ -189,8 +194,10 @@ export const ApiRequestBuilderPage = () => {
   const [corsProxyModalOpen, setCorsProxyModalOpen] = useState(false);
   const [corsProxySettings, setCorsProxySettings] = useState<CorsProxySettings>(getCorsProxySettings);
   const [currentSavedId, setCurrentSavedId] = useState<string | null>(null);
-  const [urlCopied, setUrlCopied] = useState(false);
-  const [curlCopied, setCurlCopied] = useState(false);
+  const { status: urlCopyStatus, copy: copyUrlText } = useCopyToClipboard();
+  const { status: curlCopyStatus, copy: copyCurlText } = useCopyToClipboard();
+  const urlCopied = urlCopyStatus === 'copied';
+  const curlCopied = curlCopyStatus === 'copied';
   // Shared by curl-paste feedback, share-link load results, and JSON import results — one
   // generic inline notice rather than three separate near-identical pieces of state.
   const [notice, setNotice] = useState<{ tone: 'ok' | 'error'; message: string } | null>(null);
@@ -608,25 +615,13 @@ export const ApiRequestBuilderPage = () => {
   };
 
   const handleCopyCurl = async () => {
-    try {
-      await navigator.clipboard.writeText(generateCurlCommand(builder.request, activeVariables));
-      setCurlCopied(true);
-      window.setTimeout(() => setCurlCopied(false), 1500);
-    } catch {
-      // Clipboard permission denied — nothing else to do.
-    }
+    await copyCurlText(generateCurlCommand(builder.request, activeVariables));
   };
 
   const handleCopyUrl = async () => {
     const fullUrl = buildUrlWithParams(builder.request.url, builder.request.params);
     if (!fullUrl) return;
-    try {
-      await navigator.clipboard.writeText(fullUrl);
-      setUrlCopied(true);
-      window.setTimeout(() => setUrlCopied(false), 1500);
-    } catch {
-      // Clipboard permission denied — nothing else to do.
-    }
+    await copyUrlText(fullUrl);
   };
 
   // Validated against the environment-resolved URL, not the raw template — so a URL like
@@ -738,6 +733,7 @@ export const ApiRequestBuilderPage = () => {
                 aria-label="Request URL"
                 aria-invalid={!urlValidation.valid}
                 spellCheck={false}
+                data-clarity-mask="true"
                 className="w-full h-full rounded-xl border border-ink/10 sm:rounded-none sm:border-y sm:border-x-0 bg-ink/[0.03] focus:bg-ink/5 focus:border-accent-blue px-3 py-2.5 text-sm font-mono text-ink placeholder:text-secondary-text/50 focus:outline-none transition-colors"
               />
             </div>
@@ -789,7 +785,7 @@ export const ApiRequestBuilderPage = () => {
             </button>
             <button type="button" onClick={handleCopyCurl} className={smallButtonClass}>
               {curlCopied ? <Check size={13} aria-hidden="true" /> : <Terminal size={13} aria-hidden="true" />}
-              {curlCopied ? 'Copied' : 'Copy as cURL'}
+              {curlCopied ? 'Copied' : curlCopyStatus === 'error' ? "Couldn't copy" : 'Copy as cURL'}
             </button>
             <button type="button" onClick={() => setCodeGenModalOpen(true)} className={smallButtonClass}>
               <Code2 size={13} aria-hidden="true" />
@@ -801,7 +797,7 @@ export const ApiRequestBuilderPage = () => {
             </button>
             <button type="button" onClick={handleCopyUrl} disabled={!builder.request.url.trim()} className={smallButtonClass}>
               {urlCopied ? <Check size={13} aria-hidden="true" /> : <Copy size={13} aria-hidden="true" />}
-              {urlCopied ? 'Copied' : 'Copy URL'}
+              {urlCopied ? 'Copied' : urlCopyStatus === 'error' ? "Couldn't copy" : 'Copy URL'}
             </button>
             <button
               type="button"
@@ -830,7 +826,6 @@ export const ApiRequestBuilderPage = () => {
               activeEnvironmentId={activeEnvironmentId}
               onSelect={handleSelectEnvironment}
               onManage={() => setEnvironmentModalOpen(true)}
-              theme={theme}
             />
             <button
               type="button"
@@ -841,22 +836,17 @@ export const ApiRequestBuilderPage = () => {
               CORS Proxy
               {customProxy ? ': On' : corsProxySettings.mode === 'auto' ? ': Auto' : ': Off'}
             </button>
-            <label className={`${smallButtonClass} cursor-pointer`} title="Request timeout — how long to wait before the request is automatically cancelled.">
-              <Clock size={13} aria-hidden="true" />
-              <select
-                value={builder.request.timeoutMs}
-                onChange={(e) => builder.setTimeoutMs(Number(e.target.value))}
-                aria-label="Request timeout"
-                style={{ colorScheme: theme }}
-                className="bg-transparent border-none text-xs font-mono font-medium focus:outline-none cursor-pointer appearance-none"
-              >
-                {TIMEOUT_OPTIONS_MS.map((ms) => (
-                  <option key={ms} value={ms}>
-                    Timeout: {formatTimeout(ms)}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <Select
+              id="api-timeout"
+              value={String(builder.request.timeoutMs)}
+              onChange={(ms) => builder.setTimeoutMs(Number(ms))}
+              options={TIMEOUT_OPTIONS_MS.map((ms) => ({ value: String(ms), label: `Timeout: ${formatTimeout(ms)}` }))}
+              ariaLabel="Request timeout"
+              title="Request timeout — how long to wait before the request is automatically cancelled."
+              icon={<Clock size={13} aria-hidden="true" className="shrink-0" />}
+              triggerClassName={smallButtonClass}
+              menuClassName="w-max min-w-full font-mono"
+            />
             <button type="button" onClick={scrollToGuides} className={smallButtonClass}>
               <BookOpen size={13} aria-hidden="true" />
               Guides
@@ -929,7 +919,12 @@ export const ApiRequestBuilderPage = () => {
             </div>
           ) : (
             <>
-              <div className="rounded-2xl border border-ink/10 bg-bg-secondary/40 p-3 sm:p-5 mb-6">
+              {/* Masked from Clarity session recordings: params, headers, body and
+                  auth are where real endpoints, API keys and bearer tokens get
+                  typed. The tab chrome itself is inside the masked subtree too,
+                  which is fine — clicks and layout still record, only the text
+                  is redacted. */}
+              <div data-clarity-mask="true" className="rounded-2xl border border-ink/10 bg-bg-secondary/40 p-3 sm:p-5 mb-6">
                 <RequestTabs
                   active={builder.activeTab}
                   onChange={(tab: RequestTab) => builder.setActiveTab(tab)}
@@ -994,7 +989,7 @@ export const ApiRequestBuilderPage = () => {
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-ink/10 bg-bg-secondary/40 p-3 sm:p-5">
+              <div data-clarity-mask="true" className="rounded-2xl border border-ink/10 bg-bg-secondary/40 p-3 sm:p-5">
                 <h2 className="text-xs font-mono uppercase tracking-widest text-secondary-text mb-4">Response</h2>
                 <ResponseViewer
                   sending={builder.sending}
@@ -1387,24 +1382,23 @@ export const ApiRequestBuilderPage = () => {
             <span className="w-4 text-center text-xs font-mono" aria-hidden="true">%</span>
             Decode URL
           </button>
-          <label className={`${moreMenuItemClass} cursor-pointer`}>
+          <div className={moreMenuItemClass}>
             <Globe size={16} aria-hidden="true" />
             Environment
-            <select
+            <Select
+              id="api-environment-menu"
               value={activeEnvironmentId ?? ''}
-              onChange={(e) => handleSelectEnvironment(e.target.value || null)}
-              aria-label="Active environment"
-              style={{ colorScheme: theme }}
-              className="ml-auto bg-ink/5 border border-ink/10 rounded-lg px-2 py-1 text-xs font-mono text-secondary-text focus:outline-none focus:border-accent-blue max-w-[110px]"
-            >
-              <option value="">No Environment</option>
-              {environments.map((env) => (
-                <option key={env.id} value={env.id}>
-                  {env.name}
-                </option>
-              ))}
-            </select>
-          </label>
+              onChange={(id) => handleSelectEnvironment(id || null)}
+              options={[
+                { value: '', label: 'No Environment' },
+                ...environments.map((env) => ({ value: env.id, label: env.name })),
+              ]}
+              ariaLabel="Active environment"
+              className="ml-auto"
+              triggerClassName={menuFieldTriggerClass}
+              menuClassName="right-0 w-max min-w-full max-w-[220px] font-mono"
+            />
+          </div>
           <button
             type="button"
             onClick={() => { setEnvironmentModalOpen(true); setMoreMenuOpen(false); }}
@@ -1424,23 +1418,20 @@ export const ApiRequestBuilderPage = () => {
               {customProxy ? 'On' : corsProxySettings.mode === 'auto' ? 'Auto' : 'Off'}
             </span>
           </button>
-          <label className={`${moreMenuItemClass} cursor-pointer`}>
+          <div className={moreMenuItemClass}>
             <Clock size={16} aria-hidden="true" />
             Timeout
-            <select
-              value={builder.request.timeoutMs}
-              onChange={(e) => builder.setTimeoutMs(Number(e.target.value))}
-              aria-label="Request timeout"
-              style={{ colorScheme: theme }}
-              className="ml-auto bg-ink/5 border border-ink/10 rounded-lg px-2 py-1 text-xs font-mono text-secondary-text focus:outline-none focus:border-accent-blue"
-            >
-              {TIMEOUT_OPTIONS_MS.map((ms) => (
-                <option key={ms} value={ms}>
-                  {formatTimeout(ms)}
-                </option>
-              ))}
-            </select>
-          </label>
+            <Select
+              id="api-timeout-menu"
+              value={String(builder.request.timeoutMs)}
+              onChange={(ms) => builder.setTimeoutMs(Number(ms))}
+              options={TIMEOUT_OPTIONS_MS.map((ms) => ({ value: String(ms), label: formatTimeout(ms) }))}
+              ariaLabel="Request timeout"
+              className="ml-auto"
+              triggerClassName={menuFieldTriggerClass}
+              menuClassName="right-0 w-max min-w-full font-mono"
+            />
+          </div>
           <button
             type="button"
             onClick={() => { setMoreMenuOpen(false); scrollToGuides(); }}

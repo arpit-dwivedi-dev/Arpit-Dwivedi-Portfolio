@@ -3,7 +3,8 @@ import { folderPath } from '../../../tools/apiRequestBuilder/collections';
 import type { Collection, Folder } from '../../../tools/apiRequestBuilder/collections';
 import type { SavedRequest } from '../../../tools/apiRequestBuilder/types';
 import { Modal } from './Modal';
-import { fieldClass, labelClass } from './sharedClasses';
+import { fieldClass, labelClass, selectTriggerClass } from './sharedClasses';
+import { Select } from '../../ui/Select';
 
 interface MoveRequestModalProps {
   open: boolean;
@@ -59,30 +60,28 @@ export const MoveRequestModal = ({ open, onClose, request, collections, folders,
       <label htmlFor="move-request-collection" className={`${labelClass} block mb-1.5`}>
         Collection
       </label>
-      <select
+      <Select
         id="move-request-collection"
         value={collectionId}
-        onChange={(e) => handleCollectionChange(e.target.value)}
-        className={`${fieldClass} mb-3`}
-      >
-        {collections.map((c) => (
-          <option key={c.id} value={c.id}>
-            {c.name}
-          </option>
-        ))}
-      </select>
+        onChange={handleCollectionChange}
+        options={collections.map((c) => ({ value: c.id, label: c.name }))}
+        className="mb-3"
+        triggerClassName={selectTriggerClass}
+      />
 
       <label htmlFor="move-request-folder" className={`${labelClass} block mb-1.5`}>
         Folder
       </label>
-      <select id="move-request-folder" value={folderId ?? ''} onChange={(e) => setFolderId(e.target.value || null)} className={fieldClass}>
-        <option value="">Collection root (no folder)</option>
-        {folderOptions.map((f) => (
-          <option key={f.id} value={f.id}>
-            {f.label}
-          </option>
-        ))}
-      </select>
+      <Select
+        id="move-request-folder"
+        value={folderId ?? ''}
+        onChange={(id) => setFolderId(id || null)}
+        options={[
+          { value: '', label: 'Collection root (no folder)' },
+          ...folderOptions.map((f) => ({ value: f.id, label: f.label })),
+        ]}
+        triggerClassName={selectTriggerClass}
+      />
 
       <div className="flex justify-end gap-2 mt-5">
         <button

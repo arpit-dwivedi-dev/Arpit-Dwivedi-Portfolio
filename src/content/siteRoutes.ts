@@ -12,15 +12,17 @@
 // which of App.tsx's routes are indexable, and pulls their metadata
 // (lastmod, priority, changefreq) from a small hand-maintained list for
 // static pages, plus the same data modules the pages themselves render from
-// (src/tools/registry.ts, src/content/guides/*, src/content/blog/data.ts)
-// for everything that multiplies.
+// (src/tools/registry.ts, src/content/guides/*) for everything that
+// multiplies. /blog is a STATIC_ROUTES entry, not a generator: it's a
+// single hub page backed by a live external feed (see
+// src/lib/engineeringPosts.ts), with no per-post detail route to enumerate.
 //
 // Route classes (Task 3's must-index policy, encoded as data + filters
 // rather than a separate prose list so it can't drift from what actually
 // renders):
-//   - indexable public routes    → STATIC_ROUTES + tool/category/guide/blog
-//                                   generators below (all reachable from
-//                                   getIndexableRoutes)
+//   - indexable public routes    → STATIC_ROUTES (includes /blog) +
+//                                   tool/category/guide generators below
+//                                   (all reachable from getIndexableRoutes)
 //   - non-indexable utility routes → getExcludedRoutes(): QR redirect,
 //                                   legacy /free-tools redirects, hidden
 //                                   tools
@@ -32,13 +34,11 @@
 //   - dynamic content routes       → tool/category pages (from
 //                                   src/tools/registry.ts), guide
 //                                   categories/articles (from
-//                                   src/content/guides/*), blog posts (from
-//                                   src/content/blog/data.ts)
+//                                   src/content/guides/*)
 import { isEnglishOnlyPath } from '../i18n/routeMeta';
 import { TOOL_CATEGORIES, TOOLS, getToolsByCategory } from '../tools/registry';
 import { guidePath, getGuideCategoriesWithCounts } from './guides/categories';
 import { GUIDES } from './guides/data';
-import { BLOG_POSTS } from './blog/data';
 
 export const SITE_ORIGIN = 'https://101techlabs.com';
 
@@ -184,15 +184,6 @@ export const getIndexableGuideArticleRoutes = (): PublicRoute[] =>
 export const getNoindexPrerenderOnlyPaths = (): string[] =>
   GUIDES.filter((guide) => guide.noindex).map((guide) => guidePath(guide));
 
-// ---- blog hub + posts (dynamic content route) -----------------------------
-export const getIndexableBlogPostRoutes = (): PublicRoute[] =>
-  BLOG_POSTS.map((post) => ({
-    path: `/blog/${post.slug}`,
-    lastmod: post.updatedDate,
-    changefreq: 'monthly',
-    priority: 0.7,
-  }));
-
 // ---- non-indexable utility / client-only redirect / hidden routes --------
 // These exist as real App.tsx routes but must never appear in the sitemap
 // or be treated as indexable content. Listed explicitly (rather than just
@@ -209,11 +200,6 @@ const HAND_MAINTAINED_EXCLUSIONS: ExcludedRoute[] = [
     path: '/free-tools',
     hiPath: '/hi/free-tools',
     reason: 'Legacy redirect (Navigate) to /tools — see App.tsx.',
-  },
-  {
-    path: '/free-tools/google-maps-scraper',
-    hiPath: '/hi/free-tools/google-maps-scraper',
-    reason: 'Legacy redirect (Navigate) to the Google Maps finder tool — see App.tsx.',
   },
 ];
 
@@ -236,7 +222,6 @@ export const getIndexableRoutes = (): PublicRoute[] => [
   ...getIndexableToolRoutes(),
   ...getIndexableGuideCategoryRoutes(),
   ...getIndexableGuideArticleRoutes(),
-  ...getIndexableBlogPostRoutes(),
 ];
 
 /** Flat list of every indexable path, English and Hindi. */

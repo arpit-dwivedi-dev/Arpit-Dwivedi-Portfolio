@@ -31,13 +31,18 @@ export const initErrorAndPerformanceMonitoring = async () => {
     integrations: [
       Sentry.browserTracingIntegration(),
       Sentry.replayIntegration({
-        maskAllText: false,
+        // Behavioural replay is Clarity's job now (unlimited recordings, see the
+        // clarityPlugin in vite.config.ts). Sentry's free tier allows only 50
+        // replays a month, so they're reserved for sessions that actually threw —
+        // and masked, since those sessions are exactly the ones where a token or
+        // schema was on screen when things broke.
+        maskAllText: true,
         blockAllMedia: true,
       }),
     ],
     tracesSampleRate: 1.0,
-    // Record 10% of all sessions, but always record a session that hits an error.
-    replaysSessionSampleRate: 0.1,
+    // No ambient session recording — only sessions that hit an error.
+    replaysSessionSampleRate: 0,
     replaysOnErrorSampleRate: 1.0,
   });
 };

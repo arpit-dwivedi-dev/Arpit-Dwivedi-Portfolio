@@ -15,6 +15,7 @@ import {
   WifiOff,
   XCircle,
 } from 'lucide-react';
+import { useCopyToClipboard } from '../../../hooks/useCopyToClipboard';
 import type { ApiResponse, RequestFailure, ResponseBodyKind } from '../../../tools/apiRequestBuilder/types';
 import { formatBytes, formatDuration } from '../../../tools/apiRequestBuilder/urlUtils';
 import { tryParseJson } from '../../../tools/apiRequestBuilder/jsonUtils';
@@ -66,7 +67,8 @@ type ResponseTab = 'body' | 'headers';
 export const ResponseViewer = ({ sending, response, error, elapsedMs, viaProxy, onCancel }: ResponseViewerProps) => {
   const [tab, setTab] = useState<ResponseTab>('body');
   const [bodyView, setBodyView] = useState<BodyView>('pretty');
-  const [copied, setCopied] = useState(false);
+  const { status: copyStatus, copy: copyText } = useCopyToClipboard();
+  const copied = copyStatus === 'copied';
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const newTabUrlRef = useRef<string | null>(null);
 
@@ -120,16 +122,9 @@ export const ResponseViewer = ({ sending, response, error, elapsedMs, viaProxy, 
 
   const canCopy = response !== null && response.bodyKind !== 'image' && response.bodyKind !== 'binary' && response.bodyText !== '';
 
-  const handleCopy = async () => {
+  const handleCopy = () => {
     if (!response || !canCopy) return;
-    try {
-      await navigator.clipboard.writeText(response.bodyText);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1500);
-    } catch {
-      // Clipboard API can be denied by browser permissions — nothing sensible to
-      // recover to here, the copy button simply stays in its unclicked state.
-    }
+    void copyText(response.bodyText);
   };
 
   const handleDownload = () => {
@@ -376,8 +371,14 @@ export const ResponseViewer = ({ sending, response, error, elapsedMs, viaProxy, 
             )}
             {canCopy && (
               <button type="button" onClick={handleCopy} className={smallButtonClass} aria-label="Copy response body">
-                {copied ? <Check size={13} aria-hidden="true" /> : <Copy size={13} aria-hidden="true" />}
-                {copied ? 'Copied' : 'Copy'}
+                {copied ? (
+                  <Check size={13} aria-hidden="true" />
+                ) : copyStatus === 'error' ? (
+                  <AlertTriangle size={13} aria-hidden="true" className="text-red-400" />
+                ) : (
+                  <Copy size={13} aria-hidden="true" />
+                )}
+                {copied ? 'Copied' : copyStatus === 'error' ? "Couldn't copy" : 'Copy'}
               </button>
             )}
             {showOpenInNewTab && !isEmpty && (

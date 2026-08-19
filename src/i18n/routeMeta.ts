@@ -16,7 +16,6 @@ export type RouteKey =
   | 'editorialPolicy'
   | 'tools'
   | 'toolsLeadGeneration'
-  | 'mapsScraper'
   | 'toolsGenerators'
   | 'invoiceGenerator'
   | 'qrCodeGenerator'
@@ -67,16 +66,11 @@ export const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; descript
     },
     tools: {
       title: 'Free Tools | 101 Tech Labs',
-      description: 'Free browser tools from 101 Tech Labs — starting with a Google Maps business finder. No signup, no catch.',
+      description: 'Free browser tools from 101 Tech Labs — starting with a browser-based invoice generator. No signup, no catch.',
     },
     toolsLeadGeneration: {
       title: 'Lead Generation Tools | 101 Tech Labs',
-      description: 'Free tools for finding and exporting business and contact data — starting with a Google Maps business finder.',
-    },
-    mapsScraper: {
-      title: 'Google Maps Business Finder (Free Tool) | 101 Tech Labs',
-      description:
-        'Find businesses on Google Maps and pull their name, address, phone, website, rating, and hours into a CSV. Built for quick lookups, not bulk scraping.',
+      description: 'Free tools for finding and exporting business and contact data.',
     },
     toolsGenerators: {
       title: 'Generators | 101 Tech Labs',
@@ -172,12 +166,7 @@ export const ROUTE_META: Record<Lang, Record<RouteKey, { title: string; descript
     },
     toolsLeadGeneration: {
       title: 'लीड जनरेशन टूल्स | 101 Tech Labs',
-      description: 'बिज़नेस और कॉन्टैक्ट डेटा खोजने और एक्सपोर्ट करने के फ्री टूल्स — शुरुआत गूगल मैप्स बिज़नेस फ़ाइंडर से।',
-    },
-    mapsScraper: {
-      title: 'गूगल मैप्स बिज़नेस फ़ाइंडर (फ्री टूल) | 101 Tech Labs',
-      description:
-        'गूगल मैप्स पर बिज़नेस खोजें और उनका नाम, पता, फ़ोन नंबर, वेबसाइट, रेटिंग और समय एक CSV में निकालें। छोटे लुकअप के लिए बना है, बल्क स्क्रैपिंग के लिए नहीं।',
+      description: 'बिज़नेस और कॉन्टैक्ट डेटा खोजने और एक्सपोर्ट करने के फ्री टूल्स।',
     },
     toolsGenerators: {
       title: 'जनरेटर्स | 101 Tech Labs',
@@ -289,7 +278,6 @@ export const ROUTE_KEY_BY_PATH: Record<string, RouteKey> = {
   '/editorial-policy': 'editorialPolicy',
   '/tools': 'tools',
   '/tools/lead-generation': 'toolsLeadGeneration',
-  '/tools/lead-generation/google-maps-business-finder': 'mapsScraper',
   '/tools/generators': 'toolsGenerators',
   '/tools/generators/invoice-generator': 'invoiceGenerator',
   '/tools/generators/qr-code-generator': 'qrCodeGenerator',

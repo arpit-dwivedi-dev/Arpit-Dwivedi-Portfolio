@@ -56,9 +56,6 @@ const ToolsPage = lazy(() => import('./pages/ToolsPage').then((m) => ({ default:
 const ToolCategoryPage = lazy(() =>
   import('./pages/ToolCategoryPage').then((m) => ({ default: m.ToolCategoryPage })),
 );
-const GoogleMapsScraperPage = lazy(() =>
-  import('./pages/tools/GoogleMapsScraperPage').then((m) => ({ default: m.GoogleMapsScraperPage })),
-);
 const InvoiceGeneratorPage = lazy(() =>
   import('./pages/tools/InvoiceGeneratorPage').then((m) => ({ default: m.InvoiceGeneratorPage })),
 );
@@ -93,7 +90,6 @@ const GuideOrCategoryPage = lazy(() =>
   import('./pages/GuideOrCategoryPage').then((m) => ({ default: m.GuideOrCategoryPage })),
 );
 const BlogPage = lazy(() => import('./pages/BlogPage').then((m) => ({ default: m.BlogPage })));
-const BlogPostPage = lazy(() => import('./pages/BlogPostPage').then((m) => ({ default: m.BlogPostPage })));
 
 // A null Suspense fallback means a direct visit to a lazy route (shared link,
 // bookmark) paints nothing — not even the navbar — until the chunk downloads
@@ -154,8 +150,6 @@ export default function App() {
             <Route path="/hi/tools" element={lazyRoute(ToolsPage)} />
             <Route path="/tools/:category" element={lazyRoute(ToolCategoryPage)} />
             <Route path="/hi/tools/:category" element={lazyRoute(ToolCategoryPage)} />
-            <Route path="/tools/lead-generation/google-maps-business-finder" element={lazyRoute(GoogleMapsScraperPage)} />
-            <Route path="/hi/tools/lead-generation/google-maps-business-finder" element={lazyRoute(GoogleMapsScraperPage)} />
             <Route path="/tools/generators/invoice-generator" element={lazyRoute(InvoiceGeneratorPage)} />
             <Route path="/hi/tools/generators/invoice-generator" element={lazyRoute(InvoiceGeneratorPage)} />
             <Route path="/tools/generators/qr-code-generator" element={lazyRoute(QRCodeGeneratorPage)} />
@@ -199,11 +193,11 @@ export default function App() {
             {/* English-only, same reasoning as /guides above. Separate from
                /guides on purpose (Phase 3 decision, content-rewrite project):
                /guides stays scoped to the free tools' own how-to content;
-               /blog covers broader topics inside the actual company
-               positioning (backend/identity engineering, full-stack
-               application development). */}
+               /blog is a curated feed of open-source engineering posts
+               pulled live from dev.to and linked out to their original
+               source — see src/lib/engineeringPosts.ts. No per-post detail
+               route: cards redirect straight to the external article. */}
             <Route path="/blog" element={lazyRoute(BlogPage)} />
-            <Route path="/blog/:slug" element={lazyRoute(BlogPostPage)} />
 
             {/* Legacy /free-tools URLs — redirect rather than 404 now that a
                handful of these may already be indexed or bookmarked. A true
@@ -211,14 +205,6 @@ export default function App() {
                hosting layer is confirmed (see SEO audit, §1/§4). */}
             <Route path="/free-tools" element={<Navigate to="/tools" replace />} />
             <Route path="/hi/free-tools" element={<Navigate to="/hi/tools" replace />} />
-            <Route
-              path="/free-tools/google-maps-scraper"
-              element={<Navigate to="/tools/lead-generation/google-maps-business-finder" replace />}
-            />
-            <Route
-              path="/hi/free-tools/google-maps-scraper"
-              element={<Navigate to="/hi/tools/lead-generation/google-maps-business-finder" replace />}
-            />
 
             {/* Safety net for any unmatched URL (dead link, typo, stale
                bookmark) — without this, React Router renders nothing and

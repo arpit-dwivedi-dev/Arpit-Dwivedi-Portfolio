@@ -1,8 +1,9 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Check, Copy, ExternalLink, ShieldCheck } from 'lucide-react';
 import { Modal } from './Modal';
 import type { ApiRequest } from '../../../tools/apiRequestBuilder/types';
 import { buildShareUrl, encodeShareRequest } from '../../../tools/apiRequestBuilder/shareRequest';
+import { useCopyToClipboard } from '../../../hooks/useCopyToClipboard';
 
 interface ShareModalProps {
   open: boolean;
@@ -20,7 +21,8 @@ interface ShareModalProps {
  *  shareRequest.sanitizeForShare) — nothing here ever needs to know that already happened,
  *  since encodeShareRequest() does it internally. */
 export const ShareModal = ({ open, onClose, request, baseUrl }: ShareModalProps) => {
-  const [copied, setCopied] = useState(false);
+  const { status: copyStatus, copy: copyText } = useCopyToClipboard();
+  const copied = copyStatus === 'copied';
 
   const result = useMemo(() => {
     if (!open || !request) return null;
@@ -33,13 +35,7 @@ export const ShareModal = ({ open, onClose, request, baseUrl }: ShareModalProps)
 
   const handleCopy = async () => {
     if (!result?.ok) return;
-    try {
-      await navigator.clipboard.writeText(result.url);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1500);
-    } catch {
-      // Clipboard permission denied — the URL is still visible in the field to copy manually.
-    }
+    await copyText(result.url);
   };
 
   return (
@@ -64,6 +60,12 @@ export const ShareModal = ({ open, onClose, request, baseUrl }: ShareModalProps)
               {copied ? 'Copied' : 'Copy'}
             </button>
           </div>
+
+          {copyStatus === 'error' && (
+            <p className="text-xs text-red-400 mb-3" role="status">
+              Couldn't copy automatically — select the link above and copy it manually.
+            </p>
+          )}
 
           <a
             href={result.url}

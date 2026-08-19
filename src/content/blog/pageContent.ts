@@ -4,19 +4,16 @@ export interface BlogIndexContent {
   title: string;
   titleAccent: string;
   description: string;
-  allPostsLabel: string;
-  categoriesAriaLabel: string;
   readTimeSuffix: string;
-}
-
-export interface BlogDetailContent {
-  breadcrumbLabel: string;
-  updatedPrefix: string;
-  readTimeSuffix: string;
-  faqHeading: string;
-  relatedHeading: string;
-  ctaText: string;
-  ctaButton: string;
+  sourcePrefix: string;
+  loadingLabel: string;
+  loadMoreErrorLabel: string;
+  initialErrorTitle: string;
+  initialErrorDescription: string;
+  retryLabel: string;
+  emptyTitle: string;
+  emptyDescription: string;
+  endOfResultsLabel: string;
 }
 
 // English-only, same pattern and reasoning as guides/pageContent.ts — no
@@ -26,18 +23,15 @@ export const blogIndexContent: BlogIndexContent = {
   eyebrow: 'Engineering Notes',
   title: 'Explore. Learn.',
   titleAccent: 'Build Better.',
-  description: 'Insights, ideas, and practical knowledge from the world of software, technology, and digital products.',
-  allPostsLabel: 'All Posts',
-  categoriesAriaLabel: 'Filter posts by category',
+  description: 'A live feed of open-source engineering writing, pulled from dev.to. Click through to read the full post at its original source.',
   readTimeSuffix: 'min read',
-};
-
-export const blogDetailContent: BlogDetailContent = {
-  breadcrumbLabel: 'Blog',
-  updatedPrefix: 'Updated',
-  readTimeSuffix: 'min read',
-  faqHeading: 'FAQ',
-  relatedHeading: 'Related Posts',
-  ctaText: 'Need this kind of thinking applied to your own project?',
-  ctaButton: 'Get in touch',
+  sourcePrefix: 'via',
+  loadingLabel: 'Loading more posts…',
+  loadMoreErrorLabel: 'Couldn’t load more posts.',
+  initialErrorTitle: 'Couldn’t load the feed',
+  initialErrorDescription: 'Something went wrong reaching the post source. Check your connection and try again.',
+  retryLabel: 'Retry',
+  emptyTitle: 'No posts right now',
+  emptyDescription: 'The feed came back empty. Check back again soon.',
+  endOfResultsLabel: 'You’re all caught up — that’s everything for now.',
 };

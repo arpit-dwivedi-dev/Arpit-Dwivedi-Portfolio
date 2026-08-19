@@ -32,11 +32,40 @@ const gtagPlugin = (measurementId: string | undefined): Plugin => ({
   },
 });
 
+// Injects the Microsoft Clarity tag (session recordings + heatmaps) the same
+// way as the GA4 tag above: statically, at build/dev-server time, so no tag is
+// present at all when VITE_CLARITY_ID is unset. Clarity's own snippet is an
+// async loader, but it still has to run during the initial parse for it to
+// capture the first paint's DOM — a later runtime injection misses the start
+// of the session, which is exactly the part worth replaying.
+const clarityPlugin = (projectId: string | undefined): Plugin => ({
+  name: 'inject-clarity',
+  transformIndexHtml(html) {
+    if (!projectId) return html;
+    return html.replace(
+      '</head>',
+      `    <script>
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "${projectId}");
+    </script>
+  </head>`,
+    );
+  },
+});
+
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
     base: '/',
-    plugins: [react(), tailwindcss(), gtagPlugin(env.VITE_GA_MEASUREMENT_ID)],
+    plugins: [
+      react(),
+      tailwindcss(),
+      gtagPlugin(env.VITE_GA_MEASUREMENT_ID),
+      clarityPlugin(env.VITE_CLARITY_ID),
+    ],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
     },

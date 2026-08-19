@@ -1,8 +1,5 @@
+import { copyTextToClipboard } from '../../../lib/clipboard';
+
 export async function copyDbmlToClipboard(text: string): Promise<boolean> {
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    return false;
-  }
+  return copyTextToClipboard(text);
 }

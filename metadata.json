@@ -425,98 +425,6 @@
       "navTerms": "Terms",
       "navEditorialPolicy": "Editorial Policy"
     },
-    "mapsScraperTool": {
-      "howItWorksTitle": "How It Works",
-      "howItWorksSteps": [
-        "Enter what you're looking for — e.g. \"coffee shops\" — and, optionally, a location.",
-        "Choose how many results you want, up to {maxResults} free per search.",
-        "Export the results as CSV, Excel, or JSON with one click."
-      ],
-      "featuresTitle": "Features",
-      "features": [
-        "Name, address, phone, website, rating, and hours for every result",
-        "Export to CSV, Excel (.xls), or JSON",
-        "Live progress and screen-reader-friendly status while a search runs",
-        "No account, install, or signup required"
-      ],
-      "useCasesTitle": "Use Cases",
-      "useCases": [
-        "Agencies building a local business prospect list",
-        "Local SEO audits — checking a client's listing against nearby competitors",
-        "Franchise or expansion research — checking business density in a target area",
-        "Compiling a public business directory for research or journalism"
-      ],
-      "advantagesTitle": "Advantages",
-      "advantages": [
-        "Faster than scrolling and copying listings by hand",
-        "Structured, exportable output instead of screenshots",
-        "Nothing to install — runs in the browser"
-      ],
-      "limitationsTitle": "Limitations",
-      "limitations": [
-        "Free tier caps at {maxResults} results per search, {maxSearches} searches per session",
-        "Built for quick lookups, not high-volume or production data pipelines",
-        "Higher limits available on request — see \"Go Premium\" above"
-      ],
-      "faqTitle": "FAQ",
-      "faq": [
-        {
-          "question": "Is the Google Maps Business Finder free to use?",
-          "answer": "Yes. You get up to {maxResults} results per search and {maxSearches} searches per browser session, with no account or signup required."
-        },
-        {
-          "question": "What data does it export?",
-          "answer": "Business name, address, phone number, website, rating, and hours — as a CSV, Excel (.xls), or JSON file."
-        },
-        {
-          "question": "What happens when I hit the free session limit?",
-          "answer": "Searches are capped per session to keep the free tool fast and available for everyone. Refresh the page to reset your count, or reach out for premium access with higher limits."
-        },
-        {
-          "question": "Does this replace the official Google Places API?",
-          "answer": "No. It's built for quick, low-volume manual lookups — agency prospecting, local SEO checks, one-off research — not as a production data pipeline."
-        }
-      ],
-      "relatedToolsTitle": "Related Tools",
-      "moreComingSoon": "More {category} are on the way.",
-      "browseAllTools": "Browse all tools",
-      "crmCta": "Need this data flowing straight into your CRM or outreach tool automatically?",
-      "talkToUs": "Talk to us",
-      "freeToolLabel": "Free Tool",
-      "backTo": "Back to {category}",
-      "heroDescription": "Find businesses on Google Maps and pull their name, address, phone, website, rating, and hours — into a table you can export.",
-      "searchLabel": "Search",
-      "locationLabel": "Location",
-      "optionalLabel": "(optional)",
-      "resultsLabel": "Results",
-      "searchPlaceholder": "e.g. coffee shops",
-      "locationPlaceholder": "e.g. Austin, TX",
-      "resultsOptionLabel": "{n} results",
-      "morePremiumOption": "More (Premium)",
-      "stopButton": "Stop",
-      "runSearchButton": "Run search",
-      "sessionStatus": "{used}/{max} searches used this session",
-      "sessionLimitNote": " — refresh to reset",
-      "resultsHeading": "Results",
-      "buyMeCoffee": "Buy me a coffee",
-      "exportButton": "Export",
-      "exportCsv": "CSV (.csv)",
-      "exportExcel": "Excel (.xls)",
-      "exportJson": "JSON (.json)",
-      "emptyState": "Nothing yet — run a search to see results here.",
-      "progressAriaLabel": "Search progress",
-      "closeAriaLabel": "Close",
-      "upiModalHeading": "Buy me a coffee",
-      "upiModalBody": "If you like the work, you can support it — scan the QR and pay. Simple and easy!",
-      "premiumModalHeading": "Go Premium",
-      "premiumModalBody": "Need more than 15 results per search? That's available on our premium plan — reach out and we'll set you up.",
-      "contactUsButton": "Contact us",
-      "statusSearching": "Searching — {loaded} of {target} results loaded",
-      "statusLoaded": "{count} results loaded",
-      "errorEmptyQuery": "Enter a search term, like \"coffee shops in Austin, TX\".",
-      "errorFetchFailed": "Something went wrong fetching results. Try again.",
-      "screenshotAlt": "Google Maps Business Finder search form with a 'coffee shops' query, an 'Austin, TX' location, and a 10-results option selected"
-    },
     "invoiceGeneratorTool": {
       "freeToolLabel": "Free Tool",
       "heroDescription": "Fill in the invoice below, download it as a PDF, and save it for next time — everything stays in your browser.",
@@ -660,6 +568,7 @@
       "downloadSvgButton": "SVG",
       "copyImageButton": "Copy",
       "copiedButton": "Copied",
+      "copyFailedButton": "Couldn't copy",
       "buyMeCoffee": "Buy me a coffee",
       "upiModalHeading": "Buy me a coffee",
       "upiModalBody": "If you like the work, you can support it — scan the QR and pay. Simple and easy!",
