@@ -10,8 +10,13 @@
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-W8XNZHK7');</script>
     <!-- End Google Tag Manager -->
-    <link rel="preload" href="/fonts/inter-latin-variable.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/jetbrains-mono-latin-variable.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Archivo carries both the weight and width axes, so this one file covers
+         the display and body roles alike (see src/index.css). JetBrains Mono is
+         deliberately NOT preloaded: it only sets section labels and data rows,
+         never the LCP element, so it competes with the LCP font for critical
+         bandwidth for no gain. Dropping it offsets most of Archivo's extra
+         weight over the Inter file it replaced. -->
+    <link rel="preload" href="/fonts/archivo-latin-variable.woff2" as="font" type="font/woff2" crossorigin />
     <meta name="google-adsense-account" content="ca-pub-7270893225305104" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />

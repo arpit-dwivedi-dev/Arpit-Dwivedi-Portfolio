@@ -4,16 +4,18 @@
   "requestFramePermissions": [],
   "content": {
     "navLinks": [
-      { "name": "Home", "href": "#home" },
-      { "name": "About", "href": "#about" },
-      { "name": "Services", "href": "#experience" },
-      { "name": "Projects", "href": "#projects" },
-      { "name": "Free Tools", "href": "/free-tools" },
-      { "name": "Blog", "href": "/blog" },
-      { "name": "Contact", "href": "#contact" }
+      { "name": "About", "href": "#about", "soon": false },
+      { "name": "Services", "href": "#experience", "soon": false },
+      { "name": "Products", "href": "#next", "soon": true },
+      { "name": "Projects", "href": "/projects", "soon": false },
+      { "name": "Tools", "href": "/tools", "soon": false },
+      { "name": "Blog", "href": "/blog", "soon": false }
     ],
     "nav": {
       "ariaLinkedin": "LinkedIn",
+      "soon": "Soon",
+      "ariaProductsSoon": "Products — coming soon",
+      "ctaQuote": "Get a quote",
       "ariaOpenMenu": "Open menu",
       "ariaCloseMenu": "Close menu",
       "ariaLanguage": "Language",
@@ -100,6 +102,22 @@
         "location": "Serving clients worldwide, remote-first.",
         "help": "Available commands: [about, skills, projects, contact, whoami, location, clear, exit]",
         "exit": "Safe mode engaged. To restart, refresh your terminal session."
+      }
+    },
+    "nowNext": {
+      "label": "Now / Next",
+      "title": "Services today. Products next.",
+      "active": {
+        "status": "Active",
+        "title": "Services",
+        "description": "Websites, custom systems, AI and automation, DevOps. This is the work we take on today.",
+        "linkLabel": "See what we do"
+      },
+      "next": {
+        "status": "Coming soon",
+        "title": "Products",
+        "description": "We're building our own products. Nothing to announce yet.",
+        "progressLabel": "In progress"
       }
     },
     "freeToolsSection": {

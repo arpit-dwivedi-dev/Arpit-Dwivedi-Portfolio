@@ -6,15 +6,17 @@ import type { SiteContent } from '../i18n/types';
 // instead of silently falling back to English at runtime.
 export const hiContent: SiteContent = {
   navLinks: [
-    { name: 'होम', href: '#home' },
-    { name: 'हमारे बारे में', href: '#about' },
-    { name: 'सेवाएं', href: '#experience' },
-    { name: 'प्रोजेक्ट्स', href: '#projects' },
-    { name: 'फ्री टूल्स', href: '/hi/free-tools' },
-    { name: 'संपर्क करें', href: '#contact' },
+    { name: 'हमारे बारे में', href: '#about', soon: false },
+    { name: 'सेवाएं', href: '#experience', soon: false },
+    { name: 'प्रोडक्ट्स', href: '#next', soon: true },
+    { name: 'प्रोजेक्ट्स', href: '/hi/projects', soon: false },
+    { name: 'टूल्स', href: '/hi/tools', soon: false },
   ],
   nav: {
     ariaLinkedin: 'LinkedIn',
+    soon: 'जल्द',
+    ariaProductsSoon: 'प्रोडक्ट्स — जल्द आ रहे हैं',
+    ctaQuote: 'कोटेशन लें',
     ariaOpenMenu: 'मेनू खोलें',
     ariaCloseMenu: 'मेनू बंद करें',
     ariaLanguage: 'भाषा',
@@ -101,6 +103,22 @@ export const hiContent: SiteContent = {
       location: 'दुनियाभर के क्लाइंट्स की सेवा करते हैं, रिमोट-फर्स्ट।',
       help: 'उपलब्ध कमांड: [about, skills, projects, contact, whoami, location, clear, exit]',
       exit: 'सेफ मोड सक्रिय। फिर से शुरू करने के लिए अपना टर्मिनल सेशन रीफ़्रेश करें।',
+    },
+  },
+  nowNext: {
+    label: 'अब / आगे',
+    title: 'आज सेवाएं। आगे प्रोडक्ट्स।',
+    active: {
+      status: 'सक्रिय',
+      title: 'सेवाएं',
+      description: 'वेबसाइट, कस्टम सिस्टम, AI और ऑटोमेशन, DevOps। यही काम हम आज करते हैं।',
+      linkLabel: 'देखें हम क्या करते हैं',
+    },
+    next: {
+      status: 'जल्द आ रहा है',
+      title: 'प्रोडक्ट्स',
+      description: 'हम अपने खुद के प्रोडक्ट बना रहे हैं। अभी घोषणा करने के लिए कुछ नहीं है।',
+      progressLabel: 'चल रहा है',
     },
   },
   freeToolsSection: {

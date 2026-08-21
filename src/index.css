@@ -19,12 +19,21 @@
 /* Self-hosted (see public/fonts/): avoids the fonts.googleapis.com -> fonts.gstatic.com
    request chain, which was the longest link in the critical network path (~1.4s).
    Both files are variable fonts — one file per family covers every weight used. */
+
+/* Archivo carries BOTH a weight and a width axis in one file, which is why it
+   replaced Inter for display and body alike: the display role is the same
+   family at wdth 115 / wght 600, so there's no second file to download and no
+   pairing mismatch to manage. The 62%-125% font-stretch range is what makes
+   `font-variation-settings: "wdth" ...` resolve — without it the browser
+   clamps every instance to the default width and the display face silently
+   renders identical to body text. */
 @font-face {
-  font-family: "Inter";
+  font-family: "Archivo";
   font-style: normal;
   font-weight: 100 900;
+  font-stretch: 62% 125%;
   font-display: swap;
-  src: url("/fonts/inter-latin-variable.woff2") format("woff2");
+  src: url("/fonts/archivo-latin-variable.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -38,29 +47,51 @@
 }
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
   --color-accent-blue: #00D1FF;
   --color-accent-purple: #7C3AED;
-  /* Same hue as accent-purple, brightened for text use: #7C3AED on #000 measures
-     3.69:1 (fails WCAG 1.4.3's 4.5:1 minimum for normal-size text). This token
-     measures 7.72:1 on black. Use for TEXT; keep accent-purple for icon/bg fills,
-     where the 3:1 non-text-contrast minimum already passes. */
+  /* Same hue as accent-purple, brightened for text use: #7C3AED on the page
+     ground measures 2.5:1 (fails WCAG 1.4.3's 4.5:1 minimum for normal-size
+     text). This token measures 7.4:1. Use for TEXT; keep accent-purple for
+     icon/bg fills, where the 3:1 non-text-contrast minimum already passes. */
   --color-accent-purple-text: #A78BFA;
-  --color-bg-pure: #000000;
-  --color-bg-secondary: #0F0F0F;
-  --color-bg-tertiary: #1A1A1A;
-  --color-secondary-text: #A1A1AA;
+
+  /* The surface ramp. These four token NAMES are load-bearing — they're
+     referenced by ~100 utility classes across the marketing site, every tool
+     page and every guide — so the modernization re-tones the site by changing
+     their VALUES and renaming nothing.
+     What changed and why: the ramp used to be #000 / #0F0F0F / #1A1A1A, three
+     neutral grays with no hue. A pure-black ground with one bright accent is
+     the single most generic dark-UI look there is, and neutral gray gives the
+     cyan accent nothing to belong to. Every step now carries a little blue,
+     so the dark reads as a deliberate temperature rather than an absence. */
+  --color-bg-pure: #05070A;
+  --color-bg-secondary: #0B1016;
+  --color-bg-tertiary: #171D26;
+  --color-secondary-text: #94A3B8;
   /* Stand-in for literal white/black: text, glass surfaces, and borders that
-     need to sit on top of bg-pure regardless of which theme is active. */
-  --color-ink: #FFFFFF;
+     need to sit on top of bg-pure regardless of which theme is active. Cool
+     off-white rather than #FFF — pure white on a near-black ground is harsh
+     at body sizes, and every hairline in the system is derived from this
+     value, so a slightly warmer-than-nothing tint softens all of them at
+     once. 16.7:1 on bg-pure. */
+  --color-ink: #E6EBF2;
 }
 
 /* Native form controls (checkbox/radio glyphs, scrollbars, date pickers) use
    the OS/browser palette; `color-scheme` points them at the active theme. */
 :root {
   color-scheme: dark;
+
+  /* Hairlines, derived from --color-ink so they follow the theme with no
+     separate light-mode rule. The `-lit` variant is deliberately brighter:
+     it goes on TOP edges only, which is what gives every surface in the
+     system a consistent "lit from above" read (see .surface below). */
+  --hairline: color-mix(in srgb, var(--color-ink) 8%, transparent);
+  --hairline-lit: color-mix(in srgb, var(--color-ink) 14%, transparent);
 }
 
 /* Safety net for any native <select> (the UI ones all use components/ui/Select
@@ -86,14 +117,22 @@ select optgroup {
   /* #6D28D9 measures 5.3:1 on white; accent-purple itself is unchanged
      since it's only used as an icon/bg fill here (3:1 minimum). */
   --color-accent-purple-text: #6D28D9;
-  --color-bg-pure: #FFFFFF;
-  --color-bg-secondary: #F4F4F5;
+  /* Light mode mirrors the dark ramp's cool tone rather than going to paper
+     white: the same slight blue in every step, inverted. It also inverts the
+     LIGHT MODEL — see the .surface rule below, where light mode drops the top
+     highlight and casts a shadow downward instead, because a lighter top edge
+     on an already-light surface has nowhere to go. */
+  --color-bg-pure: #FBFCFD;
+  --color-bg-secondary: #F1F4F8;
   /* A bigger step than the dark theme's bg-secondary -> bg-tertiary gap
-     (#0F0F0F -> #1A1A1A) needs: light surfaces have far less lightness
-     range to work with before nested panels blend into their container. */
-  --color-bg-tertiary: #D4D4D8;
-  --color-secondary-text: #52525B;
-  --color-ink: #0A0A0A;
+     needs: light surfaces have far less lightness range to work with before
+     nested panels blend into their container. */
+  --color-bg-tertiary: #D9E0E8;
+  --color-secondary-text: #4C5A6B;
+  --color-ink: #0C1218;
+
+  --hairline: color-mix(in srgb, var(--color-ink) 12%, transparent);
+  --hairline-lit: color-mix(in srgb, var(--color-ink) 12%, transparent);
 }
 
 @layer base {
@@ -101,36 +140,240 @@ select optgroup {
     @apply bg-bg-pure text-ink font-sans antialiased selection:bg-accent-blue/30 selection:text-accent-blue transition-colors duration-300;
   }
 
+  /* One visible focus treatment for every interactive element on the site,
+     set once here rather than per-component — the previous styles left focus
+     to whatever each component happened to declare, so a fair number of
+     links and buttons had no visible focus state at all. */
+  :focus-visible {
+    outline: 2px solid var(--color-accent-blue);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* The hard gate. Everything below is a blanket kill switch for CSS-driven
+     motion; JS-driven motion (the `motion` library) is handled separately by
+     useReducedMotion inside components/ui/Reveal.tsx and its callers, since
+     no CSS rule can reach it. Both halves are required — this alone would
+     leave scroll reveals stuck at opacity 0. */
   @media (prefers-reduced-motion: reduce) {
-    .animate-pulse,
-    .animate-ping {
-      animation: none;
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
     }
   }
 }
 
-/* A black-tinted overlay (the dark theme's .glass recipe, inverted) reads as
-   a flat gray blob on light backgrounds — there's no lightness headroom left
-   to fake glass. Light mode instead lifts the card off the page with a
-   near-white surface plus a soft shadow. */
-:root.light .glass {
-  background-color: rgba(255, 255, 255, 0.75);
-  border-color: rgba(24, 24, 27, 0.08);
-  box-shadow: 0 12px 30px -12px rgba(24, 24, 27, 0.18), 0 2px 8px -2px rgba(24, 24, 27, 0.06);
-}
-
 @layer utilities {
+  /* ---- Type roles -------------------------------------------------------
+     Four display steps: 76 / 44 / 30 / 22px at 1440. The jumps are 1.73x,
+     1.47x and 1.36x — dramatic where hierarchy matters, tight where it
+     doesn't. The scale these replaced stepped by about 1.2x throughout,
+     which is why no heading read as a level change from its neighbour.
+     Width and weight travel with the size (that's the point of a variable
+     family with a wdth axis): display instances are wide and mid-weight
+     rather than narrow and heavy, which reads assured instead of shouty. */
+  .t-dxl {
+    font-family: var(--font-display);
+    font-variation-settings: "wdth" 115, "wght" 600;
+    font-size: clamp(2.75rem, 5.3vw, 4.75rem);
+    line-height: 0.94;
+    letter-spacing: -0.03em;
+  }
+  .t-dl {
+    font-family: var(--font-display);
+    font-variation-settings: "wdth" 115, "wght" 600;
+    font-size: clamp(1.875rem, 3.1vw, 2.75rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .t-ds {
+    font-family: var(--font-display);
+    font-variation-settings: "wdth" 112, "wght" 600;
+    font-size: clamp(1.5rem, 2vw, 1.875rem);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+  }
+  .t-dm {
+    font-family: var(--font-display);
+    font-variation-settings: "wdth" 110, "wght" 600;
+    font-size: 1.375rem;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+  /* The mono utility role: section markers, data labels, tool names, status.
+     Mono is structural on this site rather than decorative — the product is
+     software and the free tools are the proof — so it gets a named role. */
+  .t-label {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  /* ---- Surface & light -------------------------------------------------
+     Depth comes from one light source, upper-left, and a brighter hairline
+     on TOP edges only. That's cheaper than shadows, it never animates, and
+     it stays consistent across every surface on the site. Light mode can't
+     express "lit from above" by lightening a light surface, so it drops the
+     top highlight and casts a soft shadow downward instead. */
+  .surface {
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--hairline);
+    border-top-color: var(--hairline-lit);
+  }
+  .surface-raised {
+    background-color: var(--color-bg-tertiary);
+    border: 1px solid var(--hairline);
+    border-top-color: var(--hairline-lit);
+  }
+  :root.light .surface,
+  :root.light .surface-raised {
+    box-shadow: 0 10px 24px -14px rgba(12, 18, 24, 0.16), 0 2px 6px -2px rgba(12, 18, 24, 0.05);
+  }
+
+  .hairline {
+    background-color: var(--hairline);
+  }
+  .border-hairline {
+    border-color: var(--hairline);
+  }
+
+  /* The page's light source. Anchored top-left in cyan with a violet
+     fall-off bottom-right, so the direction is the same on every screen and
+     every section inherits the same rake. Replaces the two animate-pulse
+     blur blobs the hero used to carry, which pulsed on a timer, had no
+     shared direction, and are the stock "premium dark" decoration. */
+  .page-light {
+    background-image:
+      radial-gradient(120% 80% at 6% -10%, color-mix(in srgb, var(--color-accent-blue) 12%, transparent), transparent 58%),
+      radial-gradient(90% 70% at 96% 108%, color-mix(in srgb, var(--color-accent-purple) 9%, transparent), transparent 62%);
+  }
+  :root.light .page-light {
+    background-image:
+      radial-gradient(120% 80% at 6% -10%, color-mix(in srgb, var(--color-accent-blue) 8%, transparent), transparent 58%),
+      radial-gradient(90% 70% at 96% 108%, color-mix(in srgb, var(--color-accent-purple) 6%, transparent), transparent 62%);
+  }
+
+  /* A single fractal-noise overlay on the page ground only, never on
+     surfaces — it reads as the paper the interface sits on rather than as a
+     texture applied to things. 2.5% is deliberately near the threshold of
+     perception; the moment it's visible as "noise" it's too strong. */
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  :root.light .grain::after {
+    opacity: 0.04;
+  }
+
+  /* ---- Kept names, new recipes ----------------------------------------
+     .glass and the glow utilities are referenced across the tool pages and
+     guides, not just the marketing site, so they keep their names and get
+     re-cut to match the new light model instead of being replaced. */
   .glass {
-    @apply bg-ink/5 backdrop-blur-xl border border-ink/10;
+    background-color: color-mix(in srgb, var(--color-ink) 4%, transparent);
+    border: 1px solid var(--hairline);
+    border-top-color: var(--hairline-lit);
+    backdrop-filter: blur(20px);
+  }
+  /* A black-tinted overlay (the dark theme's .glass recipe, inverted) reads as
+     a flat gray blob on light backgrounds — there's no lightness headroom left
+     to fake glass. Light mode instead lifts the card off the page with a
+     near-white surface plus a soft shadow. */
+  :root.light .glass {
+    background-color: rgba(255, 255, 255, 0.75);
+    box-shadow: 0 12px 30px -12px rgba(12, 18, 24, 0.16), 0 2px 8px -2px rgba(12, 18, 24, 0.05);
   }
   .glow-blue {
-    @apply shadow-[0_0_20px_rgba(0,209,255,0.3)];
+    box-shadow: 0 0 24px -4px color-mix(in srgb, var(--color-accent-blue) 28%, transparent);
   }
   .glow-purple {
-    @apply shadow-[0_0_20px_rgba(124,58,237,0.3)];
+    box-shadow: 0 0 24px -4px color-mix(in srgb, var(--color-accent-purple) 28%, transparent);
   }
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-accent-blue to-accent-purple;
+  }
+
+  /* ---- Logo sheen ------------------------------------------------------
+     One specular sweep across the mark — fires once on load, again on each
+     hover, never on a timer.
+
+     The blade is a narrow gradient inside a wrapper that is MASKED by the
+     logo's own artwork (mask-image points at the same file the <img>
+     renders), so the light only ever lands on the mark itself. Masking the
+     wrapper rather than the moving blade is the whole trick: mask on the
+     blade would travel with it and immediately fall out of register with the
+     logo, which is how this effect usually ends up as a rectangle of glare
+     sliding over a logo instead of a highlight on it.
+
+     Two identical keyframe sets under different names because a single
+     animation name will not re-trigger on hover once it has already run to
+     completion with `forwards`. */
+  @keyframes logo-sheen-load {
+    from { transform: translateX(-160%) skewX(-18deg); }
+    to { transform: translateX(300%) skewX(-18deg); }
+  }
+  @keyframes logo-sheen-hover {
+    from { transform: translateX(-160%) skewX(-18deg); }
+    to { transform: translateX(300%) skewX(-18deg); }
+  }
+  .logo-sheen {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    -webkit-mask-image: url("/logo-64.png");
+    mask-image: url("/logo-64.png");
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+  }
+  .logo-sheen-blade {
+    position: absolute;
+    top: -30%;
+    bottom: -30%;
+    left: 0;
+    width: 42%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--color-ink) 55%, transparent),
+      transparent
+    );
+    /* Ends off the far edge of an overflow-hidden box, so `forwards` leaves
+       no residue sitting on the mark. 780ms, transform only. */
+    transform: translateX(-160%) skewX(-18deg);
+    animation: logo-sheen-load 780ms cubic-bezier(0.4, 0, 0.2, 1) 620ms 1 forwards;
+  }
+  .group:hover .logo-sheen-blade {
+    animation: logo-sheen-hover 780ms cubic-bezier(0.4, 0, 0.2, 1) 0ms 1 forwards;
+  }
+  /* A real specular highlight is lighter than what it crosses. In light mode
+     --color-ink is near-black, so the mix above would sweep a shadow across
+     the mark instead of a shine; force white there. */
+  :root.light .logo-sheen-blade {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75), transparent);
+  }
+  /* Explicit, not covered by the blanket rule in @layer base: that one
+     compresses animation-duration to 0.01ms, which would fire this as a
+     single-frame flash rather than suppressing it. */
+  @media (prefers-reduced-motion: reduce) {
+    .logo-sheen-blade {
+      animation: none !important;
+      opacity: 0 !important;
+    }
   }
 
   /* Thin, theme-matched scrollbar for scroll containers that shouldn't wear
