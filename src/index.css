@@ -262,6 +262,38 @@ select optgroup {
       radial-gradient(90% 70% at 96% 108%, color-mix(in srgb, var(--color-accent-purple) 6%, transparent), transparent 62%);
   }
 
+  /* Ties an embedded raster image (a PNG diagram, not a themed component)
+     into the accent palette instead of letting its baked-in background sit
+     as an unrelated rectangle on the page. The inset tint alone wasn't
+     enough — a dark PNG on a light page still reads as a hard-edged foreign
+     block, since nothing behind it shares the color. The outward box-shadow
+     is what actually fixes that: it bleeds the same cyan/violet light that
+     .page-light casts on the page out from the image's own edges, so the
+     boundary dissolves into a glow instead of cutting straight against the
+     page ground. Both pieces use the theme tokens, so they re-tone with
+     .light same as everything else — light mode needs the halo turned up
+     since it has more contrast to bridge. */
+  /* .media-glow {
+    position: relative;
+    box-shadow:
+      0 24px 70px -22px color-mix(in srgb, var(--color-accent-blue) 30%, transparent),
+      0 34px 90px -30px color-mix(in srgb, var(--color-accent-purple) 24%, transparent);
+  }
+  :root.light .media-glow {
+    box-shadow:
+      0 24px 70px -18px color-mix(in srgb, var(--color-accent-blue) 30%, transparent),
+      0 34px 90px -26px color-mix(in srgb, var(--color-accent-purple) 26%, transparent);
+  }
+  .media-glow::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(120% 80% at 6% -10%, color-mix(in srgb, var(--color-accent-blue) 22%, transparent), transparent 58%),
+      radial-gradient(90% 70% at 96% 108%, color-mix(in srgb, var(--color-accent-purple) 18%, transparent), transparent 62%);
+  } */
+
   /* A single fractal-noise overlay on the page ground only, never on
      surfaces — it reads as the paper the interface sits on rather than as a
      texture applied to things. 2.5% is deliberately near the threshold of

@@ -18,13 +18,8 @@ import { SectionRule } from './ui/SectionRule';
  *
  * This was the only section on the original page that wasn't a centred
  * heading over a card grid, so the rework refines it rather than replacing
- * it: the checklist becomes a mono ledger, and the diagram is redrawn in the
- * new surface language with violet doing the structural work.
- *
- * The dashed spinning ring behind the diagram is gone. It referenced an
- * `animate-spin-slow` class that was never defined anywhere in the codebase,
- * so it had been rendering as a static dashed circle — decoration that
- * described nothing about the architecture.
+ * it: the checklist becomes a mono ledger, and the diagram card now renders
+ * public/devops.png rather than a hand-built box diagram.
  */
 export const DevOpsArchitecture = () => {
   const { content } = useLanguage();
@@ -59,28 +54,13 @@ export const DevOpsArchitecture = () => {
             </Reveal>
           </div>
 
-          <Reveal from="right" className="surface rounded-[3px] p-6 sm:p-8">
-            {/* Architecture diagram: load balancer fans out to app nodes,
-                all backed by one database cluster — the shape described in
-                the copy on the left, not a generic box drawing. */}
-            <div className="flex flex-col items-center gap-0" role="img" aria-label={`${architecture.loadBalancer} to three ${architecture.nodeApp} instances to ${architecture.database}`}>
-              <div className="t-label text-[0.625rem] text-accent-blue border border-accent-blue/40 rounded-[3px] px-4 py-2.5 text-center">
-                {architecture.loadBalancer}
-              </div>
-              <div className="w-px h-7 bg-accent-blue/30" aria-hidden="true" />
-              <div className="grid grid-cols-3 gap-3 w-full">
-                {[1, 2, 3].map((n) => (
-                  <div key={n} className="flex flex-col items-center gap-2 surface-raised rounded-[3px] py-4 px-2">
-                    <span className="font-mono text-[0.5625rem] text-secondary-text tracking-wider text-center">
-                      {architecture.nodeApp} {n}
-                    </span>
-                  </div>
-                ))}
-              </div>
-              <div className="w-px h-7 bg-accent-purple/40" aria-hidden="true" />
-              <div className="t-label text-[0.625rem] text-accent-purple-text border border-accent-purple/45 rounded-[3px] px-4 py-2.5 text-center">
-                {architecture.database}
-              </div>
+          <Reveal from="right">
+            <div className="media-glow rounded-[3px] overflow-hidden border border-hairline">
+              <img
+                src="/devops.png"
+                alt={`${architecture.loadBalancer} to three ${architecture.nodeApp} instances to ${architecture.database}`}
+                className="w-full block"
+              />
             </div>
           </Reveal>
         </div>
