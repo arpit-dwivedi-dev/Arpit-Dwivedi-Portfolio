@@ -19,9 +19,7 @@ describe('Homepage', () => {
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     page = await browser.newPage();
-    // 1536 so the section rail renders — it is 2xl-only, because below that
-    // the labelled rail overlaps the hero terminal.
-    await page.setViewport({ width: 1536, height: 900 });
+    await page.setViewport({ width: 1440, height: 900 });
     await page.goto(BASE, { waitUntil: 'networkidle2' });
   });
 

@@ -23,7 +23,7 @@ export const About = () => {
       <div className="max-w-7xl mx-auto px-5 sm:px-6">
         <div className="max-w-3xl">
           <Reveal>
-            <h2 className="t-dl text-ink pb-9 max-w-[22ch]">
+            <h2 className="t-ds text-ink pb-9 max-w-[26ch]">
               {about.title} {about.titleAccent}
             </h2>
           </Reveal>

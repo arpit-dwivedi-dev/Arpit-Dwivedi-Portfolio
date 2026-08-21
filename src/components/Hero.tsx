@@ -56,11 +56,9 @@ export const Hero = () => {
     }
   }, [history]);
 
-  const handleCommand = (e: FormEvent) => {
-    e.preventDefault();
-    if (!input.trim()) return;
-
-    const cmd = input.trim().toLowerCase();
+  const runCommand = (raw: string) => {
+    const cmd = raw.trim().toLowerCase();
+    if (!cmd) return;
     if (cmd === 'clear') {
       setHistory([{ id: Date.now().toString(), type: 'response', text: hero.terminal.cleared }]);
     } else if (COMMANDS[cmd as keyof typeof COMMANDS]) {
@@ -80,10 +78,15 @@ export const Hero = () => {
     setInput('');
   };
 
+  const handleCommand = (e: FormEvent) => {
+    e.preventDefault();
+    runCommand(input);
+  };
+
   return (
     <section
       id="home"
-      className="page-light relative flex items-center pt-[72px] pb-16 sm:pb-20 lg:min-h-screen overflow-hidden"
+      className="page-light relative flex items-center pt-[72px] pb-16 sm:pb-20 lg:pt-32 lg:pb-28 overflow-hidden"
     >
       <motion.div
         variants={group}
@@ -148,7 +151,7 @@ export const Hero = () => {
               </span>
             </div>
 
-            <div className="h-[280px] sm:h-[330px] lg:h-[390px] overflow-y-auto scrollbar-thin px-5 py-4 font-mono text-[0.8125rem] leading-[1.85]">
+            <div className="h-[280px] sm:h-[320px] lg:h-[356px] overflow-y-auto scrollbar-thin px-5 py-4 font-mono text-[0.8125rem] leading-[1.85]">
               <div>
                 <AnimatePresence mode="popLayout" initial={false}>
                   {history.map((item) => (
@@ -194,6 +197,22 @@ export const Hero = () => {
                     <Send size={14} aria-hidden="true" />
                   </button>
                 </form>
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 pt-4">
+                  <span className="t-label text-[0.5625rem] text-secondary-text">Try</span>
+                  {(['about', 'skills', 'projects', 'contact'] as const).map((cmd) => (
+                    <button
+                      key={cmd}
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        runCommand(cmd);
+                      }}
+                      className="font-mono text-[0.6875rem] text-accent-blue border border-accent-blue/30 hover:border-accent-blue hover:bg-accent-blue/10 rounded-[2px] px-2 py-1 transition-colors"
+                    >
+                      {cmd}
+                    </button>
+                  ))}
+                </div>
                 <div ref={terminalEndRef} />
               </div>
             </div>

@@ -302,8 +302,14 @@ select optgroup {
   .glow-purple {
     box-shadow: 0 0 24px -4px color-mix(in srgb, var(--color-accent-purple) 28%, transparent);
   }
+  /* Ends on accent-purple-TEXT, not accent-purple. The gradient used to run
+     to #7C3AED, which measures 2.5:1 on the page ground — failing even the
+     3:1 large-text threshold — so the tail of every gradient heading was
+     below AA. Automated contrast checks miss this entirely, because the
+     element's own color is `transparent` and only the clipped background
+     carries the failing value. Same hue, text-safe lightness. */
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-accent-blue to-accent-purple;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-accent-blue to-accent-purple-text;
   }
 
   /* ---- Logo sheen ------------------------------------------------------
