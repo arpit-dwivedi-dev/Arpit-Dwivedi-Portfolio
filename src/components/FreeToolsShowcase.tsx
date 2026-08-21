@@ -169,7 +169,11 @@ export const FreeTools = () => {
       </div>
 
       <Reveal from="none" className="surface border-x-0 rounded-none">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+        {/* auto-rows-fr so the two-column layout's rows are equal height too.
+            Without it row 2 sized to its own content and sat 21px taller than
+            row 1, which is correct grid behaviour but reads as the same
+            mismatched-height problem the rack was built to fix. */}
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 auto-rows-fr">
           {visibleTools.map((tool, idx) => {
             const Stage = STAGES[tool.id];
             return (
@@ -180,7 +184,11 @@ export const FreeTools = () => {
                   rel="noopener noreferrer"
                   className="group h-full flex flex-col px-5 sm:px-6 py-8 hover:bg-ink/[0.02] transition-colors"
                 >
-                  <div className="flex items-baseline gap-2.5 pb-2">
+                  {/* Reserves two lines whether the title needs them or not.
+                      "DBML Diagram Builder" wraps at four columns while the
+                      others do not, which pushed that bay's whole stack down
+                      relative to its neighbours. */}
+                  <div className="flex items-baseline gap-2.5 pb-2 xl:min-h-[3.05rem]">
                     <span className="font-mono text-[0.6875rem] text-secondary-text tracking-wider">
                       {String(idx + 1).padStart(2, '0')}
                     </span>
@@ -188,15 +196,20 @@ export const FreeTools = () => {
                       {toolTitle(tool)}
                     </h3>
                   </div>
-                  <p className="text-[0.8125rem] text-secondary-text leading-relaxed pb-5">{toolDescription(tool)}</p>
+                  {/* grow, so the slack from four differing description lengths
+                      collects ABOVE the stage rather than below it. The stages
+                      are the row's visual anchor: bays are equal height, and
+                      the stage and link below it are fixed, so growing here is
+                      what puts every stage's top edge on the same line. */}
+                  <p className="grow text-[0.8125rem] text-secondary-text leading-relaxed pb-5">{toolDescription(tool)}</p>
 
                   {Stage && (
-                    <div className="min-h-[168px] flex items-center justify-center rounded-[3px] bg-bg-pure border border-hairline border-t-[color:var(--hairline-lit)] p-3.5">
+                    <div className="min-h-[180px] flex items-center justify-center rounded-[3px] bg-bg-pure border border-hairline border-t-[color:var(--hairline-lit)] p-3.5">
                       <Stage />
                     </div>
                   )}
 
-                  <span className="mt-auto pt-6 inline-flex items-center gap-1.5 text-[0.8125rem] font-semibold text-ink group-hover:text-accent-blue transition-colors">
+                  <span className="pt-6 inline-flex items-center gap-1.5 text-[0.8125rem] font-semibold text-ink group-hover:text-accent-blue transition-colors">
                     Open
                     <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" aria-hidden="true" />
                   </span>
