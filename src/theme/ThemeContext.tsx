@@ -4,29 +4,45 @@ export type Theme = 'light' | 'dark';
 
 interface ThemeContextValue {
   theme: Theme;
+  canToggleTheme: boolean;
   toggleTheme: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
+const canToggleTheme = import.meta.env.DEV;
 
 const getInitialTheme = (): Theme => {
+  if (!canToggleTheme) return 'dark';
+
   const stored = localStorage.getItem('theme');
   if (stored === 'light' || stored === 'dark') return stored;
-  return document.documentElement.classList.contains('light') ? 'light' : 'dark';
+  return 'dark';
 };
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
 
   useEffect(() => {
+    if (!canToggleTheme && theme !== 'dark') {
+      setTheme('dark');
+      return;
+    }
+
     document.documentElement.classList.toggle('light', theme === 'light');
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'light' ? '#ffffff' : '#000000');
-    localStorage.setItem('theme', theme);
+    if (canToggleTheme) {
+      localStorage.setItem('theme', theme);
+    } else {
+      localStorage.removeItem('theme');
+    }
   }, [theme]);
 
-  const toggleTheme = () => setTheme((t) => (t === 'light' ? 'dark' : 'light'));
+  const toggleTheme = () => {
+    if (!canToggleTheme) return;
+    setTheme((t) => (t === 'light' ? 'dark' : 'light'));
+  };
 
-  return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>;
+  return <ThemeContext.Provider value={{ theme, canToggleTheme, toggleTheme }}>{children}</ThemeContext.Provider>;
 };
 
 export const useTheme = () => {

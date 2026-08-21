@@ -28,7 +28,7 @@ const SoonPill = ({ label }: { label: string }) => (
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { theme, toggleTheme } = useTheme();
+  const { theme, canToggleTheme, toggleTheme } = useTheme();
   const { content } = useLanguage();
   const { navLinks, contact, nav } = content;
   const homeHref = '/';
@@ -122,14 +122,16 @@ export const Navbar = () => {
               <a href={contact.linkedinUrl} target="_blank" rel="noreferrer" aria-label={nav.ariaLinkedin} className="p-2 -m-2 text-secondary-text hover:text-accent-blue transition-colors">
                 <FaLinkedin size={17} />
               </a>
-              <button
-                type="button"
-                onClick={toggleTheme}
-                aria-label={theme === 'dark' ? nav.ariaSwitchToLight : nav.ariaSwitchToDark}
-                className="p-2 -m-2 text-secondary-text hover:text-accent-blue transition-colors"
-              >
-                {theme === 'dark' ? <Sun size={17} aria-hidden="true" /> : <Moon size={17} aria-hidden="true" />}
-              </button>
+              {canToggleTheme && (
+                <button
+                  type="button"
+                  onClick={toggleTheme}
+                  aria-label={theme === 'dark' ? nav.ariaSwitchToLight : nav.ariaSwitchToDark}
+                  className="p-2 -m-2 text-secondary-text hover:text-accent-blue transition-colors"
+                >
+                  {theme === 'dark' ? <Sun size={17} aria-hidden="true" /> : <Moon size={17} aria-hidden="true" />}
+                </button>
+              )}
             </div>
             {/* Contact left the link row and became the bar's one action. The
                 page's single job is getting a stranger into this form, and it
@@ -204,15 +206,17 @@ export const Navbar = () => {
           <a href={contact.linkedinUrl} target="_blank" rel="noreferrer" aria-label={nav.ariaLinkedin} tabIndex={isOpen ? undefined : -1} className="p-3 -m-3 text-secondary-text hover:text-accent-blue transition-colors">
             <FaLinkedin size={22} />
           </a>
-          <button
-            type="button"
-            onClick={toggleTheme}
-            tabIndex={isOpen ? undefined : -1}
-            aria-label={theme === 'dark' ? nav.ariaSwitchToLight : nav.ariaSwitchToDark}
-            className="p-3 -m-3 text-secondary-text hover:text-accent-blue transition-colors"
-          >
-            {theme === 'dark' ? <Sun size={22} aria-hidden="true" /> : <Moon size={22} aria-hidden="true" />}
-          </button>
+          {canToggleTheme && (
+            <button
+              type="button"
+              onClick={toggleTheme}
+              tabIndex={isOpen ? undefined : -1}
+              aria-label={theme === 'dark' ? nav.ariaSwitchToLight : nav.ariaSwitchToDark}
+              className="p-3 -m-3 text-secondary-text hover:text-accent-blue transition-colors"
+            >
+              {theme === 'dark' ? <Sun size={22} aria-hidden="true" /> : <Moon size={22} aria-hidden="true" />}
+            </button>
+          )}
         </div>
       </motion.div>
     </nav>

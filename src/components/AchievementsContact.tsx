@@ -19,7 +19,7 @@ import { SectionRule } from './ui/SectionRule';
  * This was the only section on the original page that wasn't a centred
  * heading over a card grid, so the rework refines it rather than replacing
  * it: the checklist becomes a mono ledger, and the diagram card now renders
- * public/devops.png rather than a hand-built box diagram.
+ * public/devops-diagram.svg rather than a hand-built box diagram.
  */
 export const DevOpsArchitecture = () => {
   const { content } = useLanguage();
@@ -57,7 +57,7 @@ export const DevOpsArchitecture = () => {
           <Reveal from="right">
             <div className="media-glow rounded-[3px] overflow-hidden border border-hairline">
               <img
-                src="/devops.png"
+                src="/devops-diagram.svg"
                 alt={`${architecture.loadBalancer} to three ${architecture.nodeApp} instances to ${architecture.database}`}
                 className="w-full block"
               />

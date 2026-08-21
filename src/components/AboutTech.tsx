@@ -20,8 +20,21 @@ export const About = () => {
 
   return (
     <section id="about" className="relative py-24 sm:py-28">
-      <div className="max-w-7xl mx-auto px-5 sm:px-6">
-        <div className="max-w-3xl">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 relative">
+        {/* Fills the gutter max-w-3xl leaves open beside it on wide screens —
+            a plain wireframe/nodes graphic with no fill behind it, so it has
+            no hard edge to blend against the section. Only shows once that
+            gutter is wide enough to hold it without crowding the text
+            (max-w-7xl caps at 1280px, so the gap beyond the copy never grows
+            past ~464px — sizing tighter than that keeps a comfortable gap). */}
+        <img
+          src="/purpose-illustration.svg"
+          alt=""
+          style={{'margin-right': '-10%' , width: '70%'}}
+          className="hidden xl:block absolute top-1/2 -translate-y-1/2 right-0 z-0 w-[420px] opacity-90 pointer-events-none select-none"
+        />
+
+        <div className="relative z-10 max-w-3xl">
           <Reveal>
             <h2 className="t-ds text-ink pb-9 max-w-[26ch]">
               {about.title} {about.titleAccent}
@@ -43,7 +56,7 @@ export const About = () => {
           </div>
         </div>
 
-        <Reveal className="pt-14 max-w-3xl">
+        <Reveal className="relative z-10 pt-14 max-w-3xl">
           <dl className="flex flex-col">
             <div className="h-px hairline" />
             <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1 py-4">
@@ -68,7 +81,7 @@ export const About = () => {
           </dl>
         </Reveal>
 
-        <Reveal className="pt-10">
+        <Reveal className="relative z-10 pt-10">
           <ul className="flex flex-wrap gap-x-8 gap-y-3 list-none">
             {about.features.map((feature) => (
               <li key={feature} className="t-label text-secondary-text">
