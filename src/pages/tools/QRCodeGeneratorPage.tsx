@@ -23,9 +23,9 @@ const fillPlaceholders = (text: string, vars: Record<string, string>) =>
   Object.entries(vars).reduce((acc, [key, value]) => acc.replaceAll(`{${key}}`, value), text);
 
 export const QRCodeGeneratorPage = () => {
-  const { lang, content } = useLanguage();
+  const { content } = useLanguage();
   const t = content.qrCodeGeneratorTool;
-  const toolsBase = lang === 'hi' ? '/hi/tools' : '/tools';
+  const toolsBase = '/tools';
   const categoryHref = `${toolsBase}/${TOOL.category}`;
 
   useEffect(() => {
@@ -44,21 +44,21 @@ export const QRCodeGeneratorPage = () => {
             <Breadcrumbs
               className="mb-2"
               backHref={categoryHref}
-              backLabel={fillPlaceholders(t.backTo, { category: categoryTitle(TOOL_CATEGORY, lang) })}
+              backLabel={fillPlaceholders(t.backTo, { category: categoryTitle(TOOL_CATEGORY) })}
               items={[
-                { name: content.nav.breadcrumbHome, href: lang === 'hi' ? '/hi' : '/', className: 'hidden sm:flex' },
+                { name: content.nav.breadcrumbHome, href: '/', className: 'hidden sm:flex' },
                 { name: content.toolsPage.breadcrumb, href: toolsBase, className: 'hidden sm:flex' },
-                { name: categoryTitle(TOOL_CATEGORY, lang), href: categoryHref },
-                { name: toolTitle(TOOL, lang) },
+                { name: categoryTitle(TOOL_CATEGORY), href: categoryHref },
+                { name: toolTitle(TOOL) },
               ]}
             />
 
             <div className="flex flex-col items-center text-center gap-1">
               <span className="text-accent-blue font-mono text-xs sm:text-sm tracking-widest uppercase block">{t.freeToolLabel}</span>
-              <h1 className="text-xl md:text-3xl font-bold tracking-tight text-gradient">{toolTitle(TOOL, lang)}</h1>
+              <h1 className="text-xl md:text-3xl font-bold tracking-tight text-gradient">{toolTitle(TOOL)}</h1>
               {QR_GUIDE && (
                 <Link
-                  to={lang === 'hi' ? '/hi' : guidePath(QR_GUIDE)}
+                  to={guidePath(QR_GUIDE)}
                   className="inline-flex items-center gap-1.5 mt-1 text-xs font-medium text-secondary-text hover:text-accent-blue transition-colors"
                 >
                   <BookOpen size={13} aria-hidden="true" />
@@ -81,23 +81,21 @@ export const QRCodeGeneratorPage = () => {
 
           <QrCodeGeneratorWidget initialType="url" toolId={TOOL.id} />
 
-          {lang !== 'hi' && (
-            <p className="text-secondary-text text-xs mt-3">
-              Need a QR code specifically for sharing contact details? Use our{' '}
-              <Link to="/vcard-qr-code" className="text-accent-blue hover:underline">
-                vCard QR Code Generator
-              </Link>
-              . Creating one for a restaurant or café menu? See our{' '}
-              <Link to="/menu-qr-code" className="text-accent-blue hover:underline">
-                Menu QR Code Generator
-              </Link>
-              . Need to share WiFi access? Use our{' '}
-              <Link to="/wifi-qr-code" className="text-accent-blue hover:underline">
-                WiFi QR Code Generator
-              </Link>
-              .
-            </p>
-          )}
+          <p className="text-secondary-text text-xs mt-3">
+            Need a QR code specifically for sharing contact details? Use our{' '}
+            <Link to="/vcard-qr-code" className="text-accent-blue hover:underline">
+              vCard QR Code Generator
+            </Link>
+            . Creating one for a restaurant or café menu? See our{' '}
+            <Link to="/menu-qr-code" className="text-accent-blue hover:underline">
+              Menu QR Code Generator
+            </Link>
+            . Need to share WiFi access? Use our{' '}
+            <Link to="/wifi-qr-code" className="text-accent-blue hover:underline">
+              WiFi QR Code Generator
+            </Link>
+            .
+          </p>
         </div>
       </main>
 
@@ -105,10 +103,10 @@ export const QRCodeGeneratorPage = () => {
         data={{
           '@context': 'https://schema.org',
           '@type': 'WebApplication',
-          name: toolTitle(TOOL, lang),
+          name: toolTitle(TOOL),
           url: `https://101techlabs.com${categoryHref}/${TOOL.path}`,
-          description: toolDescription(TOOL, lang),
-          inLanguage: lang,
+          description: toolDescription(TOOL),
+          inLanguage: 'en',
           applicationCategory: 'BusinessApplication',
           operatingSystem: 'Any',
           offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
@@ -135,12 +133,10 @@ export const QRCodeGeneratorPage = () => {
           </ol>
         </div>
 
-        {lang !== 'hi' && (
-          <div className="p-6 rounded-2xl bg-bg-secondary border border-ink/5">
-            <span className="text-accent-blue font-mono uppercase tracking-widest text-[10px] block mb-2">{t.judgmentHeading}</span>
-            <p className="text-secondary-text text-sm leading-relaxed">{t.judgmentText}</p>
-          </div>
-        )}
+        <div className="p-6 rounded-2xl bg-bg-secondary border border-ink/5">
+          <span className="text-accent-blue font-mono uppercase tracking-widest text-[10px] block mb-2">{t.judgmentHeading}</span>
+          <p className="text-secondary-text text-sm leading-relaxed">{t.judgmentText}</p>
+        </div>
 
         <div>
           <h2 className="text-2xl font-bold tracking-tight mb-4">{t.featuresTitle}</h2>
@@ -191,7 +187,7 @@ export const QRCodeGeneratorPage = () => {
             <ul className="grid sm:grid-cols-2 gap-3">
               <li>
                 <Link
-                  to={lang === 'hi' ? '/hi' : guidePath(QR_GUIDE)}
+                  to={guidePath(QR_GUIDE)}
                   className="block p-4 rounded-2xl bg-bg-secondary border border-ink/5 hover:border-accent-blue/30 transition-colors"
                 >
                   <span className="font-bold text-ink">{QR_GUIDE.title}</span>
@@ -212,15 +208,15 @@ export const QRCodeGeneratorPage = () => {
                     to={`${toolsBase}/${related.category}/${related.path}`}
                     className="block p-4 rounded-2xl bg-bg-secondary border border-ink/5 hover:border-accent-blue/30 transition-colors"
                   >
-                    <span className="font-bold text-ink">{toolTitle(related, lang)}</span>
-                    <p className="text-secondary-text text-sm mt-1">{toolDescription(related, lang)}</p>
+                    <span className="font-bold text-ink">{toolTitle(related)}</span>
+                    <p className="text-secondary-text text-sm mt-1">{toolDescription(related)}</p>
                   </Link>
                 </li>
               ))}
             </ul>
           ) : (
             <p className="text-secondary-text text-sm">
-              {fillPlaceholders(t.moreComingSoon, { category: categoryTitle(TOOL_CATEGORY, lang).toLowerCase() })}{' '}
+              {fillPlaceholders(t.moreComingSoon, { category: categoryTitle(TOOL_CATEGORY).toLowerCase() })}{' '}
               <Link to={toolsBase} className="text-accent-blue hover:underline">{t.browseAllTools}</Link>.
             </p>
           )}
@@ -229,7 +225,7 @@ export const QRCodeGeneratorPage = () => {
         <div className="p-6 rounded-3xl glass border-ink/10 flex flex-wrap items-center justify-between gap-4">
           <p className="text-ink font-medium">{t.crmCta}</p>
           <Link
-            to={`${lang === 'hi' ? '/hi/contact' : '/contact'}?source=${TOOL.id}`}
+            to={`${'/contact'}?source=${TOOL.id}`}
             onClick={() => trackEvent('tool_to_contact_click', { tool_name: TOOL.id })}
             className="shrink-0 inline-flex items-center gap-2 px-5 py-3 bg-accent-blue text-bg-pure font-bold rounded-xl hover:glow-blue transition-all"
           >

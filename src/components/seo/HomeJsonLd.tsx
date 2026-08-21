@@ -8,7 +8,7 @@ import { JsonLd } from './JsonLd';
 // block on every single page, including the tool page, which also injects
 // its own distinct FAQPage — two FAQPage nodes on one rendered document.
 export const HomeJsonLd = () => {
-  const { content, lang } = useLanguage();
+  const { content } = useLanguage();
 
   return (
     <JsonLd
@@ -21,11 +21,11 @@ export const HomeJsonLd = () => {
             description: service.description,
             provider: { '@id': 'https://101techlabs.com/#organization' },
             areaServed: ['Noida', 'Delhi NCR', 'India'],
-            inLanguage: lang,
+            inLanguage: 'en',
           })),
           {
             '@type': 'FAQPage',
-            inLanguage: lang,
+            inLanguage: 'en',
             mainEntity: content.faq.items.map((item) => ({
               '@type': 'Question',
               name: item.question,

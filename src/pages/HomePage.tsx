@@ -25,9 +25,9 @@ export const HomePage = () => {
     restDelta: 0.001
   });
 
-  const { lang, content } = useLanguage();
+  const { content } = useLanguage();
   const { navLinks, homeProjectsNote } = content;
-  const projectsHref = lang === 'hi' ? '/hi/projects' : '/projects';
+  const projectsHref = '/projects';
   const dotLinks = navLinks.filter((link) => SCROLL_SPY_HASHES.includes(link.href));
   const [activeHash, setActiveHash] = useState(dotLinks[0]?.href ?? '#home');
 
@@ -51,7 +51,7 @@ export const HomePage = () => {
     sections.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lang]);
+  }, []);
 
   return (
     <div className="relative bg-bg-pure selection:bg-accent-blue/30 selection:text-accent-blue overflow-x-hidden">

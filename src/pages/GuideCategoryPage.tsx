@@ -23,7 +23,7 @@ interface GuideCategoryPageProps {
 // resolution order. Every guide list here is derived from GUIDES/
 // GUIDE_CATEGORIES at render time, never hand-maintained.
 export const GuideCategoryPage = ({ category }: GuideCategoryPageProps) => {
-  const { lang, content } = useLanguage();
+  const { content } = useLanguage();
   const guides = getGuidesByCategory(category.slug);
   const otherCategories = getGuideCategoriesWithCounts(GUIDES).filter((c) => c.slug !== category.slug);
   const url = `${SITE_ORIGIN}/guides/${category.slug}`;
@@ -64,7 +64,7 @@ export const GuideCategoryPage = ({ category }: GuideCategoryPageProps) => {
           <Breadcrumbs
             className="mb-3 sm:mb-6"
             items={[
-              { name: content.nav.breadcrumbHome, href: lang === 'hi' ? '/hi' : '/' },
+              { name: content.nav.breadcrumbHome, href: '/' },
               { name: t.breadcrumbLabel, href: '/guides' },
               { name: category.title },
             ]}
@@ -89,7 +89,7 @@ export const GuideCategoryPage = ({ category }: GuideCategoryPageProps) => {
           <div className="mt-10 sm:mt-14 p-6 rounded-3xl glass border-ink/10 flex flex-wrap items-center justify-between gap-4">
             <p className="text-ink font-medium">{t.ctaText}</p>
             <Link
-              to={lang === 'hi' ? '/hi/tools' : '/tools'}
+              to={'/tools'}
               className="shrink-0 inline-flex items-center gap-2 px-5 py-3 bg-accent-blue text-bg-pure font-bold rounded-xl hover:glow-blue transition-all"
             >
               {t.ctaButton}

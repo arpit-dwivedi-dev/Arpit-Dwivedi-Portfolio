@@ -176,8 +176,8 @@ const downloadJsonFile = (filename: string, data: unknown): void => {
 };
 
 export const ApiRequestBuilderPage = () => {
-  const { lang, content } = useLanguage();
-  const toolsBase = lang === 'hi' ? '/hi/tools' : '/tools';
+  const { content } = useLanguage();
+  const toolsBase = '/tools';
   const categoryHref = `${toolsBase}/${TOOL.category}`;
 
   const builder = useApiRequestBuilder();
@@ -667,7 +667,7 @@ export const ApiRequestBuilderPage = () => {
         data={{
           '@context': 'https://schema.org',
           '@type': 'WebApplication',
-          name: toolTitle(TOOL, lang),
+          name: toolTitle(TOOL),
           url: `${SITE_ORIGIN}${categoryHref}/${TOOL.path}`,
           description: TOOL.description,
           inLanguage: 'en',
@@ -696,11 +696,11 @@ export const ApiRequestBuilderPage = () => {
             <Breadcrumbs
               className="mb-2"
               backHref={categoryHref}
-              backLabel={`Back to ${categoryTitle(TOOL_CATEGORY, lang)}`}
+              backLabel={`Back to ${categoryTitle(TOOL_CATEGORY)}`}
               items={[
-                { name: content.nav.breadcrumbHome, href: lang === 'hi' ? '/hi' : '/', className: 'hidden sm:flex' },
+                { name: content.nav.breadcrumbHome, href: '/', className: 'hidden sm:flex' },
                 { name: content.toolsPage.breadcrumb, href: toolsBase, className: 'hidden sm:flex' },
-                { name: categoryTitle(TOOL_CATEGORY, lang), href: categoryHref },
+                { name: categoryTitle(TOOL_CATEGORY), href: categoryHref },
                 { name: 'API Request Builder' },
               ]}
             />
@@ -1238,8 +1238,8 @@ export const ApiRequestBuilderPage = () => {
                         to={`${toolsBase}/${related.category}/${related.path}`}
                         className="block p-4 rounded-2xl bg-bg-secondary border border-ink/5 hover:border-accent-blue/30 transition-colors"
                       >
-                        <span className="font-bold text-ink">{toolTitle(related, lang)}</span>
-                        <p className="text-secondary-text text-sm mt-1">{toolDescription(related, lang)}</p>
+                        <span className="font-bold text-ink">{toolTitle(related)}</span>
+                        <p className="text-secondary-text text-sm mt-1">{toolDescription(related)}</p>
                       </Link>
                     </li>
                   ))}

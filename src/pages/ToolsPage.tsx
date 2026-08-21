@@ -10,10 +10,10 @@ import { useLanguage } from '../i18n/LanguageContext';
 import { TOOLS, TOOL_CATEGORIES, getToolsByCategory, categoryTitle, toolTitle, toolDescription } from '../tools/registry';
 
 export const ToolsPage = () => {
-  const { lang, content } = useLanguage();
+  const { content } = useLanguage();
   const t = content.toolsPage;
   const [searchParams, setSearchParams] = useSearchParams();
-  const basePath = lang === 'hi' ? '/hi/tools' : '/tools';
+  const basePath = '/tools';
   // Backs the WebSite SearchAction in index.html's JSON-LD (/tools?q=...) —
   // that schema is only honest if this page actually reads and applies `q`.
   const query = searchParams.get('q') ?? '';
@@ -27,9 +27,9 @@ export const ToolsPage = () => {
     const q = query.trim().toLowerCase();
     if (!q) return visible;
     return visible.filter(
-      (tool) => toolTitle(tool, lang).toLowerCase().includes(q) || toolDescription(tool, lang).toLowerCase().includes(q),
+      (tool) => toolTitle(tool).toLowerCase().includes(q) || toolDescription(tool).toLowerCase().includes(q),
     );
-  }, [query, lang]);
+  }, [query]);
 
   // Categories are only worth their own listed/linked page once they hold a
   // tool — an empty category page is thin content, not a topical hub.
@@ -43,7 +43,7 @@ export const ToolsPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <Breadcrumbs
             className="mb-3 sm:mb-6"
-            items={[{ name: content.nav.breadcrumbHome, href: lang === 'hi' ? '/hi' : '/' }, { name: t.breadcrumb }]}
+            items={[{ name: content.nav.breadcrumbHome, href: '/' }, { name: t.breadcrumb }]}
           />
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-4 sm:mb-6">
@@ -88,7 +88,7 @@ export const ToolsPage = () => {
                     href={`${basePath}/${category.slug}`}
                     className="px-2.5 sm:px-4 py-1 sm:py-2 rounded-full bg-bg-secondary border border-ink/5 text-xs sm:text-sm text-secondary-text hover:text-ink hover:border-accent-blue/30 transition-colors whitespace-nowrap"
                   >
-                    {categoryTitle(category, lang)}
+                    {categoryTitle(category)}
                   </a>
                 ))}
               </nav>
@@ -103,8 +103,8 @@ export const ToolsPage = () => {
                 {filtered.map((tool, idx) => (
                   <ToolCard
                     key={tool.id}
-                    title={toolTitle(tool, lang)}
-                    description={toolDescription(tool, lang)}
+                    title={toolTitle(tool)}
+                    description={toolDescription(tool)}
                     icon={tool.icon}
                     href={`${basePath}/${tool.category}/${tool.path}`}
                     index={idx}

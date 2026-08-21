@@ -24,40 +24,27 @@ const SITEMAP_PATH = path.join(ROOT, 'public/sitemap.xml');
 
 const { SITE_ORIGIN, getIndexableRoutes } = await import(path.join(ROOT, 'src/content/siteRoutes.ts'));
 
-const hreflangBlock = (route) => {
-  const links = [`    <xhtml:link rel="alternate" hreflang="en" href="${SITE_ORIGIN}${route.path}" />`];
-  if (route.hiPath) {
-    links.push(`    <xhtml:link rel="alternate" hreflang="hi" href="${SITE_ORIGIN}${route.hiPath}" />`);
-  }
-  links.push(`    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE_ORIGIN}${route.path}" />`);
-  return links.join('\n');
-};
-
 // Matches the sitemap's existing style of always showing at least one
 // decimal place (1 -> "1.0") while preserving genuine two-decimal values
 // (0.75) as-is.
 const formatPriority = (priority) => (Number.isInteger(priority * 10) ? priority.toFixed(1) : String(priority));
 
-const urlBlock = (loc, route, priority) => `  <url>
-    <loc>${SITE_ORIGIN}${loc}</loc>
-${hreflangBlock(route)}
+// No hreflang alternates: the site is single-language since the /hi Hindi
+// mirror was retired (see HindiRedirect in src/App.tsx). A self-referencing
+// hreflang on a monolingual site carries no signal.
+const urlBlock = (route) => `  <url>
+    <loc>${SITE_ORIGIN}${route.path}</loc>
     <lastmod>${route.lastmod}</lastmod>
     <changefreq>${route.changefreq}</changefreq>
-    <priority>${formatPriority(priority)}</priority>
+    <priority>${formatPriority(route.priority)}</priority>
   </url>`;
 
 const routes = getIndexableRoutes();
 
-const blocks = routes.flatMap((route) => {
-  const enBlock = urlBlock(route.path, route, route.priority);
-  if (!route.hiPath) return [enBlock];
-  const hiBlock = urlBlock(route.hiPath, route, route.hiPriority ?? route.priority);
-  return [enBlock, hiBlock];
-});
+const blocks = routes.map(urlBlock);
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${blocks.join('\n\n')}
 </urlset>
 `;

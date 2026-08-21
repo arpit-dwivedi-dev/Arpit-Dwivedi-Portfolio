@@ -14,9 +14,7 @@ import { ThemeProvider } from './theme/ThemeContext';
 const FULL_SCREEN_TOOL_PATHS = ['/tools/developer/dbml-diagram-builder'];
 const GlobalWidgets = () => {
   const location = useLocation();
-  const isFullScreenTool = FULL_SCREEN_TOOL_PATHS.some(
-    (path) => location.pathname === path || location.pathname === `/hi${path}`,
-  );
+  const isFullScreenTool = FULL_SCREEN_TOOL_PATHS.includes(location.pathname);
   if (isFullScreenTool) return null;
   return (
     <>
@@ -26,8 +24,21 @@ const GlobalWidgets = () => {
   );
 };
 
+// The site used to serve a Hindi mirror under /hi/... Those routes are gone,
+// but some of their URLs are indexed and bookmarked, so rather than letting
+// them fall through to the catch-all (which would dump every visitor on the
+// home page and lose the page they asked for), strip the prefix and send
+// them to the English equivalent. A server-level 301 should replace this
+// once the hosting layer supports one — same caveat as the /free-tools
+// redirects below.
+const HindiRedirect = () => {
+  const location = useLocation();
+  const target = location.pathname.replace(/^\/hi(?=\/|$)/, '') || '/';
+  return <Navigate to={`${target}${location.search}${location.hash}`} replace />;
+};
+
 // A plain <a> here can't reach useLanguage() — this component sits inside
-// LanguageProvider so it's the one that translates the skip link.
+// LanguageProvider so it's the one that renders the skip link.
 const SkipLink = () => {
   const { content } = useLanguage();
   return (
@@ -122,66 +133,41 @@ export default function App() {
           <Analytics />
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/hi" element={<HomePage />} />
 
             <Route path="/projects" element={lazyRoute(ProjectsPage)} />
-            <Route path="/hi/projects" element={lazyRoute(ProjectsPage)} />
-
             <Route path="/about" element={lazyRoute(AboutPage)} />
-            <Route path="/hi/about" element={lazyRoute(AboutPage)} />
-
             <Route path="/services" element={lazyRoute(ServicesPage)} />
-            <Route path="/hi/services" element={lazyRoute(ServicesPage)} />
-
             <Route path="/contact" element={lazyRoute(ContactPage)} />
-            <Route path="/hi/contact" element={lazyRoute(ContactPage)} />
-
             <Route path="/privacy-policy" element={lazyRoute(PrivacyPolicyPage)} />
-            <Route path="/hi/privacy-policy" element={lazyRoute(PrivacyPolicyPage)} />
-
             <Route path="/terms" element={lazyRoute(TermsPage)} />
-            <Route path="/hi/terms" element={lazyRoute(TermsPage)} />
-
             <Route path="/editorial-policy" element={lazyRoute(EditorialPolicyPage)} />
-            <Route path="/hi/editorial-policy" element={lazyRoute(EditorialPolicyPage)} />
 
             {/* /tools replaces /free-tools — see redirects below */}
             <Route path="/tools" element={lazyRoute(ToolsPage)} />
-            <Route path="/hi/tools" element={lazyRoute(ToolsPage)} />
             <Route path="/tools/:category" element={lazyRoute(ToolCategoryPage)} />
-            <Route path="/hi/tools/:category" element={lazyRoute(ToolCategoryPage)} />
             <Route path="/tools/generators/invoice-generator" element={lazyRoute(InvoiceGeneratorPage)} />
-            <Route path="/hi/tools/generators/invoice-generator" element={lazyRoute(InvoiceGeneratorPage)} />
             <Route path="/tools/generators/qr-code-generator" element={lazyRoute(QRCodeGeneratorPage)} />
-            <Route path="/hi/tools/generators/qr-code-generator" element={lazyRoute(QRCodeGeneratorPage)} />
             {/* Dedicated SEO landing page for the "vCard/contact QR code"
                intent cluster — reuses the same generator engine as the hub
-               above, preselected to the `contact` QR type. English-only by
-               design (see routeMeta.ts); no /hi/vcard-qr-code route. */}
+               above, preselected to the `contact` QR type. */}
             <Route path="/vcard-qr-code" element={lazyRoute(VCardQrCodePage)} />
             {/* Same pattern for the "menu QR code" intent cluster (restaurant
                and café menus) — the shared generator engine again, this time
-               preselected and locked to the `menu` QR type. English-only, no
-               /hi/menu-qr-code route. */}
+               preselected and locked to the `menu` QR type. */}
             <Route path="/menu-qr-code" element={lazyRoute(MenuQrCodePage)} />
             {/* Same pattern for the "WiFi QR code" intent cluster (guest and
                team network sharing) — the shared generator engine again,
-               this time preselected and locked to the `wifi` QR type.
-               English-only, no /hi/wifi-qr-code route. */}
+               this time preselected and locked to the `wifi` QR type. */}
             <Route path="/wifi-qr-code" element={lazyRoute(WifiQrCodePage)} />
             <Route path="/tools/developer/api-request-builder" element={lazyRoute(ApiRequestBuilderPage)} />
-            <Route path="/hi/tools/developer/api-request-builder" element={lazyRoute(ApiRequestBuilderPage)} />
             <Route path="/tools/developer/dbml-diagram-builder" element={lazyRoute(DbmlDiagramBuilderPage)} />
             {/* Not a content page — the smart-redirect target embedded inside
                Multi-URL / dual-platform App QR codes. See QRRedirectPage. */}
             <Route path="/tools/generators/qr-code-generator/go" element={lazyRoute(QRRedirectPage)} />
-            <Route path="/hi/tools/generators/qr-code-generator/go" element={lazyRoute(QRRedirectPage)} />
 
-            {/* English-only content hub — original guides written in-house
-               (not scraped from competitors) covering how-to topics for each
-               free tool (invoicing, QR codes, API testing) for SEO/GEO. No
-               Hindi routes yet; low priority next to the tools themselves,
-               and 5 Hindi long-form articles is its own project. Article
+            {/* Content hub — original guides written in-house (not scraped
+               from competitors) covering how-to topics for each free tool
+               (invoicing, QR codes, API testing) for SEO/GEO. Article
                canonical URLs are /guides/:category/:slug; the legacy
                single-segment /guides/:slug still resolves category landing
                pages directly and redirects old flat article URLs to their
@@ -190,8 +176,8 @@ export default function App() {
             <Route path="/guides/:category/:slug" element={lazyRoute(GuidePage)} />
             <Route path="/guides/:slug" element={lazyRoute(GuideOrCategoryPage)} />
 
-            {/* English-only, same reasoning as /guides above. Separate from
-               /guides on purpose (Phase 3 decision, content-rewrite project):
+            {/* Separate from /guides on purpose (Phase 3 decision,
+               content-rewrite project):
                /guides stays scoped to the free tools' own how-to content;
                /blog is a curated feed of open-source engineering posts
                pulled live from dev.to and linked out to their original
@@ -204,7 +190,13 @@ export default function App() {
                server-level 301 should replace this once the production
                hosting layer is confirmed (see SEO audit, §1/§4). */}
             <Route path="/free-tools" element={<Navigate to="/tools" replace />} />
-            <Route path="/hi/free-tools" element={<Navigate to="/hi/tools" replace />} />
+
+            {/* Retired Hindi mirror — see HindiRedirect. Must stay above the
+               catch-all so /hi/tools lands on /tools rather than the home
+               page. Both shapes are needed: "/hi/*" does not match a bare
+               "/hi" in React Router. */}
+            <Route path="/hi" element={<HindiRedirect />} />
+            <Route path="/hi/*" element={<HindiRedirect />} />
 
             {/* Safety net for any unmatched URL (dead link, typo, stale
                bookmark) — without this, React Router renders nothing and

@@ -17,7 +17,7 @@ const categories = getGuideCategoriesWithCounts(GUIDES);
 // renders inside the shared Navbar/Footer so language switching elsewhere
 // on the site keeps working; this page's own copy just doesn't localize yet.
 export const GuidesPage = () => {
-  const { lang, content } = useLanguage();
+  const { content } = useLanguage();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -31,7 +31,7 @@ export const GuidesPage = () => {
         <div className="max-w-5xl mx-auto px-6">
           <Breadcrumbs
             className="mb-3 sm:mb-6"
-            items={[{ name: content.nav.breadcrumbHome, href: lang === 'hi' ? '/hi' : '/' }, { name: t.breadcrumbLabel }]}
+            items={[{ name: content.nav.breadcrumbHome, href: '/' }, { name: t.breadcrumbLabel }]}
           />
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8 sm:mb-12">
@@ -59,7 +59,7 @@ export const GuidesPage = () => {
           <div className="mt-10 sm:mt-14 p-6 rounded-3xl glass border-ink/10 flex flex-wrap items-center justify-between gap-4">
             <p className="text-ink font-medium">{t.ctaText}</p>
             <Link
-              to={lang === 'hi' ? '/hi/tools' : '/tools'}
+              to={'/tools'}
               className="shrink-0 inline-flex items-center gap-2 px-5 py-3 bg-accent-blue text-bg-pure font-bold rounded-xl hover:glow-blue transition-all"
             >
               {t.ctaButton}
