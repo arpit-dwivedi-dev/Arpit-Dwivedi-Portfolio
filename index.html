@@ -30,9 +30,16 @@
     <script>
       // Runs before first paint to avoid a flash of the wrong theme.
       (function () {
+        var isLocal = ['localhost', '127.0.0.1', '::1'].indexOf(window.location.hostname) !== -1;
+        if (!isLocal) {
+          localStorage.removeItem('theme');
+          document.documentElement.classList.remove('light');
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000000');
+          return;
+        }
+
         var stored = localStorage.getItem('theme');
-        var isLight = stored ? stored === 'light' : !window.matchMedia('(prefers-color-scheme: dark)').matches && window.matchMedia('(prefers-color-scheme: light)').matches;
-        if (isLight) {
+        if (stored === 'light') {
           document.documentElement.classList.add('light');
           document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff');
         }
