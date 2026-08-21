@@ -37,7 +37,7 @@ export const DevOpsArchitecture = () => {
         <div className="pt-6 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-12 lg:gap-20 items-start">
           <div>
             <Reveal>
-              <h2 className="t-dl text-ink pb-7">
+              <h2 className="t-ds text-ink pb-7">
                 {devops.title} {devops.titleAccent}
               </h2>
             </Reveal>

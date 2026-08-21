@@ -147,7 +147,7 @@ export const Process = () => {
       <div className="max-w-7xl mx-auto px-5 sm:px-6">
         <SectionRule label={process.label} />
         <Reveal className="pt-6 pb-12 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5 lg:gap-16">
-          <h2 className="t-dl text-ink">
+          <h2 className="t-ds text-ink">
             {process.title} {process.titleAccent}
           </h2>
           <p className="text-secondary-text leading-relaxed max-w-[42ch] lg:pb-1.5">{process.description}</p>

@@ -22,7 +22,7 @@ export const WhyChooseUs = () => {
     <section className="relative pt-24 sm:pt-28">
       <div className="max-w-7xl mx-auto px-5 sm:px-6 pb-10">
         <Reveal>
-          <h2 className="t-dl text-ink max-w-[22ch]">
+          <h2 className="t-ds text-ink max-w-[26ch]">
             {whyChooseUs.title} {whyChooseUs.titleAccent}
           </h2>
         </Reveal>
@@ -35,7 +35,7 @@ export const WhyChooseUs = () => {
               key={reason.title}
               index={idx}
               className={[
-                'border-hairline py-7 sm:py-8',
+                'border-hairline py-8 sm:py-10',
                 idx > 0 ? 'border-t' : '',
                 'sm:border-t-0',
                 idx % 2 === 1 ? 'sm:border-l sm:pl-6' : '',
@@ -47,8 +47,8 @@ export const WhyChooseUs = () => {
                 .filter(Boolean)
                 .join(' ')}
             >
-              <h3 className="t-label text-accent-blue pb-3">{reason.title}</h3>
-              <p className="text-[0.8125rem] text-secondary-text leading-relaxed">{reason.description}</p>
+              <h3 className="t-dm text-[1.0625rem] text-ink pb-3">{reason.title}</h3>
+              <p className="text-sm text-secondary-text leading-relaxed">{reason.description}</p>
             </Reveal>
           ))}
         </div>
@@ -88,7 +88,7 @@ export const FAQ = () => {
       <div className="max-w-3xl mx-auto px-5 sm:px-6">
         <SectionRule label={faq.label} />
         <Reveal className="pt-6 pb-10">
-          <h2 className="t-dl text-ink">
+          <h2 className="t-ds text-ink">
             {faq.title} {faq.titleAccent}
           </h2>
         </Reveal>

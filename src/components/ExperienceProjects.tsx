@@ -23,7 +23,7 @@ export const Services = () => {
       <div className="max-w-7xl mx-auto px-5 sm:px-6">
         <SectionRule label={servicesSection.label} />
         <Reveal className="pt-6 pb-12">
-          <h2 className="t-dl text-ink">
+          <h2 className="t-ds text-ink">
             {servicesSection.title} {servicesSection.titleAccent}
           </h2>
         </Reveal>
