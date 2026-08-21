@@ -1,5 +1,6 @@
-import { lazy, Suspense, type ComponentType } from 'react';
+import { lazy, Suspense, useEffect, useState, type ComponentType } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { MotionConfig } from 'motion/react';
 import { HomePage } from './pages/HomePage';
 import { ScrollToHash } from './components/ScrollToHash';
 import { WhatsAppButton } from './components/WhatsAppButton';
@@ -12,15 +13,54 @@ import { ThemeProvider } from './theme/ThemeContext';
 // and a bottom-right minimap — the site-wide WhatsApp/ChatBot bubbles float
 // on top of that canvas and collide with it, so they're suppressed there.
 const FULL_SCREEN_TOOL_PATHS = ['/tools/developer/dbml-diagram-builder'];
+/**
+ * True once the page footer is on screen.
+ *
+ * The floating WhatsApp and chat launchers live in the bottom-right corner,
+ * which is exactly where the footer's own links sit at the end of every page —
+ * they were painting on top of them. The previous fix was 8rem of extra
+ * footer padding below md, which left a band of dead space on mobile and did
+ * nothing at desktop widths, where the collision also happened. Getting out
+ * of the way when the footer arrives fixes both without reserving empty
+ * space that exists only to be avoided.
+ */
+const useFooterInView = () => {
+  const [inView, setInView] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    const footer = document.querySelector('footer');
+    if (!footer) {
+      setInView(false);
+      return;
+    }
+    const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), {
+      // Trigger a little early, so the launchers are gone before they
+      // overlap rather than fading out on top of the first link they reach.
+      rootMargin: '0px 0px 40px 0px',
+    });
+    observer.observe(footer);
+    return () => observer.disconnect();
+  }, [location.pathname]);
+
+  return inView;
+};
+
 const GlobalWidgets = () => {
   const location = useLocation();
+  const footerInView = useFooterInView();
   const isFullScreenTool = FULL_SCREEN_TOOL_PATHS.includes(location.pathname);
   if (isFullScreenTool) return null;
   return (
-    <>
+    // Opacity on an ancestor does not create a containing block for fixed
+    // descendants, so the launchers keep positioning against the viewport.
+    <div
+      className={`transition-opacity duration-300 ${footerInView ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+      aria-hidden={footerInView}
+    >
       <WhatsAppButton />
       <ChatBot />
-    </>
+    </div>
   );
 };
 
@@ -125,6 +165,14 @@ export default function App() {
   const basename = import.meta.env.BASE_URL.replace(/\/$/, "");
 
   return (
+    // reducedMotion="user" is the site-wide gate for JS-driven motion. The CSS
+    // media query in index.css cannot reach anything the motion library
+    // animates inline, and there are ~25 components with their own motion
+    // props; this makes every one of them honour the OS setting without each
+    // having to remember to call useReducedMotion. Transform and layout
+    // animations are dropped to their end state while opacity is still
+    // allowed, so nothing is left invisible.
+    <MotionConfig reducedMotion="user">
     <ThemeProvider>
       <Router basename={basename}>
         <LanguageProvider>
@@ -207,5 +255,6 @@ export default function App() {
         </LanguageProvider>
       </Router>
     </ThemeProvider>
+    </MotionConfig>
   );
 }

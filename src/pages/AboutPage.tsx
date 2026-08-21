@@ -41,7 +41,7 @@ export const AboutPage = () => {
                 <p key={p}>{p}</p>
               ))}
             </div>
-            <h3 className="text-accent-purple font-mono text-sm tracking-widest uppercase mt-12 mb-4">
+            <h3 className="text-accent-purple-text font-mono text-sm tracking-widest uppercase mt-12 mb-4">
               {aboutPage.workLabel}
             </h3>
             <ul className="space-y-3 text-base text-secondary-text leading-relaxed list-disc list-inside">

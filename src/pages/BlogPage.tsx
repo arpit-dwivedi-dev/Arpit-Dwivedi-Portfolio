@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { ArrowUpRight, Clock, AlertCircle, FileText, Loader2 } from 'lucide-react';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/AchievementsContact';
+import { Reveal } from '../components/ui/Reveal';
 import { Breadcrumbs } from '../components/seo/Breadcrumbs';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useEngineeringPosts } from '../hooks/useEngineeringPosts';
@@ -25,12 +26,7 @@ const PostSkeleton = () => (
 );
 
 const PostCard = ({ post, index }: { post: EngineeringPost; index: number }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 30 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ delay: (index % 6) * 0.05 }}
-  >
+  <Reveal index={index % 6}>
     <a
       href={post.url}
       target="_blank"
@@ -69,7 +65,7 @@ const PostCard = ({ post, index }: { post: EngineeringPost; index: number }) => 
         {post.description && (
           <p className="text-secondary-text text-sm leading-relaxed flex-grow mb-3 line-clamp-3">{post.description}</p>
         )}
-        <div className="flex items-center flex-wrap gap-x-3 gap-y-1 text-xs text-secondary-text/70 mt-auto">
+        <div className="flex items-center flex-wrap gap-x-3 gap-y-1 text-xs text-secondary-text mt-auto">
           <span>{post.author}</span>
           <span aria-hidden="true">&middot;</span>
           <span>{formatDate(post.publishedAt)}</span>
@@ -85,7 +81,7 @@ const PostCard = ({ post, index }: { post: EngineeringPost; index: number }) => 
         </div>
       </div>
     </a>
-  </motion.div>
+  </Reveal>
 );
 
 // English-only for now, same reasoning as GuidesPage — see App.tsx route
@@ -205,7 +201,7 @@ export const BlogPage = () => {
           )}
 
           {!isLoading && !error && !hasMore && posts.length > 0 && (
-            <p className="text-center text-secondary-text/70 text-sm py-10">{t.endOfResultsLabel}</p>
+            <p className="text-center text-secondary-text text-sm py-10">{t.endOfResultsLabel}</p>
           )}
         </div>
       </main>

@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'motion/react';
 import { ArrowUpRight, Clock } from 'lucide-react';
 import type { Guide } from '../../content/guides/types';
 import { guideCategoryTitle, guidePath } from '../../content/guides/categories';
+import { Reveal } from '../ui/Reveal';
 
 interface GuideCardProps {
   guide: Guide;
@@ -14,12 +14,7 @@ interface GuideCardProps {
 }
 
 export const GuideCard = ({ guide, index, readTimeSuffix, showCategory = true }: GuideCardProps) => (
-  <motion.div
-    initial={{ opacity: 0, y: 30 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ delay: index * 0.05 }}
-  >
+  <Reveal index={index}>
     <Link
       to={guidePath(guide)}
       className="group p-6 rounded-3xl bg-bg-secondary border border-ink/5 hover:border-accent-blue/30 transition-all flex flex-col h-full"
@@ -32,10 +27,10 @@ export const GuideCard = ({ guide, index, readTimeSuffix, showCategory = true }:
       </div>
       <h2 className="text-lg font-bold text-ink mb-2 group-hover:text-accent-blue transition-colors">{guide.title}</h2>
       <p className="text-secondary-text text-sm leading-relaxed flex-grow mb-3">{guide.description}</p>
-      <span className="inline-flex items-center gap-1.5 text-xs text-secondary-text/70">
+      <span className="inline-flex items-center gap-1.5 text-xs text-secondary-text">
         <Clock size={12} aria-hidden="true" />
         {guide.readTimeMinutes} {readTimeSuffix}
       </span>
     </Link>
-  </motion.div>
+  </Reveal>
 );

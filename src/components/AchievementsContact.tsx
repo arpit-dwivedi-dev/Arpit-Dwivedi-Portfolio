@@ -1,98 +1,88 @@
-import { motion } from 'motion/react';
-import { Zap, Server, Mail, Send } from 'lucide-react';
+import { Mail, Send, ArrowRight } from 'lucide-react';
 import { FaLinkedin } from 'react-icons/fa';
 import { useState, FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import metadata from '../../metadata.json';
 import { useLanguage } from '../i18n/LanguageContext';
 import { trackEvent } from '../monitoring';
+import { Reveal } from './ui/Reveal';
+import { SectionRule } from './ui/SectionRule';
 
 // Achievements component deleted 2026-08-12 — its five impact-metric stats
 // (99.9% performance, 95% AI automation, etc.) were never measured; confirmed
 // invented placeholders with the founder during the content-rewrite project.
 // Never commented back in without real, measured numbers. See positioning.md.
 
+/**
+ * DevOps & Architecture — kept asymmetric, since it already was.
+ *
+ * This was the only section on the original page that wasn't a centred
+ * heading over a card grid, so the rework refines it rather than replacing
+ * it: the checklist becomes a mono ledger, and the diagram is redrawn in the
+ * new surface language with violet doing the structural work.
+ *
+ * The dashed spinning ring behind the diagram is gone. It referenced an
+ * `animate-spin-slow` class that was never defined anywhere in the codebase,
+ * so it had been rendering as a static dashed circle — decoration that
+ * described nothing about the architecture.
+ */
 export const DevOpsArchitecture = () => {
   const { content } = useLanguage();
   const { devops, architecture } = content;
 
   return (
-    <section className="py-24 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-center lg:text-left"
-          >
-            <span className="text-accent-purple-text font-mono text-sm tracking-widest uppercase mb-2 block">{devops.label}</span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-8">{devops.title} <span className="text-accent-blue">{devops.titleAccent}</span></h2>
-            
-            <div className="space-y-6 text-base md:text-lg text-secondary-text leading-relaxed">
-              <p>
-                {devops.description}
-              </p>
-              <ul className="space-y-4">
-                {devops.list.map((item, idx) => (
-                  <li key={item} className="flex items-center gap-3">
-                    <div className={`w-6 h-6 rounded-full bg-accent-${idx % 2 === 0 ? 'blue' : 'purple'}/10 flex items-center justify-center text-accent-${idx % 2 === 0 ? 'blue' : 'purple'}`}>
-                      <Zap size={14} aria-hidden="true" />
+    <section className="relative py-24 sm:py-28">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6">
+        <SectionRule label={devops.label} />
+        <div className="pt-6 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-12 lg:gap-20 items-start">
+          <div>
+            <Reveal>
+              <h2 className="t-dl text-ink pb-7">
+                {devops.title} {devops.titleAccent}
+              </h2>
+            </Reveal>
+            <Reveal index={1}>
+              <p className="text-base sm:text-lg text-secondary-text leading-[1.7] max-w-[58ch]">{devops.description}</p>
+            </Reveal>
+            <Reveal index={2} className="pt-9">
+              <ul className="list-none flex flex-col">
+                <li className="h-px hairline" aria-hidden="true" />
+                {devops.list.map((item) => (
+                  <li key={item}>
+                    <div className="py-4">
+                      <span className="t-label text-secondary-text">{item}</span>
                     </div>
-                    <span className="text-sm font-medium text-ink">{item}</span>
+                    <div className="h-px hairline" />
                   </li>
                 ))}
               </ul>
-            </div>
-          </motion.div>
+            </Reveal>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="relative p-8 rounded-3xl glass border-ink/10 glow-blue/10 overflow-hidden"
-          >
-            {/* Architecture Diagram Mockup */}
-            <div className="relative z-10 grid grid-cols-3 gap-4">
-              <div className="col-span-3 flex justify-center mb-8">
-                <div className="px-6 py-3 rounded-xl glass border-accent-blue text-accent-blue font-bold text-sm glow-blue">
-                  {architecture.loadBalancer}
-                </div>
+          <Reveal from="right" className="surface rounded-[3px] p-6 sm:p-8">
+            {/* Architecture diagram: load balancer fans out to app nodes,
+                all backed by one database cluster — the shape described in
+                the copy on the left, not a generic box drawing. */}
+            <div className="flex flex-col items-center gap-0" role="img" aria-label={`${architecture.loadBalancer} to three ${architecture.nodeApp} instances to ${architecture.database}`}>
+              <div className="t-label text-[0.625rem] text-accent-blue border border-accent-blue/40 rounded-[3px] px-4 py-2.5 text-center">
+                {architecture.loadBalancer}
               </div>
-              
-              <div className="flex flex-col items-center gap-4">
-                <div className="w-full p-4 rounded-xl glass border-ink/10 flex flex-col items-center gap-2">
-                  <Server size={24} className="text-ink" aria-hidden="true" />
-                  <span className="text-[10px] font-mono text-secondary-text">{architecture.nodeApp} 1</span>
-                </div>
+              <div className="w-px h-7 bg-accent-blue/30" aria-hidden="true" />
+              <div className="grid grid-cols-3 gap-3 w-full">
+                {[1, 2, 3].map((n) => (
+                  <div key={n} className="flex flex-col items-center gap-2 surface-raised rounded-[3px] py-4 px-2">
+                    <span className="font-mono text-[0.5625rem] text-secondary-text tracking-wider text-center">
+                      {architecture.nodeApp} {n}
+                    </span>
+                  </div>
+                ))}
               </div>
-              <div className="flex flex-col items-center gap-4">
-                <div className="w-full p-4 rounded-xl glass border-ink/10 flex flex-col items-center gap-2">
-                  <Server size={24} className="text-ink" aria-hidden="true" />
-                  <span className="text-[10px] font-mono text-secondary-text">{architecture.nodeApp} 2</span>
-                </div>
-              </div>
-              <div className="flex flex-col items-center gap-4">
-                <div className="w-full p-4 rounded-xl glass border-ink/10 flex flex-col items-center gap-2">
-                  <Server size={24} className="text-ink" aria-hidden="true" />
-                  <span className="text-[10px] font-mono text-secondary-text">{architecture.nodeApp} 3</span>
-                </div>
-              </div>
-
-              <div className="col-span-3 flex justify-center mt-8">
-                <div className="px-6 py-3 rounded-xl glass border-accent-purple text-accent-purple font-bold text-sm glow-purple">
-                  {architecture.database}
-                </div>
+              <div className="w-px h-7 bg-accent-purple/40" aria-hidden="true" />
+              <div className="t-label text-[0.625rem] text-accent-purple-text border border-accent-purple/45 rounded-[3px] px-4 py-2.5 text-center">
+                {architecture.database}
               </div>
             </div>
-            
-            {/* Connecting Lines (Abstract) */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
-              <div className="w-full h-full border-2 border-dashed border-ink/10 rounded-full animate-spin-slow" />
-            </div>
-          </motion.div>
+          </Reveal>
         </div>
       </div>
     </section>
@@ -114,7 +104,7 @@ const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY as string | undefined;
 interface ContactProps {
   /** Cuts the section's own top padding — used on the standalone /contact
    *  page, where the page wrapper already clears the fixed navbar, so the
-   *  homepage's full py-24 top padding just adds a redundant gap on top of it. */
+   *  homepage's full top padding just adds a redundant gap on top of it. */
   compact?: boolean;
   /** Where the visitor arrived from (e.g. a tool id like "invoice-generator"
    *  forwarded via ?source= from a tool page's CTA). Tags both the GA4
@@ -123,6 +113,9 @@ interface ContactProps {
    *  undifferentiated "contact" bucket. */
   source?: string;
 }
+
+const FIELD_CLASS =
+  'w-full bg-ink/[0.03] border border-hairline rounded-[3px] px-3.5 py-3 text-ink placeholder:text-secondary-text focus:border-accent-blue focus:outline-none transition-colors';
 
 export const Contact = ({ compact = false, source }: ContactProps = {}) => {
   const { content } = useLanguage();
@@ -190,59 +183,52 @@ export const Contact = ({ compact = false, source }: ContactProps = {}) => {
   };
 
   return (
-    <section id="contact" className={`${compact ? 'pt-4 pb-24' : 'py-24'} relative overflow-hidden`}>
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center lg:text-left"
-          >
-            <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-2 block">{contact.label}</span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-8">{contact.title} <span className="text-gradient">{contact.titleAccent}</span></h2>
-            
-            <p className="text-base md:text-lg text-secondary-text mb-12 leading-relaxed">
-              {contact.description}
-            </p>
+    <section id="contact" className={`relative ${compact ? 'pt-4 pb-24' : 'py-24 sm:py-28'}`}>
+      <div className="max-w-7xl mx-auto px-5 sm:px-6">
+        <SectionRule label={contact.label} />
+        <div className="pt-6 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-12 lg:gap-20">
+          <div>
+            <Reveal>
+              {/* The accent gradient that used to sit on titleAccent here is
+                  gone, along with the flat cyan on the other eight headings —
+                  cyan now marks live software and focus only. */}
+              <h2 className="t-dl text-ink pb-7 max-w-[20ch]">
+                {contact.title} {contact.titleAccent}
+              </h2>
+            </Reveal>
+            <Reveal index={1}>
+              <p className="text-base sm:text-lg text-secondary-text leading-[1.7] max-w-[52ch]">{contact.description}</p>
+            </Reveal>
+            <Reveal index={2} className="pt-10">
+              <div className="flex flex-col">
+                <div className="h-px hairline" />
+                <a href={`mailto:${contact.email}`} className="group flex items-center gap-4 py-5">
+                  <Mail size={17} className="text-secondary-text group-hover:text-accent-blue transition-colors shrink-0" aria-hidden="true" />
+                  <span className="t-label text-secondary-text w-20 shrink-0">{contact.form.email}</span>
+                  <span className="text-sm sm:text-base font-medium text-ink group-hover:text-accent-blue transition-colors truncate">
+                    {contact.email}
+                  </span>
+                </a>
+                <div className="h-px hairline" />
+                <a href={contact.linkedinUrl} target="_blank" rel="noreferrer" className="group flex items-center gap-4 py-5">
+                  <span className="text-secondary-text group-hover:text-accent-blue transition-colors shrink-0 flex" aria-hidden="true">
+                    <FaLinkedin size={17} />
+                  </span>
+                  <span className="t-label text-secondary-text w-20 shrink-0">LinkedIn</span>
+                  <span className="text-sm sm:text-base font-medium text-ink group-hover:text-accent-blue transition-colors truncate">
+                    {contact.linkedin}
+                  </span>
+                </a>
+                <div className="h-px hairline" />
+              </div>
+            </Reveal>
+          </div>
 
-            {/* items-start (not center): each link's width is just its own icon+text
-                content, which varies (email address vs. "101 Tech Labs") — centering
-                them independently put every row's icon at a different x-position
-                instead of a straight left-aligned column. */}
-            <div className="space-y-6 flex flex-col items-start">
-              <a href={`mailto:${contact.email}`} className="flex items-center gap-4 group w-full max-w-sm lg:max-w-none">
-                <div className="w-12 h-12 rounded-xl bg-ink/5 flex items-center justify-center text-ink group-hover:bg-accent-blue group-hover:text-bg-pure transition-all">
-                  <Mail size={20} aria-hidden="true" />
-                </div>
-                <div>
-                  <div className="text-xs font-mono text-secondary-text uppercase tracking-widest">{contact.form.email}</div>
-                  <div className="text-lg font-bold text-ink group-hover:text-accent-blue transition-colors">{contact.email}</div>
-                </div>
-              </a>
-              <a href={contact.linkedinUrl} target="_blank" rel="noreferrer" className="flex items-center gap-4 group">
-                <div className="w-12 h-12 rounded-xl bg-ink/5 flex items-center justify-center text-ink group-hover:bg-accent-blue group-hover:text-bg-pure transition-all">
-                  <FaLinkedin size={20} />
-                </div>
-                <div>
-                  <div className="text-xs font-mono text-secondary-text uppercase tracking-widest">LinkedIn</div>
-                  <div className="text-lg font-bold text-ink group-hover:text-accent-blue transition-colors">{contact.linkedin}</div>
-                </div>
-              </a>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="p-8 rounded-3xl glass border-ink/10 glow-blue/5"
-          >
-            <form className="space-y-6" onSubmit={handleSubmit} noValidate>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label htmlFor="contact-name" className="text-xs font-mono text-secondary-text uppercase tracking-widest">{contact.form.name}</label>
+          <Reveal from="right" className="surface rounded-[3px] p-5 sm:p-7">
+            <form className="flex flex-col gap-5" onSubmit={handleSubmit} noValidate>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="contact-name" className="t-label text-secondary-text">{contact.form.name}</label>
                   <input
                     id="contact-name"
                     type="text"
@@ -252,13 +238,13 @@ export const Contact = ({ compact = false, source }: ContactProps = {}) => {
                     aria-describedby={errors.name ? 'contact-name-error' : undefined}
                     value={values.name}
                     onChange={(e) => setValues(v => ({ ...v, name: e.target.value }))}
-                    className="w-full bg-ink/5 border border-ink/10 rounded-xl px-4 py-3 text-ink focus:border-accent-blue focus:outline-none transition-colors"
+                    className={FIELD_CLASS}
                     placeholder={contact.form.namePlaceholder}
                   />
                   {errors.name && <p id="contact-name-error" role="alert" className="text-red-400 light:text-red-600 text-xs">{errors.name}</p>}
                 </div>
-                <div className="space-y-2">
-                  <label htmlFor="contact-email" className="text-xs font-mono text-secondary-text uppercase tracking-widest">{contact.form.email}</label>
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="contact-email" className="t-label text-secondary-text">{contact.form.email}</label>
                   <input
                     id="contact-email"
                     type="email"
@@ -268,24 +254,24 @@ export const Contact = ({ compact = false, source }: ContactProps = {}) => {
                     aria-describedby={errors.email ? 'contact-email-error' : undefined}
                     value={values.email}
                     onChange={(e) => setValues(v => ({ ...v, email: e.target.value }))}
-                    className="w-full bg-ink/5 border border-ink/10 rounded-xl px-4 py-3 text-ink focus:border-accent-blue focus:outline-none transition-colors"
+                    className={FIELD_CLASS}
                     placeholder={contact.form.emailPlaceholder}
                   />
                   {errors.email && <p id="contact-email-error" role="alert" className="text-red-400 light:text-red-600 text-xs">{errors.email}</p>}
                 </div>
               </div>
-              <div className="space-y-2">
-                <label htmlFor="contact-message" className="text-xs font-mono text-secondary-text uppercase tracking-widest">{contact.form.message}</label>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="contact-message" className="t-label text-secondary-text">{contact.form.message}</label>
                 <textarea
                   id="contact-message"
-                  rows={4}
+                  rows={5}
                   required
                   aria-required="true"
                   aria-invalid={errors.message ? true : undefined}
                   aria-describedby={errors.message ? 'contact-message-error' : undefined}
                   value={values.message}
                   onChange={(e) => setValues(v => ({ ...v, message: e.target.value }))}
-                  className="w-full bg-ink/5 border border-ink/10 rounded-xl px-4 py-3 text-ink focus:border-accent-blue focus:outline-none transition-colors"
+                  className={FIELD_CLASS}
                   placeholder={contact.form.messagePlaceholder}
                 />
                 {errors.message && <p id="contact-message-error" role="alert" className="text-red-400 light:text-red-600 text-xs">{errors.message}</p>}
@@ -293,10 +279,10 @@ export const Contact = ({ compact = false, source }: ContactProps = {}) => {
               <button
                 type="submit"
                 disabled={status === 'sending'}
-                className="w-full py-4 bg-accent-blue text-bg-pure font-bold rounded-xl flex items-center justify-center gap-2 hover:glow-blue transition-all group disabled:opacity-60 disabled:cursor-not-allowed"
+                className="group w-full h-13 bg-ink text-bg-pure font-semibold rounded-[3px] flex items-center justify-center gap-2.5 hover:bg-accent-blue transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {status === 'sending' ? contact.form.sending : contact.form.button}
-                <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" aria-hidden="true" />
+                <Send size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" aria-hidden="true" />
               </button>
               {status === 'sent' && (
                 <p role="status" className="text-accent-blue text-sm text-center">{contact.statusSent}</p>
@@ -305,28 +291,35 @@ export const Contact = ({ compact = false, source }: ContactProps = {}) => {
                 <p role="alert" className="text-red-400 light:text-red-600 text-sm text-center">{contact.statusError.replace('{email}', contact.email)}</p>
               )}
             </form>
-          </motion.div>
+          </Reveal>
         </div>
       </div>
     </section>
   );
 };
 
+/**
+ * Footer.
+ *
+ * Same links, organised into labelled columns instead of two dense
+ * centre-aligned rows of uppercase mono. The old bottom bar put nine links of
+ * identical weight on one line, which is where the floating action buttons
+ * used to land on top of them; see App.tsx for the clearance fix.
+ */
 export const Footer = () => {
   const { content } = useLanguage();
-  const { navLinks, footer } = content;
-  const homeHref = '/';
+  const { footer } = content;
 
   // Real, individually-crawlable pages — distinct from the homepage-anchor
-  // nav above, which only makes sense on "/". Every one of these needs its
-  // own URL for Google (and AdSense review) to find independent of the
-  // one-page scroll experience.
+  // nav, which only makes sense on "/". Every one of these needs its own URL
+  // for Google (and AdSense review) to find independent of the one-page
+  // scroll experience.
   const siteLinks = [
     { name: footer.navTools, href: '/tools' },
-    // Guides/Blog are English-only (no /hi route — see App.tsx), so these
-    // two deliberately skip withLang() rather than link to a dead /hi/blog.
     { name: footer.navGuides, href: '/guides' },
     { name: footer.navBlog, href: '/blog' },
+  ];
+  const companyLinks = [
     { name: footer.navAbout, href: '/about' },
     { name: footer.navServices, href: '/services' },
     { name: footer.navContact, href: '/contact' },
@@ -337,44 +330,53 @@ export const Footer = () => {
     { name: footer.navEditorialPolicy, href: '/editorial-policy' },
   ];
 
+  const columns = [
+    { heading: 'Tools', links: siteLinks },
+    { heading: 'Company', links: companyLinks },
+    { heading: 'Legal', links: legalLinks },
+  ];
+
   return (
-    // pb-32 below md: the fixed chat + WhatsApp launchers stack to about
-    // 9rem tall in that bottom-right corner, and the footer nav (which is
-    // centered full-width until md's row layout kicks in) was landing right
-    // under them with only pb-10 of clearance — the buttons sat on top of
-    // "Services" et al. once scrolled to the bottom.
-    <footer className="pt-10 pb-32 md:pb-10 border-t border-ink/5 bg-bg-pure">
-      <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
-        <div>
-          <div className="text-xl font-bold tracking-tighter">
-            {metadata.name}<span className="text-accent-blue">.</span>
+    <footer className="border-t border-hairline bg-bg-pure">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 pt-14 pb-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-[1.5fr_1fr_1fr_1fr] gap-10">
+        <div className="col-span-2 sm:col-span-3 lg:col-span-1">
+          <div className="t-dm text-[1.0625rem] text-ink">
+            {metadata.name}
+            <span className="text-accent-blue">.</span>
           </div>
-          <div className="text-[10px] font-mono text-secondary-text mt-1">{footer.techNote}</div>
+          <p className="text-[0.8125rem] text-secondary-text pt-2 max-w-[30ch]">{footer.techNote}</p>
         </div>
-        <div className="text-secondary-text text-sm font-mono">
-          © {new Date().getFullYear()} {metadata.name}. {footer.rights}
-        </div>
-        <nav aria-label="Footer" className="flex flex-wrap justify-center items-center gap-6">
-          {navLinks.slice(0, 3).map(link => (
-            <a key={link.name} href={link.href.startsWith('#') ? `${homeHref}${link.href}` : link.href} className="py-3 -my-3 text-secondary-text hover:text-ink transition-colors text-sm">{link.name}</a>
-          ))}
-        </nav>
+
+        {columns.map((col) => (
+          <nav key={col.heading} aria-label={col.heading}>
+            <p className="t-label text-secondary-text pb-4">{col.heading}</p>
+            <ul className="list-none flex flex-col gap-2.5">
+              {col.links.map((link) => (
+                <li key={link.name}>
+                  <Link to={link.href} className="text-sm text-secondary-text hover:text-ink transition-colors">
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))}
       </div>
-      <div className="max-w-7xl mx-auto px-6 mt-6 pt-6 border-t border-ink/5 flex flex-col md:flex-row justify-center items-center gap-x-8 gap-y-3">
-        <nav aria-label="Site pages" className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2">
-          {siteLinks.map((link) => (
-            <Link key={link.name} to={link.href} className="py-3 -my-3 text-secondary-text hover:text-ink transition-colors text-xs font-mono uppercase tracking-widest">
-              {link.name}
-            </Link>
-          ))}
-        </nav>
-        <nav aria-label="Legal" className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2">
-          {legalLinks.map((link) => (
-            <Link key={link.name} to={link.href} className="py-3 -my-3 text-secondary-text/70 hover:text-ink transition-colors text-xs font-mono uppercase tracking-widest">
-              {link.name}
-            </Link>
-          ))}
-        </nav>
+
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 pb-10">
+        <div className="h-px hairline" />
+        <div className="pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <p className="font-mono text-[0.6875rem] text-secondary-text">
+            © {new Date().getFullYear()} {metadata.name}. {footer.rights}
+          </p>
+          <Link
+            to="/#contact"
+            className="group inline-flex items-center gap-2 text-sm font-semibold text-ink hover:text-accent-blue transition-colors"
+          >
+            {footer.navContact}
+            <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
+          </Link>
+        </div>
       </div>
     </footer>
   );

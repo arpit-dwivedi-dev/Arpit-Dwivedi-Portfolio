@@ -3,6 +3,7 @@ import { ExternalLink } from 'lucide-react';
 import { FaGithub } from 'react-icons/fa';
 import React from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
+import { REVEAL_INITIAL, REVEAL_IN_VIEW, REVEAL_VIEWPORT, revealTransition } from './ui/Reveal';
 
 interface ProjectCardProps {
   key?: string;
@@ -62,10 +63,10 @@ export const ProjectCard = ({ project, index }: ProjectCardProps) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1 }}
+      initial={REVEAL_INITIAL}
+      whileInView={REVEAL_IN_VIEW}
+      viewport={REVEAL_VIEWPORT}
+      transition={revealTransition(index)}
       className="group p-8 rounded-3xl bg-bg-secondary border border-ink/5 hover:border-accent-blue/30 transition-all flex flex-col h-full relative overflow-hidden light:shadow-[0_12px_30px_-12px_rgba(24,24,27,0.18)]"
     >
       {/* Background Glow */}
