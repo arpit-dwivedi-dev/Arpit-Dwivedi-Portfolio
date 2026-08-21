@@ -111,9 +111,12 @@ select optgroup {
 
 :root.light {
   color-scheme: light;
-  /* #0077B6 measures 5.4:1 on white (vs. 1.9:1 for the dark theme's
-     #00D1FF) — kept saturated enough to still read as the brand blue. */
-  --color-accent-blue: #0077B6;
+  /* Kept saturated enough to still read as the brand blue, but darker than
+     the #0077B6 this replaced: that measured 5.4:1 on white yet only 3.45:1
+     for 11px label text on the raised terminal surface, which is the worst
+     case the site actually renders. This clears 4.5:1 on all three light
+     surfaces. */
+  --color-accent-blue: #005A87;
   /* #6D28D9 measures 5.3:1 on white; accent-purple itself is unchanged
      since it's only used as an icon/bg fill here (3:1 minimum). */
   --color-accent-purple-text: #6D28D9;

@@ -341,7 +341,7 @@ export const InvoiceGeneratorPage = () => {
                 </div>
                 <div className="space-y-1">
                   <label htmlFor="invoice-ship-to" className={labelClass}>
-                    {t.shipToLabel} <span className="normal-case text-secondary-text/70">{t.optionalLabel}</span>
+                    {t.shipToLabel} <span className="normal-case text-secondary-text">{t.optionalLabel}</span>
                   </label>
                   <textarea
                     id="invoice-ship-to"

@@ -99,7 +99,7 @@ export const Navbar = () => {
                 to={hrefFor(link.href)}
                 aria-label={link.soon ? nav.ariaProductsSoon : undefined}
                 className={`group/link relative text-sm font-medium whitespace-nowrap inline-flex items-center gap-1.5 py-2 transition-colors ${
-                  link.soon ? 'text-secondary-text/70 hover:text-secondary-text' : 'text-secondary-text hover:text-ink'
+                  link.soon ? 'text-secondary-text hover:text-ink' : 'text-secondary-text hover:text-ink'
                 }`}
               >
                 {link.name}

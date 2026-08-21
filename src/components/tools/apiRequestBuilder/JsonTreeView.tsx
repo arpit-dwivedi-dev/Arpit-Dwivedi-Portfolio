@@ -67,7 +67,7 @@ const JsonNode = ({ value, depth }: JsonNodeProps) => {
         <ChevronRight size={12} aria-hidden="true" className={`transition-transform ${expanded ? 'rotate-90' : ''}`} />
       </button>
       <span className="text-secondary-text">{openBracket}</span>
-      {!expanded && <span className="text-secondary-text/60 mx-1">{entries.length} items</span>}
+      {!expanded && <span className="text-secondary-text mx-1">{entries.length} items</span>}
       {expanded && (
         <div className="pl-4 border-l border-ink/10 ml-1.5">
           {entries.map(([key, child], idx) => (

@@ -1,109 +1,83 @@
-import React from 'react';
-import { motion } from 'motion/react';
-import { Code2, Layout, Server, ShieldCheck, Zap } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
+import { Reveal } from './ui/Reveal';
 
-// static Tailwind class maps to avoid JIT stripping
-const techClassMap: Record<string, string> = {
-  'accent-blue': 'bg-accent-blue/10 text-accent-blue',
-  'accent-purple': 'bg-accent-purple/10 text-accent-purple',
-};
-
+/**
+ * About — the page's one purely editorial section.
+ *
+ * No top rule, no eyebrow, no container: it opens straight onto type at a
+ * reading measure, which is the point. Four of the eleven sections keep a
+ * labelled rule and two open bare like this one; applying the same framing
+ * everywhere is what made the original page read as one shape repeated.
+ *
+ * The right-hand summary card is gone, but none of its content is: EST. 2026,
+ * the two expertise lines and the service area now sit in a compact mono
+ * ledger under the prose, where they read as facts rather than as a graphic
+ * standing in for facts. about.label is unused by design.
+ */
 export const About = () => {
   const { content } = useLanguage();
   const { about } = content;
 
-  const icons = [Zap, ShieldCheck, Server, Layout];
-
   return (
-    <section id="about" className="py-24 relative overflow-hidden bg-bg-secondary">
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-        <motion.div
-          initial={{ opacity: 0, x: -40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center lg:text-left"
-        >
-          <span className="text-accent-purple font-mono text-sm tracking-widest uppercase mb-2 block">{about.label}</span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-8">{about.title} <span className="text-accent-blue">{about.titleAccent}</span></h2>
-          
-          <div className="space-y-6 text-base md:text-lg text-secondary-text leading-relaxed">
-            {about.paragraphs.map((p) => (
-              <p key={p} dangerouslySetInnerHTML={{ __html: p.replaceAll(/\*\*(.+?)\*\*/g, (_match, phrase) => `<span class="text-ink font-medium">${phrase}</span>`) }} />
+    <section id="about" className="relative py-24 sm:py-28">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6">
+        <div className="max-w-3xl">
+          <Reveal>
+            <h2 className="t-dl text-ink pb-9 max-w-[22ch]">
+              {about.title} {about.titleAccent}
+            </h2>
+          </Reveal>
+
+          <div className="flex flex-col gap-6">
+            {about.paragraphs.map((p, idx) => (
+              <Reveal key={p} index={idx}>
+                <p
+                  className="text-base sm:text-lg text-secondary-text leading-[1.7] max-w-[62ch]"
+                  // Bold runs in the source copy mark the closing thesis line.
+                  dangerouslySetInnerHTML={{
+                    __html: p.replaceAll(/\*\*(.+?)\*\*/g, (_m, phrase) => `<span class="text-ink font-medium">${phrase}</span>`),
+                  }}
+                />
+              </Reveal>
             ))}
           </div>
+        </div>
 
-          <div className="grid grid-cols-2 gap-6 mt-12">
-            {about.features.map((feature, i) => {
-              const Icon = icons[i % icons.length];
-              const color = i % 2 === 0 ? 'accent-blue' : 'accent-purple';
-              return (
-                <div key={feature} className="flex items-center gap-3">
-               <div className={`${techClassMap[color] ?? 'bg-gray-500/10 text-gray-500'} w-10 h-10 rounded-lg flex items-center justify-center` }>
-                    <Icon size={20} />
-                  </div>
-                  <span className="text-sm font-medium text-ink">{feature}</span>
-                </div>
-              );
-            })}
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="relative"
-        >
-          {/* The grid above is single-column below lg, so this card runs full-width
-              and stacked there — a fixed aspect-square makes the box shorter than its
-              content (2-line heading + badge + 2 expertise rows + service-area box) at
-              those widths, and overflow-hidden was clipping the bottom as a result.
-              Let height follow content below lg; lg+ restores the fixed-ratio look. */}
-          <div className="w-full aspect-auto lg:aspect-square rounded-3xl overflow-hidden glass p-4 glow-purple/20">
-            <div className="w-full h-full rounded-2xl bg-bg-tertiary p-8 flex flex-col gap-8 justify-between">
-              <div className="flex justify-between items-start gap-3">
-                <div className="text-3xl sm:text-4xl font-bold text-ink tracking-tighter">101 <span className="text-accent-blue">TECH LABS</span></div>
-                <div className="shrink-0 px-3 py-1 rounded-full border border-ink/10 text-[10px] font-mono text-secondary-text">{about.card.est}</div>
-              </div>
-
-              <div className="space-y-4">
-                {about.card.expertise.map((item, i) => {
-                  const Icon = i === 0 ? Code2 : Zap;
-                  const color = i === 0 ? 'accent-blue' : 'accent-purple';
-                  return (
-                    <div key={item.title} className="flex items-center gap-4">
-               <div className={`${techClassMap[color] ?? 'bg-gray-500/10 text-gray-500'} w-12 h-12 rounded-xl flex items-center justify-center shrink-0` }>
-                        <Icon size={24} />
-                      </div>
-                      <div>
-                        <div className="text-sm font-bold text-ink">{item.title}</div>
-                        <div className="text-xs text-secondary-text">{item.subtitle}</div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div className="p-4 rounded-xl glass border-accent-blue/20">
-                <div className="text-[10px] font-mono text-accent-blue uppercase tracking-widest mb-2">{about.card.locationLabel}</div>
-                <div className="text-sm font-medium text-ink">{about.card.location}</div>
-              </div>
+        <Reveal className="pt-14 max-w-3xl">
+          <dl className="flex flex-col">
+            <div className="h-px hairline" />
+            <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1 py-4">
+              <dt className="t-label text-secondary-text w-32 shrink-0">Founded</dt>
+              <dd className="text-sm text-ink">{about.card.est.replace('EST. ', '')}</dd>
             </div>
-          </div>
-          
-          {/* Decorative Elements */}
-          <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-accent-blue/20 rounded-full blur-3xl" />
-          <div className="absolute -top-6 -left-6 w-32 h-32 bg-accent-purple/20 rounded-full blur-3xl" />
-        </motion.div>
+            {about.card.expertise.map((item) => (
+              <div key={item.title}>
+                <div className="h-px hairline" />
+                <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1 py-4">
+                  <dt className="t-label text-secondary-text w-32 shrink-0">{item.title}</dt>
+                  <dd className="text-sm text-secondary-text">{item.subtitle}</dd>
+                </div>
+              </div>
+            ))}
+            <div className="h-px hairline" />
+            <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1 py-4">
+              <dt className="t-label text-secondary-text w-32 shrink-0">{about.card.locationLabel}</dt>
+              <dd className="text-sm text-ink">{about.card.location}</dd>
+            </div>
+            <div className="h-px hairline" />
+          </dl>
+        </Reveal>
+
+        <Reveal className="pt-10">
+          <ul className="flex flex-wrap gap-x-8 gap-y-3 list-none">
+            {about.features.map((feature) => (
+              <li key={feature} className="t-label text-secondary-text">
+                {feature}
+              </li>
+            ))}
+          </ul>
+        </Reveal>
       </div>
     </section>
   );
 };
-
-// TechStack component deleted 2026-08-12 — it was never rendered anywhere
-// (an orphaned export, like Achievements/Testimonials), and its content was
-// exactly the tech-name tag list positioning.md's PORTFOLIO/no-tech-tags
-// rules exist to remove. techStack/techStackSection data deleted with it.

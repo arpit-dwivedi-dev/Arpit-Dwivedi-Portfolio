@@ -80,7 +80,7 @@
       "subtitle": "From scalable backends to thoughtful AI integrations, we build the technology your product needs to launch, grow, and keep up.",
       "buttons": {
         "projects": "View Projects",
-        "contact": "Get a Quote"
+        "contact": "Get a quote"
       },
       "terminal": {
         "filename": "101_tech_labs -- portfolio_v2.ts",
@@ -229,7 +229,7 @@
         { "title": "Build & Iterate", "description": "Regular check-ins as we build, with room to adjust as you see it take shape." },
         { "title": "Launch & Support", "description": "We deploy, hand over what you need, and stay reachable for fixes and follow-up work." }
       ],
-      "cta": "Start a Project"
+      "cta": "Start a project"
     },
     "faq": {
       "label": "Questions",

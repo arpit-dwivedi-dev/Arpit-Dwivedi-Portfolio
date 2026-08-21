@@ -1,118 +1,112 @@
-import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { motion, useScroll, useSpring } from 'motion/react';
 import { Navbar } from '../components/Navbar';
 import { HomeJsonLd } from '../components/seo/HomeJsonLd';
 import { Hero } from '../components/Hero';
+import { NowNext } from '../components/NowNext';
 import { FreeTools } from '../components/FreeToolsShowcase';
 import { About } from '../components/AboutTech';
 import { Team, Process } from '../components/TeamProcess';
 import { WhyChooseUs, FAQ } from '../components/TrustSections';
 import { Services } from '../components/ExperienceProjects';
 import { DevOpsArchitecture, Contact, Footer } from '../components/AchievementsContact';
-import { motion, useScroll, useSpring } from 'motion/react';
-import { useLanguage } from '../i18n/LanguageContext';
 
-// Only the nav entries that are actually in-page anchors on this route —
-// "Projects", "Free Tools" and "Blog" point at separate pages, not homepage
-// sections, so they'd never light up and had nothing to scroll-spy against.
-const SCROLL_SPY_HASHES = ['#home', '#about', '#experience', '#contact'];
+// The dot rail's own list, no longer derived from navLinks. It used to filter
+// the nav by a hash allow-list, which meant the rail silently lost entries
+// whenever the nav changed — and the nav no longer carries #home or #contact
+// at all. These are the homepage's real section anchors, in page order.
+const RAIL_SECTIONS = [
+  { id: 'home', label: 'Top' },
+  { id: 'next', label: 'Now / Next' },
+  { id: 'about', label: 'About' },
+  { id: 'experience', label: 'Services' },
+  { id: 'faq', label: 'FAQ' },
+  { id: 'contact', label: 'Contact' },
+];
 
 export const HomePage = () => {
   const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
-  });
+  const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+  const [activeId, setActiveId] = useState(RAIL_SECTIONS[0].id);
 
-  const { content } = useLanguage();
-  const { navLinks, homeProjectsNote } = content;
-  const projectsHref = '/projects';
-  const dotLinks = navLinks.filter((link) => SCROLL_SPY_HASHES.includes(link.href));
-  const [activeHash, setActiveHash] = useState(dotLinks[0]?.href ?? '#home');
-
-  // Drives the dot rail below: without this it was just a column of dots
-  // that linked somewhere but never showed where "somewhere" was.
   useEffect(() => {
-    const sections = dotLinks
-      .map((link) => document.querySelector(link.href))
-      .filter((el): el is Element => el !== null);
+    const sections = RAIL_SECTIONS.map((s) => document.getElementById(s.id)).filter(
+      (el): el is HTMLElement => el !== null,
+    );
     if (sections.length === 0) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries.filter((e) => e.isIntersecting);
-        if (visible.length > 0) {
-          setActiveHash(`#${visible[0].target.id}`);
-        }
+        if (visible.length > 0) setActiveId(visible[0].target.id);
       },
       { rootMargin: '-40% 0px -50% 0px' },
     );
     sections.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <div className="relative bg-bg-pure selection:bg-accent-blue/30 selection:text-accent-blue overflow-x-hidden">
-      {/* Progress Bar */}
+    <div className="grain relative bg-bg-pure selection:bg-accent-blue/30 selection:text-accent-blue overflow-x-hidden">
       <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-accent-blue z-[60] origin-left"
+        className="fixed top-0 left-0 right-0 h-0.5 bg-accent-blue z-[60] origin-left"
         style={{ scaleX }}
+        aria-hidden="true"
       />
 
-      {/* Scroll-spy dot rail — highlights whichever homepage section is in view */}
-      <div className="fixed right-6 top-1/2 -translate-y-1/2 z-50 hidden xl:flex flex-col gap-4">
-          {dotLinks.map((link) => {
-            const isActive = activeHash === link.href;
+      {/* Section rail. This was an unlabelled column of near-invisible dots —
+          it told you a position you already knew and never said what it
+          pointed at. It now carries the section name at all times (there is
+          room for it at xl and up, which is the only width it renders at),
+          and the active row is the one thing in it drawn in the accent. */}
+      <nav
+        aria-label="Sections"
+        // 2xl, not xl: the content column maxes out at 1280px, so at 1440 the
+        // margin beside it is 80px and the labelled rail landed on top of the
+        // hero terminal. It only has room from 1536px up.
+        className="fixed right-10 top-1/2 -translate-y-1/2 z-40 hidden 2xl:block"
+      >
+        <ul className="list-none flex flex-col gap-1">
+          {RAIL_SECTIONS.map((section) => {
+            const isActive = activeId === section.id;
             return (
-              <a
-                key={link.href}
-                href={link.href}
-                aria-label={`Go to ${link.name}`}
-                aria-current={isActive ? 'true' : undefined}
-                title={link.name}
-                className="group p-2 -m-2 flex items-center justify-center"
-              >
-                <span
-                  className={`rounded-full transition-all ${
-                    isActive ? 'w-2.5 h-2.5 bg-accent-blue' : 'w-2 h-2 bg-ink/20 group-hover:bg-accent-blue group-hover:scale-150'
-                  }`}
-                  aria-hidden="true"
-                />
-              </a>
+              <li key={section.id}>
+                <a
+                  href={`#${section.id}`}
+                  aria-current={isActive ? 'true' : undefined}
+                  className="group flex items-center justify-end gap-3 py-1.5"
+                >
+                  <span
+                    className={`t-label text-[0.5625rem] transition-colors ${
+                      isActive ? 'text-accent-blue' : 'text-secondary-text group-hover:text-secondary-text'
+                    }`}
+                  >
+                    {section.label}
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className={`h-px transition-all ${
+                      isActive ? 'w-6 bg-accent-blue' : 'w-3 bg-secondary-text/30 group-hover:w-5 group-hover:bg-secondary-text'
+                    }`}
+                  />
+                </a>
+              </li>
             );
           })}
-      </div>
+        </ul>
+      </nav>
 
       <Navbar />
       <HomeJsonLd />
 
       <main id="main-content">
         <Hero />
+        <NowNext />
         <FreeTools />
         <About />
         <Services />
         <WhyChooseUs />
         <Team />
-
-        {/* Low-key proof line, not a section — positioning.md's PORTFOLIO
-            rule allows either a modest /work-style page or "a single
-            low-key line further down" instead of homepage prominence.
-            /projects (kept as the URL, not a new /work page — see Phase 3
-            SEO notes) holds the full delivered/demo breakdown. Wrapped in a
-            bordered pill rather than left bare: unstyled, it rendered as a
-            floating line of text in a large empty gap and read as a broken
-            component rather than an intentional aside. */}
-        <div className="max-w-xl mx-auto pb-24 px-6">
-          <p className="text-center text-secondary-text text-sm rounded-2xl border border-ink/5 bg-bg-secondary/60 px-6 py-4">
-            {homeProjectsNote.text}{' '}
-            <Link to={projectsHref} className="text-accent-blue hover:text-ink transition-colors font-medium">
-              {homeProjectsNote.linkLabel}
-            </Link>
-          </p>
-        </div>
-
         <DevOpsArchitecture />
         <Process />
         <FAQ />
@@ -120,11 +114,6 @@ export const HomePage = () => {
       </main>
 
       <Footer />
-
-      {/* Global Background Elements */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(0,209,255,0.03),transparent_70%)]" />
-      </div>
     </div>
   );
 };

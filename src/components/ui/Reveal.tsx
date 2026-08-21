@@ -80,3 +80,18 @@ export const Reveal = ({
     </Motion>
   );
 };
+
+/**
+ * The reveal's motion values, exported for the two card components whose
+ * motion props sit on the card element itself (ProjectCard, ToolCard) —
+ * wrapping those in <Reveal> would insert a div between the grid and a
+ * h-full child and collapse the equal-height rows. Same numbers, one source.
+ */
+export const REVEAL_VIEWPORT = { once: true, margin: '-8% 0px -8% 0px' } as const;
+export const REVEAL_INITIAL = { opacity: 0, y: 16 } as const;
+export const REVEAL_IN_VIEW = { opacity: 1, y: 0 } as const;
+export const revealTransition = (index = 0) => ({
+  duration: 0.55,
+  delay: index * 0.06,
+  ease: [0.22, 0.61, 0.36, 1] as const,
+});

@@ -1,75 +1,55 @@
-import { motion } from 'motion/react';
-import { Layout, Calendar, Zap, Search, Brain, CheckCircle2 } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
+import { Reveal } from './ui/Reveal';
+import { SectionRule } from './ui/SectionRule';
 
-const serviceIcons = [Layout, Calendar, Zap, Search, Brain];
-const serviceColors = ['accent-blue', 'accent-purple', 'accent-blue', 'accent-purple', 'accent-blue'];
-const serviceClassMap: Record<string, string> = {
-  'accent-blue': 'bg-accent-blue/10 text-accent-blue',
-  'accent-purple': 'bg-accent-purple/10 text-accent-purple',
-};
-
+/**
+ * Services — a ledger, not a card grid.
+ *
+ * Five services on a 3+2 grid always left an awkward shape; the previous fix
+ * was a six-column grid with column-start offsets to centre the orphan row.
+ * A ledger has no orphan row to fix: each service is one line item, the count
+ * can change freely, and the hairlines give the section a rhythm that five
+ * rounded rectangles never did.
+ *
+ * No numbers here on purpose. Services are a set, not a sequence — only the
+ * process steps are genuinely ordered, so only they are numbered.
+ */
 export const Services = () => {
   const { content } = useLanguage();
   const { services, servicesSection } = content;
 
   return (
-    <section id="experience" className="py-24 relative overflow-hidden bg-bg-secondary">
-      <div className="max-w-7xl mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-20"
-        >
-          <span className="text-accent-purple font-mono text-sm tracking-widest uppercase mb-2 block">{servicesSection.label}</span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">{servicesSection.title} <span className="text-accent-blue">{servicesSection.titleAccent}</span></h2>
-        </motion.div>
+    <section id="experience" className="relative py-24 sm:py-28 bg-bg-secondary">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6">
+        <SectionRule label={servicesSection.label} />
+        <Reveal className="pt-6 pb-12">
+          <h2 className="t-dl text-ink">
+            {servicesSection.title} {servicesSection.titleAccent}
+          </h2>
+        </Reveal>
 
-        {/* 5 cards on a 3-col grid leaves row 2 with a dangling empty slot.
-            grid-cols-6 lets the first 3 cards fill row 1 exactly (2 cols
-            each) and the last 2 sit centered on row 2 instead of hugging
-            the left edge — a 3-2 layout instead of 3-2-gap. */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
-          {services.map((service, idx) => {
-            const Icon = serviceIcons[idx % serviceIcons.length];
-            const color = serviceColors[idx % serviceColors.length];
-            const spanClass =
-              idx < 3 ? 'lg:col-span-2' : idx === 3 ? 'lg:col-span-2 lg:col-start-2' : 'md:col-span-2 lg:col-span-2 lg:col-start-4';
-            return (
-              <motion.div
-                key={service.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className={`p-6 rounded-3xl glass border-ink/5 hover:border-accent-blue/20 transition-all group ${spanClass}`}
-              >
-                <div className={`${serviceClassMap[color]} w-12 h-12 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
-                  <Icon size={24} aria-hidden="true" />
+        <div className="flex flex-col">
+          <div className="h-px hairline" />
+          {services.map((service, idx) => (
+            <Reveal key={service.title} index={idx}>
+              <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,22rem)_1fr] gap-3 lg:gap-14 py-8">
+                <h3 className="t-dm text-[1.25rem] text-ink lg:pt-0.5">{service.title}</h3>
+                <div className="flex flex-col gap-5">
+                  <p className="text-secondary-text leading-relaxed max-w-[62ch]">{service.description}</p>
+                  <ul className="flex flex-wrap gap-x-6 gap-y-2 list-none">
+                    {service.highlights.map((h) => (
+                      <li key={h} className="t-label text-[0.625rem] text-secondary-text">
+                        {h}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <h3 className="text-xl font-bold text-ink mb-3 group-hover:text-accent-blue transition-colors">{service.title}</h3>
-                <p className="text-secondary-text text-sm mb-6 leading-relaxed">{service.description}</p>
-                <ul className="flex flex-wrap gap-2 list-none">
-                  {service.highlights.map(h => (
-                    <li key={h} className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-ink/5 text-[10px] font-mono text-ink">
-                      <CheckCircle2 size={10} className="text-accent-blue" aria-hidden="true" />
-                      {h}
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            );
-          })}
+              </div>
+              <div className="h-px hairline" />
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>
   );
 };
-
-// Projects mini-grid ("Key Projects") deleted 2026-08-12 — it duplicated
-// /projects' full case studies in a prominent mid-homepage position,
-// including the SA Ethics Biotech demo shown as an equal card alongside real
-// delivered work. positioning.md's PORTFOLIO rule demotes this off the
-// homepage; HomePage.tsx now carries a single low-key line instead. See
-// positioning.md.

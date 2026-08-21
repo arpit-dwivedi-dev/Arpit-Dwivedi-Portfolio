@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { ArrowUpRight, type LucideIcon } from 'lucide-react';
+import { REVEAL_INITIAL, REVEAL_IN_VIEW, REVEAL_VIEWPORT, revealTransition } from '../ui/Reveal';
 
 export interface ToolCardProps {
   key?: string;
@@ -19,10 +20,10 @@ export const ToolCard = ({ title, description, icon: Icon, href, index = 0 }: To
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1 }}
+      initial={REVEAL_INITIAL}
+      whileInView={REVEAL_IN_VIEW}
+      viewport={REVEAL_VIEWPORT}
+      transition={revealTransition(index)}
       className="group p-5 sm:p-8 rounded-2xl sm:rounded-3xl bg-bg-secondary border border-ink/5 hover:border-accent-blue/30 transition-all flex flex-col h-full relative overflow-hidden light:shadow-[0_12px_30px_-12px_rgba(24,24,27,0.18)]"
     >
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-accent-blue/5 rounded-full blur-3xl group-hover:bg-accent-blue/10 transition-colors" />
