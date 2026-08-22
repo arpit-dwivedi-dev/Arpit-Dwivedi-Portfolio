@@ -81,17 +81,11 @@ export const Reveal = ({
   );
 };
 
-/**
- * The reveal's motion values, exported for ProjectCard, whose motion props sit
- * on the card element itself — wrapping it in <Reveal> would insert a div
- * between the grid and a h-full child and collapse the equal-height rows.
- * Same numbers, one source.
- */
-export const REVEAL_VIEWPORT = { once: true, margin: '-8% 0px -8% 0px' } as const;
-export const REVEAL_INITIAL = { opacity: 0, y: 16 } as const;
-export const REVEAL_IN_VIEW = { opacity: 1, y: 0 } as const;
-export const revealTransition = (index = 0) => ({
-  duration: 0.55,
-  delay: index * 0.06,
-  ease: [0.22, 0.61, 0.36, 1] as const,
-});
+// The four loose motion values that used to be exported here (REVEAL_INITIAL,
+// REVEAL_IN_VIEW, REVEAL_VIEWPORT, revealTransition) existed for exactly one
+// caller: ProjectCard, which could not wrap itself in <Reveal> without
+// inserting a div between the grid and an h-full child and collapsing the
+// equal-height rows. The projects ledger has no equal-height rows to collapse,
+// so ProjectRow uses <Reveal as="li"> like every other list on the site and
+// the escape hatch is gone. Re-adding it means re-adding the bug where a
+// second copy of these numbers drifts from the component's.

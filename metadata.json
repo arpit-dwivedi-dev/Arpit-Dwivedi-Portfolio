@@ -62,7 +62,10 @@
         "featured": true,
         "description": "This NGO runs blood donation camps, mobile health clinics, old-age home support, and medical aid for underprivileged communities across India — but had no way for donors or volunteers to find them online. We built a full donation and outreach website: volunteer and donor sign-up, a cause-based donation flow, a news and events section, a photo gallery, and their impact numbers, all in one place. People can now find the organization, understand what they do, and give — without the NGO needing a developer on staff.",
         "tags": ["Nonprofit", "Donor Platform"],
-        "link": "https://www.rashtriyaswasthyasangathan.org/"
+        "link": "https://www.rashtriyaswasthyasangathan.org/",
+        "host": "rashtriyaswasthyasangathan.org",
+        "note": "Runs without a developer on staff — the NGO adds causes, events and gallery entries themselves.",
+        "stage": "donation"
       },
       {
         "title": "SA Ethics Biotech",
@@ -70,7 +73,9 @@
         "status": "demo",
         "description": "SA Ethics Biotech is an ISO 9001:2015 & ISO 13485:2016 certified manufacturer and importer/exporter of medical devices and blood bank equipment, based in Delhi and Kanpur. After delivering the Rashtriya Swasthya Sangathan project, we built this corporate site on spec — unpaid, unsolicited — to show what a site matching their certifications and B2B credibility could look like. It was never adopted: not live on their actual domain, not paid for, not a client engagement. Shown here as design work, honestly labeled, not as a delivered project.",
         "tags": ["Medical Devices", "B2B", "Concept Work"],
-        "link": "https://arpit-dwivedi-dev.github.io/S-A-Ethics-Biotech-Pvt.-Ltd./"
+        "link": "https://arpit-dwivedi-dev.github.io/S-A-Ethics-Biotech-Pvt.-Ltd./",
+        "note": "Not live on their domain. Not paid for. Not a client engagement.",
+        "stage": "concept"
       }
     ],
     "hero": {
@@ -413,17 +418,23 @@
       "pageDescription": "Everything so far, honestly labeled — one delivered client project, and a concept build that never made it to production.",
       "backToHome": "Back to Home",
       "deliveredHeading": "Delivered Work",
-      "demoHeading": "Concept / Demo Work — Not in Production",
+      "demoHeading": "Concept / Demo Work",
       "demoIntro": "Built on spec to show capability, not commissioned or paid for. Never adopted by the client. Shown here as design work, not as a client engagement.",
       "ctaText": "Like what you see? Here's what we can build for you.",
-      "ctaButton": "See Services"
-    },
-    "projectCard": {
-      "viewGithub": "View Github Repository",
-      "viewLive": "View Live Project",
-      "viewDemo": "View Demo",
-      "viewDetails": "View {title} project details",
-      "demoBadge": "Not in Production"
+      "ctaButton": "See Services",
+      "breadcrumb": "Projects",
+      "deliveredStatus": "Live in production",
+      "demoStatus": "Not in production",
+      "deliveredCount": "{count} Delivered",
+      "demoCount": "{count} Concept — Not in Production",
+      "demoNoticeLabel": "Read this first",
+      "demoTag": "Concept — never adopted",
+      "buildNoteLabel": "Build note",
+      "statusLabel": "Status",
+      "openLive": "View live project",
+      "openDemo": "View the demo",
+      "openRepo": "View the code",
+      "ctaLabel": "What's next"
     },
     "architecture": {
       "loadBalancer": "LOAD BALANCER (NGINX)",
