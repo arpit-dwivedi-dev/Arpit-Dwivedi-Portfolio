@@ -153,6 +153,17 @@ select optgroup {
     border-radius: 2px;
   }
 
+  /* Chrome paints its own clear glyph inside every `type="search"` field, in
+     its own (unthemeable) grey. Wherever we draw a clear button of our own —
+     the tools index does — the field shows TWO crosses side by side. Suppressed
+     globally rather than per-field: the OS glyph never matched the surface ramp
+     in the first place, and no field on the site relies on it. */
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
   /* The hard gate. Everything below is a blanket kill switch for CSS-driven
      motion; JS-driven motion (the `motion` library) is handled separately by
      useReducedMotion inside components/ui/Reveal.tsx and its callers, since
@@ -244,6 +255,18 @@ select optgroup {
   }
   .border-hairline {
     border-color: var(--hairline);
+  }
+  /* The top-edge half of the light model, for one-off boxes that can't use
+     `.surface` (a different background, or only some edges bordered).
+     It has to live HERE, after `.border-hairline`, and it has to be a named
+     utility: the obvious spelling — `border-hairline
+     border-t-[color:var(--hairline-lit)]` — silently does nothing, because
+     Tailwind's arbitrary utility is emitted up at the @import while
+     `.border-hairline` is authored down here, so the all-sides colour wins the
+     cascade and repaints the top edge back to 8%. Every surface written that
+     way was quietly flat. */
+  .border-t-lit {
+    border-top-color: var(--hairline-lit);
   }
 
   /* The page's light source. Anchored top-left in cyan with a violet

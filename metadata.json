@@ -802,14 +802,40 @@
     },
     "toolsPage": {
       "breadcrumb": "Tools",
-      "eyebrow": "Free Tools",
+      "ruleLabel": "Free tools",
+      "liveCount": "{count} live",
       "titleStart": "Small tools,",
       "titleAccent": "no signup",
       "description": "Things we built for our own work that turned out useful enough to share. Free to run, no account needed.",
+      "facts": [
+        {
+          "label": "No account",
+          "text": "Nothing to sign up for, nothing to cancel."
+        },
+        {
+          "label": "In-browser",
+          "text": "No install; your saved work stays on your device."
+        },
+        {
+          "label": "Real output",
+          "text": "PDF, PNG, SVG, DBML, code — yours to keep."
+        }
+      ],
       "categoriesAriaLabel": "Tool categories",
+      "allCategories": "All",
       "searchAriaLabel": "Search tools",
       "searchPlaceholder": "Search tools…",
+      "clearSearchAriaLabel": "Clear search",
+      "resultCount": "Showing {count} of {total}",
+      "buildNoteLabel": "Built this way",
+      "openLabel": "Open",
+      "noResultsLabel": "0 results",
       "noToolsMatch": "No tools match \"{query}\" yet.",
+      "noToolsMatchBody": "Everything here is free and runs in your browser. Clear the search to see all {total}.",
+      "clearSearch": "Clear search",
+      "categoriesHeading": "Browse by category",
+      "categoryToolCount": "{count} tools",
+      "categoryToolCountOne": "{count} tool",
       "toolCategoryEyebrow": "Tool Category",
       "noCategoryTools": "No {category} yet — check back soon.",
       "categoryGuidesText": "Written guides for these tools — worked examples, step by step.",

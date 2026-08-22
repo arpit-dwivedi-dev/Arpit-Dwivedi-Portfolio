@@ -78,57 +78,73 @@ export interface ToolDefinition {
    *  suggestions — but the route and component stay live for anyone with a
    *  direct link. Use for tools pulled from discovery without deleting them. */
   hidden?: boolean;
-  /** One real decision made while building this tool — surfaced on the
-   *  homepage's free-tools section per positioning.md ("make the thinking
-   *  visible"). English only, like guides/data.ts — not translated, so it's
-   *  simply omitted from the Hindi homepage rather than left half-translated. */
+  /** One real decision made while building this tool — surfaced per
+   *  positioning.md ("make the thinking visible"). This is the long form, sized
+   *  for a tool page's own section; listing rows use `note` instead. */
   judgment?: string;
+  /** Short form of `description` for LISTING rows (ToolsPage, category pages).
+   *  `description` is written for search results and runs to four or five lines
+   *  in a row, which is what pushed every row to a different height. Falls back
+   *  to `description` when unset. */
+  lead?: string;
+  /** Short form of `judgment` for the same listing rows — two lines at most, so
+   *  the build note reads as a remark rather than a paragraph. Falls back to
+   *  `judgment` when unset. */
+  note?: string;
 }
 
-// Adding tool #2 is a new entry here — ToolCard, ToolsPage, and CategoryPage don't change.
+// Adding a tool is a new entry here — ToolRow, ToolsPage, and CategoryPage don't change.
 export const TOOLS: ToolDefinition[] = [
   {
     id: 'invoice-generator',
     title: 'Invoice Generator',
     description: 'Create a professional invoice in your browser, download it as a PDF, and save it for later — no signup, no server, your data stays on your device.',
+    lead: 'Create a professional invoice in your browser, download it as a PDF, and save it for later.',
     icon: Receipt,
     category: 'generators',
     path: 'invoice-generator',
     featured: true,
     judgment: "Invoice history is saved under a versioned key, on purpose — there's no backend to run a migration against, so a future data-shape change just starts a fresh history instead of crashing on old records.",
+    note: 'Invoice history is saved under a versioned key, so a future data-shape change starts a fresh history instead of crashing on old records.',
   },
   {
     id: 'qr-code-generator',
     title: 'QR Code Generator',
     description: 'Create a QR code for a URL, contact card, text, SMS, email, phone number, or social link — customize the colors and download it as a PNG or SVG.',
+    lead: 'Create a QR code for a URL, contact card, text, SMS, email, phone number, or social link.',
     icon: QrCode,
     category: 'generators',
     path: 'qr-code-generator',
     relatedToolIds: ['invoice-generator'],
     featured: true,
     judgment: 'Multi-URL and dual-platform QR codes encode all their routing data directly into the URL itself — no backend or database needed to resolve a scan.',
+    note: 'Multi-URL and dual-platform codes encode their routing in the URL itself, so no backend has to resolve a scan.',
   },
   {
     id: 'api-request-builder',
     title: 'API Request Builder',
     description: 'Build, send, and inspect HTTP requests from your browser — params, headers, body, and auth, with environments, collections, cURL/OpenAPI/Postman import, and code generation. No signup, no account required.',
+    lead: 'Build, send, and inspect HTTP requests from your browser: params, headers, body, and auth.',
     icon: Send,
     category: 'developer',
     path: 'api-request-builder',
     featured: true,
     relatedToolIds: ['dbml-diagram-builder'],
     judgment: 'By default, requests go straight from your browser to the target API over fetch() — a proxy only enters the picture if a direct request gets CORS-blocked and the automatic fallback kicks in, or you explicitly configure one, so the common case still has nothing in between.',
+    note: 'Requests go straight from your browser over fetch(); a proxy only enters the picture if CORS blocks the direct call.',
   },
   {
     id: 'dbml-diagram-builder',
     title: 'DBML Diagram Builder',
     description: 'Write DBML and watch an interactive ER diagram build itself — drag tables, auto-layout relationships, and export as DBML, PNG, or SVG. No signup, no server.',
+    lead: 'Write DBML and watch an interactive ER diagram build itself, then export it as DBML, PNG, or SVG.',
     icon: Database,
     category: 'developer',
     path: 'dbml-diagram-builder',
     featured: true,
     relatedToolIds: ['api-request-builder'],
     judgment: 'Node positions are keyed by table name and stored per-diagram — editing a column keeps every table exactly where you dragged it, and only a genuinely new table gets auto-placed.',
+    note: 'Node positions are keyed by table name, so editing a column keeps every table exactly where you dragged it.',
   },
 ];
 
@@ -136,6 +152,8 @@ export const categoryTitle = (category: ToolCategory) => category.title;
 export const categoryDescription = (category: ToolCategory) => category.description;
 export const toolTitle = (tool: ToolDefinition) => tool.title;
 export const toolDescription = (tool: ToolDefinition) => tool.description;
+export const toolLead = (tool: ToolDefinition) => tool.lead ?? tool.description;
+export const toolNote = (tool: ToolDefinition) => tool.note ?? tool.judgment;
 
 export const getToolCategory = (slug: string): ToolCategory | undefined =>
   TOOL_CATEGORIES.find((category) => category.slug === slug);
