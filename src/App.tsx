@@ -4,7 +4,10 @@ import { MotionConfig } from 'motion/react';
 import { HomePage } from './pages/HomePage';
 import { ScrollToHash } from './components/ScrollToHash';
 import { WhatsAppButton } from './components/WhatsAppButton';
-import { ChatBot } from './components/ChatBot';
+// Chat launcher disabled for now — the backing bot isn't running, so the
+// bubble opened onto a dead assistant. Re-enable with the import + <ChatBot />
+// below once the service is live again.
+// import { ChatBot } from './components/ChatBot';
 import { Analytics } from './components/Analytics';
 import { LanguageProvider, useLanguage } from './i18n/LanguageContext';
 import { ThemeProvider } from './theme/ThemeContext';
@@ -59,7 +62,7 @@ const GlobalWidgets = () => {
       aria-hidden={footerInView}
     >
       <WhatsAppButton />
-      <ChatBot />
+      {/* <ChatBot /> */}
     </div>
   );
 };
