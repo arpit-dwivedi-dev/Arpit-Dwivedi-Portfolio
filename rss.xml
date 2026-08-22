@@ -6,18 +6,137 @@
   <description>A curated feed of open-source engineering writing.</description>
   <language>en</language>
   <item>
-    <title>1ª vez trabalhando com git em um time: tudo que você precisa saber</title>
-    <link>https://dev.to/he4rt/1a-vez-trabalhando-com-git-com-time-tudo-que-voce-precisa-saber-19il</link>
-    <guid isPermaLink="true">https://dev.to/he4rt/1a-vez-trabalhando-com-git-com-time-tudo-que-voce-precisa-saber-19il</guid>
-    <description>Faz mais de 5 anos que eu não abria um PR ou issue técnica no Github, mas essa semana tenho aprendido...</description>
-    <pubDate>Thu, 20 Aug 2026 06:52:21 GMT</pubDate>
+    <title>I Added Terminal Charts to My Dev.to CLI. Here&apos;s What My Data Looks Like.</title>
+    <link>https://dev.to/sarvar_04/i-added-terminal-charts-to-my-devto-cli-heres-what-my-data-looks-like-250j</link>
+    <guid isPermaLink="true">https://dev.to/sarvar_04/i-added-terminal-charts-to-my-devto-cli-heres-what-my-data-looks-like-250j</guid>
+    <description>devpub v0.2.1 adds color-gradient bar charts, sparklines, trend arrows, and multi-period breakdowns to your Dev.to analytics. All in the terminal. Zero new dependencies.</description>
+    <pubDate>Fri, 21 Aug 2026 14:13:00 GMT</pubDate>
   </item>
   <item>
-    <title>BlazorMemory 1.0 is out. Ten months, 14 packages, and what I got wrong along the way.</title>
-    <link>https://dev.to/aftabkh4n/blazormemory-10-is-out-ten-months-14-packages-and-what-i-got-wrong-along-the-way-1548</link>
-    <guid isPermaLink="true">https://dev.to/aftabkh4n/blazormemory-10-is-out-ten-months-14-packages-and-what-i-got-wrong-along-the-way-1548</guid>
-    <description>I started BlazorMemory in January because I wanted an AI chat assistant in Blazor that remembered...</description>
-    <pubDate>Thu, 20 Aug 2026 08:27:59 GMT</pubDate>
+    <title>Checking whether an npm package &quot;exists&quot; stopped working</title>
+    <link>https://dev.to/tisankan/checking-whether-an-npm-package-exists-stopped-working-2j0e</link>
+    <guid isPermaLink="true">https://dev.to/tisankan/checking-whether-an-npm-package-exists-stopped-working-2j0e</guid>
+    <description>Every npm supply chain postmortem ends with the same advice: verify the package before you install...</description>
+    <pubDate>Sat, 22 Aug 2026 08:17:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Cura doesn&apos;t have connector generation. I built a plugin, and a one-click installer, that does.</title>
+    <link>https://dev.to/rx290/cura-doesnt-have-connector-generation-i-built-a-plugin-and-a-one-click-installer-that-does-2cjk</link>
+    <guid isPermaLink="true">https://dev.to/rx290/cura-doesnt-have-connector-generation-i-built-a-plugin-and-a-one-click-installer-that-does-2cjk</guid>
+    <description>OrcaSlicer and PrusaSlicer both let you generate mechanical connectors, plugs, dowels, snaps,...</description>
+    <pubDate>Sat, 22 Aug 2026 08:23:55 GMT</pubDate>
+  </item>
+  <item>
+    <title>OpenWA: A Self-Hosted WhatsApp API Gateway Built for Production</title>
+    <link>https://dev.to/ganesh_bora_12e6afdf2c7f0/openwa-a-self-hosted-whatsapp-api-gateway-built-for-production-2hp0</link>
+    <guid isPermaLink="true">https://dev.to/ganesh_bora_12e6afdf2c7f0/openwa-a-self-hosted-whatsapp-api-gateway-built-for-production-2hp0</guid>
+    <description>OpenWA: A Self-Hosted WhatsApp API Gateway Built for Production   WhatsApp&apos;s official API is...</description>
+    <pubDate>Sat, 22 Aug 2026 08:21:55 GMT</pubDate>
+  </item>
+  <item>
+    <title>How to Validate Crypto Wallet Addresses Offline in Java</title>
+    <link>https://dev.to/oleksandr_dendeberia_9648/how-to-validate-crypto-wallet-addresses-offline-in-java-4lkc</link>
+    <guid isPermaLink="true">https://dev.to/oleksandr_dendeberia_9648/how-to-validate-crypto-wallet-addresses-offline-in-java-4lkc</guid>
+    <description>Crypto address validation is one of those small backend features that becomes important very...</description>
+    <pubDate>Sat, 22 Aug 2026 07:53:34 GMT</pubDate>
+  </item>
+  <item>
+    <title>Mojo vs Python: What Qualcomm&apos;s Open Source Release Actually Changes for Developers</title>
+    <link>https://dev.to/jamilxt/mojo-vs-python-what-qualcomms-open-source-release-actually-changes-for-developers-51eg</link>
+    <guid isPermaLink="true">https://dev.to/jamilxt/mojo-vs-python-what-qualcomms-open-source-release-actually-changes-for-developers-51eg</guid>
+    <description>For three years, the biggest complaint about Mojo was not the syntax, the performance claims, or the...</description>
+    <pubDate>Sat, 22 Aug 2026 03:03:45 GMT</pubDate>
+  </item>
+  <item>
+    <title>I built a GitHub repository intelligence API — here&apos;s what I learned</title>
+    <link>https://dev.to/kingdavid9999/i-built-a-github-repository-intelligence-api-heres-what-i-learned-14ok</link>
+    <guid isPermaLink="true">https://dev.to/kingdavid9999/i-built-a-github-repository-intelligence-api-heres-what-i-learned-14ok</guid>
+    <description>Every open source maintainer I&apos;ve talked to has the same problem.  Their GitHub issues are a mess....</description>
+    <pubDate>Sat, 22 Aug 2026 07:29:37 GMT</pubDate>
+  </item>
+  <item>
+    <title>The AI demo failed, but the database remembered half of it</title>
+    <link>https://dev.to/jtorchia/the-ai-demo-failed-but-the-database-remembered-half-of-it-3m4a</link>
+    <guid isPermaLink="true">https://dev.to/jtorchia/the-ai-demo-failed-but-the-database-remembered-half-of-it-3m4a</guid>
+    <description>This is a submission for DEV&apos;s Summer Bug Smash: Clear the Lineup.  The error message said the...</description>
+    <pubDate>Fri, 21 Aug 2026 14:40:26 GMT</pubDate>
+  </item>
+  <item>
+    <title>Week-6, 7, 8</title>
+    <link>https://dev.to/darshit2308/week-6-7-8-58ln</link>
+    <guid isPermaLink="true">https://dev.to/darshit2308/week-6-7-8-58ln</guid>
+    <description>Catching Up: Architecture, Security, and Concurrency in the Heka Auth Service   Hey...</description>
+    <pubDate>Sat, 22 Aug 2026 05:51:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Leveling up OpenCode... and not in the way you would expect.</title>
+    <link>https://dev.to/searay_11_254650fe8d2b6b6/leveling-up-opencode-and-not-in-the-way-you-would-expect-27</link>
+    <guid isPermaLink="true">https://dev.to/searay_11_254650fe8d2b6b6/leveling-up-opencode-and-not-in-the-way-you-would-expect-27</guid>
+    <description>So I&apos;ve been using OpenCode for a while now, and it&apos;s pretty cool. It&apos;s clean, minimal, effective,...</description>
+    <pubDate>Sat, 22 Aug 2026 00:44:02 GMT</pubDate>
+  </item>
+  <item>
+    <title>Building a Community Plugin Marketplace for OWASP OWTF (GSoC 2026)</title>
+    <link>https://dev.to/piyush140104/from-sandbox-to-review-queue-my-gsoc-2026-project-with-owasp-owtf-50dd</link>
+    <guid isPermaLink="true">https://dev.to/piyush140104/from-sandbox-to-review-queue-my-gsoc-2026-project-with-owasp-owtf-50dd</guid>
+    <description>My Google Summer of Code 2026 project with OWASP OWTF. A marketplace that lets any user upload Python plugins that get reviewed and then run inside the framework just like built-in plugins.</description>
+    <pubDate>Sat, 22 Aug 2026 06:24:06 GMT</pubDate>
+  </item>
+  <item>
+    <title>Can We Automate the Work of a Software Engineer? The Story Behind HEALER</title>
+    <link>https://dev.to/_a9de0f38ed294cfb7e5e/can-we-automate-the-work-of-a-software-engineer-the-story-behind-healer-2mge</link>
+    <guid isPermaLink="true">https://dev.to/_a9de0f38ed294cfb7e5e/can-we-automate-the-work-of-a-software-engineer-the-story-behind-healer-2mge</guid>
+    <description>In my previous article, I wrote about X-Ray — an observability system that grew out of my work on...</description>
+    <pubDate>Sat, 22 Aug 2026 00:45:20 GMT</pubDate>
+  </item>
+  <item>
+    <title>MCP has a discovery problem. I built a meta-server that searches all 75,000 servers.</title>
+    <link>https://dev.to/dror_bengal_4d4388774752d/mcp-has-a-discovery-problem-i-built-a-meta-server-that-searches-all-75000-servers-30gm</link>
+    <guid isPermaLink="true">https://dev.to/dror_bengal_4d4388774752d/mcp-has-a-discovery-problem-i-built-a-meta-server-that-searches-all-75000-servers-30gm</guid>
+    <description>There are now tens of thousands of MCP servers. Glama indexes ~75,000. PulseMCP lists ~22,000. npm...</description>
+    <pubDate>Fri, 21 Aug 2026 20:40:29 GMT</pubDate>
+  </item>
+  <item>
+    <title>MeshCtx: Open Source AI Agent with17 Brain Regions</title>
+    <link>https://dev.to/golflover2023/meshctx-open-source-ai-agent-with17-brain-regions-3gme</link>
+    <guid isPermaLink="true">https://dev.to/golflover2023/meshctx-open-source-ai-agent-with17-brain-regions-3gme</guid>
+    <description>Why I Built an AI Agent with17 Brain Regions (And What I Learned)   Most AI agents are...</description>
+    <pubDate>Fri, 21 Aug 2026 23:55:33 GMT</pubDate>
+  </item>
+  <item>
+    <title>Independent Stores Do Not Need a Second AI Store</title>
+    <link>https://dev.to/seasonkoh/independent-stores-do-not-need-a-second-ai-store-196d</link>
+    <guid isPermaLink="true">https://dev.to/seasonkoh/independent-stores-do-not-need-a-second-ai-store-196d</guid>
+    <description>When merchants hear that AI assistants may become a new shopping interface, the first reaction is...</description>
+    <pubDate>Sat, 22 Aug 2026 07:33:45 GMT</pubDate>
+  </item>
+  <item>
+    <title>I moved coding-agent verification out of the prompt</title>
+    <link>https://dev.to/hecer/i-moved-coding-agent-verification-out-of-the-prompt-4c90</link>
+    <guid isPermaLink="true">https://dev.to/hecer/i-moved-coding-agent-verification-out-of-the-prompt-4c90</guid>
+    <description>A coding agent can agree to run the tests and still fail to run them. It can also run the wrong...</description>
+    <pubDate>Fri, 21 Aug 2026 13:09:58 GMT</pubDate>
+  </item>
+  <item>
+    <title>I Ran a 284B-Parameter LLM From 3.2GB of RAM — in Plain C</title>
+    <link>https://dev.to/ronak_parmar_033c50d168b5/i-ran-a-284b-parameter-llm-from-32gb-of-ram-in-plain-c-cbp</link>
+    <guid isPermaLink="true">https://dev.to/ronak_parmar_033c50d168b5/i-ran-a-284b-parameter-llm-from-32gb-of-ram-in-plain-c-cbp</guid>
+    <description>DeepSeek-V4-Flash has 284 billion parameters and takes up about 160GB on disk. My laptop does not...</description>
+    <pubDate>Fri, 21 Aug 2026 13:54:48 GMT</pubDate>
+  </item>
+  <item>
+    <title>Free AI Tiers Need a Stress Test. Here&apos;s the Harness</title>
+    <link>https://dev.to/codepro_4664/free-ai-tiers-need-a-stress-test-heres-the-harness-2d0o</link>
+    <guid isPermaLink="true">https://dev.to/codepro_4664/free-ai-tiers-need-a-stress-test-heres-the-harness-2d0o</guid>
+    <description>Free AI endpoints look like generous gifts. Most of them are unmeasured gifts. A free server can save...</description>
+    <pubDate>Fri, 21 Aug 2026 13:27:52 GMT</pubDate>
+  </item>
+  <item>
+    <title>Testing MonkeyCode&apos;s Free Server Before You Trust It: A $0 Reproducible Probe</title>
+    <link>https://dev.to/codex_1135/testing-monkeycodes-free-server-before-you-trust-it-a-0-reproducible-probe-4l6c</link>
+    <guid isPermaLink="true">https://dev.to/codex_1135/testing-monkeycodes-free-server-before-you-trust-it-a-0-reproducible-probe-4l6c</guid>
+    <description>Free AI coding help is easy to advertise. Hard to verify.  Landing pages show happy demos. Benchmark...</description>
+    <pubDate>Fri, 21 Aug 2026 13:17:07 GMT</pubDate>
   </item>
   <item>
     <title>We tested &quot;tokenize before you compress&quot; against 452 configurations, and it mostly held up</title>
@@ -27,193 +146,74 @@
     <pubDate>Fri, 21 Aug 2026 01:37:16 GMT</pubDate>
   </item>
   <item>
-    <title>Show Dev: DevsFTP — An open-source, S/FTP client with dynamic HSL themes, embedded SSH terminals, and AES-256 local vaults.</title>
-    <link>https://dev.to/devsftp/show-dev-why-i-built-devsftp-an-open-source-color-coded-sftp-client-with-dynamic-hsl-themes-e6n</link>
-    <guid isPermaLink="true">https://dev.to/devsftp/show-dev-why-i-built-devsftp-an-open-source-color-coded-sftp-client-with-dynamic-hsl-themes-e6n</guid>
-    <description>DevsFTP is an open-source, local-first FTP &amp;amp; SFTP desktop client for Windows and Linux. It was...</description>
-    <pubDate>Fri, 21 Aug 2026 05:09:59 GMT</pubDate>
+    <title>useEditorContext composable in n8n codebase.</title>
+    <link>https://dev.to/ramunarasinga-11/useeditorcontext-composable-in-n8n-codebase-1hkk</link>
+    <guid isPermaLink="true">https://dev.to/ramunarasinga-11/useeditorcontext-composable-in-n8n-codebase-1hkk</guid>
+    <description>In this article, we review useEditorContext in n8n codebase. You will learn:   Composables in...</description>
+    <pubDate>Fri, 21 Aug 2026 15:30:00 GMT</pubDate>
   </item>
   <item>
-    <title>JX N-Body Engine 0.1.0: Arbitrary-Precision Python and Numerical Validation</title>
-    <link>https://dev.to/linomx90/jx-n-body-engine-010-arbitrary-precision-python-and-numerical-validation-g50</link>
-    <guid isPermaLink="true">https://dev.to/linomx90/jx-n-body-engine-010-arbitrary-precision-python-and-numerical-validation-g50</guid>
-    <description>A Newtonian N-body engine built around a sixth-order Yoshida integrator, an independent Decimal...</description>
-    <pubDate>Fri, 21 Aug 2026 04:45:15 GMT</pubDate>
+    <title>LTX-2.5: How a Diffusion-Based Video Decoder Changes the Open-Weights Video Generation Stack</title>
+    <link>https://dev.to/prabhakar_chaudhary_7afe4/ltx-25-how-a-diffusion-based-video-decoder-changes-the-open-weights-video-generation-stack-4808</link>
+    <guid isPermaLink="true">https://dev.to/prabhakar_chaudhary_7afe4/ltx-25-how-a-diffusion-based-video-decoder-changes-the-open-weights-video-generation-stack-4808</guid>
+    <description>LTX-2.5: How a Diffusion-Based Video Decoder Changes the Open-Weights Video Generation...</description>
+    <pubDate>Fri, 21 Aug 2026 16:07:04 GMT</pubDate>
   </item>
   <item>
-    <title>I Was Tired of Pasting curl Commands into ChatGPT Just to Convert Them — So I Built a Free Converte</title>
-    <link>https://dev.to/sarfaraznaushad/i-was-tired-of-pasting-curl-commands-into-chatgpt-just-to-convert-them-so-i-built-a-free-converte-2d15</link>
-    <guid isPermaLink="true">https://dev.to/sarfaraznaushad/i-was-tired-of-pasting-curl-commands-into-chatgpt-just-to-convert-them-so-i-built-a-free-converte-2d15</guid>
-    <description>If you work with APIs, this is a familiar loop: you copy a curl command from Postman, an API doc, or...</description>
-    <pubDate>Fri, 21 Aug 2026 04:40:19 GMT</pubDate>
+    <title>Robot Training Data Is Messier Than You Think: Auditing 4,959 Episodes with an Open-Source Tool</title>
+    <link>https://dev.to/liesliy/robot-training-data-is-messier-than-you-think-auditing-4959-episodes-with-an-open-source-tool-20ke</link>
+    <guid isPermaLink="true">https://dev.to/liesliy/robot-training-data-is-messier-than-you-think-auditing-4959-episodes-with-an-open-source-tool-20ke</guid>
+    <description>Robot learning is getting better very quickly.  We now have better policy architectures, more capable...</description>
+    <pubDate>Fri, 21 Aug 2026 08:48:10 GMT</pubDate>
   </item>
   <item>
-    <title>This week in AI + Indian markets: a zero-click exploit, an open-weight frontier, and a losing streak that snapped</title>
-    <link>https://dev.to/abhishek_sharma_a9792aee8/this-week-in-ai-indian-markets-a-zero-click-exploit-an-open-weight-frontier-and-a-losing-400h</link>
-    <guid isPermaLink="true">https://dev.to/abhishek_sharma_a9792aee8/this-week-in-ai-indian-markets-a-zero-click-exploit-an-open-weight-frontier-and-a-losing-400h</guid>
-    <description>Three stories this week span cybersecurity, model economics, and market structure — and they&apos;re more...</description>
-    <pubDate>Fri, 21 Aug 2026 04:52:07 GMT</pubDate>
+    <title>Building Reactive MPAs in 2KB: Meet Flynt.js</title>
+    <link>https://dev.to/marsbos/building-reactive-mpas-in-2kb-meet-flyntjs-31ap</link>
+    <guid isPermaLink="true">https://dev.to/marsbos/building-reactive-mpas-in-2kb-meet-flyntjs-31ap</guid>
+    <description>Why I Built Flynt.js: Reactivity Without Messy HTML Clutter   If you build Multi-Page...</description>
+    <pubDate>Fri, 21 Aug 2026 11:52:05 GMT</pubDate>
   </item>
   <item>
-    <title>Training your own LLM usually means building a specialist</title>
-    <link>https://dev.to/sarthakagrawal927/training-your-own-llm-usually-means-building-a-specialist-365c</link>
-    <guid isPermaLink="true">https://dev.to/sarthakagrawal927/training-your-own-llm-usually-means-building-a-specialist-365c</guid>
-    <description>When someone asks how to train their own LLM, they usually do not need a multi-million-dollar...</description>
-    <pubDate>Fri, 21 Aug 2026 04:30:00 GMT</pubDate>
+    <title>The Maven build was green. An expected test class never ran</title>
+    <link>https://dev.to/adhamafis/the-maven-build-was-green-an-expected-test-class-never-ran-10ep</link>
+    <guid isPermaLink="true">https://dev.to/adhamafis/the-maven-build-was-green-an-expected-test-class-never-ran-10ep</guid>
+    <description>I was building a small Spring Boot demo for Exevra, a JUnit test-execution check. I wanted a failure...</description>
+    <pubDate>Fri, 21 Aug 2026 12:01:17 GMT</pubDate>
   </item>
   <item>
-    <title>The Sloppiest Thing About AI</title>
-    <link>https://dev.to/oxplot/the-sloppiest-thing-about-ai-15i6</link>
-    <guid isPermaLink="true">https://dev.to/oxplot/the-sloppiest-thing-about-ai-15i6</guid>
-    <description>Originally published on oxblog.  There is a fashionable new way to avoid thinking. Notice an em dash,...</description>
-    <pubDate>Fri, 21 Aug 2026 04:32:22 GMT</pubDate>
+    <title>Pythonaibrain-NLP 0.2.0 Is Now on PyPI — A Structured NLU/NLG Architecture for Python</title>
+    <link>https://dev.to/divyanshusinha136/pythonaibrain-nlp-020-is-now-on-pypi-a-structured-nlunlg-architecture-for-python-45lh</link>
+    <guid isPermaLink="true">https://dev.to/divyanshusinha136/pythonaibrain-nlp-020-is-now-on-pypi-a-structured-nlunlg-architecture-for-python-45lh</guid>
+    <description>Today I&apos;m releasing Pythonaibrain-NLP 0.2.0, the latest public release of my Python NLP...</description>
+    <pubDate>Fri, 21 Aug 2026 15:28:55 GMT</pubDate>
   </item>
   <item>
-    <title>Why Knowledge Bases Are Better Hosted Online Rather Than as Local Markdown</title>
-    <link>https://dev.to/songofhawk/why-knowledge-bases-are-better-hosted-online-rather-than-as-local-markdown-37e3</link>
-    <guid isPermaLink="true">https://dev.to/songofhawk/why-knowledge-bases-are-better-hosted-online-rather-than-as-local-markdown-37e3</guid>
-    <description>Why Knowledge Bases Are Better Hosted Online Rather Than as Local Markdown    Doco series ·...</description>
-    <pubDate>Fri, 21 Aug 2026 02:16:12 GMT</pubDate>
+    <title>Building an OKLCH palette generator that survives gamut limits and exports to Aseprite</title>
+    <link>https://dev.to/ivan_kulkin_1522025957eee/building-an-oklch-palette-generator-that-survives-gamut-limits-and-exports-to-aseprite-4g51</link>
+    <guid isPermaLink="true">https://dev.to/ivan_kulkin_1522025957eee/building-an-oklch-palette-generator-that-survives-gamut-limits-and-exports-to-aseprite-4g51</guid>
+    <description>A row of attractive swatches is not yet a useful pixel-art palette.  A working palette needs a...</description>
+    <pubDate>Fri, 21 Aug 2026 14:04:10 GMT</pubDate>
   </item>
   <item>
-    <title>Vulnerability advisories grew 2.3x-6.6x in 5 years; open-source tool count stayed flat</title>
-    <link>https://dev.to/hamelin123/vulnerability-advisories-grew-23x-66x-in-5-years-open-source-tool-count-stayed-flat-4a5m</link>
-    <guid isPermaLink="true">https://dev.to/hamelin123/vulnerability-advisories-grew-23x-66x-in-5-years-open-source-tool-count-stayed-flat-4a5m</guid>
-    <description>We bucketed every advisory in OSV.dev&apos;s public per-ecosystem archives by its record-publication year...</description>
-    <pubDate>Fri, 21 Aug 2026 03:33:57 GMT</pubDate>
+    <title>Free Model, Free Server, Real Limits: Evaluating MonkeyCode&apos;s Free Tier</title>
+    <link>https://dev.to/codejs_6920/free-model-free-server-real-limits-evaluating-monkeycodes-free-tier-56o8</link>
+    <guid isPermaLink="true">https://dev.to/codejs_6920/free-model-free-server-real-limits-evaluating-monkeycodes-free-tier-56o8</guid>
+    <description>A developer signed up for a free AI coding tier. Monday morning, the quota looked generous. Thursday...</description>
+    <pubDate>Fri, 21 Aug 2026 13:07:37 GMT</pubDate>
   </item>
   <item>
-    <title>Your Cargo.lock Diff Is Also a Permission Diff</title>
-    <link>https://dev.to/demivalerith/your-cargolock-diff-is-also-a-permission-diff-3bg</link>
-    <guid isPermaLink="true">https://dev.to/demivalerith/your-cargolock-diff-is-also-a-permission-diff-3bg</guid>
-    <description>The concrete problem   A Rust dependency change looks deceptively tidy in review. The pull...</description>
-    <pubDate>Fri, 21 Aug 2026 02:22:21 GMT</pubDate>
+    <title>How We Cut Our Cloud SaaS Bill by $14,000/Year with 7 Self-Hosted Open-Source Tools in 2026</title>
+    <link>https://dev.to/enfernandes/how-we-cut-our-cloud-saas-bill-by-14000year-with-7-self-hosted-open-source-tools-in-2026-9dd</link>
+    <guid isPermaLink="true">https://dev.to/enfernandes/how-we-cut-our-cloud-saas-bill-by-14000year-with-7-self-hosted-open-source-tools-in-2026-9dd</guid>
+    <description>A complete technical breakdown of replacing Firebase, Zapier, Datadog, Slack, Notion, Jira, and Sentry with open-source alternatives on a single $14/mo VPS.</description>
+    <pubDate>Fri, 21 Aug 2026 10:06:16 GMT</pubDate>
   </item>
   <item>
-    <title>Node.js SEA Just Got Way Simpler — Updating My node-sea Boilerplate for Node 26</title>
-    <link>https://dev.to/hamdi_laadhari/nodejs-sea-just-got-way-simpler-updating-my-node-sea-boilerplate-for-node-26-1efl</link>
-    <guid isPermaLink="true">https://dev.to/hamdi_laadhari/nodejs-sea-just-got-way-simpler-updating-my-node-sea-boilerplate-for-node-26-1efl</guid>
-    <description>A while back I put together node-sea, a small boilerplate showing how to package a TypeScript app...</description>
-    <pubDate>Fri, 21 Aug 2026 01:38:05 GMT</pubDate>
-  </item>
-  <item>
-    <title>What I took back off the shelf</title>
-    <link>https://dev.to/phpboyscout/what-i-took-back-off-the-shelf-4enm</link>
-    <guid isPermaLink="true">https://dev.to/phpboyscout/what-i-took-back-off-the-shelf-4enm</guid>
-    <description>I put my working practice on a public shelf, and then took some of it back off again. Working out which half was the interesting part.</description>
-    <pubDate>Fri, 21 Aug 2026 01:49:02 GMT</pubDate>
-  </item>
-  <item>
-    <title>Keep Every LangSmith Trace Without the 10 Retention Bill</title>
-    <link>https://dev.to/aviadr1/keep-every-langsmith-trace-without-the-10x-retention-bill-2gl1</link>
-    <guid isPermaLink="true">https://dev.to/aviadr1/keep-every-langsmith-trace-without-the-10x-retention-bill-2gl1</guid>
-    <description>LangSmith is excellent for debugging live AI systems. But keeping every trace in its...</description>
-    <pubDate>Fri, 21 Aug 2026 00:38:17 GMT</pubDate>
-  </item>
-  <item>
-    <title>I Brought IdentityServer Back to Life as Open Source (.NET 8)</title>
-    <link>https://dev.to/richard_vquezprez_c356/i-brought-identityserver-back-to-life-as-open-source-net-8-3374</link>
-    <guid isPermaLink="true">https://dev.to/richard_vquezprez_c356/i-brought-identityserver-back-to-life-as-open-source-net-8-3374</guid>
-    <description>I Brought IdentityServer Back to Life as Open Source (.NET 8)   The original IdentityServer...</description>
-    <pubDate>Thu, 20 Aug 2026 23:12:06 GMT</pubDate>
-  </item>
-  <item>
-    <title>How we cut repo-wide symbol indexing for LLM agents from 30s to 98ms</title>
-    <link>https://dev.to/wulun811/how-we-cut-repo-wide-symbol-indexing-for-llm-agents-from-30s-to-98ms-1mn2</link>
-    <guid isPermaLink="true">https://dev.to/wulun811/how-we-cut-repo-wide-symbol-indexing-for-llm-agents-from-30s-to-98ms-1mn2</guid>
-    <description>How we cut repo-wide symbol indexing for LLM agents from 30s to 98ms   If your coding agent...</description>
-    <pubDate>Thu, 20 Aug 2026 18:51:52 GMT</pubDate>
-  </item>
-  <item>
-    <title>A Linux video player with NVIDIA VFX VSR support (real-time upscaling + frame interpolation, built with an AI coding agent)</title>
-    <link>https://dev.to/zhangmq/a-linux-video-player-with-nvidia-vfx-vsr-support-real-time-upscaling-frame-interpolation-built-3fbd</link>
-    <guid isPermaLink="true">https://dev.to/zhangmq/a-linux-video-player-with-nvidia-vfx-vsr-support-real-time-upscaling-frame-interpolation-built-3fbd</guid>
-    <description>Short version of a recent write-up — no full article here, just the pitch.  I wanted RTX VSR-class...</description>
-    <pubDate>Thu, 20 Aug 2026 16:40:23 GMT</pubDate>
-  </item>
-  <item>
-    <title>Show DEV: Strata – Inspect your coding agent sessions</title>
-    <link>https://dev.to/stele/show-dev-strata-inspect-your-coding-agent-sessions-278b</link>
-    <guid isPermaLink="true">https://dev.to/stele/show-dev-strata-inspect-your-coding-agent-sessions-278b</guid>
-    <description>Today we&apos;re open sourcing Strata, the session infrastructure that powers...</description>
-    <pubDate>Thu, 20 Aug 2026 21:43:54 GMT</pubDate>
-  </item>
-  <item>
-    <title>IEC 104 Before the Wire: Understanding Its Architecture, Framing, and Security Boundaries</title>
-    <link>https://dev.to/null_saint/iec-104-before-the-wire-understanding-its-architecture-framing-and-security-boundaries-nc5</link>
-    <guid isPermaLink="true">https://dev.to/null_saint/iec-104-before-the-wire-understanding-its-architecture-framing-and-security-boundaries-nc5</guid>
-    <description>By RUGERO Tesla (@404Saint).   IEC 60870-5-104 (IEC 104) is the TCP/IP-based member of the IEC...</description>
-    <pubDate>Thu, 20 Aug 2026 15:57:00 GMT</pubDate>
-  </item>
-  <item>
-    <title>AI Killed Git Commits: So I Stopped Publishing Them</title>
-    <link>https://dev.to/js402/ai-killed-git-commits-so-i-stopped-publishing-them-3182</link>
-    <guid isPermaLink="true">https://dev.to/js402/ai-killed-git-commits-so-i-stopped-publishing-them-3182</guid>
-    <description>When agents write most of the code, the commit is no longer the unit of work. The release is. So my public repository now receives one commit per release, and nothing in between.</description>
-    <pubDate>Thu, 20 Aug 2026 18:18:56 GMT</pubDate>
-  </item>
-  <item>
-    <title>I Moved to Windows and Missed My Mac Terminal — So I Built beautiful-wmux</title>
-    <link>https://dev.to/vatana7/i-moved-to-windows-and-missed-my-mac-terminal-so-i-built-beautiful-wmux-3dpb</link>
-    <guid isPermaLink="true">https://dev.to/vatana7/i-moved-to-windows-and-missed-my-mac-terminal-so-i-built-beautiful-wmux-3dpb</guid>
-    <description>I recently moved from Mac to Windows.  On Mac, I used cmux and loved how good the terminal felt. On...</description>
-    <pubDate>Thu, 20 Aug 2026 18:00:06 GMT</pubDate>
-  </item>
-  <item>
-    <title>I went looking for my ad profile inside the bid request. It wasn&apos;t there.</title>
-    <link>https://dev.to/ilya_mozerov_867dbdd91feb/i-went-looking-for-my-ad-profile-inside-the-bid-request-it-wasnt-there-4h7l</link>
-    <guid isPermaLink="true">https://dev.to/ilya_mozerov_867dbdd91feb/i-went-looking-for-my-ad-profile-inside-the-bid-request-it-wasnt-there-4h7l</guid>
-    <description>When an ad is auctioned for you, a bid request goes out that describes you — segments, identity...</description>
-    <pubDate>Thu, 20 Aug 2026 19:53:41 GMT</pubDate>
-  </item>
-  <item>
-    <title>FFmpeg-Kit-Extended Upgraded to FFmpeg 9.0.1: New FFmpeg, FFprobe &amp; FFplay Features for Flutter and React Native</title>
-    <link>https://dev.to/akashskypatel/ffmpeg-kit-extended-upgraded-to-ffmpeg-901-new-ffmpeg-ffprobe-ffplay-features-for-flutter-and-1fgg</link>
-    <guid isPermaLink="true">https://dev.to/akashskypatel/ffmpeg-kit-extended-upgraded-to-ffmpeg-901-new-ffmpeg-ffprobe-ffplay-features-for-flutter-and-1fgg</guid>
-    <description>https://www.npmjs.com/package/ffmpeg-kit-extended  https://pub.dev/packages/ffmpeg_kit_extended_flu...</description>
-    <pubDate>Thu, 20 Aug 2026 19:14:09 GMT</pubDate>
-  </item>
-  <item>
-    <title>An Introduction to WSO2 Identity Server - Simplifying Identity &amp; Access Management</title>
-    <link>https://dev.to/dinusha_sanjeewani_ec4e64/an-introduction-to-wso2-identity-server-simplifying-identity-access-management-4f4</link>
-    <guid isPermaLink="true">https://dev.to/dinusha_sanjeewani_ec4e64/an-introduction-to-wso2-identity-server-simplifying-identity-access-management-4f4</guid>
-    <description>​In today&apos;s digital landscape, securing user identities and managing access control are critical...</description>
-    <pubDate>Fri, 21 Aug 2026 05:19:22 GMT</pubDate>
-  </item>
-  <item>
-    <title>I found a $45 billion number that vanished from NVIDIA&apos;s SEC filings</title>
-    <link>https://dev.to/tianninglab/i-found-a-45-billion-number-that-vanished-from-nvidias-sec-filings-1g5n</link>
-    <guid isPermaLink="true">https://dev.to/tianninglab/i-found-a-45-billion-number-that-vanished-from-nvidias-sec-filings-1g5n</guid>
-    <description>Liquid syntax error: &apos;raw&apos; tag was never closed</description>
-    <pubDate>Thu, 20 Aug 2026 19:47:56 GMT</pubDate>
-  </item>
-  <item>
-    <title>We Built RoasNova: An Open-Source AI Advertising Operations Platform</title>
-    <link>https://dev.to/muratkomurcu1/we-built-roasnova-an-open-source-ai-advertising-operations-platform-db9</link>
-    <guid isPermaLink="true">https://dev.to/muratkomurcu1/we-built-roasnova-an-open-source-ai-advertising-operations-platform-db9</guid>
-    <description>Advertising teams do not suffer from a lack of dashboards.  They suffer from fragmented data,...</description>
-    <pubDate>Thu, 20 Aug 2026 23:26:54 GMT</pubDate>
-  </item>
-  <item>
-    <title>Self-Hosting Kimi K3: Hardware, Cost and Sovereignty</title>
-    <link>https://dev.to/mecanik-dev/self-hosting-kimi-k3-hardware-cost-and-sovereignty-27ed</link>
-    <guid isPermaLink="true">https://dev.to/mecanik-dev/self-hosting-kimi-k3-hardware-cost-and-sovereignty-27ed</guid>
-    <description>Self-hosting Kimi K3 became technically possible on 27 July 2026, when Moonshot AI published the...</description>
-    <pubDate>Thu, 20 Aug 2026 18:00:00 GMT</pubDate>
-  </item>
-  <item>
-    <title>What&apos;s a &quot;good&quot; dividend yield? You need a second number</title>
-    <link>https://dev.to/a353551071/whats-a-good-dividend-yield-you-need-a-second-number-h2k</link>
-    <guid isPermaLink="true">https://dev.to/a353551071/whats-a-good-dividend-yield-you-need-a-second-number-h2k</guid>
-    <description>Current yield is a ratio, not a verdict. To judge a dividend you need the payout ratio too. Here&apos;s why, with code.</description>
-    <pubDate>Fri, 21 Aug 2026 03:46:54 GMT</pubDate>
-  </item>
-  <item>
-    <title>Why I Started an Open-Source Python Handbook</title>
-    <link>https://dev.to/adombire_dev/why-i-started-an-open-source-python-handbook-180n</link>
-    <guid isPermaLink="true">https://dev.to/adombire_dev/why-i-started-an-open-source-python-handbook-180n</guid>
-    <description>A few days ago, I decided to start documenting my Python journey in public.  Not because I’m new to...</description>
-    <pubDate>Fri, 21 Aug 2026 03:56:05 GMT</pubDate>
+    <title>What If AI Agents Didn’t Need Memory? They Could Just Search Their Past</title>
+    <link>https://dev.to/aml-/what-if-ai-agents-didnt-need-memory-they-could-just-search-their-past-30ed</link>
+    <guid isPermaLink="true">https://dev.to/aml-/what-if-ai-agents-didnt-need-memory-they-could-just-search-their-past-30ed</guid>
+    <description>From Remembering to Searching: How ReFind Challenges AI Agent Memory   Everyone is building...</description>
+    <pubDate>Fri, 21 Aug 2026 06:56:06 GMT</pubDate>
   </item>
 </channel>
 </rss>
