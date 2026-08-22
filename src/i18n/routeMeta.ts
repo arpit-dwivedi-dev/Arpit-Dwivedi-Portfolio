@@ -28,7 +28,7 @@ export type RouteKey =
 
 export const ROUTE_META: Record<RouteKey, { title: string; description: string }> = {
   home: {
-    title: '101 Tech Labs — Full-Stack Web Applications, Noida',
+    title: '101 Tech Labs',
     description:
       'Full-stack web applications with real backend and identity engineering, built in-house. AI added where it earns its place. Noida-based, remote-first, worldwide clients.',
   },
