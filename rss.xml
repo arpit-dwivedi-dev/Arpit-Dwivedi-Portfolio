@@ -6,11 +6,39 @@
   <description>A curated feed of open-source engineering writing.</description>
   <language>en</language>
   <item>
+    <title>Your CI checks your types. It doesn&apos;t check your translations.</title>
+    <link>https://dev.to/owgreen/your-ci-checks-your-types-it-doesnt-check-your-translations-lof</link>
+    <guid isPermaLink="true">https://dev.to/owgreen/your-ci-checks-your-types-it-doesnt-check-your-translations-lof</guid>
+    <description>Your pipeline lints your JavaScript. It typechecks your types. It runs your tests, checks...</description>
+    <pubDate>Sat, 22 Aug 2026 11:26:30 GMT</pubDate>
+  </item>
+  <item>
+    <title>I got tired of gluing routers, queues, cron, and auth together — so I built okengine (Bun/TS, MIT, self-hostable)</title>
+    <link>https://dev.to/omqkhafi/i-got-tired-of-gluing-routers-queues-cron-and-auth-together-so-i-built-okengine-bunts-mit-44ac</link>
+    <guid isPermaLink="true">https://dev.to/omqkhafi/i-got-tired-of-gluing-routers-queues-cron-and-auth-together-so-i-built-okengine-bunts-mit-44ac</guid>
+    <description>The problem: a backend isn&apos;t one thing, it&apos;s ~40 things wearing a trench coat   When people...</description>
+    <pubDate>Sat, 22 Aug 2026 10:04:59 GMT</pubDate>
+  </item>
+  <item>
     <title>Building a Community Plugin Marketplace for OWASP OWTF (GSoC 2026)</title>
     <link>https://dev.to/piyush140104/building-a-community-plugin-marketplace-for-owasp-owtf-gsoc-2026-6l8</link>
     <guid isPermaLink="true">https://dev.to/piyush140104/building-a-community-plugin-marketplace-for-owasp-owtf-gsoc-2026-6l8</guid>
     <description>My Google Summer of Code 2026 project with OWASP OWTF. A marketplace where any user can upload a Python plugin that gets reviewed and then runs inside the framework.</description>
     <pubDate>Sat, 22 Aug 2026 09:26:13 GMT</pubDate>
+  </item>
+  <item>
+    <title>I Built a Kawaii Native GUI with Nim and SDL3</title>
+    <link>https://dev.to/puffball1567/i-built-a-kawaii-native-gui-with-nim-and-sdl3-3bj2</link>
+    <guid isPermaLink="true">https://dev.to/puffball1567/i-built-a-kawaii-native-gui-with-nim-and-sdl3-3bj2</guid>
+    <description>A Clay Board Style System v0.5.0 devlog about building an expressive kawaii desktop UI with typed styles, retained Canvas drawing, and no browser or WebView.</description>
+    <pubDate>Sat, 22 Aug 2026 11:34:31 GMT</pubDate>
+  </item>
+  <item>
+    <title>PR#1: Make SurrealDB performance slightly better</title>
+    <link>https://dev.to/hosseinmobarakian/pr1-make-surrealdb-performance-slightly-better-102m</link>
+    <guid isPermaLink="true">https://dev.to/hosseinmobarakian/pr1-make-surrealdb-performance-slightly-better-102m</guid>
+    <description>At the first step, I picked up the SurrealDB project for contribution. I didn&apos;t know how I could help...</description>
+    <pubDate>Sat, 22 Aug 2026 12:50:45 GMT</pubDate>
   </item>
   <item>
     <title>Checking whether an npm package &quot;exists&quot; stopped working</title>
@@ -20,11 +48,18 @@
     <pubDate>Sat, 22 Aug 2026 08:17:00 GMT</pubDate>
   </item>
   <item>
-    <title>Cura doesn&apos;t have connector generation. I built a plugin, and a one-click installer, that does.</title>
-    <link>https://dev.to/rx290/cura-doesnt-have-connector-generation-i-built-a-plugin-and-a-one-click-installer-that-does-2cjk</link>
-    <guid isPermaLink="true">https://dev.to/rx290/cura-doesnt-have-connector-generation-i-built-a-plugin-and-a-one-click-installer-that-does-2cjk</guid>
-    <description>OrcaSlicer and PrusaSlicer both let you generate mechanical connectors, plugs, dowels, snaps,...</description>
-    <pubDate>Sat, 22 Aug 2026 08:23:55 GMT</pubDate>
+    <title>Just released frosted_ui_kit ❄️: A Flutter UI kit mixing Apple’s Liquid Glass with Telegram’s fluid design</title>
+    <link>https://dev.to/abdulrasol_salhilo_42c/just-released-frosteduikit-a-flutter-ui-kit-mixing-apples-liquid-glass-with-telegrams-fluid-8db</link>
+    <guid isPermaLink="true">https://dev.to/abdulrasol_salhilo_42c/just-released-frosteduikit-a-flutter-ui-kit-mixing-apples-liquid-glass-with-telegrams-fluid-8db</guid>
+    <description>&amp;nbsp;Hey everyone! 👋 I&apos;ve been working on a highly-customizable design system and decided to...</description>
+    <pubDate>Sat, 22 Aug 2026 10:50:58 GMT</pubDate>
+  </item>
+  <item>
+    <title>Making AI Coding Agents Actually Good at Software Engineering</title>
+    <link>https://dev.to/debabrata_saha/making-ai-coding-agents-actually-good-at-software-engineering-fi3</link>
+    <guid isPermaLink="true">https://dev.to/debabrata_saha/making-ai-coding-agents-actually-good-at-software-engineering-fi3</guid>
+    <description>AI coding agents generate decent code. But decent ≠ production-ready.  They miss the stuff...</description>
+    <pubDate>Sat, 22 Aug 2026 10:20:30 GMT</pubDate>
   </item>
   <item>
     <title>OpenWA: A Self-Hosted WhatsApp API Gateway Built for Production</title>
@@ -55,11 +90,11 @@
     <pubDate>Sat, 22 Aug 2026 07:29:37 GMT</pubDate>
   </item>
   <item>
-    <title>Week-6, 7, 8</title>
-    <link>https://dev.to/darshit2308/week-6-7-8-58ln</link>
-    <guid isPermaLink="true">https://dev.to/darshit2308/week-6-7-8-58ln</guid>
-    <description>Catching Up: Architecture, Security, and Concurrency in the Heka Auth Service   Hey...</description>
-    <pubDate>Sat, 22 Aug 2026 05:51:00 GMT</pubDate>
+    <title>The Exact Funnel I Use to Get Free CLI Tools Their First Users</title>
+    <link>https://dev.to/ke_jia_24bb2f9f84f14f728a/the-exact-funnel-i-use-to-get-free-cli-tools-their-first-users-4go5</link>
+    <guid isPermaLink="true">https://dev.to/ke_jia_24bb2f9f84f14f728a/the-exact-funnel-i-use-to-get-free-cli-tools-their-first-users-4go5</guid>
+    <description>Every open-source tool has the same brutal first 90 days: zero users, zero signal, no idea whether...</description>
+    <pubDate>Sat, 22 Aug 2026 09:55:45 GMT</pubDate>
   </item>
   <item>
     <title>3 Months of Shipping Tiny Tools: What Actually Drove Downloads</title>
@@ -69,46 +104,11 @@
     <pubDate>Sat, 22 Aug 2026 10:00:57 GMT</pubDate>
   </item>
   <item>
-    <title>The Exact Funnel I Use to Get Free CLI Tools Their First Users</title>
-    <link>https://dev.to/ke_jia_24bb2f9f84f14f728a/the-exact-funnel-i-use-to-get-free-cli-tools-their-first-users-4go5</link>
-    <guid isPermaLink="true">https://dev.to/ke_jia_24bb2f9f84f14f728a/the-exact-funnel-i-use-to-get-free-cli-tools-their-first-users-4go5</guid>
-    <description>Every open-source tool has the same brutal first 90 days: zero users, zero signal, no idea whether...</description>
-    <pubDate>Sat, 22 Aug 2026 09:55:45 GMT</pubDate>
-  </item>
-  <item>
-    <title>Leveling up OpenCode... and not in the way you would expect.</title>
-    <link>https://dev.to/searay_11_254650fe8d2b6b6/leveling-up-opencode-and-not-in-the-way-you-would-expect-27</link>
-    <guid isPermaLink="true">https://dev.to/searay_11_254650fe8d2b6b6/leveling-up-opencode-and-not-in-the-way-you-would-expect-27</guid>
-    <description>So I&apos;ve been using OpenCode for a while now, and it&apos;s pretty cool. It&apos;s clean, minimal, effective,...</description>
-    <pubDate>Sat, 22 Aug 2026 00:44:02 GMT</pubDate>
-  </item>
-  <item>
-    <title>Can We Automate the Work of a Software Engineer? The Story Behind HEALER</title>
-    <link>https://dev.to/_a9de0f38ed294cfb7e5e/can-we-automate-the-work-of-a-software-engineer-the-story-behind-healer-2mge</link>
-    <guid isPermaLink="true">https://dev.to/_a9de0f38ed294cfb7e5e/can-we-automate-the-work-of-a-software-engineer-the-story-behind-healer-2mge</guid>
-    <description>In my previous article, I wrote about X-Ray — an observability system that grew out of my work on...</description>
-    <pubDate>Sat, 22 Aug 2026 00:45:20 GMT</pubDate>
-  </item>
-  <item>
-    <title>MCP has a discovery problem. I built a meta-server that searches all 75,000 servers.</title>
-    <link>https://dev.to/dror_bengal_4d4388774752d/mcp-has-a-discovery-problem-i-built-a-meta-server-that-searches-all-75000-servers-30gm</link>
-    <guid isPermaLink="true">https://dev.to/dror_bengal_4d4388774752d/mcp-has-a-discovery-problem-i-built-a-meta-server-that-searches-all-75000-servers-30gm</guid>
-    <description>There are now tens of thousands of MCP servers. Glama indexes ~75,000. PulseMCP lists ~22,000. npm...</description>
-    <pubDate>Fri, 21 Aug 2026 20:40:29 GMT</pubDate>
-  </item>
-  <item>
-    <title>How to Validate Crypto Wallet Addresses Offline in Java</title>
-    <link>https://dev.to/oleksandr_dendeberia_9648/how-to-validate-crypto-wallet-addresses-offline-in-java-4lkc</link>
-    <guid isPermaLink="true">https://dev.to/oleksandr_dendeberia_9648/how-to-validate-crypto-wallet-addresses-offline-in-java-4lkc</guid>
-    <description>Crypto address validation is one of those small backend features that becomes important very...</description>
-    <pubDate>Sat, 22 Aug 2026 07:53:34 GMT</pubDate>
-  </item>
-  <item>
-    <title>MeshCtx: Open Source AI Agent with17 Brain Regions</title>
-    <link>https://dev.to/golflover2023/meshctx-open-source-ai-agent-with17-brain-regions-3gme</link>
-    <guid isPermaLink="true">https://dev.to/golflover2023/meshctx-open-source-ai-agent-with17-brain-regions-3gme</guid>
-    <description>Why I Built an AI Agent with17 Brain Regions (And What I Learned)   Most AI agents are...</description>
-    <pubDate>Fri, 21 Aug 2026 23:55:33 GMT</pubDate>
+    <title>Week-6, 7, 8</title>
+    <link>https://dev.to/darshit2308/week-6-7-8-58ln</link>
+    <guid isPermaLink="true">https://dev.to/darshit2308/week-6-7-8-58ln</guid>
+    <description>Catching Up: Architecture, Security, and Concurrency in the Heka Auth Service   Hey...</description>
+    <pubDate>Sat, 22 Aug 2026 05:51:00 GMT</pubDate>
   </item>
   <item>
     <title>I moved coding-agent verification out of the prompt</title>
