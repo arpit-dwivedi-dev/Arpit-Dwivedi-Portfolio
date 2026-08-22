@@ -71,8 +71,8 @@ export const Team = () => {
             </Reveal>
           </div>
 
-          <Reveal index={2} from="right" className="flex flex-col">
-            {/* Falls back to the initials tile if /founder.jpg 404s — never
+          <Reveal index={2} from="right" className="flex flex-col items-center">
+            {/* Falls back to the initials tile if /founder.png 404s — never
                 leaves a broken image in the most trust-sensitive spot. */}
             {photoFailed ? (
               <div className="w-[136px] h-[136px] sm:w-[152px] sm:h-[152px] surface rounded-[3px] flex items-center justify-center shrink-0">
@@ -80,16 +80,16 @@ export const Team = () => {
               </div>
             ) : (
               <img
-                src="/founder.jpg"
+                src="/founder.png"
                 alt={founder.name}
                 width={152}
-                height={152}
+                height={227}
                 onError={() => setPhotoFailed(true)}
-                className="w-[136px] h-[136px] sm:w-[152px] sm:h-[152px] rounded-[3px] object-cover shrink-0 border border-hairline"
+                className="w-[136px] h-[203px] sm:w-[152px] sm:h-[227px] rounded-[3px] object-cover shrink-0 border border-hairline"
               />
             )}
 
-            <ul className="list-none pt-9 flex flex-col">
+            <ul className="list-none pt-9 flex flex-col w-full">
               <li className="h-px hairline" aria-hidden="true" />
               {founder.highlights.map((h, idx) => (
                 <li key={h}>
