@@ -6,11 +6,11 @@
   <description>A curated feed of open-source engineering writing.</description>
   <language>en</language>
   <item>
-    <title>I Added Terminal Charts to My Dev.to CLI. Here&apos;s What My Data Looks Like.</title>
-    <link>https://dev.to/sarvar_04/i-added-terminal-charts-to-my-devto-cli-heres-what-my-data-looks-like-250j</link>
-    <guid isPermaLink="true">https://dev.to/sarvar_04/i-added-terminal-charts-to-my-devto-cli-heres-what-my-data-looks-like-250j</guid>
-    <description>devpub v0.2.1 adds color-gradient bar charts, sparklines, trend arrows, and multi-period breakdowns to your Dev.to analytics. All in the terminal. Zero new dependencies.</description>
-    <pubDate>Fri, 21 Aug 2026 14:13:00 GMT</pubDate>
+    <title>Building a Community Plugin Marketplace for OWASP OWTF (GSoC 2026)</title>
+    <link>https://dev.to/piyush140104/building-a-community-plugin-marketplace-for-owasp-owtf-gsoc-2026-6l8</link>
+    <guid isPermaLink="true">https://dev.to/piyush140104/building-a-community-plugin-marketplace-for-owasp-owtf-gsoc-2026-6l8</guid>
+    <description>My Google Summer of Code 2026 project with OWASP OWTF. A marketplace where any user can upload a Python plugin that gets reviewed and then runs inside the framework.</description>
+    <pubDate>Sat, 22 Aug 2026 09:26:13 GMT</pubDate>
   </item>
   <item>
     <title>Checking whether an npm package &quot;exists&quot; stopped working</title>
@@ -34,11 +34,11 @@
     <pubDate>Sat, 22 Aug 2026 08:21:55 GMT</pubDate>
   </item>
   <item>
-    <title>How to Validate Crypto Wallet Addresses Offline in Java</title>
-    <link>https://dev.to/oleksandr_dendeberia_9648/how-to-validate-crypto-wallet-addresses-offline-in-java-4lkc</link>
-    <guid isPermaLink="true">https://dev.to/oleksandr_dendeberia_9648/how-to-validate-crypto-wallet-addresses-offline-in-java-4lkc</guid>
-    <description>Crypto address validation is one of those small backend features that becomes important very...</description>
-    <pubDate>Sat, 22 Aug 2026 07:53:34 GMT</pubDate>
+    <title>From 45 to 70 Free Tools — Toollium Just Got a Lot Bigger</title>
+    <link>https://dev.to/toollium/from-45-to-70-free-tools-toollium-just-got-a-lot-bigger-2m3d</link>
+    <guid isPermaLink="true">https://dev.to/toollium/from-45-to-70-free-tools-toollium-just-got-a-lot-bigger-2m3d</guid>
+    <description>A few weeks ago I shared Toollium here — 45 free browser-based tools with no sign-up, no watermarks,...</description>
+    <pubDate>Sat, 22 Aug 2026 09:04:40 GMT</pubDate>
   </item>
   <item>
     <title>Mojo vs Python: What Qualcomm&apos;s Open Source Release Actually Changes for Developers</title>
@@ -55,13 +55,6 @@
     <pubDate>Sat, 22 Aug 2026 07:29:37 GMT</pubDate>
   </item>
   <item>
-    <title>The AI demo failed, but the database remembered half of it</title>
-    <link>https://dev.to/jtorchia/the-ai-demo-failed-but-the-database-remembered-half-of-it-3m4a</link>
-    <guid isPermaLink="true">https://dev.to/jtorchia/the-ai-demo-failed-but-the-database-remembered-half-of-it-3m4a</guid>
-    <description>This is a submission for DEV&apos;s Summer Bug Smash: Clear the Lineup.  The error message said the...</description>
-    <pubDate>Fri, 21 Aug 2026 14:40:26 GMT</pubDate>
-  </item>
-  <item>
     <title>Week-6, 7, 8</title>
     <link>https://dev.to/darshit2308/week-6-7-8-58ln</link>
     <guid isPermaLink="true">https://dev.to/darshit2308/week-6-7-8-58ln</guid>
@@ -69,18 +62,25 @@
     <pubDate>Sat, 22 Aug 2026 05:51:00 GMT</pubDate>
   </item>
   <item>
+    <title>3 Months of Shipping Tiny Tools: What Actually Drove Downloads</title>
+    <link>https://dev.to/ke_jia_24bb2f9f84f14f728a/3-months-of-shipping-tiny-tools-what-actually-drove-downloads-8pc</link>
+    <guid isPermaLink="true">https://dev.to/ke_jia_24bb2f9f84f14f728a/3-months-of-shipping-tiny-tools-what-actually-drove-downloads-8pc</guid>
+    <description>I have spent the last few months shipping a string of small tools: a scaffolding CLI, a secret...</description>
+    <pubDate>Sat, 22 Aug 2026 10:00:57 GMT</pubDate>
+  </item>
+  <item>
+    <title>The Exact Funnel I Use to Get Free CLI Tools Their First Users</title>
+    <link>https://dev.to/ke_jia_24bb2f9f84f14f728a/the-exact-funnel-i-use-to-get-free-cli-tools-their-first-users-4go5</link>
+    <guid isPermaLink="true">https://dev.to/ke_jia_24bb2f9f84f14f728a/the-exact-funnel-i-use-to-get-free-cli-tools-their-first-users-4go5</guid>
+    <description>Every open-source tool has the same brutal first 90 days: zero users, zero signal, no idea whether...</description>
+    <pubDate>Sat, 22 Aug 2026 09:55:45 GMT</pubDate>
+  </item>
+  <item>
     <title>Leveling up OpenCode... and not in the way you would expect.</title>
     <link>https://dev.to/searay_11_254650fe8d2b6b6/leveling-up-opencode-and-not-in-the-way-you-would-expect-27</link>
     <guid isPermaLink="true">https://dev.to/searay_11_254650fe8d2b6b6/leveling-up-opencode-and-not-in-the-way-you-would-expect-27</guid>
     <description>So I&apos;ve been using OpenCode for a while now, and it&apos;s pretty cool. It&apos;s clean, minimal, effective,...</description>
     <pubDate>Sat, 22 Aug 2026 00:44:02 GMT</pubDate>
-  </item>
-  <item>
-    <title>Building a Community Plugin Marketplace for OWASP OWTF (GSoC 2026)</title>
-    <link>https://dev.to/piyush140104/from-sandbox-to-review-queue-my-gsoc-2026-project-with-owasp-owtf-50dd</link>
-    <guid isPermaLink="true">https://dev.to/piyush140104/from-sandbox-to-review-queue-my-gsoc-2026-project-with-owasp-owtf-50dd</guid>
-    <description>My Google Summer of Code 2026 project with OWASP OWTF. A marketplace that lets any user upload Python plugins that get reviewed and then run inside the framework just like built-in plugins.</description>
-    <pubDate>Sat, 22 Aug 2026 06:24:06 GMT</pubDate>
   </item>
   <item>
     <title>Can We Automate the Work of a Software Engineer? The Story Behind HEALER</title>
@@ -97,18 +97,18 @@
     <pubDate>Fri, 21 Aug 2026 20:40:29 GMT</pubDate>
   </item>
   <item>
+    <title>How to Validate Crypto Wallet Addresses Offline in Java</title>
+    <link>https://dev.to/oleksandr_dendeberia_9648/how-to-validate-crypto-wallet-addresses-offline-in-java-4lkc</link>
+    <guid isPermaLink="true">https://dev.to/oleksandr_dendeberia_9648/how-to-validate-crypto-wallet-addresses-offline-in-java-4lkc</guid>
+    <description>Crypto address validation is one of those small backend features that becomes important very...</description>
+    <pubDate>Sat, 22 Aug 2026 07:53:34 GMT</pubDate>
+  </item>
+  <item>
     <title>MeshCtx: Open Source AI Agent with17 Brain Regions</title>
     <link>https://dev.to/golflover2023/meshctx-open-source-ai-agent-with17-brain-regions-3gme</link>
     <guid isPermaLink="true">https://dev.to/golflover2023/meshctx-open-source-ai-agent-with17-brain-regions-3gme</guid>
     <description>Why I Built an AI Agent with17 Brain Regions (And What I Learned)   Most AI agents are...</description>
     <pubDate>Fri, 21 Aug 2026 23:55:33 GMT</pubDate>
-  </item>
-  <item>
-    <title>Independent Stores Do Not Need a Second AI Store</title>
-    <link>https://dev.to/seasonkoh/independent-stores-do-not-need-a-second-ai-store-196d</link>
-    <guid isPermaLink="true">https://dev.to/seasonkoh/independent-stores-do-not-need-a-second-ai-store-196d</guid>
-    <description>When merchants hear that AI assistants may become a new shopping interface, the first reaction is...</description>
-    <pubDate>Sat, 22 Aug 2026 07:33:45 GMT</pubDate>
   </item>
   <item>
     <title>I moved coding-agent verification out of the prompt</title>
