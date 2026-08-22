@@ -1,16 +1,17 @@
 import { useEffect } from 'react';
 import { useParams, Navigate, Link } from 'react-router-dom';
-import { motion } from 'motion/react';
 import { BookOpen } from 'lucide-react';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/AchievementsContact';
-import { ToolCard } from '../components/tools/ToolCard';
+import { ToolIndexBand } from '../components/tools/ToolRow';
 import { Breadcrumbs } from '../components/seo/Breadcrumbs';
+import { Reveal } from '../components/ui/Reveal';
+import { SectionRule } from '../components/ui/SectionRule';
 import { useLanguage } from '../i18n/LanguageContext';
 // categories.ts only — importing guides/data.ts here would pull the whole
 // guide library into this route's chunk just to read a category title.
 import { getGuideCategory } from '../content/guides/categories';
-import { getToolCategory, getToolsByCategory, categoryTitle, categoryDescription, toolTitle, toolDescription } from '../tools/registry';
+import { getToolCategory, getToolsByCategory, categoryTitle, categoryDescription } from '../tools/registry';
 
 export const ToolCategoryPage = () => {
   const { content } = useLanguage();
@@ -68,68 +69,88 @@ const ToolCategoryPageContent = ({ category, tools, guideCategory, basePath, con
   }, [tools.length]);
 
   return (
-    <div className="relative bg-bg-pure selection:bg-accent-blue/30 selection:text-accent-blue overflow-x-hidden min-h-screen">
+    <div className="grain relative bg-bg-pure selection:bg-accent-blue/30 selection:text-accent-blue overflow-x-hidden min-h-screen">
       <Navbar />
 
-      <main id="main-content" className="pt-32 pb-24">
-        <div className="max-w-7xl mx-auto px-6">
-          <Breadcrumbs
-            className="mb-8"
-            items={[
-              { name: content.nav.breadcrumbHome, href: '/' },
-              { name: t.breadcrumb, href: basePath },
-              { name: categoryTitle(category) },
-            ]}
-          />
+      <main id="main-content">
+        {/* One display step down from the tools index (t-dl against its
+            t-dxl), so a category reads as a level inside the index rather
+            than a competing landing page. The old page had this the other way
+            round — its heading was larger than the index's. */}
+        <section className="page-light relative pt-[72px]">
+          <div className="max-w-7xl mx-auto px-5 sm:px-6 pt-12 sm:pt-16">
+            <Breadcrumbs
+              className="mb-6 sm:mb-7"
+              backHref={basePath}
+              backLabel={t.breadcrumb}
+              items={[
+                { name: content.nav.breadcrumbHome, href: '/' },
+                { name: t.breadcrumb, href: basePath },
+                { name: categoryTitle(category) },
+              ]}
+            />
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16">
-            <span className="text-accent-blue font-mono text-sm tracking-widest uppercase mb-2 block">{t.toolCategoryEyebrow}</span>
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">{categoryTitle(category)}</h1>
-            <p className="text-secondary-text max-w-2xl mx-auto text-lg">{categoryDescription(category)}</p>
-          </motion.div>
+            <SectionRule label={t.toolCategoryEyebrow} />
 
+            <Reveal className="pt-6 sm:pt-7">
+              <h1 className="t-dl text-ink max-w-[20ch]">{categoryTitle(category)}</h1>
+              <p className="pt-5 text-secondary-text leading-relaxed max-w-[56ch]">{categoryDescription(category)}</p>
+            </Reveal>
+          </div>
+        </section>
+
+        <div className="pt-10 sm:pt-14">
           {tools.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {tools.map((tool, idx) => (
-                <ToolCard
-                  key={tool.id}
-                  title={toolTitle(tool)}
-                  description={toolDescription(tool)}
-                  icon={tool.icon}
-                  href={`${basePath}/${tool.category}/${tool.path}`}
-                  index={idx}
-                />
-              ))}
-            </div>
+            <ToolIndexBand
+              tools={tools}
+              basePath={basePath}
+              noteLabel={t.buildNoteLabel}
+              openLabel={t.openLabel}
+              showCategory={false}
+            />
           ) : (
-            <p className="text-center text-secondary-text">{t.noCategoryTools.replace('{category}', categoryTitle(category).toLowerCase())}</p>
+            <Reveal from="none" className="surface border-x-0 rounded-none">
+              <div className="max-w-7xl mx-auto px-5 sm:px-6 py-16 sm:py-20 flex flex-col items-start gap-4">
+                <span className="t-label text-secondary-text">{t.noResultsLabel}</span>
+                <p className="t-ds text-ink max-w-[34ch]">
+                  {t.noCategoryTools.replace('{category}', categoryTitle(category).toLowerCase())}
+                </p>
+                <Link
+                  to={basePath}
+                  className="mt-2 h-11 px-4 inline-flex items-center rounded-[3px] text-sm font-semibold text-bg-pure bg-ink hover:bg-accent-blue transition-colors"
+                >
+                  {t.breadcrumb}
+                </Link>
+              </div>
+            </Reveal>
           )}
+        </div>
 
-          {/* One contextual link into the matching guide hub — the tools here
-              have written how-to guides, and nothing on this page said so.
-              Guides are English-only (no /hi/guides route, see App.tsx), so
-              this href deliberately skips the /hi prefix, same as the footer. */}
+        {/* One contextual link into the matching guide hub — the tools here
+            have written how-to guides, and nothing on this page said so.
+            Guides are English-only (no /hi/guides route, see App.tsx), so
+            this href deliberately skips the /hi prefix, same as the footer. */}
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 pt-16 sm:pt-20 pb-16 sm:pb-24">
           {guideCategory && (
-            <div className="mt-16 p-6 rounded-3xl glass border-ink/10 flex flex-wrap items-center justify-between gap-4">
-              <p className="text-ink font-medium">{t.categoryGuidesText}</p>
+            <Reveal
+              from="none"
+              className="border-y border-hairline border-t-lit py-6 flex flex-wrap items-center justify-between gap-4"
+            >
+              <p className="text-sm text-ink max-w-[52ch]">{t.categoryGuidesText}</p>
               <Link
                 to={`/guides/${guideCategory.slug}`}
                 title={guideCategory.description}
-                className="shrink-0 inline-flex items-center gap-2 px-5 py-3 bg-accent-blue text-bg-pure font-bold rounded-xl hover:glow-blue transition-all"
+                className="shrink-0 inline-flex items-center gap-2 h-11 px-4 rounded-[3px] text-sm font-semibold text-bg-pure bg-ink hover:bg-accent-blue transition-colors"
               >
-                <BookOpen size={18} aria-hidden="true" />
+                <BookOpen size={16} aria-hidden="true" />
                 {t.categoryGuidesLink.replace('{category}', guideCategory.title)}
               </Link>
-            </div>
+            </Reveal>
           )}
         </div>
       </main>
 
       <Footer />
-
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(0,209,255,0.03),transparent_70%)]" />
-      </div>
     </div>
   );
 };
